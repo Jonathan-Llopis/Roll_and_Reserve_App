@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:roll_and_reserve/core/failure.dart';
 import 'package:roll_and_reserve/core/use_case.dart';
-import '../repositories/sign_in_repository.dart';
+import '../repositories/login_repository.dart';
 
 class SigninUserGoogleUseCase implements UseCase<void, LoginParamsGoogle> {
-  final SignInRepository repository;
+  final LoginRepository repository;
   SigninUserGoogleUseCase(this.repository);
 
   @override
@@ -12,9 +12,7 @@ class SigninUserGoogleUseCase implements UseCase<void, LoginParamsGoogle> {
     return repository.signInGoogle();
   }
 }
-class LoginParamsGoogle {
 
+class LoginParamsGoogle {
   LoginParamsGoogle();
 }
-
-

@@ -1,8 +1,9 @@
 // Define the routes using go_router
-import 'package:roll_and_reserve/domain/repositories/sign_in_repository.dart';
+import 'package:roll_and_reserve/domain/repositories/login_repository.dart';
 import 'package:roll_and_reserve/injection.dart';
-import 'package:roll_and_reserve/presentation/screens/login_page.dart';
-import 'package:roll_and_reserve/presentation/screens/user_page.dart';
+import 'package:roll_and_reserve/presentation/screens/login_screen.dart';
+import 'package:roll_and_reserve/presentation/screens/register_screen.dart';
+import 'package:roll_and_reserve/presentation/screens/user_screen.dart';
 import 'package:go_router/go_router.dart';
 
 final GoRouter router = GoRouter(
@@ -10,12 +11,16 @@ final GoRouter router = GoRouter(
   routes: [
     GoRoute(
       path: '/login',
-      builder: (context, state) => const LoginPage(),
+      builder: (context, state) => const LoginScreen(),
     ),
-    GoRoute(path: '/user', builder: (context, state) => const UserPage()),
+    GoRoute(
+      path: '/login/singIn',
+      builder: (context, state) => const RegisterScreen(),
+    ),
+    GoRoute(path: '/user', builder: (context, state) => const UserScreen()),
   ],
   redirect: (context, state) async {
-    final isLoggedIn = await sl<SignInRepository>().isLoggedIn();
+    final isLoggedIn = await sl<LoginRepository>().isLoggedIn();
     return isLoggedIn.fold((_) => '/login', (loggedIn) {
       if (loggedIn == "NO_USER" && !state.matchedLocation.contains("/login")) {
         return "/login";

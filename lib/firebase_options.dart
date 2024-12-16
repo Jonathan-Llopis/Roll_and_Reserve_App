@@ -41,56 +41,51 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyC_hhD9Vh9UGeuX098s7HLcZx911eoJZ2A',
-    appId: '1:399401442767:web:5cf89b71579c170f1d46ba',
-    messagingSenderId: '399401442767',
-    projectId: 'ejempo-login',
-    authDomain: 'ejempo-login.firebaseapp.com',
-    databaseURL: 'https://ejempo-login-default-rtdb.firebaseio.com',
-    storageBucket: 'ejempo-login.firebasestorage.app',
-    measurementId: 'G-M9G5MM801B',
+    apiKey: 'AIzaSyDYr2BK3ERM1UAf33lMjrXQr8RmTlFvgBw',
+    appId: '1:285149567188:web:e67d5709676c7748774341',
+    messagingSenderId: '285149567188',
+    projectId: 'roll-and-reserve',
+    authDomain: 'roll-and-reserve.firebaseapp.com',
+    storageBucket: 'roll-and-reserve.firebasestorage.app',
+    measurementId: 'G-5WEYV99J0B',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyC5UiYrf9mbkGvYjf65VctjqPa_1QIUp7A',
-    appId: '1:399401442767:android:c5fc3af86a969e141d46ba',
-    messagingSenderId: '399401442767',
-    projectId: 'ejempo-login',
-    databaseURL: 'https://ejempo-login-default-rtdb.firebaseio.com',
-    storageBucket: 'ejempo-login.firebasestorage.app',
+    apiKey: 'AIzaSyCP6SV19fg6hQkpx4SNL-50RvnNXY2Z1IU',
+    appId: '1:285149567188:android:3bcfbb020855df58774341',
+    messagingSenderId: '285149567188',
+    projectId: 'roll-and-reserve',
+    storageBucket: 'roll-and-reserve.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAcugP0ZsaoTMEN4fbvfhCSWlTmh4ub-t0',
-    appId: '1:399401442767:ios:d7484b14e17826ae1d46ba',
-    messagingSenderId: '399401442767',
-    projectId: 'ejempo-login',
-    databaseURL: 'https://ejempo-login-default-rtdb.firebaseio.com',
-    storageBucket: 'ejempo-login.firebasestorage.app',
-    iosClientId: '399401442767-jrk3kova1nqm8gtllauv7g6b1qvulsfb.apps.googleusercontent.com',
-    iosBundleId: 'com.example.flutterFirebaseLogin',
+    apiKey: 'AIzaSyB1upZhz_PjomewtGnIA1Gc6EzGVbEQcFo',
+    appId: '1:285149567188:ios:42365b0c3b422a73774341',
+    messagingSenderId: '285149567188',
+    projectId: 'roll-and-reserve',
+    storageBucket: 'roll-and-reserve.firebasestorage.app',
+    iosClientId: '285149567188-g3cub2dcnil6p5rkin1ic3honn6j4u12.apps.googleusercontent.com',
+    iosBundleId: 'com.example.rollAndReserve',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAcugP0ZsaoTMEN4fbvfhCSWlTmh4ub-t0',
-    appId: '1:399401442767:ios:d7484b14e17826ae1d46ba',
-    messagingSenderId: '399401442767',
-    projectId: 'ejempo-login',
-    databaseURL: 'https://ejempo-login-default-rtdb.firebaseio.com',
-    storageBucket: 'ejempo-login.firebasestorage.app',
-    iosClientId: '399401442767-jrk3kova1nqm8gtllauv7g6b1qvulsfb.apps.googleusercontent.com',
-    iosBundleId: 'com.example.flutterFirebaseLogin',
+    apiKey: 'AIzaSyB1upZhz_PjomewtGnIA1Gc6EzGVbEQcFo',
+    appId: '1:285149567188:ios:42365b0c3b422a73774341',
+    messagingSenderId: '285149567188',
+    projectId: 'roll-and-reserve',
+    storageBucket: 'roll-and-reserve.firebasestorage.app',
+    iosClientId: '285149567188-g3cub2dcnil6p5rkin1ic3honn6j4u12.apps.googleusercontent.com',
+    iosBundleId: 'com.example.rollAndReserve',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyC_hhD9Vh9UGeuX098s7HLcZx911eoJZ2A',
-    appId: '1:399401442767:web:6518c1b6a44ea7491d46ba',
-    messagingSenderId: '399401442767',
-    projectId: 'ejempo-login',
-    authDomain: 'ejempo-login.firebaseapp.com',
-    databaseURL: 'https://ejempo-login-default-rtdb.firebaseio.com',
-    storageBucket: 'ejempo-login.firebasestorage.app',
-    measurementId: 'G-E7ELMD0SGZ',
+    apiKey: 'AIzaSyDYr2BK3ERM1UAf33lMjrXQr8RmTlFvgBw',
+    appId: '1:285149567188:web:1a742908bff7d7be774341',
+    messagingSenderId: '285149567188',
+    projectId: 'roll-and-reserve',
+    authDomain: 'roll-and-reserve.firebaseapp.com',
+    storageBucket: 'roll-and-reserve.firebasestorage.app',
+    measurementId: 'G-7Y6XDP98TK',
   );
 
 }
