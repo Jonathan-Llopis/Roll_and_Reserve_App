@@ -1,0 +1,16 @@
+/home/caveman96/DAM/projecteFinal/roll_and_reserve_app/build/linux/x64/debug/bundle/roll_and_reserve
+/home/caveman96/DAM/projecteFinal/roll_and_reserve_app/build/linux/x64/debug/bundle/data/icudtl.dat
+/home/caveman96/DAM/projecteFinal/roll_and_reserve_app/build/linux/x64/debug/bundle/lib/libflutter_linux_gtk.so
+/home/caveman96/DAM/projecteFinal/roll_and_reserve_app/build/linux/x64/debug/bundle/data/flutter_assets/version.json
+/home/caveman96/DAM/projecteFinal/roll_and_reserve_app/build/linux/x64/debug/bundle/data/flutter_assets/NOTICES
+/home/caveman96/DAM/projecteFinal/roll_and_reserve_app/build/linux/x64/debug/bundle/data/flutter_assets/kernel_blob.bin
+/home/caveman96/DAM/projecteFinal/roll_and_reserve_app/build/linux/x64/debug/bundle/data/flutter_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf
+/home/caveman96/DAM/projecteFinal/roll_and_reserve_app/build/linux/x64/debug/bundle/data/flutter_assets/shaders/ink_sparkle.frag
+/home/caveman96/DAM/projecteFinal/roll_and_reserve_app/build/linux/x64/debug/bundle/data/flutter_assets/AssetManifest.bin
+/home/caveman96/DAM/projecteFinal/roll_and_reserve_app/build/linux/x64/debug/bundle/data/flutter_assets/fonts/MaterialIcons-Regular.otf
+/home/caveman96/DAM/projecteFinal/roll_and_reserve_app/build/linux/x64/debug/bundle/data/flutter_assets/AssetManifest.bin.json
+/home/caveman96/DAM/projecteFinal/roll_and_reserve_app/build/linux/x64/debug/bundle/data/flutter_assets/FontManifest.json
+/home/caveman96/DAM/projecteFinal/roll_and_reserve_app/build/linux/x64/debug/bundle/data/flutter_assets/assets/images/google.png
+/home/caveman96/DAM/projecteFinal/roll_and_reserve_app/build/linux/x64/debug/bundle/data/flutter_assets/assets/animation/dragon_animations.riv
+/home/caveman96/DAM/projecteFinal/roll_and_reserve_app/build/linux/x64/debug/bundle/data/flutter_assets/AssetManifest.json
+/home/caveman96/DAM/projecteFinal/roll_and_reserve_app/build/linux/x64/debug/bundle/data/flutter_assets/NOTICES.Z
