@@ -1,7 +1,7 @@
 {
   "project_info": {
     "project_number": "285149567188",
-    "project_id": "roll-and-reserve",
+    "project_id": "rollAndReserve",
     "storage_bucket": "roll-and-reserve.firebasestorage.app"
   },
   "client": [
@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:285149567188:android:3bcfbb020855df58774341",
         "android_client_info": {
-          "package_name": "com.rollandreserve.com"
+          "package_name": "com.example.rollAndReserve"
         }
       },
       "oauth_client": [

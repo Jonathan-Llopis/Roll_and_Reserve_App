@@ -35,14 +35,16 @@ class ResetPassword extends LoginEvent {
   List<Object?> get props => [email];
 }
 
-class IsEmailUsed extends LoginEvent {
+class IsEmailUserUsed extends LoginEvent {
   final String email;
+    final String name;
 
-  IsEmailUsed({required this.email});
+  IsEmailUserUsed({required this.email, required this.name});
 
   @override
-  List<Object?> get props => [email];
+  List<Object?> get props => [email, name];
 }
+
 
 class LogoutButtonPressed extends LoginEvent {}
 
