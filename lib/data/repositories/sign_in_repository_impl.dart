@@ -56,8 +56,12 @@ class LoginRepositoryImpl implements LoginRepository {
   @override
   Future<Either<Failure, String>> isLoggedIn() async {
     try {
-      String? user = dataSource.getCurrentUser();
-      return Right(user ?? "NO_USER");
+      final id = sharedPreferences.getString('id');
+      if (id == null) {
+        return Right("NO_USER");
+      } else {
+        return Right(id);
+      }
     } catch (e) {
       return Left(AuthFailure());
     }
@@ -89,6 +93,16 @@ class LoginRepositoryImpl implements LoginRepository {
   Future<Either<Failure, bool>> isEmailUsed(String email) async {
     try {
       bool isUsed = await firebaseAuthDataSource.isEmailUsed(email);
+      return Right(isUsed);
+    } catch (e) {
+      return Left(AuthFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> isNameUsed(String name) async {
+    try {
+      bool isUsed = await firebaseAuthDataSource.isNameUsed(name);
       return Right(isUsed);
     } catch (e) {
       return Left(AuthFailure());

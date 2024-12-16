@@ -25,7 +25,6 @@ class _LoginScreenState extends State<LoginScreen> {
   rive.SMIInput<bool>? coverEyes;
   rive.SMIInput<double>? lookNumber;
   rive.SMIInput<bool>? unHide;
-  rive.SMIInput<bool>? fly;
   rive.SMIInput<bool>? check;
   rive.SMIInput<bool>? trigger;
 
@@ -139,7 +138,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       coverEyes = controller?.findInput<bool>("Cover Eyes");
                       lookNumber = controller?.findInput<double>("Number 1");
                       unHide = controller?.findInput<bool>("Unhide");
-                      fly = controller?.findInput<bool>("Fly");
                       check = controller?.findInput<bool>("Check");
                       trigger = controller?.findInput<bool>("Trigger 1");
                       emailFocus();
@@ -252,7 +250,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               elevation: 3,
                             ),
                             onPressed: () {
-                              fly?.change(true);
                               context.read<LoginBloc>().add(
                                     LoginGoogle(),
                                   );
@@ -262,11 +259,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 );
                               }
                             },
-                            icon: Image.asset(
-                              'images/google.png',
-                              height: 20,
-                              width: 20,
-                            ),
+                            icon: Image.asset('images/google.png',
+                                height: 20, width: 20, fit: BoxFit.cover),
                             label: const Text(
                               'Google Login',
                               style: TextStyle(
@@ -299,7 +293,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 5),
                 TextButton(
                   onPressed: () {
-                    fly?.change(true);
                     context.push('/login/singIn');
                   },
                   child: const Text(
