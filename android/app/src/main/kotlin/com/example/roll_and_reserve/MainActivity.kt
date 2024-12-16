@@ -1,5 +1,5 @@
-package com.example.roll_and_reserve
+package com.example.rollAndReserve
 
 import io.flutter.embedding.android.FlutterActivity
 
-class MainActivity: FlutterActivity()
+class MainActivity : FlutterActivity()

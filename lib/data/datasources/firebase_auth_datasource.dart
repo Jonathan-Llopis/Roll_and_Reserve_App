@@ -14,6 +14,12 @@ class FirebaseAuthDataSource {
     return UserModel.fromUserCredential(userCredentials);
   }
 
+   Future<UserModel> signUp(String email, String password) async {
+    UserCredential userCredentials =
+        await auth.createUserWithEmailAndPassword(email: email, password: password);
+    return UserModel.fromUserCredential(userCredentials);
+  }
+
   Future<void> logout() async {
     await auth.signOut();
   }
@@ -47,4 +53,9 @@ class FirebaseAuthDataSource {
     }
     return UserModel.fromUserCredential(userCredentials);
   }
+
+  Future<void> resetPassword(String email) async {
+    await auth.sendPasswordResetEmail(email: email);
+  }
+
 }

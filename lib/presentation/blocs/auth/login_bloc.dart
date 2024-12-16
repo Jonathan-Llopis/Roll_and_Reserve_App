@@ -1,9 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/core/use_case.dart';
 import 'package:roll_and_reserve/domain/usecases/get_current_user_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/is_email_used_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/reset_password.dart';
 import 'package:roll_and_reserve/domain/usecases/sign_in_user_google_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/sign_in_user_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/sign_out_user_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/sign_up_user_usecase.dart';
 import 'login_event.dart';
 import 'login_state.dart';
 
@@ -12,13 +15,19 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final SignoutUserUseCase signOutUserUseCase;
   final GetCurrentUserUseCase getCurrentUserUseCase;
   final SigninUserGoogleUseCase signInUserGoogleUseCase;
-  LoginBloc(
-    this.signInUserUseCase,
-    this.signOutUserUseCase,
-    this.getCurrentUserUseCase,
-    this.signInUserGoogleUseCase
+  final SignUpUserUseCase signUpUserUseCase;
+  final ResetPasswordUseCase restorPasswordUseCase;
+  final IsEmailUsedUsecase isEmailUsedUseCase;
 
-  ) : super(LoginState.initial()) {
+  LoginBloc(
+      this.signInUserUseCase,
+      this.signOutUserUseCase,
+      this.getCurrentUserUseCase,
+      this.signInUserGoogleUseCase,
+      this.signUpUserUseCase,
+      this.restorPasswordUseCase,
+      this.isEmailUsedUseCase)
+      : super(LoginState.initial()) {
     on<LoginButtonPressed>((event, emit) async {
       emit(LoginState.loading());
       final result = await signInUserUseCase(LoginParams(
@@ -27,6 +36,16 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       ));
       result.fold(
         (failure) => emit(LoginState.failure("Fallo al realizar el login")),
+        (_) => emit(LoginState.success(event.email)),
+      );
+    });
+
+    on<RegisterButtonPressed>((event, emit) async {
+      emit(LoginState.loading());
+      final result = await signUpUserUseCase(RegisterParams(
+          email: event.email, password: event.password, name: event.name));
+      result.fold(
+        (failure) => emit(LoginState.failure("Fallo al realizar el registro")),
         (_) => emit(LoginState.success(event.email)),
       );
     });
@@ -46,16 +65,30 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           (failure) => emit(LoginState.failure("Fallo al realizar el logout")),
           (_) => emit(LoginState.initial()));
     });
-     on<LoginGoogle>((event, emit) async {
+    on<LoginGoogle>((event, emit) async {
       emit(LoginState.loading());
-      final result = await signInUserGoogleUseCase(LoginParamsGoogle()
-
-      );
+      final result = await signInUserGoogleUseCase(LoginParamsGoogle());
       result.fold(
         (failure) => emit(LoginState.failure("Fallo al realizar el login")),
         (_) => emit(LoginState.success('')),
       );
     });
-
+    on<ResetPassword>((event, emit) async {
+      emit(LoginState.loading());
+      final result = await restorPasswordUseCase(event.email);
+      result.fold(
+        (failure) =>
+            emit(LoginState.failure("Fallo al realizar la recuperacion")),
+        (_) => emit(LoginState.success('')),
+      );
+    });
+    on<IsEmailUsed>((event, emit) async {
+      emit(LoginState(isLoading: true));
+      final result = await isEmailUsedUseCase(event.email);
+      result.fold(
+        (failure) => emit(LoginState(isLoading: false, isEmailUsed: null)),
+        (isUsed) => emit(LoginState(isLoading: false, isEmailUsed: isUsed)),
+      );
+    });
   }
 }
