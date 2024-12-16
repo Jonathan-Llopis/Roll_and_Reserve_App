@@ -1,5 +1,6 @@
 import 'package:roll_and_reserve/data/datasources/firestore_users_datasource.dart';
 import 'package:roll_and_reserve/domain/usecases/is_email_used_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/is_name_used_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/reset_password.dart';
 import 'package:roll_and_reserve/domain/usecases/sign_up_user_usecase.dart';
 import 'package:roll_and_reserve/presentation/blocs/auth/login_bloc.dart';
@@ -19,7 +20,7 @@ final GetIt sl = GetIt.instance;
 void configureDependencies() async {
   // BLocs
   sl.registerFactory<LoginBloc>(
-    () => LoginBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl()),
+    () => LoginBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()),
   );
 
   // Instancia de Firebase Auth
@@ -59,6 +60,9 @@ void configureDependencies() async {
   );
   sl.registerLazySingleton<IsEmailUsedUsecase>(
     () => IsEmailUsedUsecase(sl()),
+  );
+  sl.registerLazySingleton<IsNameUsedUsecase>(
+    () => IsNameUsedUsecase(sl()),
   );
 
   final sharedPreferences = await SharedPreferences.getInstance();

@@ -9,8 +9,19 @@ class FirestoreUsersDatasource {
 
   Future<bool> isEmailUsed(String email) async {
     CollectionReference users = FirebaseFirestore.instance.collection('Users');
-    
+
     QuerySnapshot snapshot = await users.where('email', isEqualTo: email).get();
+    if (snapshot.docs.isEmpty) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  Future<bool> isNameUsed(String name) async {
+    CollectionReference users = FirebaseFirestore.instance.collection('Users');
+
+    QuerySnapshot snapshot = await users.where('name', isEqualTo: name).get();
     if (snapshot.docs.isEmpty) {
       return false;
     } else {

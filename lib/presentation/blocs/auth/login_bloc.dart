@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/core/use_case.dart';
 import 'package:roll_and_reserve/domain/usecases/get_current_user_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/is_email_used_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/is_name_used_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/reset_password.dart';
 import 'package:roll_and_reserve/domain/usecases/sign_in_user_google_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/sign_in_user_usecase.dart';
@@ -18,6 +19,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final SignUpUserUseCase signUpUserUseCase;
   final ResetPasswordUseCase restorPasswordUseCase;
   final IsEmailUsedUsecase isEmailUsedUseCase;
+  final IsNameUsedUsecase isNameUsedUseCase;
 
   LoginBloc(
       this.signInUserUseCase,
@@ -26,7 +28,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       this.signInUserGoogleUseCase,
       this.signUpUserUseCase,
       this.restorPasswordUseCase,
-      this.isEmailUsedUseCase)
+      this.isEmailUsedUseCase,
+      this.isNameUsedUseCase)
       : super(LoginState.initial()) {
     on<LoginButtonPressed>((event, emit) async {
       emit(LoginState.loading());
@@ -55,7 +58,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       result.fold(
         (failure) =>
             emit(LoginState.failure("Fallo al verificar la autenticación")),
-        (username) => emit(LoginState.success(username)),
+        (id) => emit(LoginState.isLogedIn(id)),
       );
     });
 
@@ -65,6 +68,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           (failure) => emit(LoginState.failure("Fallo al realizar el logout")),
           (_) => emit(LoginState.initial()));
     });
+
     on<LoginGoogle>((event, emit) async {
       emit(LoginState.loading());
       final result = await signInUserGoogleUseCase(LoginParamsGoogle());
@@ -82,13 +86,15 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         (_) => emit(LoginState.success('')),
       );
     });
-    on<IsEmailUsed>((event, emit) async {
+    on<IsEmailUserUsed>((event, emit) async {
       emit(LoginState(isLoading: true));
-      final result = await isEmailUsedUseCase(event.email);
-      result.fold(
-        (failure) => emit(LoginState(isLoading: false, isEmailUsed: null)),
-        (isUsed) => emit(LoginState(isLoading: false, isEmailUsed: isUsed)),
-      );
+      final emailResult = await isEmailUsedUseCase(event.email);
+      final nameResult = await isNameUsedUseCase(event.name);
+      emit(LoginState(
+        isLoading: false,
+        isEmailUsed: emailResult.fold((_) => null, (isUsed) => isUsed),
+        isNameUsed: nameResult.fold((_) => null, (isUsed) => isUsed),
+      ));
     });
   }
 }

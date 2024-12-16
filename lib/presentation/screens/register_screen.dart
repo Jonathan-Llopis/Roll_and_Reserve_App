@@ -6,6 +6,8 @@ import 'package:roll_and_reserve/presentation/blocs/auth/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/auth/login_event.dart';
 import 'package:roll_and_reserve/presentation/functions/validator_function.dart';
 
+import '../blocs/auth/login_state.dart';
+
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -107,6 +109,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final loginBloc = BlocProvider.of<LoginBloc>(context);
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -206,6 +209,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               if (value == null || value.isEmpty) {
                                 return 'El nombre es obligatorio';
                               }
+                              final isNameUsed = loginBloc.state.isNameUsed;
+                              if (isNameUsed != null && isNameUsed) {
+                                return 'El nombre ya está en uso.';
+                              }
                               return null;
                             },
                           ),
@@ -231,8 +238,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               if (!isEmailValid(value)) {
                                 return 'El correo electrónico no es válido';
                               }
-                              final loginBloc =
-                                  BlocProvider.of<LoginBloc>(context);
                               final isEmailUsed = loginBloc.state.isEmailUsed;
                               if (isEmailUsed != null && isEmailUsed) {
                                 return 'El email ya está en uso.';
@@ -360,56 +365,59 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                               const SizedBox(width: 20),
                               Expanded(
-                                child: ElevatedButton(
-                                  // En tu botón onPressed
-                                  onPressed: () async {
-                                    final loginBloc = context.read<LoginBloc>();
-                                    loginBloc.add(IsEmailUsed(
-                                        email: emailController.text));
-                                    final currentState = loginBloc.state;
-                                    if (currentState.isLoading) {
-                                      showDialog(
-                                        context: context,
-                                        barrierDismissible: false,
-                                        builder: (context) => AlertDialog(
-                                          title: Text('Verificando email...'),
-                                          content: Row(
-                                            children: [
-                                              CircularProgressIndicator(),
-                                              SizedBox(width: 16),
-                                              Text('Por favor, espere...'),
-                                            ],
+                                child: BlocListener<LoginBloc, LoginState>(
+                                  listener: (context, state) {
+                                    if (state.isEmailUsed != null &&
+                                        state.isNameUsed != null) {
+                                      if (state.isEmailUsed! ||
+                                          state.isNameUsed!) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                                'El email o nombre ya existe en la base de datos'),
                                           ),
-                                        ),
-                                      );
-                                      return;
-                                    }
-                                    if (formKey.currentState!.validate()) {
-                                      loginBloc.add(RegisterButtonPressed(
-                                        email: emailController.text,
-                                        password: passwordController.text,
-                                        name: nameController.text,
-                                      ));
-                                      context.go('/login');
+                                        );
+                                      }
+                                      if (formKey.currentState!.validate()) {
+                                        context
+                                            .read<LoginBloc>()
+                                            .add(RegisterButtonPressed(
+                                              email: emailController.text,
+                                              password: passwordController.text,
+                                              name: nameController.text,
+                                            ));
+                                        context.go('/login');
+                                      }
                                     }
                                   },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF6A11CB),
-                                    foregroundColor: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      final loginBloc =
+                                          context.read<LoginBloc>();
+                                      loginBloc.add(IsEmailUserUsed(
+                                          email: emailController.text,
+                                          name: nameController.text));
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color(0xFF6A11CB),
+                                      foregroundColor: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 16),
                                     ),
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 16),
-                                  ),
-                                  child: const Text(
-                                    'Register',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600),
+                                    child: const Text(
+                                      'Register',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600),
+                                    ),
                                   ),
                                 ),
-                              ),
+                              )
                             ],
                           ),
                         ],
