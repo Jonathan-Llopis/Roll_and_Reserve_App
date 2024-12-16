@@ -1,4 +1,0 @@
-/usr/bin/ninja \
-  -C \
-  /home/caveman96/.pub-cache/hosted/pub.dev/rive_common-0.4.15/android/.cxx/Debug/2a1w2rm2/armeabi-v7a \
-  rive_text
