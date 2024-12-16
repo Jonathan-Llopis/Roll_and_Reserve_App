@@ -1,0 +1,1 @@
+ /home/caveman96/DAM/projecteFinal/roll_and_reserve_app/.dart_tool/flutter_build/764a7c1e0ced491a8273326ff781ef45/native_assets.yaml: 
