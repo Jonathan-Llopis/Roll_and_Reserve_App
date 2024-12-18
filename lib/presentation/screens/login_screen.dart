@@ -99,7 +99,6 @@ class _LoginScreenState extends State<LoginScreen> {
             if (state.isLoading) {
               return const Center(child: CircularProgressIndicator());
             }
-
             return Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -259,8 +258,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                 );
                               }
                             },
-                            icon: Image.network('https://rotulosmatesanz.com/wp-content/uploads/2017/09/2000px-Google_G_Logo.svg_.png',
-                                height: 20, width: 20, fit: BoxFit.cover),
+                            icon: Image.asset(
+                                'assets/images/google.png',
+                                height: 20,
+                                width: 20,
+                                fit: BoxFit.cover),
                             label: const Text(
                               'Google Login',
                               style: TextStyle(
