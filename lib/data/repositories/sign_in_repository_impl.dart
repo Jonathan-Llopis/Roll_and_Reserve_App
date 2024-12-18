@@ -9,10 +9,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LoginRepositoryImpl implements LoginRepository {
   final FirebaseAuthDataSource dataSource;
   final SharedPreferences sharedPreferences;
-  final FirestoreUsersDatasource firebaseAuthDataSource;
+  final FirestoreUsersDatasource firebaseUserDataSource;
 
   LoginRepositoryImpl(
-      this.dataSource, this.sharedPreferences, this.firebaseAuthDataSource);
+      this.dataSource, this.sharedPreferences, this.firebaseUserDataSource);
 
   @override
   Future<Either<Failure, UserModel>> signInGoogle() async {
@@ -44,7 +44,7 @@ class LoginRepositoryImpl implements LoginRepository {
       String email, String password, String name) async {
     try {
       UserModel user = await dataSource.signUp(email, password);
-      firebaseAuthDataSource.registerUser(user.email, name, user.id);
+      firebaseUserDataSource.registerUser(user.email, name, user.id);
       await sharedPreferences.setString('email', user.email);
       await sharedPreferences.setString('id', user.id);
       return Right(user);
@@ -92,7 +92,7 @@ class LoginRepositoryImpl implements LoginRepository {
   @override
   Future<Either<Failure, bool>> isEmailUsed(String email) async {
     try {
-      bool isUsed = await firebaseAuthDataSource.isEmailUsed(email);
+      bool isUsed = await firebaseUserDataSource.isEmailUsed(email);
       return Right(isUsed);
     } catch (e) {
       return Left(AuthFailure());
@@ -102,7 +102,7 @@ class LoginRepositoryImpl implements LoginRepository {
   @override
   Future<Either<Failure, bool>> isNameUsed(String name) async {
     try {
-      bool isUsed = await firebaseAuthDataSource.isNameUsed(name);
+      bool isUsed = await firebaseUserDataSource.isNameUsed(name);
       return Right(isUsed);
     } catch (e) {
       return Left(AuthFailure());
