@@ -8,4 +8,4 @@ COPY . /app/
 RUN flutter pub get
 
 # Comando para iniciar la aplicación en un emulador o dispositivo conectado
-CMD ["flutter", "emulators", "--launch", "emulator-5554", "&&", "flutter", "run"]
+CMD ["tail", "-f", "/dev/null"]
