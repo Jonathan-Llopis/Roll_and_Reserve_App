@@ -31,6 +31,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       this.isEmailUsedUseCase,
       this.isNameUsedUseCase)
       : super(LoginState.initial()) {
+        
     on<LoginButtonPressed>((event, emit) async {
       emit(LoginState.loading());
       final result = await signInUserUseCase(LoginParams(
@@ -58,7 +59,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       result.fold(
         (failure) =>
             emit(LoginState.failure("Fallo al verificar la autenticación")),
-        (id) => emit(LoginState.isLogedIn(id)),
+        (user) => emit(LoginState.isLogedIn(user)),
       );
     });
 
