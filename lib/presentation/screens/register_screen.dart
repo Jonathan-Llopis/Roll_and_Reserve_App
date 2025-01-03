@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rive/rive.dart' as rive;
 import 'package:go_router/go_router.dart';
+import 'package:roll_and_reserve/config/theme/theme.dart';
 import 'package:roll_and_reserve/presentation/blocs/auth/login_bloc.dart';
-import 'package:roll_and_reserve/presentation/blocs/auth/login_event.dart';
+import 'package:roll_and_reserve/presentation/functions/rive_animation.dart';
 import 'package:roll_and_reserve/presentation/functions/validator_function.dart';
-
-import '../blocs/auth/login_state.dart';
+import 'package:roll_and_reserve/presentation/widgets/custom_form_field.dart';
+import 'package:roll_and_reserve/presentation/widgets/buttons/register_button.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -29,14 +30,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   FocusNode passwordFocusNode = FocusNode();
   FocusNode confirmPasswordFocusNode = FocusNode();
 
-  rive.StateMachineController? controller;
-
-  rive.SMIInput<bool>? coverEyes;
-  rive.SMIInput<double>? lookNumber;
-  rive.SMIInput<bool>? unHide;
-  rive.SMIInput<bool>? fly;
-  rive.SMIInput<bool>? check;
-  rive.SMIInput<bool>? trigger;
+  RiveAnimationController? riveController;
 
   bool _passwordVisible = false;
   bool _passwordConfirmVisible = false;
@@ -60,51 +54,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void emailFocus() {
-    if (emailFocusNode.hasFocus) {
-      check?.change(true);
-    } else {
-      check?.change(false);
-    }
+    riveController?.emailFocus(emailFocusNode.hasFocus);
   }
 
   void nameFocus() {
-    if (nameFocusNode.hasFocus) {
-      check?.change(true);
-    } else {
-      check?.change(false);
-    }
+    riveController?.nameFocus(nameFocusNode.hasFocus);
   }
 
   void passwordFocused() {
-    if (passwordFocusNode.hasFocus && !_passwordConfirmVisible) {
-      trigger?.change(true);
-      check?.change(true);
-      coverEyes?.change(true);
-    } else if (passwordFocusNode.hasFocus && _passwordConfirmVisible) {
-      trigger?.change(true);
-      check?.change(true);
-      coverEyes?.change(true);
-    } else if (!passwordFocusNode.hasFocus) {
-      coverEyes?.change(false);
-      trigger?.change(true);
-      check?.change(false);
-    }
+    riveController?.passwordFocus(passwordFocusNode.hasFocus, _passwordVisible);
   }
 
   void confirmationPasswordFocused() {
-    if (confirmPasswordFocusNode.hasFocus && !_passwordVisible) {
-      trigger?.change(true);
-      check?.change(true);
-      coverEyes?.change(true);
-    } else if (confirmPasswordFocusNode.hasFocus && _passwordVisible) {
-      trigger?.change(true);
-      check?.change(true);
-      coverEyes?.change(true);
-    } else if (!confirmPasswordFocusNode.hasFocus) {
-      coverEyes?.change(false);
-      trigger?.change(true);
-      check?.change(false);
-    }
+    riveController?.confirmationPasswordFocused(
+        confirmPasswordFocusNode.hasFocus, _passwordConfirmVisible);
   }
 
   @override
@@ -114,16 +77,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF6A11CB),
-              Color(0xFF2575FC),
-            ],
-          ),
-        ),
+        decoration: AppTheme.backgroundDecoration,
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
@@ -133,20 +87,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const SizedBox(height: 40),
                 const Text(
                   'Roll and Reserve',
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                  style: AppTheme.titleStyle,
                 ),
                 const SizedBox(height: 10),
-                const Text(
-                  'SingIn to continue',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white70,
-                  ),
-                ),
+                const Text('SingIn to continue', style: AppTheme.subtitleStyle),
                 const SizedBox(height: 30),
                 SizedBox(
                   height: 230,
@@ -156,18 +100,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     fit: BoxFit.cover,
                     stateMachines: const ["State Machine 1"],
                     onInit: (artboard) {
-                      controller = rive.StateMachineController.fromArtboard(
-                        artboard,
-                        "State Machine 1",
-                      );
-                      if (controller == null) return;
-                      artboard.addController(controller!);
-                      coverEyes = controller?.findInput<bool>("Cover Eyes");
-                      lookNumber = controller?.findInput<double>("Number 1");
-                      unHide = controller?.findInput<bool>("Unhide");
-                      fly = controller?.findInput<bool>("Fly");
-                      check = controller?.findInput<bool>("Check");
-                      trigger = controller?.findInput<bool>("Trigger 1");
+                      riveController = RiveAnimationController(artboard);
                       emailFocus();
                       passwordFocused();
                     },
@@ -175,167 +108,87 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 Container(
                   padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 10,
-                        offset: Offset(0, 4),
-                      ),
-                    ],
-                  ),
+                  decoration: AppTheme.containerDecoration,
                   child: Column(children: [
                     Form(
                       key: formKey,
                       child: Column(
                         children: [
-                          TextFormField(
-                            focusNode: nameFocusNode,
-                            controller: nameController,
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.person),
+                          CustomFormField(
+                              controller: nameController,
                               labelText: 'Username',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            onChanged: (value) {
-                              check?.change(true);
-                              lookNumber?.change(value.length.toDouble());
-                            },
-                            validator: (String? value) {
-                              if (value == null || value.isEmpty) {
-                                return 'El nombre es obligatorio';
-                              }
-                              final isNameUsed = loginBloc.state.isNameUsed;
-                              if (isNameUsed != null && isNameUsed) {
-                                return 'El nombre ya está en uso.';
-                              }
-                              return null;
-                            },
-                          ),
+                              icon: Icons.person,
+                              validator: (value) => validateEmail(value),
+                              onChanged: (value) {
+                                nameFocus();
+                                riveController?.updateLookNumber(value.length);
+                              },
+                              focusNode: nameFocusNode,
+                              riveController: null),
                           const SizedBox(height: 20),
-                          TextFormField(
-                            focusNode: emailFocusNode,
-                            controller: emailController,
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.email),
+                          CustomFormField(
+                              controller: emailController,
                               labelText: 'Email',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            onChanged: (value) {
-                              check?.change(true);
-                              lookNumber?.change(value.length.toDouble());
-                            },
-                            validator: (String? value) {
-                              if (value == null || value.isEmpty) {
-                                return 'El email es obligatorio';
-                              }
-                              if (!isEmailValid(value)) {
-                                return 'El correo electrónico no es válido';
-                              }
-                              final isEmailUsed = loginBloc.state.isEmailUsed;
-                              if (isEmailUsed != null && isEmailUsed) {
-                                return 'El email ya está en uso.';
-                              }
-                              return null;
-                            },
-                          ),
+                              icon: Icons.email,
+                              validator: (value) =>
+                                  validateName(value, loginBloc),
+                              onChanged: (value) {
+                                emailFocus();
+                                riveController?.updateLookNumber(value.length);
+                              },
+                              focusNode: emailFocusNode,
+                              riveController: null),
                           const SizedBox(height: 20),
-                          TextFormField(
-                            focusNode: passwordFocusNode,
+                          CustomFormField(
                             controller: passwordController,
-                            obscureText: !_passwordVisible,
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.lock),
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  _passwordVisible
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    unHide?.change(!_passwordVisible);
-                                    _passwordVisible = !_passwordVisible;
-                                  });
-                                },
+                            labelText: 'Password',
+                            icon: Icons.lock,
+                            validator: (value) => validatePassword(value),
+                            obscureText: true,
+                            focusNode: passwordFocusNode,
+                            onChanged: (String value) {},
+                            riveController: null,
+                            sufixIconButton: IconButton(
+                              icon: Icon(
+                                _passwordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
                               ),
-                              labelText: 'Password',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _passwordVisible = !_passwordVisible;
+                                  riveController!
+                                      .toggleUnHide(_passwordVisible);
+                                });
+                              },
                             ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'La contraseña es obligatoria';
-                              }
-                              if (value.length < 8) {
-                                return 'La contraseña debe tener al menos 8 caracteres';
-                              }
-                              if (!hasNumber(value)) {
-                                return 'La contraseña debe contener al menos un número';
-                              }
-                              if (!hasUppercaseLetter(value)) {
-                                return 'La contraseña debe contener al menos una letra mayúscula';
-                              }
-                              if (!hasLowercaseLetter(value)) {
-                                return 'La contraseña debe contener al menos una letra minúscula';
-                              }
-                              return null;
-                            },
                           ),
                           const SizedBox(height: 20),
-                          TextFormField(
-                            focusNode: confirmPasswordFocusNode,
+                          CustomFormField(
                             controller: confirmPasswordController,
-                            obscureText: !_passwordConfirmVisible,
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.lock),
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  _passwordConfirmVisible
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    unHide?.change(!_passwordConfirmVisible);
-                                    _passwordConfirmVisible =
-                                        !_passwordConfirmVisible;
-                                  });
-                                },
+                            labelText: 'Confirmation Password',
+                            icon: Icons.lock,
+                            validator: (value) => validateConfirmPassword(
+                                value, passwordController),
+                            obscureText: true,
+                            focusNode: confirmPasswordFocusNode,
+                            onChanged: (String value) {},
+                            riveController: null,
+                            sufixIconButton: IconButton(
+                              icon: Icon(
+                                _passwordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
                               ),
-                              labelText: ' Confirmation Password',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _passwordConfirmVisible =
+                                      !_passwordConfirmVisible;
+                                  riveController!
+                                      .toggleUnHide(_passwordConfirmVisible);
+                                });
+                              },
                             ),
-                            validator: (String? value) {
-                              if (value == null || value.isEmpty) {
-                                return 'La contraseña es obligatoria';
-                              }
-                              if (value.length < 8) {
-                                return 'La contraseña debe tener al menos 8 caracteres';
-                              }
-                              if (!hasNumber(value)) {
-                                return 'La contraseña debe contener al menos un número';
-                              }
-                              if (!hasUppercaseLetter(value)) {
-                                return 'La contraseña debe contener al menos una letra mayúscula';
-                              }
-                              if (!hasLowercaseLetter(value)) {
-                                return 'La contraseña debe contener al menos una letra minúscula';
-                              }
-                              if (value != passwordController.text) {
-                                return 'Las contraseñas no coinciden';
-                              }
-                              return null;
-                            },
                           ),
                           const SizedBox(height: 20),
                           Row(
@@ -346,77 +199,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   onPressed: () {
                                     context.go('/login');
                                   },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.grey[300],
-                                    foregroundColor: Colors.black87,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 16),
-                                  ),
-                                  child: const Text(
-                                    'Cancelar',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500),
-                                  ),
+                                  style: AppTheme.elevatedButtonCancelStyle,
+                                  child: const Text('Cancelar',
+                                      style: AppTheme.buttonStyle),
                                 ),
                               ),
                               const SizedBox(width: 20),
                               Expanded(
-                                child: BlocListener<LoginBloc, LoginState>(
-                                  listener: (context, state) {
-                                    if (state.isEmailUsed != null &&
-                                        state.isNameUsed != null) {
-                                      if (state.isEmailUsed! ||
-                                          state.isNameUsed!) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                                'El email o nombre ya existe en la base de datos'),
-                                          ),
-                                        );
-                                      }
-                                      if (formKey.currentState!.validate()) {
-                                        context
-                                            .read<LoginBloc>()
-                                            .add(RegisterButtonPressed(
-                                              email: emailController.text,
-                                              password: passwordController.text,
-                                              name: nameController.text,
-                                            ));
-                                        context.go('/login');
-                                      }
-                                    }
-                                  },
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      final loginBloc =
-                                          context.read<LoginBloc>();
-                                      loginBloc.add(IsEmailUserUsed(
-                                          email: emailController.text,
-                                          name: nameController.text));
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color(0xFF6A11CB),
-                                      foregroundColor: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 16),
-                                    ),
-                                    child: const Text(
-                                      'Register',
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                  ),
-                                ),
+                                child: RegisterButton(
+                                    formKey: formKey,
+                                    emailController: emailController,
+                                    passwordController: passwordController,
+                                    nameController: nameController),
                               )
                             ],
                           ),

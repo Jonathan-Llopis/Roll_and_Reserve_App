@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:roll_and_reserve/config/theme/theme.dart';
 import 'package:roll_and_reserve/presentation/blocs/auth/login_bloc.dart';
-import 'package:roll_and_reserve/presentation/blocs/auth/login_event.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rive/rive.dart' as rive;
 import 'package:roll_and_reserve/presentation/blocs/auth/login_state.dart';
+import 'package:roll_and_reserve/presentation/functions/rive_animation.dart';
 import 'package:roll_and_reserve/presentation/functions/show_dialogs.dart';
+import 'package:roll_and_reserve/presentation/widgets/buttons/login_with_google.dart';
+import 'package:roll_and_reserve/presentation/widgets/custom_form_field.dart';
+import 'package:roll_and_reserve/presentation/widgets/buttons/login_button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -20,13 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
   FocusNode emailFocusNode = FocusNode();
   FocusNode passwordFocusNode = FocusNode();
 
-  rive.StateMachineController? controller;
-
-  rive.SMIInput<bool>? coverEyes;
-  rive.SMIInput<double>? lookNumber;
-  rive.SMIInput<bool>? unHide;
-  rive.SMIInput<bool>? check;
-  rive.SMIInput<bool>? trigger;
+  RiveAnimationController? riveController;
 
   bool _passwordVisible = false;
 
@@ -45,26 +43,11 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void emailFocus() {
-    if (emailFocusNode.hasFocus) {
-      trigger?.change(true);
-      check?.change(true);
-    } else {
-      trigger?.change(true);
-      check?.change(false);
-    }
+    riveController?.emailFocus(emailFocusNode.hasFocus);
   }
 
   void passwordFocused() {
-    if (passwordFocusNode.hasFocus && _passwordVisible) {
-      trigger?.change(true);
-      coverEyes?.change(true);
-    } else if (passwordFocusNode.hasFocus && !_passwordVisible) {
-      trigger?.change(true);
-      coverEyes?.change(true);
-    } else {
-      coverEyes?.change(false);
-      trigger?.change(true);
-    }
+    riveController?.passwordFocus(passwordFocusNode.hasFocus, _passwordVisible);
   }
 
   @override
@@ -73,16 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
         body: Container(
       width: double.infinity,
       height: double.infinity,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color(0xFF6A11CB),
-            Color(0xFF2575FC),
-          ],
-        ),
-      ),
+      decoration: AppTheme.backgroundDecoration,
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
@@ -103,22 +77,9 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 40),
-                const Text(
-                  'Roll and Reserve',
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
+                const Text('Roll and Reserve', style: AppTheme.titleStyle),
                 const SizedBox(height: 10),
-                const Text(
-                  'Login to continue',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white70,
-                  ),
-                ),
+                const Text('Login to continue', style: AppTheme.subtitleStyle),
                 const SizedBox(height: 30),
                 SizedBox(
                   height: 230,
@@ -128,17 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     fit: BoxFit.cover,
                     stateMachines: const ["State Machine 1"],
                     onInit: (artboard) {
-                      controller = rive.StateMachineController.fromArtboard(
-                        artboard,
-                        "State Machine 1",
-                      );
-                      if (controller == null) return;
-                      artboard.addController(controller!);
-                      coverEyes = controller?.findInput<bool>("Cover Eyes");
-                      lookNumber = controller?.findInput<double>("Number 1");
-                      unHide = controller?.findInput<bool>("Unhide");
-                      check = controller?.findInput<bool>("Check");
-                      trigger = controller?.findInput<bool>("Trigger 1");
+                      riveController = RiveAnimationController(artboard);
                       emailFocus();
                       passwordFocused();
                     },
@@ -146,57 +97,53 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 Container(
                   padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 10,
-                        offset: Offset(0, 4),
-                      ),
-                    ],
-                  ),
+                  decoration: AppTheme.containerDecoration,
                   child: Column(children: [
-                    TextField(
-                      focusNode: emailFocusNode,
-                      controller: emailController,
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.email),
+                    CustomFormField(
+                        controller: emailController,
                         labelText: 'Email',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      onChanged: (value) {
-                        emailFocus();
-                        lookNumber?.change(value.length.toDouble());
-                      },
-                    ),
+                        icon: Icons.email,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter your email';
+                          }
+                          return null;
+                        },
+                        onChanged: (value) {
+                          emailFocus();
+                          riveController?.updateLookNumber(value.length);
+                        },
+                        focusNode: emailFocusNode,
+                        riveController: riveController),
                     const SizedBox(height: 15),
-                    TextField(
-                      focusNode: passwordFocusNode,
+                    CustomFormField(
                       controller: passwordController,
-                      obscureText: !_passwordVisible,
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.lock),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _passwordVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              unHide?.change(!_passwordVisible);
-                              _passwordVisible = !_passwordVisible;
-                            });
-                          },
+                      labelText: 'Password',
+                      icon: Icons.lock,
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter your password';
+                        }
+                        return null;
+                      },
+                      obscureText: true,
+                      onChanged: (value) {
+                        passwordFocused();
+                      },
+                      focusNode: passwordFocusNode,
+                      riveController: riveController,
+                      sufixIconButton: IconButton(
+                        icon: Icon(
+                          _passwordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
                         ),
-                        labelText: 'Password',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
+                        onPressed: () {
+                          setState(() {
+                            _passwordVisible = !_passwordVisible;
+                            riveController!.toggleUnHide(_passwordVisible);
+                          });
+                        },
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -204,74 +151,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Expanded(
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF6A11CB),
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              elevation: 5,
-                            ),
-                            onPressed: () {
-                              final email = emailController.text.trim();
-                              final password = passwordController.text.trim();
-                              context.read<LoginBloc>().add(
-                                    LoginButtonPressed(
-                                        email: email, password: password),
-                                  );
-                              if (state.errorMessage != null) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(state.errorMessage!)),
-                                );
-                              }
-                            },
-                            child: const Text(
-                              'Login',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
+                          child: LoginButton(
+                              emailController: emailController,
+                              passwordController: passwordController),
                         ),
                         const SizedBox(width: 15),
                         Expanded(
-                          child: ElevatedButton.icon(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                side: const BorderSide(color: Colors.black12),
-                              ),
-                              elevation: 3,
-                            ),
-                            onPressed: () {
-                              context.read<LoginBloc>().add(
-                                    LoginGoogle(),
-                                  );
-                              if (state.errorMessage != null) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(state.errorMessage!)),
-                                );
-                              }
-                            },
-                            icon: Image.asset(
-                                'assets/images/google.png',
-                                height: 20,
-                                width: 20,
-                                fit: BoxFit.cover),
-                            label: const Text(
-                              'Google Login',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black87,
-                              ),
-                            ),
-                          ),
+                          child: LoginWithGoogle(),
                         ),
                       ],
                     ),
