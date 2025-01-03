@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:roll_and_reserve/presentation/widgets/dialog_email_sent.dart';
-import 'package:roll_and_reserve/presentation/widgets/dialog_logout.dart';
-import 'package:roll_and_reserve/presentation/widgets/dialog_reset_password.dart';
+import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_email_sent.dart';
+import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_logout.dart';
+import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_reset_password.dart';
 
 
 Future<void> mostrarResetPassword(BuildContext context) {
