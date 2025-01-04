@@ -3,6 +3,7 @@ class UserEntity {
   final String email;
   final int role;
   final String name;
+  final String username;
   final String avatar;
   final double averageRaiting;
 
@@ -12,5 +13,6 @@ class UserEntity {
       required this.averageRaiting,
       required this.id,
       required this.name,
+      required this.username,
       required this.role});
 }

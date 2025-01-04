@@ -47,7 +47,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<RegisterButtonPressed>((event, emit) async {
       emit(LoginState.loading());
       final result = await signUpUserUseCase(RegisterParams(
-          email: event.email, password: event.password, name: event.name));
+          email: event.email, password: event.password, name: event.name, username: event.username));
       result.fold(
         (failure) => emit(LoginState.failure("Fallo al realizar el registro")),
         (_) => emit(LoginState.success(event.email)),

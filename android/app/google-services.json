@@ -1,7 +1,7 @@
 {
   "project_info": {
     "project_number": "285149567188",
-    "project_id": "rollAndReserve",
+    "project_id": "roll-and-reserve",
     "storage_bucket": "roll-and-reserve.firebasestorage.app"
   },
   "client": [

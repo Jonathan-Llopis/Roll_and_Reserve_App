@@ -4,9 +4,9 @@ import 'dart:convert';
 import 'package:roll_and_reserve/data/models/user_model.dart';
 
 abstract class UserDatasource {
-  Future<UserModel> getValidUser(String email, String token);
-  Future<UserModel> getUser(String email, String token);
+  Future<UserModel> getValidUser(String id, String token);
   Future<String> getValidToken(String email);
+  Future<bool> createUser(UserModel user);
 }
 
 class UserDatasourceImpl implements UserDatasource {
@@ -15,10 +15,9 @@ class UserDatasourceImpl implements UserDatasource {
   List<UserModel> usuarios = [];
 
   @override
-  Future<UserModel> getValidUser(
-      String email, String token) async {
+  Future<UserModel> getValidUser(String id, String token) async {
     final response = await client.get(
-      Uri.parse('http://localhost:8000/users'),
+      Uri.parse('http://localhost:8000/users/$id'),
       headers: {
         'authorization': 'Bearer $token',
       },
@@ -29,16 +28,15 @@ class UserDatasourceImpl implements UserDatasource {
 
       usuarios = userJson.map((json) => UserModel.fromJson(json)).toList();
 
-      UserModel usuario =
-          usuarios.firstWhere((usuario) => usuario.email == email);
-         final user = UserModel(
-        id: usuario.id,
-        email: email,
-        role: usuario.role,
-        name: usuario.name,
-        avatar: usuario.avatar,
-        averageRaiting: usuario.averageRaiting
-      );
+      UserModel usuario = usuarios.firstWhere((usuario) => usuario.id == id);
+      final user = UserModel(
+          id: id,
+          email: usuario.email,
+          role: usuario.role,
+          name: usuario.name,
+          username: usuario.username,
+          avatar: usuario.avatar,
+          averageRaiting: usuario.averageRaiting);
       return user;
     } else {
       throw Exception('Error al cargar usuario');
@@ -67,32 +65,18 @@ class UserDatasourceImpl implements UserDatasource {
   }
 
   @override
-  Future<UserModel> getUser(String email, String token) async {
-    final response = await client.get(
+  Future<bool> createUser(UserModel user) async {
+    final response = await client.post(
       Uri.parse('http://localhost:8000/users'),
       headers: {
-        'authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
       },
+      body: json.encode(user.toJson()),
     );
-
-    if (response.statusCode == 200) {
-      final List<dynamic> userJson = json.decode(response.body);
-
-      usuarios = userJson.map((json) => UserModel.fromJson(json)).toList();
-
-      UserModel usuario =
-          usuarios.firstWhere((usuario) => usuario.email == email);
-      final user = UserModel(
-        id: usuario.id,
-        email: email,
-        role: usuario.role,
-        name: usuario.name,
-        avatar: usuario.avatar,
-        averageRaiting: usuario.averageRaiting
-      );
-      return user;
+    if (response.statusCode == 201) {
+      return true;
     } else {
-      throw Exception('Error al cargar usuarios');
+      throw Exception('Error al crear el inventario: ${response.body}');
     }
   }
 }

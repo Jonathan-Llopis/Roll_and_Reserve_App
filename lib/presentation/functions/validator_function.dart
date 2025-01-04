@@ -19,16 +19,23 @@ bool isEmailValid(String value) {
   ).hasMatch(value);
 }
 
-String? validateEmail(String? value) {
+String? validateUserName(String? value,  LoginBloc loginBloc) {
   if (value == null || value.isEmpty) {
-    return 'Email is required';
-  } else if (!isEmailValid(value)) {
-    return 'Invalid email';
+    return 'El nombre es obligatorio';
+  }
+  final isNameUsed = loginBloc.state.isNameUsed;
+  if (isNameUsed != null && isNameUsed) {
+    return 'El nombre ya está en uso.';
   }
   return null;
 }
-
-String? validateName(String? value, LoginBloc loginBloc) {
+String? validateName(String? value) {
+  if (value == null || value.isEmpty) {
+    return 'El nombre es obligatorio';
+  }
+  return null;
+}
+String? validateEmail(String? value, LoginBloc loginBloc) {
   if (value == null || value.isEmpty) {
     return 'El email es obligatorio';
   }
@@ -61,7 +68,8 @@ String? validatePassword(String? value) {
   return null;
 }
 
-String? validateConfirmPassword(String? value, TextEditingController passwordController) {
+String? validateConfirmPassword(
+    String? value, TextEditingController passwordController) {
   if (value == null || value.isEmpty) {
     return 'La contraseña es obligatoria';
   }
