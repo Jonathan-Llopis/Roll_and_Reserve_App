@@ -6,6 +6,7 @@ class UserModel {
   final String email;
   final int role;
   final String name;
+  final String username;
   final String avatar;
   final double averageRaiting;
 
@@ -14,6 +15,7 @@ class UserModel {
       required this.email,
       required this.role,
       required this.name,
+      required this.username,
       required this.avatar,
       required this.averageRaiting});
 
@@ -22,6 +24,7 @@ class UserModel {
         id: userCredentials.user?.uid ?? "NO_ID",
         email: userCredentials.user?.email ?? "NO_EMAIL",
         name: userCredentials.user?.displayName ?? "NO_NAME",
+        username: userCredentials.user?.displayName ?? "NO_NAME",
         role: 2,
         avatar: '',
         averageRaiting: 0);
@@ -33,16 +36,17 @@ class UserModel {
         email: json['email'],
         role: json['role'],
         name: json['name'],
+        username: json['username'],
         avatar: json['avatar'],
         averageRaiting: json['average_raiting']);
   }
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'email': email,
       'role': role,
       'name': name,
-      'avatar': avatar,
-      'average_raiting': averageRaiting
+      'username': username,
     };
   }
 
@@ -52,6 +56,7 @@ class UserModel {
         email: email,
         role: role,
         name: name,
+        username: username,
         avatar: avatar,
         averageRaiting: averageRaiting);
   }

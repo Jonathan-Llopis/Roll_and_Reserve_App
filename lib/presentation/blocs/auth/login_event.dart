@@ -19,8 +19,10 @@ class RegisterButtonPressed extends LoginEvent {
   final String email;
   final String password;
   final String name;
+  final String username;
 
-  RegisterButtonPressed({required this.email, required this.password, required this.name});
+  RegisterButtonPressed(
+      {required this.email, required this.password, required this.name, required this.username});
 
   @override
   List<Object?> get props => [email, password];
@@ -37,14 +39,13 @@ class ResetPassword extends LoginEvent {
 
 class IsEmailUserUsed extends LoginEvent {
   final String email;
-    final String name;
+  final String name;
 
   IsEmailUserUsed({required this.email, required this.name});
 
   @override
   List<Object?> get props => [email, name];
 }
-
 
 class LogoutButtonPressed extends LoginEvent {}
 
