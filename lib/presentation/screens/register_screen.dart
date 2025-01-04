@@ -22,6 +22,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController confirmPasswordController =
       TextEditingController();
   final TextEditingController nameController = TextEditingController();
+    final TextEditingController userNameController = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
 
@@ -29,6 +30,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   FocusNode nameFocusNode = FocusNode();
   FocusNode passwordFocusNode = FocusNode();
   FocusNode confirmPasswordFocusNode = FocusNode();
+  FocusNode userNameFocusNode = FocusNode();
 
   RiveAnimationController? riveController;
 
@@ -41,6 +43,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     passwordFocusNode.addListener(passwordFocused);
     nameFocusNode.addListener(emailFocus);
     confirmPasswordFocusNode.addListener(confirmationPasswordFocused);
+    userNameFocusNode.addListener(userNameFocus);
     super.initState();
   }
 
@@ -50,6 +53,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     passwordFocusNode.removeListener(passwordFocused);
     nameFocusNode.removeListener(emailFocus);
     confirmPasswordFocusNode.removeListener(confirmationPasswordFocused);
+    userNameFocusNode.removeListener(userNameFocus);
     super.dispose();
   }
 
@@ -58,6 +62,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void nameFocus() {
+    riveController?.nameFocus(nameFocusNode.hasFocus);
+  }
+   void userNameFocus() {
     riveController?.nameFocus(nameFocusNode.hasFocus);
   }
 
@@ -115,10 +122,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       child: Column(
                         children: [
                           CustomFormField(
+                              controller: userNameController,
+                              labelText: 'Nombre de Usuario',
+                              icon: Icons.badge_rounded,
+                              validator: (value) => validateUserName(value, loginBloc),
+                              onChanged: (value) {
+                                nameFocus();
+                                riveController?.updateLookNumber(value.length);
+                              },
+                              focusNode: userNameFocusNode,
+                              riveController: null),
+                               const SizedBox(height: 20),
+                              CustomFormField(
                               controller: nameController,
-                              labelText: 'Username',
+                              labelText: 'Nombre',
                               icon: Icons.person,
-                              validator: (value) => validateEmail(value),
+                              validator: (value) => validateName(value),
                               onChanged: (value) {
                                 nameFocus();
                                 riveController?.updateLookNumber(value.length);
@@ -131,7 +150,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               labelText: 'Email',
                               icon: Icons.email,
                               validator: (value) =>
-                                  validateName(value, loginBloc),
+                                  validateEmail(value, loginBloc),
                               onChanged: (value) {
                                 emailFocus();
                                 riveController?.updateLookNumber(value.length);
@@ -210,7 +229,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     formKey: formKey,
                                     emailController: emailController,
                                     passwordController: passwordController,
-                                    nameController: nameController),
+                                    nameController: nameController,
+                                    userNameController: userNameController),
                               )
                             ],
                           ),

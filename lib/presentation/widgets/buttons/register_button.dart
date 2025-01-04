@@ -14,12 +14,14 @@ class RegisterButton extends StatelessWidget {
     required this.emailController,
     required this.passwordController,
     required this.nameController,
+    required this.userNameController
   });
 
   final GlobalKey<FormState> formKey;
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final TextEditingController nameController;
+  final TextEditingController userNameController;
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +46,7 @@ class RegisterButton extends StatelessWidget {
                   email: emailController.text,
                   password: passwordController.text,
                   name: nameController.text,
+                  username: userNameController.text
                 ));
             context.go('/login');
           }

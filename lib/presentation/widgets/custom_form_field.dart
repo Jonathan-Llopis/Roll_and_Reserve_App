@@ -30,7 +30,7 @@ class CustomFormField extends StatefulWidget {
 }
 
 class _CustomFormFieldState extends State<CustomFormField> {
-  bool _passwordVisible = true;
+  final bool _passwordVisible = true;
 
   @override
   Widget build(BuildContext context) {

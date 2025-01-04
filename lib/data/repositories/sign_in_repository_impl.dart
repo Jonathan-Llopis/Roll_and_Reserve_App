@@ -26,7 +26,7 @@ class LoginRepositoryImpl implements LoginRepository {
       await sharedPreferences.setString('id', user.id);
       await sharedPreferences.setString('token', tokenGenerado);
       UserModel usuerDataBase =
-          await userDatasource.getUser(user.email, tokenGenerado);
+          await userDatasource.getValidUser(user.id, tokenGenerado);
       return Right(usuerDataBase.toUserEntity());
     } catch (e) {
       return Left(AuthFailure());
@@ -44,7 +44,7 @@ class LoginRepositoryImpl implements LoginRepository {
       await sharedPreferences.setString('id', user.id);
       final token = sharedPreferences.getString('token');
       UserModel usuerDataBase =
-          await userDatasource.getUser(user.email, token!);
+          await userDatasource.getValidUser(user.id, token!);
       return Right(usuerDataBase.toUserEntity());
     } catch (e) {
       return Left(AuthFailure());
@@ -53,16 +53,30 @@ class LoginRepositoryImpl implements LoginRepository {
 
   @override
   Future<Either<Failure, UserEntity>> signUp(
-      String email, String password, String name) async {
+      String email, String password, String name, String username) async {
     try {
+      
       UserModel user = await dataSource.signUp(email, password);
-      firebaseUserDataSource.registerUser(user.email, name, user.id);
+      firebaseUserDataSource.registerUser(
+        user.email,
+        name,
+        user.id,
+      );
       await sharedPreferences.setString('email', user.email);
       await sharedPreferences.setString('id', user.id);
-      final token = sharedPreferences.getString('token');
-      UserModel usuerDataBase =
-          await userDatasource.getUser(user.email, token!);
-      return Right(usuerDataBase.toUserEntity());
+      
+      UserModel usuarioRegistro = UserModel(
+          email: email,
+          id: user.id,
+          name: name,
+          username: username,
+          role: 2,
+          avatar: '0',
+          averageRaiting: 0);
+      await userDatasource.createUser(usuarioRegistro);
+      String tokenGenerado = await userDatasource.getValidToken(email);
+      await sharedPreferences.setString('token', tokenGenerado);
+      return Right(usuarioRegistro.toUserEntity());
     } catch (e) {
       return Left(AuthFailure());
     }
@@ -75,10 +89,10 @@ class LoginRepositoryImpl implements LoginRepository {
       if (id == null) {
         return Left(AuthFailure());
       } else {
-          final token = sharedPreferences.getString('token');
-          final email = sharedPreferences.getString('email');
+        final token = sharedPreferences.getString('token');
+        final id = sharedPreferences.getString('id');
         UserModel usuerDataBase =
-            await userDatasource.getUser(email!, token!);
+            await userDatasource.getValidUser(id!, token!);
         return Right(usuerDataBase.toUserEntity());
       }
     } catch (e) {
