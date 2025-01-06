@@ -163,7 +163,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             labelText: 'Password',
                             icon: Icons.lock,
                             validator: (value) => validatePassword(value),
-                            obscureText: true,
+                            obscureText: !_passwordVisible,
                             focusNode: passwordFocusNode,
                             onChanged: (String value) {},
                             riveController: null,
@@ -189,13 +189,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             icon: Icons.lock,
                             validator: (value) => validateConfirmPassword(
                                 value, passwordController),
-                            obscureText: true,
+                            obscureText: !_passwordConfirmVisible,
                             focusNode: confirmPasswordFocusNode,
                             onChanged: (String value) {},
                             riveController: null,
                             sufixIconButton: IconButton(
                               icon: Icon(
-                                _passwordVisible
+                                _passwordConfirmVisible
                                     ? Icons.visibility
                                     : Icons.visibility_off,
                               ),

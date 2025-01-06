@@ -6,6 +6,7 @@ class LoginState {
   final String? errorMessage;
   final bool? isEmailUsed;
   final bool? isNameUsed;
+  final bool? validatePassword;
   final String? id;
   final UserEntity? user;
 
@@ -16,17 +17,20 @@ class LoginState {
       this.isEmailUsed,
       this.isNameUsed,
       this.id,
-      this.user});
+      this.user,
+      this.validatePassword
+      });
 
-  LoginState copyWith(
-      {bool? isLoading,
-      String? email,
-      String? errorMessage,
-      bool? isEmailUsed,
-      bool? isNameUsed,
-      String? id,
-      UserEntity? user,
-      }) {
+  LoginState copyWith({
+    bool? isLoading,
+    String? email,
+    String? errorMessage,
+    bool? isEmailUsed,
+    bool? isNameUsed,
+    String? id,
+    UserEntity? user,
+    bool? validatePassword
+  }) {
     return LoginState(
         isLoading: isLoading ?? this.isLoading,
         email: email ?? this.email,
@@ -34,7 +38,8 @@ class LoginState {
         isEmailUsed: isEmailUsed ?? this.isEmailUsed,
         isNameUsed: isNameUsed ?? this.isNameUsed,
         id: id ?? this.id,
-        user: user ?? this.user
+        user: user ?? this.user,
+        validatePassword: validatePassword ?? this.validatePassword
         );
   }
 
@@ -48,4 +53,5 @@ class LoginState {
 
   factory LoginState.failure(String errorMessage) =>
       LoginState(errorMessage: errorMessage);
+
 }

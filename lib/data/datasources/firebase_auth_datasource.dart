@@ -14,9 +14,9 @@ class FirebaseAuthDataSource {
     return UserModel.fromUserCredential(userCredentials);
   }
 
-   Future<UserModel> signUp(String email, String password) async {
-    UserCredential userCredentials =
-        await auth.createUserWithEmailAndPassword(email: email, password: password);
+  Future<UserModel> signUp(String email, String password) async {
+    UserCredential userCredentials = await auth.createUserWithEmailAndPassword(
+        email: email, password: password);
     return UserModel.fromUserCredential(userCredentials);
   }
 
@@ -58,4 +58,18 @@ class FirebaseAuthDataSource {
     await auth.sendPasswordResetEmail(email: email);
   }
 
+Future<bool> validatePassword(String password, String email) async {
+  try {
+    await auth.signInWithEmailAndPassword(email: email, password: password);
+    return true;
+  } on FirebaseAuthException catch (e) {
+    return false;
+  } catch (e) {
+    return false;
+  }
+}
+  Future<void> updatePassword(String password) async {
+    var firebaseUser = auth.currentUser;
+    firebaseUser?.updatePassword(password);
+  }
 }

@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/auth/login_bloc.dart';
@@ -9,70 +12,77 @@ class MenuLateral extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userBloc = BlocProvider.of<LoginBloc>(context);
+
     return Drawer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+          // Encabezado del Drawer
+          UserAccountsDrawerHeader(
+            decoration: BoxDecoration(
+              color: Colors.lightBlue.shade700,
+            ),
+            accountName: Text(
+              userBloc.state.user?.username ?? 'Usuario',
+              style: TextStyle(fontSize: 20),
+            ),
+            accountEmail: Text(
+              userBloc.state.user?.email ?? 'correo@example.com',
+            ),
+            currentAccountPicture: CircleAvatar(
+              backgroundImage: kIsWeb
+                  ? MemoryImage(userBloc.state.user!.avatar!)
+                  : FileImage(File(userBloc.state.user!.avatar.path)),
+            ),
+          ),
+
+          // Opciones del menú
+          Expanded(
+            child: ListView(
               children: [
-                Material(
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                      padding: EdgeInsets.only(
-                          top: MediaQuery.of(context).padding.top, bottom: 24),
-                      child: Column(
-                        children: [
-                          const CircleAvatar(
-                            radius: 52,
-                            backgroundImage: NetworkImage(
-                                "https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o="),
-                          ),
-                          const SizedBox(
-                            height: 12,
-                          ),
-                          Text(
-                            userBloc.state.user!.name,
-                            style: const TextStyle(
-                                fontSize: 28, color: Colors.white),
-                          ),
-                          Text(
-                            userBloc.state.user!.email,
-                            style: const TextStyle(
-                                fontSize: 14, color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                ListTile(
+                  leading: Icon(Icons.home, color: Colors.lightBlue),
+                  title: Text('Inicio'),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.settings, color: Colors.lightBlue),
+                  title: Text('Configuración'),
+                  onTap: () {
+                    mostrarUserEdit(context);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.lock, color: Colors.lightBlue),
+                  title: Text('Cambiar Contraseña'),
+                  onTap: () {
+                    updatePassword(context);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.help, color: Colors.lightBlue),
+                  title: Text('Ayuda'),
+                  onTap: () {},
                 ),
               ],
             ),
           ),
+
+          // Botón de Cerrar Sesión
+          Divider(),
           ListTile(
-            contentPadding: const EdgeInsets.only(bottom: 16),
-            title: const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Cerrar Sesión',
-                  style: TextStyle(color: Colors.white),
-                ),
-                Icon(
-                  Icons.exit_to_app,
-                  color: Colors.white,
-                ),
-              ],
+            leading: Icon(Icons.exit_to_app, color: Colors.red),
+            title: Text(
+              'Cerrar Sesión',
+              style: TextStyle(color: Colors.red),
             ),
             onTap: () {
               mostrarLogOut(context);
             },
           ),
+          SizedBox(height: 16),
         ],
       ),
     );

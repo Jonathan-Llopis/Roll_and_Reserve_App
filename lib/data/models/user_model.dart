@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:roll_and_reserve/domain/entities/user_entity.dart';
 
@@ -7,7 +9,8 @@ class UserModel {
   final int role;
   final String name;
   final String username;
-  final String avatar;
+  final String avatarId;
+  final dynamic avatar;
   final double averageRaiting;
 
   UserModel(
@@ -17,6 +20,7 @@ class UserModel {
       required this.name,
       required this.username,
       required this.avatar,
+      required this.avatarId,
       required this.averageRaiting});
 
   static UserModel fromUserCredential(UserCredential userCredentials) {
@@ -26,23 +30,25 @@ class UserModel {
         name: userCredentials.user?.displayName ?? "NO_NAME",
         username: userCredentials.user?.displayName ?? "NO_NAME",
         role: 2,
-        avatar: '',
+        avatarId: "",
+        avatar: File(""),
         averageRaiting: 0);
   }
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-        id: json['id_user'],
-        email: json['email'],
-        role: json['role'],
-        name: json['name'],
-        username: json['username'],
-        avatar: json['avatar'],
-        averageRaiting: json['average_raiting']);
+        id: json['id_google'] ?? "",
+        email: json['email'] ?? "",
+        role: json['role'] ?? "",
+        name: json['name'] ?? "",
+        username: json['username'] ?? "",
+        avatarId: json['avatar'] ?? "",
+        avatar:File(""),
+        averageRaiting: json['average_raiting'] ?? 0);
   }
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      'id_google': id,
       'email': email,
       'role': role,
       'name': name,
@@ -50,14 +56,14 @@ class UserModel {
     };
   }
 
-  UserEntity toUserEntity() {
+  UserEntity toUserEntity(dynamic avatarFile) {
     return UserEntity(
         id: id,
         email: email,
         role: role,
         name: name,
         username: username,
-        avatar: avatar,
+        avatar: avatarFile,
         averageRaiting: averageRaiting);
   }
 }

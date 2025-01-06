@@ -19,7 +19,7 @@ bool isEmailValid(String value) {
   ).hasMatch(value);
 }
 
-String? validateUserName(String? value,  LoginBloc loginBloc) {
+String? validateUserName(String? value, LoginBloc loginBloc) {
   if (value == null || value.isEmpty) {
     return 'El nombre es obligatorio';
   }
@@ -29,12 +29,14 @@ String? validateUserName(String? value,  LoginBloc loginBloc) {
   }
   return null;
 }
+
 String? validateName(String? value) {
   if (value == null || value.isEmpty) {
     return 'El nombre es obligatorio';
   }
   return null;
 }
+
 String? validateEmail(String? value, LoginBloc loginBloc) {
   if (value == null || value.isEmpty) {
     return 'El email es obligatorio';
@@ -87,6 +89,22 @@ String? validateConfirmPassword(
   }
   if (value != passwordController.text) {
     return 'Las contraseñas no coinciden';
+  }
+  return null;
+}
+
+String? validateCurrentPassword(String? value, LoginBloc loginBloc) {
+  if (value == null || value.isEmpty) {
+    return 'La contraseña es obligatoria';
+  } else {
+    final validatePassword = loginBloc.state.validatePassword;
+    if (validatePassword != null) {
+      if (!validatePassword || loginBloc.state.errorMessage != null) {
+        return 'La contraseña no es correcta';
+      }
+    } else {
+      return 'Error al validar la contraseña';
+    }
   }
   return null;
 }
