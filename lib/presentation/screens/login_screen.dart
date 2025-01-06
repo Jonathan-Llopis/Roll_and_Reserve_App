@@ -126,7 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         }
                         return null;
                       },
-                      obscureText: true,
+                      obscureText: !_passwordVisible,
                       onChanged: (value) {
                         passwordFocused();
                       },
@@ -181,7 +181,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 5),
                 TextButton(
                   onPressed: () {
-                    context.push('/login/singIn');
+                    context.push('/login/signIn');
                   },
                   child: const Text(
                     'Don\'t have an account? Register here',

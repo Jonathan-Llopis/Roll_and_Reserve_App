@@ -8,6 +8,9 @@ import 'package:roll_and_reserve/domain/usecases/sign_in_user_google_usecase.dar
 import 'package:roll_and_reserve/domain/usecases/sign_in_user_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/sign_out_user_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/sign_up_user_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/update_pass_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/update_user_info.dart';
+import 'package:roll_and_reserve/domain/usecases/validate_pass_usecase.dart';
 import 'login_event.dart';
 import 'login_state.dart';
 
@@ -20,6 +23,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final ResetPasswordUseCase restorPasswordUseCase;
   final IsEmailUsedUsecase isEmailUsedUseCase;
   final IsNameUsedUsecase isNameUsedUseCase;
+  final UpdateUserInfoUseCase updateUserInfoUseCase;
+  final UpdatePasswordUsecase updatePasswordUsecase;
+  final ValidatePasswordUsecase validatePasswordUsecase;
 
   LoginBloc(
       this.signInUserUseCase,
@@ -29,9 +35,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       this.signUpUserUseCase,
       this.restorPasswordUseCase,
       this.isEmailUsedUseCase,
-      this.isNameUsedUseCase)
+      this.isNameUsedUseCase,
+      this.updateUserInfoUseCase,
+      this.updatePasswordUsecase,
+      this.validatePasswordUsecase)
       : super(LoginState.initial()) {
-        
     on<LoginButtonPressed>((event, emit) async {
       emit(LoginState.loading());
       final result = await signInUserUseCase(LoginParams(
@@ -47,7 +55,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<RegisterButtonPressed>((event, emit) async {
       emit(LoginState.loading());
       final result = await signUpUserUseCase(RegisterParams(
-          email: event.email, password: event.password, name: event.name, username: event.username));
+          email: event.email,
+          password: event.password,
+          name: event.name,
+          username: event.username));
       result.fold(
         (failure) => emit(LoginState.failure("Fallo al realizar el registro")),
         (_) => emit(LoginState.success(event.email)),
@@ -95,6 +106,38 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         isLoading: false,
         isEmailUsed: emailResult.fold((_) => null, (isUsed) => isUsed),
         isNameUsed: nameResult.fold((_) => null, (isUsed) => isUsed),
+      ));
+    });
+
+    on<UpdateUserInfoEvent>((event, emit) async {
+      emit(LoginState.loading());
+      final result = await updateUserInfoUseCase(event.user);
+      result.fold(
+        (failure) =>
+            emit(LoginState.failure("Fallo al realizar la actualización")),
+        (_) {
+          emit(LoginState.success(''));
+          add(CheckAuthentication());
+        },
+      );
+    });
+
+    on<UpdatePasswordEvent>((event, emit) async {
+      emit(LoginState.loading());
+      final result = await updatePasswordUsecase(event.password);
+      result.fold(
+        (failure) =>
+            emit(LoginState.failure("Fallo al realizar la recuperacion")),
+        (_) => emit(LoginState.success('')),
+      );
+    });
+
+    on<ValidatePasswordEvent>((event, emit) async {
+      emit(LoginState(isLoading: true));
+      final result = await validatePasswordUsecase(event.password);
+      emit(LoginState(
+        isLoading: false,
+        validatePassword: result.fold((_) => null, (isValid) => isValid),
       ));
     });
   }
