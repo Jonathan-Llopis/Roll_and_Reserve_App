@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:roll_and_reserve/core/failure.dart';
 import 'package:roll_and_reserve/data/datasources/firebase_auth_datasource.dart';
@@ -27,7 +29,11 @@ class LoginRepositoryImpl implements LoginRepository {
       await sharedPreferences.setString('token', tokenGenerado);
       UserModel usuerDataBase =
           await userDatasource.getValidUser(user.id, tokenGenerado);
-      return Right(usuerDataBase.toUserEntity());
+
+      dynamic avatarFile =
+          await userDatasource.getUserAvatar(usuerDataBase.avatarId);
+
+      return Right(usuerDataBase.toUserEntity(avatarFile));
     } catch (e) {
       return Left(AuthFailure());
     }
@@ -45,7 +51,9 @@ class LoginRepositoryImpl implements LoginRepository {
       final token = sharedPreferences.getString('token');
       UserModel usuerDataBase =
           await userDatasource.getValidUser(user.id, token!);
-      return Right(usuerDataBase.toUserEntity());
+      dynamic avatarFile =
+          await userDatasource.getUserAvatar(usuerDataBase.avatarId);
+      return Right(usuerDataBase.toUserEntity(avatarFile));
     } catch (e) {
       return Left(AuthFailure());
     }
@@ -55,7 +63,6 @@ class LoginRepositoryImpl implements LoginRepository {
   Future<Either<Failure, UserEntity>> signUp(
       String email, String password, String name, String username) async {
     try {
-      
       UserModel user = await dataSource.signUp(email, password);
       firebaseUserDataSource.registerUser(
         user.email,
@@ -64,19 +71,21 @@ class LoginRepositoryImpl implements LoginRepository {
       );
       await sharedPreferences.setString('email', user.email);
       await sharedPreferences.setString('id', user.id);
-      
+
       UserModel usuarioRegistro = UserModel(
-          email: email,
-          id: user.id,
-          name: name,
-          username: username,
-          role: 2,
-          avatar: '0',
-          averageRaiting: 0);
+        email: email,
+        id: user.id,
+        name: name,
+        username: username,
+        role: 2,
+        avatarId: user.avatarId,
+        avatar: File(""),
+        averageRaiting: 0,
+      );
       await userDatasource.createUser(usuarioRegistro);
       String tokenGenerado = await userDatasource.getValidToken(email);
       await sharedPreferences.setString('token', tokenGenerado);
-      return Right(usuarioRegistro.toUserEntity());
+      return Right(usuarioRegistro.toUserEntity(File('')));
     } catch (e) {
       return Left(AuthFailure());
     }
@@ -93,7 +102,9 @@ class LoginRepositoryImpl implements LoginRepository {
         final id = sharedPreferences.getString('id');
         UserModel usuerDataBase =
             await userDatasource.getValidUser(id!, token!);
-        return Right(usuerDataBase.toUserEntity());
+        dynamic avatarFile =
+            await userDatasource.getUserAvatar(usuerDataBase.avatarId);
+        return Right(usuerDataBase.toUserEntity(avatarFile));
       }
     } catch (e) {
       return Left(AuthFailure());
@@ -138,6 +149,40 @@ class LoginRepositoryImpl implements LoginRepository {
     try {
       bool isUsed = await firebaseUserDataSource.isNameUsed(name);
       return Right(isUsed);
+    } catch (e) {
+      return Left(AuthFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> updateUserInfo(UserEntity user) async {
+    try {
+      String avatarId =
+          await userDatasource.updateAvatar(user.toUserModel(null));
+      UserModel userModel = user.toUserModel(avatarId);
+      await userDatasource.updateUserInfo(userModel);
+      return Right(true);
+    } catch (e) {
+      return Left(AuthFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> updatePassword(String password) async {
+    try {
+      await dataSource.updatePassword(password);
+      return Right(true);
+    } catch (e) {
+      return Left(AuthFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> validatePassword(String password) async {
+    try {
+      final email = sharedPreferences.getString('email');
+      bool isValid = await dataSource.validatePassword(password, email!);
+      return Right(isValid);
     } catch (e) {
       return Left(AuthFailure());
     }

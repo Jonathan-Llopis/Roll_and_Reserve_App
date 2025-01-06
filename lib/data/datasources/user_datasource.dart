@@ -1,12 +1,17 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
-
 import 'package:roll_and_reserve/data/models/user_model.dart';
 
 abstract class UserDatasource {
   Future<UserModel> getValidUser(String id, String token);
   Future<String> getValidToken(String email);
   Future<bool> createUser(UserModel user);
+  Future<dynamic> getUserAvatar(String fileId);
+  Future<bool> updateUserInfo(UserModel user);
+  Future<String> updateAvatar(UserModel user);
 }
 
 class UserDatasourceImpl implements UserDatasource {
@@ -24,20 +29,11 @@ class UserDatasourceImpl implements UserDatasource {
     );
 
     if (response.statusCode == 200) {
-      final List<dynamic> userJson = json.decode(response.body);
+      final dynamic userJson = await json.decode(response.body);
 
-      usuarios = userJson.map((json) => UserModel.fromJson(json)).toList();
+      UserModel userModel = UserModel.fromJson(userJson);
 
-      UserModel usuario = usuarios.firstWhere((usuario) => usuario.id == id);
-      final user = UserModel(
-          id: id,
-          email: usuario.email,
-          role: usuario.role,
-          name: usuario.name,
-          username: usuario.username,
-          avatar: usuario.avatar,
-          averageRaiting: usuario.averageRaiting);
-      return user;
+      return userModel;
     } else {
       throw Exception('Error al cargar usuario');
     }
@@ -76,7 +72,70 @@ class UserDatasourceImpl implements UserDatasource {
     if (response.statusCode == 201) {
       return true;
     } else {
-      throw Exception('Error al crear el inventario: ${response.body}');
+      throw Exception('Error al crear el usuario: ${response.body}');
+    }
+  }
+
+  @override
+  Future<dynamic> getUserAvatar(String fileId) async {
+    if (fileId == "") {
+      fileId = "677abb3f330031f5ffffdb43";
+    }
+    final response = await http.get(
+      Uri.parse('http://localhost:8000/files/download/$fileId'),
+    );
+    if (response.statusCode == 200) {
+      Uint8List bytes = response.bodyBytes;
+      if (kIsWeb) {
+        return bytes;
+      } else {
+        final directory = await getTemporaryDirectory();
+        final filePath = '${directory.path}/$fileId.png';
+        final file = File(filePath);
+        await file.writeAsBytes(bytes);
+        return file;
+      }
+    } else {
+      throw Exception('Error al cargar la imagen');
+    }
+  }
+
+  @override
+  Future<bool> updateUserInfo(UserModel user) async {
+    final response = await client.put(
+      Uri.parse('http://localhost:8000/users/${user.id}'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(user.toJson()),
+    );
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Error al actualizar el usuario: ${response.body}');
+    }
+  }
+
+  @override
+  Future<String> updateAvatar(UserModel user) async {
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.parse('http://localhost:8000/files/avatar/${user.id}'),
+    );
+    request.files.add(
+      http.MultipartFile.fromBytes(
+        'file',
+        user.avatar,
+        filename: 'avatar',
+      ),
+    );
+    var response = await request.send();
+    if (response.statusCode == 201) {
+      var responseBody = await response.stream.bytesToString();
+      var id = jsonDecode(responseBody)[0]['id'];
+      return id;
+    } else {
+      throw Exception('Error al actualizar el usuario: ${response.statusCode}');
     }
   }
 }
