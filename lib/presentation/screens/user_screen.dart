@@ -24,7 +24,7 @@ class UserScreen extends StatelessWidget {
                 color: Colors.white,
               ),
               child: const Text(
-                "Aquestes són les teues incidències assignades:",
+                "Tiendas en tu zona",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 18, color: Colors.blue),
               ),
