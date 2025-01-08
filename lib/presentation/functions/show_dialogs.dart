@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:roll_and_reserve/domain/entities/table_entity.dart';
+import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_createUpdate_table.dart';
+import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_delete_shop.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_email_sent.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_logout.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_reset_password.dart';
@@ -45,6 +48,24 @@ Future<void> updatePassword(BuildContext context) {
         return const DialogoUpdatePassword();
       });
 }
+
+Future<void> deleteShop(BuildContext context, int idShop) {
+  return showDialog(
+      context: context,
+      builder: (context) {
+        return DialogDeleteShop(idShop: idShop,);
+      });
+}
+
+Future<void> showUpdateCreateTableDialog(BuildContext context, int idShop, TableEntity? table) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return DialogCreateupdateTable(idShop: idShop,table: table,);
+      },
+    );
+  }
+
 
 
 

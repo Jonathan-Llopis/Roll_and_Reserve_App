@@ -31,7 +31,7 @@ class LoginRepositoryImpl implements LoginRepository {
           await userDatasource.getValidUser(user.id, tokenGenerado);
 
       dynamic avatarFile =
-          await userDatasource.getUserAvatar(usuerDataBase.avatarId);
+          await userDatasource.getUserAvatar(usuerDataBase.avatarId, tokenGenerado);
 
       return Right(usuerDataBase.toUserEntity(avatarFile));
     } catch (e) {
@@ -52,7 +52,7 @@ class LoginRepositoryImpl implements LoginRepository {
       UserModel usuerDataBase =
           await userDatasource.getValidUser(user.id, token!);
       dynamic avatarFile =
-          await userDatasource.getUserAvatar(usuerDataBase.avatarId);
+          await userDatasource.getUserAvatar(usuerDataBase.avatarId, token);
       return Right(usuerDataBase.toUserEntity(avatarFile));
     } catch (e) {
       return Left(AuthFailure());
@@ -103,7 +103,7 @@ class LoginRepositoryImpl implements LoginRepository {
         UserModel usuerDataBase =
             await userDatasource.getValidUser(id!, token!);
         dynamic avatarFile =
-            await userDatasource.getUserAvatar(usuerDataBase.avatarId);
+            await userDatasource.getUserAvatar(usuerDataBase.avatarId, token);
         return Right(usuerDataBase.toUserEntity(avatarFile));
       }
     } catch (e) {
@@ -157,10 +157,11 @@ class LoginRepositoryImpl implements LoginRepository {
   @override
   Future<Either<Failure, bool>> updateUserInfo(UserEntity user) async {
     try {
+        final token = sharedPreferences.getString('token');
       String avatarId =
-          await userDatasource.updateAvatar(user.toUserModel(null));
+          await userDatasource.updateAvatar(user.toUserModel(null), token!);
       UserModel userModel = user.toUserModel(avatarId);
-      await userDatasource.updateUserInfo(userModel);
+      await userDatasource.updateUserInfo(userModel, token);
       return Right(true);
     } catch (e) {
       return Left(AuthFailure());
@@ -180,6 +181,7 @@ class LoginRepositoryImpl implements LoginRepository {
   @override
   Future<Either<Failure, bool>> validatePassword(String password) async {
     try {
+      
       final email = sharedPreferences.getString('email');
       bool isValid = await dataSource.validatePassword(password, email!);
       return Right(isValid);

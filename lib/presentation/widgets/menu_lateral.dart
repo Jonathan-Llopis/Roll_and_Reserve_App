@@ -17,10 +17,12 @@ class MenuLateral extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Encabezado del Drawer
           UserAccountsDrawerHeader(
             decoration: BoxDecoration(
-              color: Colors.lightBlue.shade700,
+              image: DecorationImage(
+                image: AssetImage('assets/images/appbar_back.jpg'),
+                fit: BoxFit.cover,
+              ),
             ),
             accountName: Text(
               userBloc.state.user?.username ?? 'Usuario',
@@ -35,8 +37,6 @@ class MenuLateral extends StatelessWidget {
                   : FileImage(File(userBloc.state.user!.avatar.path)),
             ),
           ),
-
-          // Opciones del menú
           Expanded(
             child: ListView(
               children: [
@@ -69,8 +69,6 @@ class MenuLateral extends StatelessWidget {
               ],
             ),
           ),
-
-          // Botón de Cerrar Sesión
           Divider(),
           ListTile(
             leading: Icon(Icons.exit_to_app, color: Colors.red),

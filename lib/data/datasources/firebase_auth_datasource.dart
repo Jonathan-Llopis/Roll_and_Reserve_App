@@ -62,7 +62,7 @@ Future<bool> validatePassword(String password, String email) async {
   try {
     await auth.signInWithEmailAndPassword(email: email, password: password);
     return true;
-  } on FirebaseAuthException catch (e) {
+  } on FirebaseAuthException {
     return false;
   } catch (e) {
     return false;
