@@ -7,6 +7,8 @@ import 'package:roll_and_reserve/config/router/routes.dart';
 import 'package:roll_and_reserve/firebase_options.dart';
 import 'package:roll_and_reserve/injection.dart';
 import 'package:roll_and_reserve/presentation/blocs/auth/login_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -29,8 +31,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => sl<LoginBloc>(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => sl<LoginBloc>(),),
+        BlocProvider(create: (_) => sl<ShopBloc>(),),
+        BlocProvider(create: (_) => sl<TableBloc>(),),
+      ],
       child: MaterialApp.router(
         routerConfig: router,
         debugShowCheckedModeBanner: false,
