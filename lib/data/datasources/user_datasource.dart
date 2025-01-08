@@ -9,9 +9,9 @@ abstract class UserDatasource {
   Future<UserModel> getValidUser(String id, String token);
   Future<String> getValidToken(String email);
   Future<bool> createUser(UserModel user);
-  Future<dynamic> getUserAvatar(String fileId);
-  Future<bool> updateUserInfo(UserModel user);
-  Future<String> updateAvatar(UserModel user);
+  Future<dynamic> getUserAvatar(String fileId, String token);
+  Future<bool> updateUserInfo(UserModel user, String token);
+  Future<String> updateAvatar(UserModel user, String token);
 }
 
 class UserDatasourceImpl implements UserDatasource {
@@ -77,13 +77,15 @@ class UserDatasourceImpl implements UserDatasource {
   }
 
   @override
-  Future<dynamic> getUserAvatar(String fileId) async {
+  Future<dynamic> getUserAvatar(String fileId, String token) async {
     if (fileId == "") {
       fileId = "677abb3f330031f5ffffdb43";
     }
     final response = await http.get(
-      Uri.parse('http://localhost:8000/files/download/$fileId'),
-    );
+        Uri.parse('http://localhost:8000/files/download/$fileId'),
+        headers: {
+          'authorization': 'Bearer $token',
+        });
     if (response.statusCode == 200) {
       Uint8List bytes = response.bodyBytes;
       if (kIsWeb) {
@@ -101,11 +103,12 @@ class UserDatasourceImpl implements UserDatasource {
   }
 
   @override
-  Future<bool> updateUserInfo(UserModel user) async {
+  Future<bool> updateUserInfo(UserModel user, String token) async {
     final response = await client.put(
       Uri.parse('http://localhost:8000/users/${user.id}'),
       headers: {
         'Content-Type': 'application/json',
+        'authorization': 'Bearer $token',
       },
       body: json.encode(user.toJson()),
     );
@@ -117,7 +120,7 @@ class UserDatasourceImpl implements UserDatasource {
   }
 
   @override
-  Future<String> updateAvatar(UserModel user) async {
+  Future<String> updateAvatar(UserModel user, String token) async {
     var request = http.MultipartRequest(
       'POST',
       Uri.parse('http://localhost:8000/files/avatar/${user.id}'),

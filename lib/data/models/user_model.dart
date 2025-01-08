@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:roll_and_reserve/data/models/functions_for_models.dart';
 import 'package:roll_and_reserve/domain/entities/user_entity.dart';
 
 class UserModel {
@@ -39,12 +40,12 @@ class UserModel {
     return UserModel(
         id: json['id_google'] ?? "",
         email: json['email'] ?? "",
-        role: json['role'] ?? "",
+        role: json['role'] ?? 2,
         name: json['name'] ?? "",
         username: json['username'] ?? "",
-        avatarId: json['avatar'] ?? "",
+        avatarId: json['avatar'] ?? "677d7129dc2ead5d127392c1",
         avatar:File(""),
-        averageRaiting: json['average_raiting'] ?? 0);
+        averageRaiting: calcularMediaRatings(json['reviews_shop']??[]));
   }
   Map<String, dynamic> toJson() {
     return {
