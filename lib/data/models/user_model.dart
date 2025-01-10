@@ -43,7 +43,7 @@ class UserModel {
         role: json['role'] ?? 2,
         name: json['name'] ?? "",
         username: json['username'] ?? "",
-        avatarId: json['avatar'] ?? "677d7129dc2ead5d127392c1",
+        avatarId: json['avatar'] ?? "67806e4ba1966a340ad6cefd",
         avatar:File(""),
         averageRaiting: calcularMediaRatings(json['reviews_shop']??[]));
   }

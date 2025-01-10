@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:roll_and_reserve/presentation/functions/rive_animation.dart';
+import 'package:roll_and_reserve/presentation/functions/controller_rive_animation.dart';
 
 class CustomFormField extends StatefulWidget {
   final TextEditingController controller;
@@ -26,8 +26,7 @@ class CustomFormField extends StatefulWidget {
   });
 
   @override
-  // ignore: library_private_types_in_public_api
-  _CustomFormFieldState createState() => _CustomFormFieldState();
+  State<CustomFormField> createState() => _CustomFormFieldState();
 }
 
 class _CustomFormFieldState extends State<CustomFormField> {

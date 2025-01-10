@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:roll_and_reserve/domain/entities/user_entity.dart';
-import 'package:roll_and_reserve/presentation/blocs/auth/login_bloc.dart';
-import 'package:roll_and_reserve/presentation/blocs/auth/login_event.dart';
-import 'package:roll_and_reserve/presentation/blocs/auth/login_state.dart';
-import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_components/text_dialog_input.dart';
+import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
+import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
+import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_components/input_text.dart';
 
 class DialogoUserSettings extends StatefulWidget {
   const DialogoUserSettings({super.key});

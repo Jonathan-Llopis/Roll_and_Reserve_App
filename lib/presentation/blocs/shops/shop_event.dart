@@ -9,7 +9,7 @@ abstract class ShopEvent extends Equatable {
 class GetShopsEvent extends ShopEvent {}
 
 class GetShopEvent extends ShopEvent {
-  final String idShop;  
+  final int idShop;  
   GetShopEvent({required this.idShop});
 
   @override

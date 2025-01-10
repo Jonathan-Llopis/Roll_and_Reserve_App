@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:roll_and_reserve/presentation/blocs/auth/login_bloc.dart';
-import 'package:roll_and_reserve/presentation/blocs/auth/login_event.dart';
-import 'package:roll_and_reserve/presentation/blocs/auth/login_state.dart';
-import 'package:roll_and_reserve/presentation/functions/validator_function.dart';
-import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_components/password_dialog_input.dart';
+import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
+import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
+import 'package:roll_and_reserve/presentation/widgets/buttons/button_update.dart';
+import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_components/input_password.dart';
 
 class DialogoUpdatePassword extends StatefulWidget {
   const DialogoUpdatePassword({super.key});
@@ -52,7 +52,7 @@ class _DialogoUserSettingsState extends State<DialogoUpdatePassword> {
                           validator: (value) {
                             final errorMessage = validateCurrentPassword(
                                 value, context.read<LoginBloc>());
-                            if (errorMessage != null ) {
+                            if (errorMessage != null) {
                               return errorMessage;
                             }
                             return null;
@@ -75,50 +75,10 @@ class _DialogoUserSettingsState extends State<DialogoUpdatePassword> {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.redAccent,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text("Cancelar"),
-                      ),
-                      BlocListener<LoginBloc, LoginState>(
-                        listener: (context, state) {
-                          if (state.validatePassword != null) {
-                            if (_formKey.currentState!.validate()) {
-                              context.read<LoginBloc>().add(UpdatePasswordEvent(
-                                  password: _newPasswordController.text));
-                              Navigator.pop(context);
-                            }
-                          }
-                        },
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          onPressed: () {
-                            context.read<LoginBloc>().add(
-                                  ValidatePasswordEvent(
-                                    password: _oldPasswordController.text,
-                                  ),
-                                );
-                          },
-                          child: const Text("Actualizar"),
-                        ),
-                      ),
-                    ],
-                  ),
+                  ButtonUpdate(
+                      formKey: _formKey,
+                      newPasswordController: _newPasswordController,
+                      oldPasswordController: _oldPasswordController),
                 ],
               ),
             ),

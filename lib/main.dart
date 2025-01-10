@@ -6,7 +6,9 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:roll_and_reserve/config/router/routes.dart';
 import 'package:roll_and_reserve/firebase_options.dart';
 import 'package:roll_and_reserve/injection.dart';
-import 'package:roll_and_reserve/presentation/blocs/auth/login_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/reviews/reviews_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 
@@ -36,6 +38,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => sl<LoginBloc>(),),
         BlocProvider(create: (_) => sl<ShopBloc>(),),
         BlocProvider(create: (_) => sl<TableBloc>(),),
+        BlocProvider(create: (_) => sl<ReviewBloc>(),),
+        BlocProvider(create: (_) => sl<ReserveBloc>(),),
       ],
       child: MaterialApp.router(
         routerConfig: router,
