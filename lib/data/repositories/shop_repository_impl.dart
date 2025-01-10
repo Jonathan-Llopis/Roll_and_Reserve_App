@@ -45,7 +45,7 @@ class ShopRepositoryImpl implements ShopsRepository {
     try {
       final token = sharedPreferences.getString('token');
       String logoId =
-          await remoteDataSource.updateAvatar(shops.toShopModel(null), token!);
+          await remoteDataSource.updateLogo(shops.toShopModel(null), token!);
       ShopModel shopModel = shops.toShopModel(logoId);
       await remoteDataSource.updateShops(shopModel, token);
       return Right(true);
@@ -63,12 +63,12 @@ class ShopRepositoryImpl implements ShopsRepository {
       final shopModelCreated =await remoteDataSource.createShops(shopModel, token!);
       ShopModel avatarShop = shopModel.addInfo("677e565be78534b20cb542b0  ", shopModelCreated.id);
       String logoId =
-          await remoteDataSource.updateAvatar(avatarShop, token);
+          await remoteDataSource.updateLogo(avatarShop, token);
        ShopModel updateShop = shopModel.addInfo(logoId, shopModelCreated.id);
       await remoteDataSource.updateShops(updateShop, token);
       return Right(true);
     } catch (e) {
-      return Left(Exception('Error al crear el inventario: ${e.toString()}'));
+      return Left(Exception('Error al crear el tienda: ${e.toString()}'));
     }
   }
 }

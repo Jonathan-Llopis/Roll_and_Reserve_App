@@ -3,3 +3,10 @@ abstract class UseCase<Type, Params> {
 }
 
 class NoParams {}
+
+class UserToReserveUseCaseParams {
+  final int idReserve;
+  final String idUser;
+
+  UserToReserveUseCaseParams({required this.idReserve, required this.idUser});
+}

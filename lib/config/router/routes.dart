@@ -1,10 +1,12 @@
-import 'package:roll_and_reserve/domain/entities/shop_entity.dart';
 import 'package:roll_and_reserve/domain/repositories/login_repository.dart';
-import 'package:roll_and_reserve/presentation/screens/login_screen.dart';
-import 'package:roll_and_reserve/presentation/screens/register_screen.dart';
-import 'package:roll_and_reserve/presentation/screens/shop_edit_screen.dart';
-import 'package:roll_and_reserve/presentation/screens/tables_screen.dart';
-import 'package:roll_and_reserve/presentation/screens/user_screen.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_reserve.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_login.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_register.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_reserves_table.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_review_shop.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_edit_shop.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_tables_shop.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_main.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:roll_and_reserve/injection.dart' as di;
@@ -35,6 +37,31 @@ final GoRouter router = GoRouter(
         builder: (context, state) {
           final shopId = int.parse(state.pathParameters['id']!);
           return TablesScreen(idShop: shopId);
+        }),
+    GoRoute(
+        path: '/user/shop/raiting/:idShop',
+        builder: (context, state) {
+          final idShop = int.parse(state.pathParameters['idShop']!);
+          return StoreReviewsPage(
+            idShop: idShop,
+          );
+        }),
+    GoRoute(
+        path: '/user/shop/table/:idTable:idShop',
+        builder: (context, state) {
+          final tableId = int.parse(state.pathParameters['idTable']!);
+          final idShop = int.parse(state.pathParameters['idShop']!);
+          return ReservationsScreen(
+            idTable: tableId,
+            idShop: idShop,
+          );
+        }),
+    GoRoute(
+        path: '/user/shop/table/reserve/:idReserve:idShop',
+        builder: (context, state) {
+          final idReserve = int.parse(state.pathParameters['idReserve']!);
+          final idShop = int.parse(state.pathParameters['idShop']!);
+          return GameReserveScreen(idReserve: idReserve, idShop: idShop);
         }),
   ],
   redirect: (context, state) async {

@@ -9,7 +9,7 @@ abstract class TableEvent extends Equatable {
 class GetTablesEvent extends TableEvent {}
 
 class GetTableEvent extends TableEvent {
-  final String idTable;
+  final int idTable;
   GetTableEvent({required this.idTable});
 
   @override
@@ -48,3 +48,4 @@ class GetTablesByShopEvent extends TableEvent {
   @override
   List<Object?> get props => [idShop];
 }
+

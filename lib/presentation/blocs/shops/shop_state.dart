@@ -1,5 +1,4 @@
 import 'package:roll_and_reserve/domain/entities/shop_entity.dart';
-import 'package:roll_and_reserve/domain/entities/user_entity.dart';
 
 class ShopState {
   final bool isLoading;

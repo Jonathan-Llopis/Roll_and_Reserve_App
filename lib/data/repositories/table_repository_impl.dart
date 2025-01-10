@@ -17,8 +17,7 @@ class TableRepositoryImpl implements TableRepository {
     try {
       final token = sharedPreferences.getString('token');
       final tableModels = await remoteDataSource.getAllTables(token!);
-      return Right(
-          tableModels.map((model) => model.toTableEntity()).toList());
+      return Right(tableModels.map((model) => model.toTableEntity()).toList());
     } catch (e) {
       return Left(Exception('Error al cargar table'));
     }
@@ -36,16 +35,14 @@ class TableRepositoryImpl implements TableRepository {
   }
 
   @override
-  Future<Either<Exception, bool>> updateTable(
-      TableEntity table) async {
+  Future<Either<Exception, bool>> updateTable(TableEntity table) async {
     try {
       final token = sharedPreferences.getString('token');
       TableModel shopModel = table.toTableModel();
       await remoteDataSource.updateTables(shopModel, token!);
       return Right(true);
     } catch (e) {
-      return Left(
-          Exception('Error al actualizar el inventario: ${e.toString()}'));
+      return Left(Exception('Error al actualizar el mesa: ${e.toString()}'));
     }
   }
 
@@ -57,8 +54,7 @@ class TableRepositoryImpl implements TableRepository {
       await remoteDataSource.createTables(shopModel, token!);
       return Right(true);
     } catch (e) {
-      return Left(Exception('Error al crear el inventario: ${e.toString()}'));
+      return Left(Exception('Error al crear el mesa: ${e.toString()}'));
     }
   }
-  
 }

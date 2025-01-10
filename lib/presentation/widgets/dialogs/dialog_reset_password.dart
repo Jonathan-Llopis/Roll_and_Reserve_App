@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:roll_and_reserve/presentation/blocs/auth/login_bloc.dart';
-import 'package:roll_and_reserve/presentation/blocs/auth/login_event.dart';
-import 'package:roll_and_reserve/presentation/functions/show_dialogs.dart';
+import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
+import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.dart';
 
 class DialogResetPassword extends StatefulWidget {
   const DialogResetPassword({super.key});
