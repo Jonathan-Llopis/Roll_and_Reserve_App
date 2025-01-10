@@ -112,6 +112,20 @@ class LoginRepositoryImpl implements LoginRepository {
   }
 
   @override
+  Future<Either<Failure, UserEntity>> getUserInfo(String idUser) async {
+    try {
+      final token = sharedPreferences.getString('token');
+      UserModel usuerDataBase =
+          await userDatasource.getValidUser(idUser, token!);
+      dynamic avatarFile =
+          await userDatasource.getUserAvatar(usuerDataBase.avatarId, token);
+      return Right(usuerDataBase.toUserEntity(avatarFile));
+    } catch (e) {
+      return Left(AuthFailure());
+    }
+  }
+
+  @override
   Future<Either<Failure, void>> logout() async {
     try {
       await dataSource.logout();

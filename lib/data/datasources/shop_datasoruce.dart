@@ -10,7 +10,7 @@ abstract class ShopRemoteDataSource {
   Future<bool> deleteShops(int idShops, String token);
   Future<bool> updateShops(ShopModel shops, String token);
   Future<ShopModel> createShops(ShopModel shops, String token);
-  Future<String> updateAvatar(ShopModel shops, String token);
+  Future<String> updateLogo(ShopModel shops, String token);
   Future<dynamic> getShopLogo(String fileId, String token);
 }
 
@@ -90,7 +90,7 @@ class ShopsRemoteDataSourceImpl implements ShopRemoteDataSource {
   }
 
   @override
-  Future<String> updateAvatar(ShopModel shop, String token) async {
+  Future<String> updateLogo(ShopModel shop, String token) async {
     var request = http.MultipartRequest(
       'POST',
       Uri.parse('http://localhost:8000/files/logo/${shop.id}'),
