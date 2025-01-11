@@ -92,20 +92,26 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
           emit(ShopState.getShops(shopsByOwner));
         },
       );
-    });on<GetShopByFilterEvent>((event, emit) async {
+    });
+    on<GetShopByFilterEvent>((event, emit) async {
       emit(ShopState.loading());
       final result = await getShopsUseCase(NoParams());
       result.fold(
-        (failure) => emit(ShopState.failure("Falló al realizar la recuperación")),
+        (failure) =>
+            emit(ShopState.failure("Falló al realizar la recuperación")),
         (shops) {
           final filteredShops = shops.where((shop) {
             if (event.name != null && event.name!.isNotEmpty) {
-              if (!shop.name.toLowerCase().contains(event.name!.toLowerCase())) {
+              if (!shop.name
+                  .toLowerCase()
+                  .contains(event.name!.toLowerCase())) {
                 return false;
               }
             }
             if (event.direction != null && event.direction!.isNotEmpty) {
-              if (!shop.address.toLowerCase().contains(event.direction!.toLowerCase())) {
+              if (!shop.address
+                  .toLowerCase()
+                  .contains(event.direction!.toLowerCase())) {
                 return false;
               }
             }
@@ -115,6 +121,5 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
         },
       );
     });
-  
   }
 }

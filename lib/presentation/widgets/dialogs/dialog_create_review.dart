@@ -15,6 +15,7 @@ class DialogCreateReview extends StatefulWidget {
 
 class _DialogCreateReviewState extends State<DialogCreateReview> {
   final _formKey = GlobalKey<FormState>();
+  // ignore: unused_field
   String _description = '';
   int _rating = 1;
   final TextEditingController _descriptionController = TextEditingController();
