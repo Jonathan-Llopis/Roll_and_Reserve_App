@@ -8,7 +8,7 @@ class ShopEntity {
   final String logoId;
   final double averageRaiting;
   final String ownerId;
-  final int tablesShop;
+  final List<int>  tablesShop;
   final List<int> gamesShop;
 
   ShopEntity(

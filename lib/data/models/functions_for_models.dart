@@ -16,12 +16,17 @@ double calcularMediaRatings(List<dynamic> reviews) {
   return contador > 0 ? sumaRatings / contador : 0;
 }
 
-int calcularMesasTienda(List<dynamic> mesas) {
-  if (mesas.isEmpty) {
-    return 0;
+List<int> calcularMesasTienda(List<dynamic> tables) {
+  List<int> listTables = [];
+  if (tables.isEmpty) {
+    return [];
   }
 
-  return mesas.length;
+  for (var table in tables) {
+    listTables.add(table['id_table']);
+  }
+
+  return listTables;
 }
 
 List<String> crearListaUsuarios(List<dynamic> users) {

@@ -21,7 +21,6 @@ class _DialogoUserSettingsState extends State<DialogoUserSettings> {
   final ImagePicker _picker = ImagePicker();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nombreController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _nombreRealController = TextEditingController();
 
   @override
@@ -29,7 +28,6 @@ class _DialogoUserSettingsState extends State<DialogoUserSettings> {
     final userBloc = BlocProvider.of<LoginBloc>(context);
     super.initState();
     _nombreController.text = userBloc.state.user!.username;
-    _emailController.text = userBloc.state.user!.email;
     _nombreRealController.text = userBloc.state.user!.name;
     _imageFile = userBloc.state.user!.avatar;
   }
@@ -108,10 +106,6 @@ class _DialogoUserSettingsState extends State<DialogoUserSettings> {
                           labelText: "Nombre Real",
                         ),
                         const SizedBox(height: 12),
-                        TextDialogInput(
-                          controller: _emailController,
-                          labelText: "Email",
-                        ),
                       ],
                     ),
                   ),
@@ -144,7 +138,7 @@ class _DialogoUserSettingsState extends State<DialogoUserSettings> {
                                   user: UserEntity(
                                     id: state.user!.id,
                                     username: _nombreController.text,
-                                    email: _emailController.text,
+                                    email: state.user!.email,
                                     avatar: _imageFile,
                                     name: _nombreRealController.text,
                                     averageRaiting: state.user!.averageRaiting,

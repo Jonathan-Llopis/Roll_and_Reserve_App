@@ -1,4 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:collection/collection.dart';
 import 'package:roll_and_reserve/core/use_case.dart';
 import 'package:roll_and_reserve/domain/usecases/table_usecases/create_table_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/table_usecases/delete_table_usecase.dart';
@@ -89,6 +91,43 @@ class TableBloc extends Bloc<TableEvent, TableState> {
           final tablesByOwner =
               tables.where((table) => table.idShop == event.idShop).toList();
           emit(TableState.getTables(tablesByOwner));
+        },
+      );
+    });
+    on<GetAvailableTablesEvent>((event, emit) async {
+      emit(TableState.loading());
+      final result = await getTablesUseCase(NoParams());
+      result.fold(
+        (failure) =>
+            emit(TableState.failure("Falló al realizar la recuperación")),
+        (tables) async {
+          final availableTables = tables.where((table) {
+            final tableOccupied = table.reserves.any((reserveId) {
+              final reserveEntity =
+                  event.reserves.firstWhereOrNull((r) => r.id == reserveId);
+              if (reserveEntity == null) {
+                return false;
+              } else {
+                final reserveStartDate = DateFormat('dd - MM - yyyy HH:mm')
+                    .parse(
+                        '${reserveEntity.dayDate} ${reserveEntity.horaInicio}');
+                final reserveEndDate = DateFormat('dd - MM - yyyy HH:mm')
+                    .parse('${reserveEntity.dayDate} ${reserveEntity.horaFin}');
+                final eventStartDate = DateFormat('dd-MM-yyyy HH:mm').parse(
+                    '${event.dayDate} ${event.startTime == '' ? '00:00' : event.startTime}');
+                final eventEndDate = DateFormat('dd-MM-yyyy HH:mm').parse(
+                    '${event.dayDate} ${event.endTime == '' ? '23:59' : event.endTime}');
+
+                return !(reserveEndDate.isBefore(eventStartDate) ||
+                    reserveStartDate.isAtSameMomentAs(eventEndDate) ||
+                    reserveStartDate.isAfter(eventEndDate) ||
+                    reserveEndDate.isAtSameMomentAs(eventStartDate));
+              }
+            });
+            return !tableOccupied;
+          }).toList();
+
+          emit(TableState.getTables(availableTables));
         },
       );
     });

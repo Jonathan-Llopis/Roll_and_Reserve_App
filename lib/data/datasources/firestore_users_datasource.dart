@@ -7,6 +7,13 @@ class FirestoreUsersDatasource {
     await users.set({'email': email, 'name': nombre, 'rol': 2, 'id': id});
   }
 
+  Future<void> updateUserInfo(String nombre, String id, int role) async {
+    DocumentReference users =
+        FirebaseFirestore.instance.collection('Users').doc(id);
+    await users.update({'name': nombre, 'rol': role,});
+  }
+
+
   Future<bool> isEmailUsed(String email) async {
     CollectionReference users = FirebaseFirestore.instance.collection('Users');
 

@@ -4,6 +4,8 @@ import 'package:roll_and_reserve/domain/entities/review_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reviews/reviews_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reviews/reviews_event.dart';
+import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/shops/shop_event.dart';
 
 class DialogCreateReview extends StatefulWidget {
   final int idShop;
@@ -96,6 +98,7 @@ class _DialogCreateReviewState extends State<DialogCreateReview> {
                       userNameWriter: '',
                       avatarIdWriter: '',
                       avatarWriter: [])));
+              context.read<ShopBloc>().add(GetShopsEvent());
               Navigator.pop(context);
             }
           },
