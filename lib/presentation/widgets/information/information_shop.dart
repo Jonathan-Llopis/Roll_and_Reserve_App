@@ -8,11 +8,10 @@ import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_state.dart';
-import 'package:roll_and_reserve/presentation/functions/functions_dialogs.dart';
-import 'package:roll_and_reserve/presentation/screens/screen_reserves_table.dart';
+import 'package:roll_and_reserve/presentation/functions/functions_utils.dart';
 
-class ShopListInventory extends StatefulWidget {
-  const ShopListInventory({
+class InformationShop extends StatefulWidget {
+  const InformationShop({
     super.key,
     required this.shop,
   });
@@ -20,10 +19,10 @@ class ShopListInventory extends StatefulWidget {
   final ShopEntity shop;
 
   @override
-  State<ShopListInventory> createState() => _ShopListInventoryState();
+  State<InformationShop> createState() => _ShopListInventoryState();
 }
 
-class _ShopListInventoryState extends State<ShopListInventory> {
+class _ShopListInventoryState extends State<InformationShop> {
   @override
   void initState() {
     super.initState();
@@ -101,11 +100,13 @@ class _ShopListInventoryState extends State<ShopListInventory> {
                     ),
                   ),
                   const SizedBox(height: 8.0),
-                  loginBloc.state.user!.role == 1 ? ElevatedButton(
-                      onPressed: () {
-                        context.go('/user/shop/${widget.shop.id}');
-                      },
-                      child: Text("Editar Mesas")): Container(),
+                  loginBloc.state.user!.role == 1
+                      ? ElevatedButton(
+                          onPressed: () {
+                            context.go('/user/shop/${widget.shop.id}');
+                          },
+                          child: Text("Editar Mesas"))
+                      : Container(),
                 ],
               ),
               const SizedBox(width: 16.0),

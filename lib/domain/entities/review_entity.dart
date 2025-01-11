@@ -7,6 +7,9 @@ class ReviewEntity {
   final String writerId;
   final String reviewedId;
   final int shopReview;
+  final String userNameWriter;
+  final String avatarIdWriter;
+  final dynamic avatarWriter;
 
   ReviewEntity(
       {required this.id,
@@ -14,7 +17,10 @@ class ReviewEntity {
       required this.review,
       required this.writerId,
       required this.reviewedId,
-      required this.shopReview});
+      required this.shopReview,
+      required this.userNameWriter,
+      required this.avatarIdWriter,
+      required this.avatarWriter});
 
   ReviewModel toReviewModel() {
     return ReviewModel(
@@ -23,6 +29,9 @@ class ReviewEntity {
         review: review,
         writerId: writerId,
         reviewedId: reviewedId,
-        shopReview: shopReview);
+        shopReview: shopReview,
+        avatarWriter: avatarWriter,
+        avatarIdWriter:  "",
+        userNameWriter: userNameWriter);
   }
 }

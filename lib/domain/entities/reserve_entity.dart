@@ -1,4 +1,5 @@
 import 'package:roll_and_reserve/data/models/reserve_model.dart';
+import 'package:roll_and_reserve/domain/entities/user_entity.dart';
 
 class ReserveEntity {
   final int id;
@@ -12,7 +13,7 @@ class ReserveEntity {
   final int gameCategoryId;
   final int gameId;
   final int tableId;
-  final List<String> idUsers;
+  final List<UserEntity> usersReserve;
 
   ReserveEntity(
       {required this.id,
@@ -26,7 +27,7 @@ class ReserveEntity {
       required this.gameCategoryId,
       required this.gameId,
       required this.tableId,
-      required this.idUsers});
+      required this.usersReserve});
 
   ReserveModel toReserveModel() {
     return ReserveModel(
@@ -41,7 +42,7 @@ class ReserveEntity {
       gameCategoryId: gameCategoryId,
       gameId: gameId,
       tableId: tableId,
-      idUsers: idUsers,
+      usersReserve: usersReserve.map((user) => user.toUserModel('')).toList(),
     );
   }
 }

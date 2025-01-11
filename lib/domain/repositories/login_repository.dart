@@ -15,4 +15,5 @@ abstract class LoginRepository {
   Future<Either<Failure, bool>> updatePassword(String password);
   Future<Either<Failure, bool>> validatePassword(String password);
   Future<Either<Failure, UserEntity>> getUserInfo(String idUser);
+  Future<Either<Failure, List<UserEntity>>> getUsersInfo();
 }

@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:roll_and_reserve/data/models/user_model.dart';
 
 abstract class UserDatasource {
+  Future<List<UserModel>> getUsers( String token);
   Future<UserModel> getValidUser(String id, String token);
   Future<String> getValidToken(String email);
   Future<bool> createUser(UserModel user);
@@ -18,6 +19,23 @@ class UserDatasourceImpl implements UserDatasource {
   final http.Client client;
   UserDatasourceImpl(this.client);
   List<UserModel> usuarios = [];
+
+    @override
+   Future<List<UserModel>> getUsers( String token) async {
+     final response = await http.get(
+       Uri.parse('http://localhost:8000/users/'),
+       headers: {
+         'authorization': 'Bearer $token',
+       },
+     );
+   
+     if (response.statusCode == 200) {
+       final List jsonList = json.decode(response.body);
+       return jsonList.map((json) => UserModel.fromJson(json)).toList();
+     } else {
+       throw Exception('Error al cargar usuarios');
+     }
+   }
 
   @override
   Future<UserModel> getValidUser(String id, String token) async {
@@ -79,7 +97,7 @@ class UserDatasourceImpl implements UserDatasource {
   @override
   Future<dynamic> getUserAvatar(String fileId, String token) async {
     if (fileId == "") {
-      fileId = "677abb3f330031f5ffffdb43";
+      fileId = "67806e4ba1966a340ad6cefd";
     }
     final response = await http.get(
         Uri.parse('http://localhost:8000/files/download/$fileId'),

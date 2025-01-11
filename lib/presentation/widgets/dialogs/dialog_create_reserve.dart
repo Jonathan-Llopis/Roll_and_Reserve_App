@@ -4,32 +4,32 @@ import 'package:roll_and_reserve/domain/entities/category_game_entity.dart';
 import 'package:roll_and_reserve/domain/entities/difficulty_entity.dart';
 import 'package:roll_and_reserve/domain/entities/game_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
-import 'package:intl/intl.dart';
+import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
 import 'package:roll_and_reserve/presentation/widgets/buttons/button_create_reserve.dart';
 
-class ReserveFormDialog extends StatefulWidget {
+class DialogCreateReserve extends StatefulWidget {
   final int idTable;
-  const ReserveFormDialog({
+  final DateTime dateReserve;
+  const DialogCreateReserve({
     required this.idTable,
+    required this.dateReserve,
     super.key,
   });
 
   @override
-  State<ReserveFormDialog> createState() => _ReserveFormDialogState();
+  State<DialogCreateReserve> createState() => _ReserveFormDialogState();
 }
 
-class _ReserveFormDialogState extends State<ReserveFormDialog> {
+class _ReserveFormDialogState extends State<DialogCreateReserve> {
   final _formKey = GlobalKey<FormState>();
 
-  // Controladores para los campos del formulario
   final TextEditingController _freePlacesController = TextEditingController();
   final TextEditingController _hourStartController = TextEditingController();
   final TextEditingController _hourEndController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _requiredMaterialController = TextEditingController();
-  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _requiredMaterialController =
+      TextEditingController();
 
-  // Opciones seleccionadas
   DifficultyEntity? _selectedDifficulty;
   GameCategoryEntity? _selectedGameCategory;
   GameEntity? _selectedGame;
@@ -41,23 +41,8 @@ class _ReserveFormDialogState extends State<ReserveFormDialog> {
     _hourEndController.dispose();
     _descriptionController.dispose();
     _requiredMaterialController.dispose();
-    _dateController.dispose();
-    super.dispose();
-  }
 
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null) {
-      final DateFormat formatter = DateFormat('dd-MM-yyyy');
-      setState(() {
-        _dateController.text = formatter.format(picked);
-      });
-    }
+    super.dispose();
   }
 
   @override
@@ -74,37 +59,13 @@ class _ReserveFormDialogState extends State<ReserveFormDialog> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: TextFormField(
-                  controller: _dateController,
-                  decoration: const InputDecoration(
-                    labelText: "Fecha de reserva",
-                    prefixIcon: Icon(Icons.calendar_today),
-                  ),
-                  readOnly: true,
-                  onTap: () => _selectDate(context),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Este campo es obligatorio";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: TextFormField(
-                  controller: _freePlacesController,
-                  decoration: const InputDecoration(
-                    labelText: "Plazas Totales en Mesa",
-                    prefixIcon: Icon(Icons.people),
-                  ),
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Este campo es obligatorio";
-                    }
-                    return null;
-                  },
-                ),
+                    controller: _freePlacesController,
+                    decoration: const InputDecoration(
+                      labelText: "Plazas Totales en Mesa",
+                      prefixIcon: Icon(Icons.people),
+                    ),
+                    keyboardType: TextInputType.number,
+                    validator: basicValidationWithNumber),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -116,8 +77,16 @@ class _ReserveFormDialogState extends State<ReserveFormDialog> {
                   ),
                   keyboardType: TextInputType.datetime,
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Este campo es obligatorio";
+                    String? error = validateHour(value);
+                    if (error != null) {
+                      return error;
+                    }
+                    if (isHourTaken(
+                        reserveBloc.state.reserves!,
+                        widget.dateReserve,
+                        _hourStartController.text,
+                        _hourEndController.text)) {
+                      return 'La hora ya está cogida ese día';
                     }
                     return null;
                   },
@@ -133,8 +102,16 @@ class _ReserveFormDialogState extends State<ReserveFormDialog> {
                   ),
                   keyboardType: TextInputType.datetime,
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Este campo es obligatorio";
+                    String? error = validateHour(value);
+                    if (error != null) {
+                      return error;
+                    }
+                    if (isHourTaken(
+                        reserveBloc.state.reserves!,
+                        widget.dateReserve,
+                        _hourStartController.text,
+                        _hourEndController.text)) {
+                      return 'La hora ya está cogida ese día';
                     }
                     return null;
                   },
@@ -143,112 +120,82 @@ class _ReserveFormDialogState extends State<ReserveFormDialog> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: TextFormField(
-                  controller: _descriptionController,
-                  decoration: const InputDecoration(
-                    labelText: "Descripción",
-                    prefixIcon: Icon(Icons.description),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Este campo es obligatorio";
-                    }
-                    return null;
-                  },
-                ),
+                    controller: _descriptionController,
+                    decoration: const InputDecoration(
+                      labelText: "Descripción",
+                      prefixIcon: Icon(Icons.description),
+                    ),
+                    validator: basicValidation),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: TextFormField(
-                  controller: _requiredMaterialController,
-                  decoration: const InputDecoration(
-                    labelText: "Material necesario",
-                    prefixIcon: Icon(Icons.build),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Este campo es obligatorio";
-                    }
-                    return null;
-                  },
-                ),
+                    controller: _requiredMaterialController,
+                    decoration: const InputDecoration(
+                      labelText: "Material necesario",
+                      prefixIcon: Icon(Icons.build),
+                    ),
+                    validator: basicValidation),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: DropdownButtonFormField<DifficultyEntity>(
-                  decoration: const InputDecoration(
-                    labelText: "Dificultad",
-                  ),
-                  value: _selectedDifficulty,
-                  items: reserveBloc.state.difficulties!
-                      .map((difficulty) => DropdownMenuItem(
-                            value: difficulty,
-                            child: Text(difficulty.description),
-                          ))
-                      .toList(),
-                  onChanged: (newValue) {
-                    setState(() {
-                      _selectedDifficulty = newValue;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null) {
-                      return "Selecciona una opción";
-                    }
-                    return null;
-                  },
-                ),
+                    decoration: const InputDecoration(
+                      labelText: "Dificultad",
+                    ),
+                    value: _selectedDifficulty,
+                    items: reserveBloc.state.difficulties!
+                        .map((difficulty) => DropdownMenuItem(
+                              value: difficulty,
+                              child: Text(difficulty.description),
+                            ))
+                        .toList(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        _selectedDifficulty = newValue;
+                      });
+                    },
+                    validator: validateSelectedValue),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: DropdownButtonFormField<GameCategoryEntity>(
-                  decoration: const InputDecoration(
-                    labelText: "Categoría de juego",
-                  ),
-                  value: _selectedGameCategory,
-                  items: reserveBloc.state.gameCategories!
-                      .map((category) => DropdownMenuItem(
-                            value: category,
-                            child: Text(category.description),
-                          ))
-                      .toList(),
-                  onChanged: (newValue) {
-                    setState(() {
-                      _selectedGameCategory = newValue;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null) {
-                      return "Selecciona una opción";
-                    }
-                    return null;
-                  },
-                ),
+                    decoration: const InputDecoration(
+                      labelText: "Categoría de juego",
+                    ),
+                    value: _selectedGameCategory,
+                    items: reserveBloc.state.gameCategories!
+                        .map((category) => DropdownMenuItem(
+                              value: category,
+                              child: Text(category.description),
+                            ))
+                        .toList(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        _selectedGameCategory = newValue;
+                      });
+                    },
+                    validator: validateSelectedValue),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: DropdownButtonFormField<GameEntity>(
-                  decoration: const InputDecoration(
-                    labelText: "Juego",
-                  ),
-                  value: _selectedGame,
-                  items: reserveBloc.state.games!
-                      .map((game) => DropdownMenuItem(
-                            value: game,
-                            child: Text(game.description),
-                          ))
-                      .toList(),
-                  onChanged: (newValue) {
-                    setState(() {
-                      _selectedGame = newValue;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null) {
-                      return "Selecciona una opción";
-                    }
-                    return null;
-                  },
-                ),
+                    decoration: const InputDecoration(
+                      labelText: "Juego",
+                    ),
+                    value: _selectedGame,
+                    items: reserveBloc.state.games!
+                        .map((game) => DropdownMenuItem(
+                              value: game,
+                              child: Text(game.description),
+                            ))
+                        .toList(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        _selectedGame = newValue;
+                      });
+                    },
+                    validator: validateSelectedValue),
               ),
             ],
           ),
@@ -259,7 +206,18 @@ class _ReserveFormDialogState extends State<ReserveFormDialog> {
           onPressed: () => Navigator.of(context).pop(),
           child: const Text("Cancelar"),
         ),
-        CreateReserveButton(formKey: _formKey, freePlacesController: _freePlacesController, dateController: _dateController, hourStartController: _hourStartController, hourEndController: _hourEndController, descriptionController: _descriptionController, requiredMaterialController: _requiredMaterialController, selectedDifficulty: _selectedDifficulty, selectedGameCategory: _selectedGameCategory, selectedGame: _selectedGame, widget: widget),
+        ButtonCreateReserve(
+            formKey: _formKey,
+            freePlacesController: _freePlacesController,
+            hourStartController: _hourStartController,
+            hourEndController: _hourEndController,
+            descriptionController: _descriptionController,
+            requiredMaterialController: _requiredMaterialController,
+            selectedDifficulty: _selectedDifficulty,
+            selectedGameCategory: _selectedGameCategory,
+            selectedGame: _selectedGame,
+            widget: widget,
+            selectedDate: widget.dateReserve),
       ],
     );
   }

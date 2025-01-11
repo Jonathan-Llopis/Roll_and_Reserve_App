@@ -12,18 +12,19 @@ import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_state.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.dart';
-import 'package:roll_and_reserve/presentation/widgets/shop_add_table.dart';
+import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
+import 'package:roll_and_reserve/presentation/widgets/screen_components/shop_add_table.dart';
 import 'package:roll_and_reserve/presentation/widgets/buttons/button_cu_shop.dart';
 
-class EditStoreForm extends StatefulWidget {
+class ScreenEditShop extends StatefulWidget {
   final int? idShop;
-  const EditStoreForm({super.key, this.idShop});
+  const ScreenEditShop({super.key, this.idShop});
 
   @override
-  State<EditStoreForm> createState() => _EditStoreFormState();
+  State<ScreenEditShop> createState() => _ScreenEditShopState();
 }
 
-class _EditStoreFormState extends State<EditStoreForm> {
+class _ScreenEditShopState extends State<ScreenEditShop> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _adressController = TextEditingController();
@@ -34,9 +35,7 @@ class _EditStoreFormState extends State<EditStoreForm> {
   void initState() {
     super.initState();
     final shopBloc = BlocProvider.of<ShopBloc>(context);
-    context
-        .read<TableBloc>()
-        .add(GetTablesByShopEvent(idShop: widget.idShop!));
+    context.read<TableBloc>().add(GetTablesByShopEvent(idShop: widget.idShop!));
     if (widget.idShop != 0) {
       ShopEntity shopEdit =
           shopBloc.state.shops!.firstWhere((shop) => shop.id == widget.idShop);
@@ -114,42 +113,30 @@ class _EditStoreFormState extends State<EditStoreForm> {
                     ),
                     const SizedBox(height: 24),
                     TextFormField(
-                      controller: _titleController,
-                      decoration: InputDecoration(
-                        labelText: 'Título',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
+                        controller: _titleController,
+                        decoration: InputDecoration(
+                          labelText: 'Título',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          prefixIcon: Icon(Icons.title),
                         ),
-                        prefixIcon: Icon(Icons.title),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'El título es obligatorio';
-                        }
-                        return null;
-                      },
-                    ),
+                        validator: basicValidation),
                     const SizedBox(height: 16),
                     TextFormField(
-                      controller: _adressController,
-                      maxLines: 2,
-                      decoration: InputDecoration(
-                        labelText: 'Dirección',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
+                        controller: _adressController,
+                        maxLines: 2,
+                        decoration: InputDecoration(
+                          labelText: 'Dirección',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          prefixIcon: Icon(Icons.location_on),
                         ),
-                        prefixIcon: Icon(Icons.location_on),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'La dirección es obligatoria';
-                        }
-                        return null;
-                      },
-                    ),
+                        validator: basicValidation),
                     const SizedBox(height: 16),
                     widget.idShop != 0
-                        ? AddTables(
+                        ? ShopAddTables(
                             widget: widget,
                             state: state,
                           )
@@ -167,7 +154,7 @@ class _EditStoreFormState extends State<EditStoreForm> {
                           style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.grey),
                         ),
-                        CreateUpdateShop(
+                        ButtonCreateUpdateShop(
                           titleController: _titleController,
                           adressController: _adressController,
                           imageFile: _imageFile,

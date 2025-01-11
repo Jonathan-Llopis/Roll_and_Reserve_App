@@ -47,6 +47,7 @@ class UserModel {
         avatar:File(""),
         averageRaiting: calcularMediaRatings(json['reviews_shop']??[]));
   }
+
   Map<String, dynamic> toJson() {
     return {
       'id_google': id,

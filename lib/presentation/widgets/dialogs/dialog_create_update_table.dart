@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:roll_and_reserve/domain/entities/table_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_event.dart';
+import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
 
 class DialogCreateUpdateTable extends StatefulWidget {
   final int idShop;
@@ -58,14 +59,7 @@ class _DialogCreateUpdateTableState extends State<DialogCreateUpdateTable> {
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Por favor ingresa un número para la mesa";
-                    } else if (int.tryParse(value) == null) {
-                      return "Por favor ingresa un número válido";
-                    }
-                    return null;
-                  },
+                  validator: basicValidationWithNumber,
                   keyboardType: TextInputType.number,
                 ),
                 const SizedBox(height: 24.0),
@@ -139,7 +133,7 @@ class _DialogCreateUpdateTableState extends State<DialogCreateUpdateTable> {
                       ElevatedButton(
                         onPressed: () {
                           context.go(
-                            '/user/shop/table/${widget.table!.id}${widget.idShop}',
+                            '/user/shop/${widget.idShop}/table/${widget.table!.id}',
                           );
                         },
                         child: const Text("Gestionar Reservas"),

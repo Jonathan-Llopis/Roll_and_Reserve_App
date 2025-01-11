@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:roll_and_reserve/core/use_case.dart';
 import 'package:roll_and_reserve/domain/entities/category_game_entity.dart';
 import 'package:roll_and_reserve/domain/entities/difficulty_entity.dart';
@@ -116,7 +117,7 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
           emit(
             ReserveState.success(),
           );
-          add(AddUserToReserveEvent(idReserve: id, idUser: event.idUser));
+          add(AddUserToReserveEvent(idReserve: id, idUser: event.idUser, idTable: event.reserve.tableId, dateReserve: event.dateReserve, ));
         },
       );
     });
@@ -160,6 +161,7 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
         (categorygames) => emit(ReserveState.getGameCategories(categorygames)),
       );
     });
+
     on<AddUserToReserveEvent>((event, emit) async {
       emit(ReserveState.loading());
       final params = UserToReserveUseCaseParams(
@@ -172,7 +174,8 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
           emit(
             ReserveState.success(),
           );
-          add(GetReservesEvent());
+          add(GetReserveByDateEvent( 
+              dateReserve: event.dateReserve, idTable: event.idTable));
         },
       );
     });
@@ -188,7 +191,8 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
           emit(
             ReserveState.success(),
           );
-          add(GetReservesEvent());
+          add(GetReserveByDateEvent( 
+              dateReserve: event.dateReserve, idTable: event.idTable));
         },
       );
     });
@@ -253,5 +257,63 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
         emit(ReserveState.failure("Error inesperado: $e"));
       }
     });
+on<GetReserveByDateEvent>((event, emit) async {
+  try {
+    final reservesFuture = getReserveUseCase(NoParams());
+    final categoriesFuture = getAllCategoryGamesUseCase(NoParams());
+    final gamesFuture = getAllGameUseCase(NoParams());
+    final difficultiesFuture = getAllDifficultyUseCase(NoParams());
+
+    final results = await Future.wait([
+      reservesFuture,
+      categoriesFuture,
+      gamesFuture,
+      difficultiesFuture,
+    ]);
+    final reservesResult =
+        results[0] as Either<Exception, List<ReserveEntity>>;
+    final categoriesResult =
+        results[1] as Either<Exception, List<GameCategoryEntity>>;
+    final gamesResult = results[2] as Either<Exception, List<GameEntity>>;
+    final difficultiesResult =
+        results[3] as Either<Exception, List<DifficultyEntity>>;
+
+    reservesResult.fold(
+      (failure) => emit(ReserveState.failure("Error al cargar reservas")),
+      (reserves) {
+        final filteredReserves = reserves.where((reserve) => 
+          reserve.dayDate == DateFormat('dd - MM - yyyy').format(event.dateReserve) && reserve.tableId == event.idTable
+        ).toList();
+
+        categoriesResult.fold(
+          (failure) => emit(
+              ReserveState.failure("Error al cargar categorías de juegos")),
+          (categories) {
+            gamesResult.fold(
+              (failure) =>
+                  emit(ReserveState.failure("Error al cargar juegos")),
+              (games) {
+                difficultiesResult.fold(
+                  (failure) => emit(
+                      ReserveState.failure("Error al cargar dificultades")),
+                  (difficulties) {
+                    emit(ReserveState.getAllData(
+                      reserves: filteredReserves,
+                      games: games,
+                      gameCategories: categories,
+                      difficulties: difficulties,
+                    ));
+                  },
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  } catch (e) {
+    emit(ReserveState.failure("Error inesperado: $e"));
+  }
+});
   }
 }

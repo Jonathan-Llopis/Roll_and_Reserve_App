@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:roll_and_reserve/data/datasources/reserve_datasource.dart';
+import 'package:roll_and_reserve/data/datasources/user_datasource.dart';
 import 'package:roll_and_reserve/data/models/reserve_model.dart';
 import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
 import 'package:roll_and_reserve/domain/repositories/reserve_repository.dart';
@@ -8,15 +9,30 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ReserveRepositoryImpl implements ReserveRepository {
   final ReserveRemoteDataSource remoteDataSource;
   final SharedPreferences sharedPreferences;
+  final UserDatasource userDatasource;
 
-  ReserveRepositoryImpl(this.remoteDataSource, this.sharedPreferences);
+  ReserveRepositoryImpl(
+      this.remoteDataSource, this.sharedPreferences, this.userDatasource);
 
   @override
   Future<Either<Exception, List<ReserveEntity>>> getAllReserves() async {
     try {
       final token = sharedPreferences.getString('token');
       final reserveModels = await remoteDataSource.getAllReserves(token!);
-      return Right(reserveModels.map((model) => model.toReserveEntity()).toList());
+      List<Future<List<dynamic>>> avatarFiles =
+          reserveModels.map((reserve) async {
+        List<Future<dynamic>> userAvatars =
+            reserve.usersReserve.map((user) async {
+          return await userDatasource.getUserAvatar(user.avatarId, token);
+        }).toList();
+        return Future.wait(userAvatars);
+      }).toList();
+      List<List<dynamic>> avatars = await Future.wait(avatarFiles);
+      List<ReserveEntity> reserveEntities =
+          reserveModels.asMap().entries.map((entry) {
+        return entry.value.toReserveEntity(avatars[entry.key]);
+      }).toList();
+      return Right(reserveEntities);
     } catch (e) {
       return Left(Exception('Error al cargar reserve'));
     }
@@ -80,4 +96,5 @@ class ReserveRepositoryImpl implements ReserveRepository {
       return Left(Exception('Error al eliminar jugador: ${e.toString()}'));
     }
   }
+
 }

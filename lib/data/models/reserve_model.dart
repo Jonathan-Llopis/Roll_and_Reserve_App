@@ -1,4 +1,5 @@
 import 'package:roll_and_reserve/data/models/functions_for_models.dart';
+import 'package:roll_and_reserve/data/models/user_model.dart';
 import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
 
 class ReserveModel {
@@ -13,7 +14,7 @@ class ReserveModel {
   final int gameCategoryId;
   final int gameId;
   final int tableId;
-  final List<String> idUsers;
+  final List<UserModel> usersReserve;
 
   ReserveModel(
       {required this.id,
@@ -27,7 +28,7 @@ class ReserveModel {
       required this.gameCategoryId,
       required this.gameId,
       required this.tableId,
-      required this.idUsers});
+      required this.usersReserve});
 
   factory ReserveModel.fromJson(Map<String, dynamic> json) {
     return ReserveModel(
@@ -42,7 +43,7 @@ class ReserveModel {
       gameCategoryId: json['reserve_game_category']== null ? 0 : json['reserve_game_category']['id_game_category'] ?? 0,
       gameId: json['reserve_of_game']== null ? 0 : json['reserve_of_game']['id_game'] ?? 0,
       tableId: json['reserve_table']== null ? 0 : json['reserve_table']['id_table'] ?? 0,
-      idUsers: crearListaUsuarios(json['users_in_reserve']?? []),
+      usersReserve: crearListaUsuerModel(json['users_in_reserve']?? []),
     );
   }
 
@@ -61,7 +62,7 @@ class ReserveModel {
     };
   }
 
-  ReserveEntity toReserveEntity() {
+  ReserveEntity toReserveEntity(List<dynamic> avatarUser) {
     return ReserveEntity(
       id: id,
       freePlaces: freePlaces,
@@ -74,8 +75,9 @@ class ReserveModel {
       gameCategoryId: gameCategoryId,
       gameId: gameId,
       tableId: tableId,
-      idUsers: idUsers,
+      usersReserve: usersReserve.asMap().entries.map((entry) {
+        return entry.value.toUserEntity(avatarUser[entry.key]);
+      }).toList(),
     );
   }
-  
 }

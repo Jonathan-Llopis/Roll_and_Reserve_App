@@ -7,16 +7,16 @@ import 'package:roll_and_reserve/presentation/blocs/shops/shop_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_state.dart';
 import 'package:roll_and_reserve/presentation/widgets/information/information_shop.dart';
 
-class ShopsBody extends StatefulWidget {
-  const ShopsBody({
+class BodyMain extends StatefulWidget {
+  const BodyMain({
     super.key,
   });
 
   @override
-  State<ShopsBody> createState() => _ShopsBodyState();
+  State<BodyMain> createState() => _BodyMainState();
 }
 
-class _ShopsBodyState extends State<ShopsBody> {
+class _BodyMainState extends State<BodyMain> {
   @override
   void initState() {
     final loginBloc = BlocProvider.of<LoginBloc>(context);
@@ -84,7 +84,7 @@ class _ShopsBodyState extends State<ShopsBody> {
                                 ? context.go('/user/shop_edit/${shop.id}')
                                 : context.go('/user/shop/${shop.id}');
                           },
-                          child: ShopListInventory(shop: shop)));
+                          child: InformationShop(shop: shop)));
                 },
               )),
             ],

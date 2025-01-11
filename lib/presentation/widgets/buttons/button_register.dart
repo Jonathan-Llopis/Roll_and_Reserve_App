@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -7,15 +6,14 @@ import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
 
-class RegisterButton extends StatelessWidget {
-  const RegisterButton({
-    super.key,
-    required this.formKey,
-    required this.emailController,
-    required this.passwordController,
-    required this.nameController,
-    required this.userNameController
-  });
+class ButtonRegister extends StatelessWidget {
+  const ButtonRegister(
+      {super.key,
+      required this.formKey,
+      required this.emailController,
+      required this.passwordController,
+      required this.nameController,
+      required this.userNameController});
 
   final GlobalKey<FormState> formKey;
   final TextEditingController emailController;
@@ -27,44 +25,33 @@ class RegisterButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
-        if (state.isEmailUsed != null &&
-            state.isNameUsed != null) {
-          if (state.isEmailUsed! ||
-              state.isNameUsed!) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(
+        if (state.isEmailUsed != null && state.isNameUsed != null) {
+          if (state.isEmailUsed! || state.isNameUsed!) {
+            ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(
-                    'El email o nombre ya existe en la base de datos'),
+                content:
+                    Text('El email o nombre ya existe en la base de datos'),
               ),
             );
           }
           if (formKey.currentState!.validate()) {
-            context
-                .read<LoginBloc>()
-                .add(RegisterButtonPressed(
-                  email: emailController.text,
-                  password: passwordController.text,
-                  name: nameController.text,
-                  username: userNameController.text
-                ));
+            context.read<LoginBloc>().add(ButtonRegisterPressed(
+                email: emailController.text,
+                password: passwordController.text,
+                name: nameController.text,
+                username: userNameController.text));
             context.go('/login');
           }
         }
       },
       child: ElevatedButton(
         onPressed: () {
-          final loginBloc =
-              context.read<LoginBloc>();
+          final loginBloc = context.read<LoginBloc>();
           loginBloc.add(IsEmailUserUsed(
-              email: emailController.text,
-              name: nameController.text));
+              email: emailController.text, name: nameController.text));
         },
         style: AppTheme.elevatedButtonAcceptStyle,
-        child: const Text(
-          'Register',
-          style:AppTheme.buttonStyle
-        ),
+        child: const Text('Register', style: AppTheme.buttonStyle),
       ),
     );
   }

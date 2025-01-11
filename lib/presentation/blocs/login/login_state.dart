@@ -9,7 +9,7 @@ class LoginState {
   final bool? validatePassword;
   final String? id;
   final UserEntity? user;
-  final UserEntity? findUser;
+
 
   const LoginState(
       {this.isLoading = false,
@@ -20,7 +20,7 @@ class LoginState {
       this.id,
       this.user,
       this.validatePassword,
-      this.findUser});
+     });
 
   LoginState copyWith(
       {bool? isLoading,
@@ -31,7 +31,7 @@ class LoginState {
       String? id,
       UserEntity? user,
       bool? validatePassword,
-      UserEntity? findUser}) {
+      }) {
     return LoginState(
         isLoading: isLoading ?? this.isLoading,
         email: email ?? this.email,
@@ -41,7 +41,7 @@ class LoginState {
         id: id ?? this.id,
         user: user ?? this.user,
         validatePassword: validatePassword ?? this.validatePassword,
-        findUser: findUser ?? this.findUser);
+        );
   }
 
   factory LoginState.initial() => const LoginState();
@@ -51,8 +51,6 @@ class LoginState {
   factory LoginState.success(String email) => LoginState(email: email);
 
   factory LoginState.isLogedIn(UserEntity user) => LoginState(user: user);
-
-  factory LoginState.getUser(UserEntity findUser) => LoginState(findUser: findUser);
 
   factory LoginState.failure(String errorMessage) =>
       LoginState(errorMessage: errorMessage);

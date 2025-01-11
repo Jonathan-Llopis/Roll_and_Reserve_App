@@ -48,3 +48,13 @@ class GetShopsByOwnerEvent extends ShopEvent {
   @override
   List<Object?> get props => [owner];
 }
+
+class GetShopByFilterEvent extends ShopEvent {
+  final String? name;
+  final String? direction;
+
+  GetShopByFilterEvent({this.name, this.direction});
+
+   @override
+  List<Object?> get props => [name, direction];
+}

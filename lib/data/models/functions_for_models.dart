@@ -1,3 +1,5 @@
+import 'package:roll_and_reserve/data/models/user_model.dart';
+
 double calcularMediaRatings(List<dynamic> reviews) {
   double sumaRatings = 0;
   int contador = 0;
@@ -72,7 +74,22 @@ String getHour(String fecha) {
   return "${fecha.substring(11, 13)}:${fecha.substring(14, 16)}";
 }
 String getIsoDate(String fecha, String hora) {
-  List<String> fechaParts = fecha.split("-");
+  List<String> fechaParts = fecha.split(" - ");
   String isoDate = "${fechaParts[2]}-${fechaParts[1]}-${fechaParts[0]}T$hora:00Z";
   return isoDate;
+}
+
+List<UserModel> crearListaUsuerModel(List<dynamic> users) {
+  List<UserModel> listaUsuarios = [];
+
+  if (users.isEmpty) {
+    return [];
+  }
+
+  for (var user in users) {
+    UserModel userModel = UserModel.fromJson(user);
+    listaUsuarios.add(userModel);
+  }
+
+  return listaUsuarios;
 }

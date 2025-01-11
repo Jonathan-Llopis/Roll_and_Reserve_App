@@ -6,23 +6,23 @@ import 'package:roll_and_reserve/config/theme/theme.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/functions/controller_rive_animation.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
-import 'package:roll_and_reserve/presentation/widgets/custom_form_field.dart';
+import 'package:roll_and_reserve/presentation/widgets/screen_components/custom_form_field.dart';
 import 'package:roll_and_reserve/presentation/widgets/buttons/button_register.dart';
 
-class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+class ScreenRegister extends StatefulWidget {
+  const ScreenRegister({super.key});
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  State<ScreenRegister> createState() => _ScreenRegisterState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _ScreenRegisterState extends State<ScreenRegister> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
   final TextEditingController nameController = TextEditingController();
-    final TextEditingController userNameController = TextEditingController();
+  final TextEditingController userNameController = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
 
@@ -64,7 +64,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void nameFocus() {
     riveController?.nameFocus(nameFocusNode.hasFocus);
   }
-   void userNameFocus() {
+
+  void userNameFocus() {
     riveController?.nameFocus(nameFocusNode.hasFocus);
   }
 
@@ -125,15 +126,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               controller: userNameController,
                               labelText: 'Nombre de Usuario',
                               icon: Icons.badge_rounded,
-                              validator: (value) => validateUserName(value, loginBloc),
+                              validator: (value) =>
+                                  validateUserName(value, loginBloc),
                               onChanged: (value) {
                                 nameFocus();
                                 riveController?.updateLookNumber(value.length);
                               },
                               focusNode: userNameFocusNode,
                               riveController: null),
-                               const SizedBox(height: 20),
-                              CustomFormField(
+                          const SizedBox(height: 20),
+                          CustomFormField(
                               controller: nameController,
                               labelText: 'Nombre',
                               icon: Icons.person,
@@ -225,7 +227,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                               const SizedBox(width: 20),
                               Expanded(
-                                child: RegisterButton(
+                                child: ButtonRegister(
                                     formKey: formKey,
                                     emailController: emailController,
                                     passwordController: passwordController,

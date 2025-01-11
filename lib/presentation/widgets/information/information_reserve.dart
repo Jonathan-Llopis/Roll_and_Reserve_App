@@ -6,17 +6,20 @@ import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_event.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_reserve.dart';
 import 'package:roll_and_reserve/presentation/widgets/cards/card_user.dart';
+
 class InformationReserve extends StatelessWidget {
   const InformationReserve({
     super.key,
     required this.widget,
     required this.reserve,
     required this.loginBloc,
+    required this.dateReserve,
   });
 
-  final GameReserveScreen widget;
+  final ScreenReserve widget;
   final ReserveEntity reserve;
   final LoginBloc loginBloc;
+  final DateTime dateReserve;
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +41,7 @@ class InformationReserve extends StatelessWidget {
                 children: [
                   const Text(
                     'Horario:',
-                    style: TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   Text(
                       'Dia: ${reserve.dayDate}  ${reserve.horaInicio} - ${reserve.horaFin}'),
@@ -47,7 +49,7 @@ class InformationReserve extends StatelessWidget {
               ),
               Chip(
                 label: Text(
-                  '${reserve.freePlaces - reserve.idUsers.length} lugares libres',
+                  '${reserve.freePlaces - reserve.usersReserve.length} lugares libres',
                 ),
                 backgroundColor: Colors.blue.shade50,
               ),
@@ -61,11 +63,11 @@ class InformationReserve extends StatelessWidget {
           const SizedBox(height: 8),
           Expanded(
             child: ListView.builder(
-              itemCount: reserve.idUsers.length,
+              itemCount: reserve.usersReserve.length,
               itemBuilder: (context, index) {
-                final user = reserve.idUsers[index];
-                return UserCardTable(
-                  idUser: user,
+                final user = reserve.usersReserve[index];
+                return CardUser(
+                  user: user,
                 );
               },
             ),
@@ -91,33 +93,50 @@ class InformationReserve extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              loginBloc.state.user!.role == 2 ?
-              ElevatedButton.icon(
-                onPressed: () {
-                  if (reserve.idUsers
-                      .contains(loginBloc.state.user!.id)) {
-                    context.read<ReserveBloc>().add(
-                        DeleteUserOfReserveEvent(
-                            idReserve: reserve.id,
-                            idUser: loginBloc.state.user!.id));
-                  } else {
-                    context.read<ReserveBloc>().add(
-                        AddUserToReserveEvent(
-                            idReserve: reserve.id,
-                            idUser: loginBloc.state.user!.id));
-                  }
-                },
-                icon: Icon(
-                  (reserve.idUsers.contains(loginBloc.state.user!.id))
-                      ? Icons.logout
-                      : Icons.login,
-                ),
-                label: Text(
-                  (reserve.idUsers.contains(loginBloc.state.user!.id))
-                      ? 'Salir'
-                      : 'Unirse',
-                ),
-              ): Container(),
+              loginBloc.state.user!.role == 2
+                  ? ElevatedButton.icon(
+                      onPressed: () {
+                        if (reserve.usersReserve
+                            .map((user) => user.id)
+                            .contains(loginBloc.state.user!.id)) {
+                          context
+                              .read<ReserveBloc>()
+                              .add(DeleteUserOfReserveEvent(
+                                idReserve: reserve.id,
+                                idUser: loginBloc.state.user!.id,
+                                idTable: reserve.tableId,
+                                dateReserve: dateReserve,
+                              ));
+                        } else {
+                          if (reserve.usersReserve.length <
+                              reserve.freePlaces) {
+                            context
+                                .read<ReserveBloc>()
+                                .add(AddUserToReserveEvent(
+                                  idReserve: reserve.id,
+                                  idUser: loginBloc.state.user!.id,
+                                  idTable: reserve.tableId,
+                                  dateReserve: dateReserve,
+                                ));
+                          }
+                        }
+                      },
+                      icon: Icon(
+                        (reserve.usersReserve
+                                .map((user) => user.id)
+                                .contains(loginBloc.state.user!.id))
+                            ? Icons.logout
+                            : Icons.login,
+                      ),
+                      label: Text(
+                        (reserve.usersReserve
+                                .map((user) => user.id)
+                                .contains(loginBloc.state.user!.id))
+                            ? 'Salir'
+                            : 'Unirse',
+                      ),
+                    )
+                  : Container(),
             ],
           ),
         ],
