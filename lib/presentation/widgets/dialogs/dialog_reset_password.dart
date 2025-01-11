@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.dart';
+import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
 
 class DialogResetPassword extends StatefulWidget {
   const DialogResetPassword({super.key});
@@ -53,12 +54,7 @@ class _DialogResetPasswordState extends State<DialogResetPassword> {
                 labelText: 'Email',
                 labelStyle: TextStyle(color: Colors.black),
               ),
-              validator: (String? value) {
-                if (value == null || value.isEmpty) {
-                  return 'El email es obligatorio';
-                }
-                return null;
-              },
+              validator: basicValidation
             ),
           )
         ],

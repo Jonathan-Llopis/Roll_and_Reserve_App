@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
 
-class LoginButton extends StatelessWidget {
-  const LoginButton({
+class ButtonLogin extends StatelessWidget {
+  const ButtonLogin({
     super.key,
     required this.emailController,
     required this.passwordController,
@@ -29,7 +29,7 @@ class LoginButton extends StatelessWidget {
         final email = emailController.text.trim();
         final password = passwordController.text.trim();
         context.read<LoginBloc>().add(
-              LoginButtonPressed(email: email, password: password),
+              ButtonLoginPressed(email: email, password: password),
             );
         if (loginBloc.state.errorMessage != null) {
           ScaffoldMessenger.of(context).showSnackBar(

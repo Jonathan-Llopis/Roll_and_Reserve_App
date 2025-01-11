@@ -7,8 +7,8 @@ import 'package:go_router/go_router.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.dart';
 
-class MenuLateral extends StatelessWidget {
-  const MenuLateral({super.key});
+class DrawerMain extends StatelessWidget {
+  const DrawerMain({super.key});
 
   @override
   Widget build(BuildContext context) {

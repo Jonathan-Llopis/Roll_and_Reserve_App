@@ -15,54 +15,72 @@ final GoRouter router = GoRouter(
   initialLocation: '/login',
   routes: [
     GoRoute(
+      name: 'login',
       path: '/login',
-      builder: (context, state) => const LoginScreen(),
+      builder: (context, state) => const ScreenLogin(),
+      routes: [
+        GoRoute(
+          name: 'register',
+          path: 'signIn',
+          builder: (context, state) => const ScreenRegister(),
+        ),
+      ],
     ),
     GoRoute(
-      path: '/login/signIn',
-      builder: (context, state) => const RegisterScreen(),
-    ),
-    GoRoute(
+      name: 'user',
       path: '/user',
-      builder: (context, state) => const UserScreen(),
+      builder: (context, state) => const ScreenMain(),
+      routes: [
+        GoRoute(
+          name: 'editShop',
+          path: 'shop_edit/:idEditShop',
+          builder: (context, state) {
+            final shopId = int.parse(state.pathParameters['idEditShop']!);
+            return ScreenEditShop(idShop: shopId);
+          },
+        ),
+        GoRoute(
+          name: 'tablesShop',
+          path: 'shop/:idTablesShop',
+          builder: (context, state) {
+            final idShop = int.parse(state.pathParameters['idTablesShop']!);
+            return ScreenTablesOfShop(idShop: idShop);
+          },
+          routes: [
+            GoRoute(
+              name: 'storeReviews',
+              path: 'raiting',
+              builder: (context, state) {
+                final idShop = int.parse(state.pathParameters['idTablesShop']!);
+                return ScreenReviewShop(idShop: idShop);
+              },
+            ),
+            GoRoute(
+              name: 'reservations',
+              path: 'table/:idTable',
+              builder: (context, state) {
+                final tableId = int.parse(state.pathParameters['idTable']!);
+                final idShop = int.parse(state.pathParameters['idTablesShop']!);
+                return ScreenReservesOfTable(idTable: tableId, idShop: idShop);
+              },
+              routes: [
+                GoRoute(
+                  name: 'gameReserve',
+                  path: 'reserve/:idReserve',
+                  builder: (context, state) {
+                    final idReserve =
+                        int.parse(state.pathParameters['idReserve']!);
+                    final idShop =
+                        int.parse(state.pathParameters['idTablesShop']!);
+                    return ScreenReserve(idReserve: idReserve, idShop: idShop);
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
     ),
-    GoRoute(
-        path: '/user/shop_edit/:id',
-        builder: (context, state) {
-          final shopId = int.parse(state.pathParameters['id']!);
-          return EditStoreForm(idShop: shopId);
-        }),
-    GoRoute(
-        path: '/user/shop/:id',
-        builder: (context, state) {
-          final shopId = int.parse(state.pathParameters['id']!);
-          return TablesScreen(idShop: shopId);
-        }),
-    GoRoute(
-        path: '/user/shop/raiting/:idShop',
-        builder: (context, state) {
-          final idShop = int.parse(state.pathParameters['idShop']!);
-          return StoreReviewsPage(
-            idShop: idShop,
-          );
-        }),
-    GoRoute(
-        path: '/user/shop/table/:idTable:idShop',
-        builder: (context, state) {
-          final tableId = int.parse(state.pathParameters['idTable']!);
-          final idShop = int.parse(state.pathParameters['idShop']!);
-          return ReservationsScreen(
-            idTable: tableId,
-            idShop: idShop,
-          );
-        }),
-    GoRoute(
-        path: '/user/shop/table/reserve/:idReserve:idShop',
-        builder: (context, state) {
-          final idReserve = int.parse(state.pathParameters['idReserve']!);
-          final idShop = int.parse(state.pathParameters['idShop']!);
-          return GameReserveScreen(idReserve: idReserve, idShop: idShop);
-        }),
   ],
   redirect: (context, state) async {
     final isLoggedIn = await di.sl<LoginRepository>().isLoggedIn();

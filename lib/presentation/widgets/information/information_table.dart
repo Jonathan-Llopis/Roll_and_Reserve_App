@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:roll_and_reserve/domain/entities/table_entity.dart';
 
-
-class InfoTable extends StatelessWidget {
-  const InfoTable({
+class InformationTable extends StatelessWidget {
+  const InformationTable({
     super.key,
     required this.table,
   });
@@ -20,10 +19,7 @@ class InfoTable extends StatelessWidget {
         children: [
           Text(
             "Mesa ${table.numberTable}",
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge!
-                .copyWith(
+            style: Theme.of(context).textTheme.titleLarge!.copyWith(
                   color: Colors.blueAccent,
                   fontWeight: FontWeight.bold,
                 ),
@@ -39,10 +35,7 @@ class InfoTable extends StatelessWidget {
               SizedBox(width: 6.0),
               Text(
                 'Reservas: ${table.reserves.length}',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium!
-                    .copyWith(
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: Colors.grey[700],
                     ),
               ),
@@ -54,18 +47,16 @@ class InfoTable extends StatelessWidget {
             runSpacing: 8.0,
             children: [
               Chip(
-                label: Text(
-                    'Juego: ${'Juego desconocido'}'),
+                label: Text('Juego: ${'Juego desconocido'}'),
                 backgroundColor: Colors.blue.shade100,
-                labelStyle:
-                    TextStyle(color: Colors.blueAccent),
+                labelStyle: TextStyle(color: Colors.blueAccent),
               ),
               Chip(
                 label: Text(
-                    'Reservas: ${table.reserves.length}',),
+                  'Reservas: ${table.reserves.length}',
+                ),
                 backgroundColor: Colors.green.shade100,
-                labelStyle:
-                    TextStyle(color: Colors.green),
+                labelStyle: TextStyle(color: Colors.green),
               ),
             ],
           ),

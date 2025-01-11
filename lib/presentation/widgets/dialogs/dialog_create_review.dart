@@ -5,15 +5,15 @@ import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reviews/reviews_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reviews/reviews_event.dart';
 
-class ReviewDialog extends StatefulWidget {
+class DialogCreateReview extends StatefulWidget {
   final int idShop;
-  const ReviewDialog({super.key, required this.idShop});
+  const DialogCreateReview({super.key, required this.idShop});
 
   @override
-  State<ReviewDialog> createState() => _ReviewDialogState();
+  State<DialogCreateReview> createState() => _DialogCreateReviewState();
 }
 
-class _ReviewDialogState extends State<ReviewDialog> {
+class _DialogCreateReviewState extends State<DialogCreateReview> {
   final _formKey = GlobalKey<FormState>();
   String _description = '';
   int _rating = 1;
@@ -91,7 +91,10 @@ class _ReviewDialogState extends State<ReviewDialog> {
                       review: _descriptionController.text,
                       writerId: loginBloc.state.user!.id,
                       reviewedId: "",
-                      shopReview: widget.idShop)));
+                      shopReview: widget.idShop,
+                      userNameWriter: '',
+                      avatarIdWriter: '',
+                      avatarWriter: [])));
               Navigator.pop(context);
             }
           },

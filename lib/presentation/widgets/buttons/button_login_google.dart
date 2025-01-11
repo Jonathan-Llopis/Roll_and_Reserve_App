@@ -4,8 +4,8 @@ import 'package:roll_and_reserve/config/theme/theme.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
 
-class LoginWithGoogle extends StatelessWidget {
-  const LoginWithGoogle({
+class ButtonLoginGoogle extends StatelessWidget {
+  const ButtonLoginGoogle({
     super.key,
   });
 

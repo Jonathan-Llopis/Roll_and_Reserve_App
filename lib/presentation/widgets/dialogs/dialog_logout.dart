@@ -5,14 +5,18 @@ import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
 
-class LogOutUser extends StatelessWidget {
-  const LogOutUser({super.key});
+class DialogLogOut extends StatelessWidget {
+  const DialogLogOut({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
       return AlertDialog(
-        title: const Text("LogOut del Usuario", style: TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 30,)),
+        title: const Text("LogOut del Usuario",
+            style: TextStyle(
+              color: Color.fromARGB(255, 0, 0, 0),
+              fontSize: 30,
+            )),
         content: const Text(
           '¿Estas seguro que quieres salir de la aplicación?',
           style: TextStyle(

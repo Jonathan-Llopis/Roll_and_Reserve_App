@@ -1,30 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_state.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.dart';
-import 'package:roll_and_reserve/presentation/widgets/default_app_bar.dart';
+import 'package:roll_and_reserve/presentation/widgets/screen_components/default_app_bar.dart';
 import 'package:roll_and_reserve/presentation/widgets/cards/card_reserve.dart';
-import 'package:roll_and_reserve/presentation/widgets/drawer_main.dart';
+import 'package:roll_and_reserve/presentation/widgets/screen_components/drawer_main.dart';
 
-class ReservationsScreen extends StatefulWidget {
+class ScreenReservesOfTable extends StatefulWidget {
   final int idTable;
   final int idShop;
-  const ReservationsScreen(
+  const ScreenReservesOfTable(
       {super.key, required this.idTable, required this.idShop});
 
   @override
-  State<ReservationsScreen> createState() => _ReservationsScreenState();
+  State<ScreenReservesOfTable> createState() => _ScreenReservesOfTableState();
 }
 
-class _ReservationsScreenState extends State<ReservationsScreen> {
+class _ScreenReservesOfTableState extends State<ScreenReservesOfTable> {
+  DateTime? _selectedDate;
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<ReserveBloc>(context)
-        .add(GetReserveByTableEvent(idTable: widget.idTable));
+    _selectedDate = DateTime.now();
+    context.read<ReserveBloc>().add(
+          GetReserveByDateEvent(
+              dateReserve: _selectedDate!, idTable: widget.idTable),
+        );
   }
 
   @override
@@ -37,7 +40,7 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
         );
       } else if (state.errorMessage != null) {
         return Scaffold(
-          appBar: AppBarDefault(scaffoldKey: scaffoldKey),
+          appBar: DefaultAppBar(scaffoldKey: scaffoldKey),
           body: Center(
             child: Text(
               state.errorMessage!,
@@ -48,7 +51,7 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
       } else if (state.reserves != null) {
         return Scaffold(
           key: scaffoldKey,
-          appBar: AppBarDefault(scaffoldKey: scaffoldKey),
+          appBar: DefaultAppBar(scaffoldKey: scaffoldKey),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -59,11 +62,6 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back),
-                      onPressed: () =>
-                          context.go('/user/shop/${widget.idShop}'),
-                    ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -83,8 +81,33 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                         ),
                       ],
                     ),
-                    const Icon(Icons.book_online,
-                        size: 48, color: Colors.green),
+                    Column(
+                      children: [
+                        const Icon(Icons.book_online,
+                            size: 48, color: Colors.green),
+                        ElevatedButton(
+                          onPressed: () async {
+                            final DateTime? picked = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime.now(),
+                              lastDate: DateTime(2030),
+                            );
+                            if (picked != null) {
+                              setState(() {
+                                _selectedDate = picked;
+                              });
+                              context.read<ReserveBloc>().add(
+                                    GetReserveByDateEvent(
+                                        dateReserve: _selectedDate!,
+                                        idTable: widget.idTable),
+                                  );
+                            }
+                          },
+                          child: const Text('Filtrar por fecha'),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -110,10 +133,10 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
               ),
             ],
           ),
-          endDrawer: const MenuLateral(),
+          endDrawer: const DrawerMain(),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-             createReserve(context, widget.idTable);
+              createReserve(context, widget.idTable, _selectedDate!);
             },
             child: const Icon(Icons.add),
           ),
