@@ -1,5 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
+
+String? basicValidation(String? value) {
+  if (value == null || value.isEmpty) {
+    return 'Campo obligatorio';
+  }
+  return null;
+}
+String? basicValidationWithNumber(String? value) {
+  if (value == null || value.isEmpty) {
+    return 'Campo obligatorio';
+  }
+  if (!value.contains(RegExp(r'^[0-9]+$'))) {
+    return 'Debe ser un número';
+  }
+  return null;
+}
+
+String? validateSelectedValue(Object? value) {
+  if (value == null) {
+    return "Selecciona una opción";
+  }
+  return null;
+}
+
+String? validateHour(String? value) {
+  if (value == null || value.isEmpty) {
+    return "Este campo es obligatorio";
+  }
+  final regex = RegExp(r'^\d{2}:\d{2}$');
+  if (!regex.hasMatch(value)) {
+    return "El formato debe ser HH:MM";
+  }
+  
+  return null;
+}
 
 bool hasNumber(String value) {
   return value.contains(RegExp(r'\d'));
@@ -107,4 +144,30 @@ String? validateCurrentPassword(String? value, LoginBloc loginBloc) {
     }
   }
   return null;
+}
+
+int horaAMinutos(String hora) {
+  final partes = hora.split(":");
+  final horas = int.parse(partes[0]);
+  final minutos = int.parse(partes[1]);
+  return horas * 60 + minutos;
+}
+
+bool isHourTaken(List<ReserveEntity> reservas, DateTime fecha, String horaInicio, String horaFin) {
+  final horaInicioMinutos = horaAMinutos(horaInicio);
+  final horaFinMinutos = horaAMinutos(horaFin);
+
+  for (var reserva in reservas) {
+    if (DateFormat('dd - MM - yyyy').parse(reserva.dayDate) == fecha) {
+      final reservaHoraInicioMinutos = horaAMinutos(reserva.horaInicio);
+      final reservaHoraFinMinutos = horaAMinutos(reserva.horaFin);
+
+      if ((horaInicioMinutos >= reservaHoraInicioMinutos && horaInicioMinutos < reservaHoraFinMinutos) ||
+          (horaFinMinutos > reservaHoraInicioMinutos && horaFinMinutos <= reservaHoraFinMinutos) ||
+          (horaInicioMinutos <= reservaHoraInicioMinutos && horaFinMinutos >= reservaHoraFinMinutos)) {
+        return true;
+      }
+    }
+  }
+  return false;
 }

@@ -6,8 +6,8 @@ import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_event.dart';
 
-class CreateUpdateShop extends StatelessWidget {
-  const CreateUpdateShop({
+class ButtonCreateUpdateShop extends StatelessWidget {
+  const ButtonCreateUpdateShop({
     super.key,
     required TextEditingController titleController,
     required TextEditingController adressController,

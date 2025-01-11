@@ -1,27 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_state.dart';
 import 'package:roll_and_reserve/presentation/widgets/information/information_reserve.dart';
 
-class GameReserveScreen extends StatefulWidget {
+class ScreenReserve extends StatefulWidget {
   final int idReserve;
   final int idShop;
-  const GameReserveScreen({
+  const ScreenReserve({
     super.key,
     required this.idReserve,
     required this.idShop,
   });
 
   @override
-  State<GameReserveScreen> createState() => _GameReserveScreenState();
+  State<ScreenReserve> createState() => _ScreenReserveState();
 }
 
-class _GameReserveScreenState extends State<GameReserveScreen> {
-  
+class _ScreenReserveState extends State<ScreenReserve> {
   @override
   Widget build(BuildContext context) {
     LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
@@ -42,12 +41,13 @@ class _GameReserveScreenState extends State<GameReserveScreen> {
           return Scaffold(
             appBar: AppBar(
               title: Text("Mesa: ${reserve.tableId}"),
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () => context.go('/user/shop/table/${reserve.tableId}${widget.idShop}'),
-              ),
             ),
-            body: InformationReserve(widget: widget, reserve: reserve, loginBloc: loginBloc),
+            body: InformationReserve(
+                widget: widget,
+                reserve: reserve,
+                loginBloc: loginBloc,
+                dateReserve:
+                    DateFormat('dd - MM - yyyy').parse(reserve.dayDate)),
           );
         } else {
           return const Scaffold(

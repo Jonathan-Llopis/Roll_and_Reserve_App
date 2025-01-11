@@ -203,4 +203,22 @@ class LoginRepositoryImpl implements LoginRepository {
       return Left(AuthFailure());
     }
   }
+
+    @override
+    Future<Either<Failure, List<UserEntity>>> getUsersInfo() async {
+      try {
+        final token = sharedPreferences.getString('token');
+        List<UserModel> usersDataBase = await userDatasource.getUsers(token!);
+        List<Future<dynamic>> avatarFiles = usersDataBase.map((user) async {
+          return await userDatasource.getUserAvatar(user.avatarId, token);
+        }).toList();
+        List<dynamic> avatars = await Future.wait(avatarFiles);
+        List<UserEntity> usersEntity = usersDataBase.asMap().entries.map((entry) {
+          return entry.value.toUserEntity(avatars[entry.key]);
+        }).toList();
+        return Right(usersEntity);
+      } catch (e) {
+          return Left(AuthFailure());
+      }
+    }
 }

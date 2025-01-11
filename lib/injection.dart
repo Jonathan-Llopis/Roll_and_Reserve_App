@@ -22,7 +22,8 @@ import 'package:roll_and_reserve/domain/repositories/reserve_repository.dart';
 import 'package:roll_and_reserve/domain/repositories/review_repository.dart';
 import 'package:roll_and_reserve/domain/repositories/shop_repository.dart';
 import 'package:roll_and_reserve/domain/repositories/table_respository.dart';
-import 'package:roll_and_reserve/domain/usecases/login_usecases/get_user_info.dart';
+import 'package:roll_and_reserve/domain/usecases/login_usecases/get_user_info_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/login_usecases/get_users_info_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/login_usecases/is_email_used_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/login_usecases/is_name_used_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/login_usecases/update_pass_usecase.dart';
@@ -71,8 +72,8 @@ final GetIt sl = GetIt.instance;
 void configureDependencies() async {
   // BLocs
   sl.registerFactory<LoginBloc>(
-    () => LoginBloc(
-        sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()),
+    () => LoginBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(),
+        sl(), sl(), sl()),
   );
   sl.registerFactory<ShopBloc>(() => ShopBloc(sl(), sl(), sl(), sl()));
   sl.registerFactory<TableBloc>(() => TableBloc(
@@ -150,6 +151,7 @@ void configureDependencies() async {
     () => ReviewRepositoryImpl(
       sl(),
       sl(),
+      sl(),
     ),
   );
   sl.registerLazySingleton<DifficultyRepository>(
@@ -172,6 +174,7 @@ void configureDependencies() async {
   );
   sl.registerLazySingleton<ReserveRepository>(
     () => ReserveRepositoryImpl(
+      sl(),
       sl(),
       sl(),
     ),
@@ -272,6 +275,9 @@ void configureDependencies() async {
   );
   sl.registerLazySingleton<GetAllDifficultyUseCase>(
     () => GetAllDifficultyUseCase(sl()),
+  );
+  sl.registerLazySingleton<GetAllUsersUseCase>(
+    () => GetAllUsersUseCase(sl()),
   );
 
   sl.registerLazySingleton(() => http.Client());

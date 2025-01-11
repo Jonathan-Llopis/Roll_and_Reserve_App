@@ -7,25 +7,38 @@ abstract class ReserveEvent extends Equatable {
 }
 
 class GetReservesEvent extends ReserveEvent {}
+
 class GetAllDifficultyEvent extends ReserveEvent {}
+
 class GetAllGameEvent extends ReserveEvent {}
+
 class GetAllCategoryGameEvent extends ReserveEvent {}
 
 class GetReserveEvent extends ReserveEvent {
-  final int idReserve;  
+  final int idReserve;
   GetReserveEvent({required this.idReserve});
 
   @override
   List<Object?> get props => [idReserve];
 }
 
+class GetReserveByDateEvent extends ReserveEvent {
+  final DateTime dateReserve;
+  final int idTable;
+  GetReserveByDateEvent({required this.dateReserve, required this.idTable});
+
+  @override
+  List<Object?> get props => [dateReserve, idTable];
+}
+
 class CreateReserveEvent extends ReserveEvent {
   final ReserveEntity reserve;
   final String idUser;
-  CreateReserveEvent({required this.reserve, required this.idUser});
+  final DateTime dateReserve;
+  CreateReserveEvent({required this.reserve, required this.idUser, required this.dateReserve});
 
   @override
-  List<Object?> get props => [reserve];
+  List<Object?> get props => [reserve, idUser, dateReserve];
 }
 
 class DeleteReserveEvent extends ReserveEvent {
@@ -36,6 +49,7 @@ class DeleteReserveEvent extends ReserveEvent {
   @override
   List<Object?> get props => [idReserve];
 }
+
 class GetReserveByTableEvent extends ReserveEvent {
   final int idTable;
   GetReserveByTableEvent({required this.idTable});
@@ -43,20 +57,25 @@ class GetReserveByTableEvent extends ReserveEvent {
   @override
   List<Object?> get props => [idTable];
 }
+
 class AddUserToReserveEvent extends ReserveEvent {
   final int idReserve;
   final String idUser;
-  AddUserToReserveEvent({required this.idReserve, required this.idUser});
+  final int idTable;
+  final DateTime dateReserve;
+  AddUserToReserveEvent({required this.idReserve, required this.idUser, required this.idTable, required this.dateReserve});
 
   @override
-  List<Object?> get props => [idReserve];
+  List<Object?> get props => [idReserve, idUser, idTable, dateReserve];
 }
+
 class DeleteUserOfReserveEvent extends ReserveEvent {
   final int idReserve;
   final String idUser;
-  DeleteUserOfReserveEvent({required this.idReserve, required this.idUser});
+  final int idTable;
+  final DateTime dateReserve;
+  DeleteUserOfReserveEvent({required this.idReserve, required this.idUser, required this.idTable, required this.dateReserve});
 
   @override
-  List<Object?> get props => [idReserve];
+  List<Object?> get props => [idReserve, idUser, idTable, dateReserve];
 }
-

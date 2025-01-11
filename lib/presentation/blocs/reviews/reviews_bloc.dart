@@ -48,7 +48,7 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
           emit(
             ReviewState.success(),
           );
-          add(GetReviewByWritterEvent(idWritter: event.review.writerId));
+          add(GetReviewByShopEvent(idShop: event.review.shopReview));
         },
       );
     });

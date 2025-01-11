@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_state.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_edit_shop.dart';
 
-class AddTables extends StatelessWidget {
-  const AddTables({
+class ShopAddTables extends StatelessWidget {
+  const ShopAddTables({
     super.key,
     required this.widget,
     required this.state,
   });
 
   final TableState state;
-  final EditStoreForm widget;
+  final ScreenEditShop widget;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,6 @@ class AddTables extends StatelessWidget {
               Text('Mesas disponibles:',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               const Spacer(),
-             
             ],
           ),
         ),

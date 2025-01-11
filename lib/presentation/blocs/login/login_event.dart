@@ -6,23 +6,23 @@ abstract class LoginEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class LoginButtonPressed extends LoginEvent {
+class ButtonLoginPressed extends LoginEvent {
   final String email;
   final String password;
 
-  LoginButtonPressed({required this.email, required this.password});
+  ButtonLoginPressed({required this.email, required this.password});
 
   @override
   List<Object?> get props => [email, password];
 }
 
-class RegisterButtonPressed extends LoginEvent {
+class ButtonRegisterPressed extends LoginEvent {
   final String email;
   final String password;
   final String name;
   final String username;
 
-  RegisterButtonPressed(
+  ButtonRegisterPressed(
       {required this.email,
       required this.password,
       required this.name,
@@ -86,16 +86,6 @@ class GetUserInfoEvent extends LoginEvent {
   @override
   List<Object?> get props => [idGoogle];
 }
-
-class GetOtherUserInfoEvent extends LoginEvent {
-  final String idGoogle;
-
-  GetOtherUserInfoEvent({required this.idGoogle});
-
-  @override
-  List<Object?> get props => [idGoogle];
-}
-
 
 class LoadAvatar extends LoginEvent {}
 

@@ -8,19 +8,19 @@ import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
 
-class AppBarDefault extends StatefulWidget implements PreferredSizeWidget {
+class DefaultAppBar extends StatefulWidget implements PreferredSizeWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
 
-  const AppBarDefault({super.key, required this.scaffoldKey});
+  const DefaultAppBar({super.key, required this.scaffoldKey});
 
   @override
-  State<AppBarDefault> createState() => _AppBarDefaultState();
+  State<DefaultAppBar> createState() => _DefaultAppBarState();
 
   @override
   Size get preferredSize => const Size.fromHeight(120);
 }
 
-class _AppBarDefaultState extends State<AppBarDefault> {
+class _DefaultAppBarState extends State<DefaultAppBar> {
   @override
   void initState() {
     super.initState();
@@ -44,7 +44,6 @@ class _AppBarDefaultState extends State<AppBarDefault> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 const SizedBox(width: 16),
-                // Logo de la app
                 Container(
                   width: 70,
                   height: 70,
@@ -69,7 +68,6 @@ class _AppBarDefaultState extends State<AppBarDefault> {
                   ),
                 ),
                 const SizedBox(width: 16),
-                // Texto del título y subtítulo
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -132,39 +130,38 @@ class _AppBarDefaultState extends State<AppBarDefault> {
               ),
             ],
             flexibleSpace: Container(
-  decoration: BoxDecoration(
-    gradient: LinearGradient(
-      colors: [
-        Colors.blue.shade800,
-        Colors.blueAccent.shade400,
-      ],
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-    ),
-    image: const DecorationImage(
-      image: AssetImage('assets/images/appbar_back.jpg'),
-      fit: BoxFit.cover,
-      colorFilter: ColorFilter.mode(
-        Colors.black45,
-        BlendMode.darken,
-      ),
-    ),
-  ),
-  child: ClipRRect(
-    borderRadius: const BorderRadius.only(
-      bottomLeft: Radius.circular(16),
-      bottomRight: Radius.circular(16),
-    ),
-    child: BackdropFilter(
-      filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-      child: Container(
-        alignment: Alignment.center,
-        color: Colors.black.withOpacity(0.2),
-      ),
-    ),
-  ),
-),
-
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.blue.shade800,
+                    Colors.blueAccent.shade400,
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                image: const DecorationImage(
+                  image: AssetImage('assets/images/appbar_back.jpg'),
+                  fit: BoxFit.cover,
+                  colorFilter: ColorFilter.mode(
+                    Colors.black45,
+                    BlendMode.darken,
+                  ),
+                ),
+              ),
+              child: ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(16),
+                  bottomRight: Radius.circular(16),
+                ),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                  child: Container(
+                    alignment: Alignment.center,
+                    color: Colors.black.withOpacity(0.2),
+                  ),
+                ),
+              ),
+            ),
           );
         }
       },

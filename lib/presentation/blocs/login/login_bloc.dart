@@ -1,7 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/core/use_case.dart';
 import 'package:roll_and_reserve/domain/usecases/login_usecases/get_current_user_usecase.dart';
-import 'package:roll_and_reserve/domain/usecases/login_usecases/get_user_info.dart';
+import 'package:roll_and_reserve/domain/usecases/login_usecases/get_user_info_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/login_usecases/get_users_info_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/login_usecases/is_email_used_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/login_usecases/is_name_used_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/login_usecases/reset_password.dart';
@@ -28,6 +29,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final UpdatePasswordUsecase updatePasswordUsecase;
   final ValidatePasswordUsecase validatePasswordUsecase;
   final GetUserInfoUseCase getUserInfoUseCase;
+  final GetAllUsersUseCase getAllUsersUseCase;
 
   LoginBloc(
       this.signInUserUseCase,
@@ -41,9 +43,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       this.updateUserInfoUseCase,
       this.updatePasswordUsecase,
       this.validatePasswordUsecase,
-      this.getUserInfoUseCase)
+      this.getUserInfoUseCase,
+      this.getAllUsersUseCase)
       : super(LoginState.initial()) {
-    on<LoginButtonPressed>((event, emit) async {
+    on<ButtonLoginPressed>((event, emit) async {
       emit(LoginState.loading());
       final result = await signInUserUseCase(LoginParams(
         email: event.email,
@@ -55,7 +58,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       );
     });
 
-    on<RegisterButtonPressed>((event, emit) async {
+    on<ButtonRegisterPressed>((event, emit) async {
       emit(LoginState.loading());
       final result = await signUpUserUseCase(RegisterParams(
           email: event.email,
@@ -143,7 +146,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         validatePassword: result.fold((_) => null, (isValid) => isValid),
       ));
     });
-
     on<GetUserInfoEvent>((event, emit) async {
       emit(LoginState(isLoading: true));
       final result = await getUserInfoUseCase(event.idGoogle);
@@ -151,18 +153,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         isLoading: false,
         user: result.fold((_) => null, (user) => user),
       ));
-    });
-
-    on<GetOtherUserInfoEvent>((event, emit) async {
-      emit(LoginState.loading());
-      final result = await getUserInfoUseCase(event.idGoogle);
-      result.fold(
-        (failure) =>
-            emit(LoginState.failure("Fallo al realizar la actualización")),
-        (userFind) {
-          emit(LoginState.getUser(userFind));
-        },
-      );
     });
   }
 }

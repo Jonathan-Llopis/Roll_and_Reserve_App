@@ -7,18 +7,19 @@ import 'package:rive/rive.dart' as rive;
 import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
 import 'package:roll_and_reserve/presentation/functions/controller_rive_animation.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.dart';
+import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
 import 'package:roll_and_reserve/presentation/widgets/buttons/button_login_google.dart';
-import 'package:roll_and_reserve/presentation/widgets/custom_form_field.dart';
+import 'package:roll_and_reserve/presentation/widgets/screen_components/custom_form_field.dart';
 import 'package:roll_and_reserve/presentation/widgets/buttons/button_login.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class ScreenLogin extends StatefulWidget {
+  const ScreenLogin({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<ScreenLogin> createState() => _ScreenLoginState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _ScreenLoginState extends State<ScreenLogin> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   FocusNode emailFocusNode = FocusNode();
@@ -103,12 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         controller: emailController,
                         labelText: 'Email',
                         icon: Icons.email,
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Please enter your email';
-                          }
-                          return null;
-                        },
+                        validator: validateEmail,
                         onChanged: (value) {
                           emailFocus();
                           riveController?.updateLookNumber(value.length);
@@ -151,13 +147,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Expanded(
-                          child: LoginButton(
+                          child: ButtonLogin(
                               emailController: emailController,
                               passwordController: passwordController),
                         ),
                         const SizedBox(width: 15),
                         Expanded(
-                          child: LoginWithGoogle(),
+                          child: ButtonLoginGoogle(),
                         ),
                       ],
                     ),
