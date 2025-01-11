@@ -9,7 +9,7 @@ class ShopModel {
   final dynamic logo;
   final double averageRaiting;
   final String ownerId;
-  final int tablesShop;
+  final List<int> tablesShop;
   final List<int> gamesShop;
 
   ShopModel(

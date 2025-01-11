@@ -30,6 +30,7 @@ environment:
 dependencies:
   cached_network_image: ^3.3.1
   cloud_firestore: ^5.5.1
+  collection: ^1.18.0
   cupertino_icons: ^1.0.8
   dartz: ^0.10.1
   dotenv: ^4.2.0
@@ -40,6 +41,8 @@ dependencies:
     sdk: flutter
   flutter_bloc: ^8.1.6
   flutter_dotenv: ^5.2.1
+  flutter_localizations:
+    sdk: flutter
   flutter_native_splash: ^2.4.3
   flutter_offline: ^4.0.0
   flutter_screenutil: ^5.9.1

@@ -50,7 +50,7 @@ class ReserveState {
 
   factory ReserveState.success() => const ReserveState();
 
-  factory ReserveState.getReserve(List<ReserveEntity> reserves) =>
+  factory ReserveState.getReserves(List<ReserveEntity> reserves) =>
       ReserveState(reserves: reserves);
 
   factory ReserveState.selectedReserve(ReserveEntity reserveSelected) =>

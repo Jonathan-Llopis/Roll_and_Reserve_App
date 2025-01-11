@@ -37,7 +37,7 @@ class ButtonCreateUpdateShop extends StatelessWidget {
                     id: 0,
                     averageRaiting: 0,
                     logoId: '0',
-                    tablesShop: 0,
+                    tablesShop:  [],
                     gamesShop: []),
               ));
         } else {
@@ -50,7 +50,7 @@ class ButtonCreateUpdateShop extends StatelessWidget {
                 averageRaiting: shopBloc.state.shop?.averageRaiting ?? 0,
                 logoId: "",
                 ownerId: loginBloc.state.user!.id,
-                tablesShop: shopBloc.state.shop?.tablesShop ?? 0,
+                tablesShop: shopBloc.state.shop?.tablesShop ?? [],
                 gamesShop: shopBloc.state.shop?.gamesShop ?? [],
               )));
         }

@@ -3,14 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_event.dart';
 
-class FilterTiendasModal extends StatefulWidget {
-  const FilterTiendasModal({super.key});
+class FilterShops extends StatefulWidget {
+  const FilterShops({super.key});
 
   @override
-  State<FilterTiendasModal> createState() => _FilterTiendasModalState();
+  State<FilterShops> createState() => _FilterShopsState();
 }
 
-class _FilterTiendasModalState extends State<FilterTiendasModal> {
+class _FilterShopsState extends State<FilterShops> {
   final _formKey = GlobalKey<FormState>();
   final _nombreTiendaController = TextEditingController();
   final _localidadTiendaController = TextEditingController();
