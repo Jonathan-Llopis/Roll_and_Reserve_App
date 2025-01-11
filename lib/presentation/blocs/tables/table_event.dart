@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
 import 'package:roll_and_reserve/domain/entities/table_entity.dart';
 
 abstract class TableEvent extends Equatable {
@@ -49,3 +50,14 @@ class GetTablesByShopEvent extends TableEvent {
   List<Object?> get props => [idShop];
 }
 
+class GetAvailableTablesEvent extends TableEvent {
+  final String dayDate;
+  final String startTime;
+  final String endTime;
+  final List<ReserveEntity> reserves;
+  GetAvailableTablesEvent(
+      {required this.dayDate, required this.startTime, required this.endTime, required this.reserves});
+
+  @override
+  List<Object?> get props => [dayDate, startTime, endTime, reserves];
+}

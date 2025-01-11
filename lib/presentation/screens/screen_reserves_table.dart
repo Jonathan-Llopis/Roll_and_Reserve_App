@@ -22,12 +22,13 @@ class _ScreenReservesOfTableState extends State<ScreenReservesOfTable> {
   DateTime? _selectedDate;
   @override
   void initState() {
-    super.initState();
+    
     _selectedDate = DateTime.now();
     context.read<ReserveBloc>().add(
           GetReserveByDateEvent(
               dateReserve: _selectedDate!, idTable: widget.idTable),
         );
+    super.initState();
   }
 
   @override
@@ -40,7 +41,7 @@ class _ScreenReservesOfTableState extends State<ScreenReservesOfTable> {
         );
       } else if (state.errorMessage != null) {
         return Scaffold(
-          appBar: DefaultAppBar(scaffoldKey: scaffoldKey),
+          appBar: DefaultAppBar(scaffoldKey: scaffoldKey,),
           body: Center(
             child: Text(
               state.errorMessage!,
@@ -51,7 +52,7 @@ class _ScreenReservesOfTableState extends State<ScreenReservesOfTable> {
       } else if (state.reserves != null) {
         return Scaffold(
           key: scaffoldKey,
-          appBar: DefaultAppBar(scaffoldKey: scaffoldKey),
+          appBar: DefaultAppBar(scaffoldKey: scaffoldKey, ),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -89,6 +90,7 @@ class _ScreenReservesOfTableState extends State<ScreenReservesOfTable> {
                           onPressed: () async {
                             final DateTime? picked = await showDatePicker(
                               context: context,
+                              locale: const Locale('es', 'ES'),
                               initialDate: DateTime.now(),
                               firstDate: DateTime.now(),
                               lastDate: DateTime(2030),

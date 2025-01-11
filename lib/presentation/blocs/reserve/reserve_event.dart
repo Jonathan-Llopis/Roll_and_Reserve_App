@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
+import 'package:roll_and_reserve/domain/entities/shop_entity.dart';
 
 abstract class ReserveEvent extends Equatable {
   @override
@@ -35,7 +36,8 @@ class CreateReserveEvent extends ReserveEvent {
   final ReserveEntity reserve;
   final String idUser;
   final DateTime dateReserve;
-  CreateReserveEvent({required this.reserve, required this.idUser, required this.dateReserve});
+  CreateReserveEvent(
+      {required this.reserve, required this.idUser, required this.dateReserve});
 
   @override
   List<Object?> get props => [reserve, idUser, dateReserve];
@@ -63,7 +65,11 @@ class AddUserToReserveEvent extends ReserveEvent {
   final String idUser;
   final int idTable;
   final DateTime dateReserve;
-  AddUserToReserveEvent({required this.idReserve, required this.idUser, required this.idTable, required this.dateReserve});
+  AddUserToReserveEvent(
+      {required this.idReserve,
+      required this.idUser,
+      required this.idTable,
+      required this.dateReserve});
 
   @override
   List<Object?> get props => [idReserve, idUser, idTable, dateReserve];
@@ -74,8 +80,24 @@ class DeleteUserOfReserveEvent extends ReserveEvent {
   final String idUser;
   final int idTable;
   final DateTime dateReserve;
-  DeleteUserOfReserveEvent({required this.idReserve, required this.idUser, required this.idTable, required this.dateReserve});
+  DeleteUserOfReserveEvent(
+      {required this.idReserve,
+      required this.idUser,
+      required this.idTable,
+      required this.dateReserve});
 
   @override
   List<Object?> get props => [idReserve, idUser, idTable, dateReserve];
+}
+
+class GetReservesByShopEvent extends ReserveEvent {
+  final ShopEntity currentShop;
+  final String dateReserve;
+  final String startTime;
+  final String endTime;
+  GetReservesByShopEvent(
+      {required this.currentShop, required this.dateReserve, required this.startTime, required this.endTime});
+
+  @override
+  List<Object?> get props => [currentShop, dateReserve, startTime, endTime];
 }

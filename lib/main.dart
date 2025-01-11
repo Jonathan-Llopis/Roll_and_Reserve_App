@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:roll_and_reserve/config/router/routes.dart';
 import 'package:roll_and_reserve/firebase_options.dart';
@@ -19,7 +20,7 @@ void main() async {
   Future.delayed(const Duration(seconds: 2), () {
     FlutterNativeSplash.remove();
   });
-  
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -35,17 +36,36 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => sl<LoginBloc>(),),
-        BlocProvider(create: (_) => sl<ShopBloc>(),),
-        BlocProvider(create: (_) => sl<TableBloc>(),),
-        BlocProvider(create: (_) => sl<ReviewBloc>(),),
-        BlocProvider(create: (_) => sl<ReserveBloc>(),),
+        BlocProvider(
+          create: (_) => sl<LoginBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => sl<ShopBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => sl<TableBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => sl<ReviewBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => sl<ReserveBloc>(),
+        ),
       ],
       child: MaterialApp.router(
         routerConfig: router,
         debugShowCheckedModeBanner: false,
         title: 'Roll and Reserve',
         theme: ThemeData(primarySwatch: Colors.blue),
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: [
+          Locale('en', ''),
+          Locale('es', ''),
+        ],
       ),
     );
   }

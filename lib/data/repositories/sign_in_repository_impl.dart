@@ -172,6 +172,7 @@ class LoginRepositoryImpl implements LoginRepository {
   Future<Either<Failure, bool>> updateUserInfo(UserEntity user) async {
     try {
         final token = sharedPreferences.getString('token');
+      await firebaseUserDataSource.updateUserInfo(user.name, user.id, user.role);
       String avatarId =
           await userDatasource.updateAvatar(user.toUserModel(null), token!);
       UserModel userModel = user.toUserModel(avatarId);

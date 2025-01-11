@@ -30,7 +30,7 @@ class ScreenReviewShop extends StatelessWidget {
         } else if (state.reviews != null) {
           return Scaffold(
             key: scaffoldKey,
-            appBar: DefaultAppBar(scaffoldKey: scaffoldKey),
+            appBar: DefaultAppBar(scaffoldKey: scaffoldKey, ),
             body: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

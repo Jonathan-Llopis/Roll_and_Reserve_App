@@ -10,8 +10,8 @@ import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
 
 class DefaultAppBar extends StatefulWidget implements PreferredSizeWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
-
-  const DefaultAppBar({super.key, required this.scaffoldKey});
+  const DefaultAppBar(
+      {super.key, required this.scaffoldKey});
 
   @override
   State<DefaultAppBar> createState() => _DefaultAppBarState();
@@ -35,6 +35,9 @@ class _DefaultAppBarState extends State<DefaultAppBar> {
           return const Center(child: CircularProgressIndicator());
         } else {
           return AppBar(
+            iconTheme: IconThemeData(
+              color: Colors.white,
+            ),
             backgroundColor: Colors.transparent,
             elevation: 0,
             toolbarHeight: 120,

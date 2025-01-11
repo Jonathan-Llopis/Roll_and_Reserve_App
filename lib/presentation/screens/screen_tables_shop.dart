@@ -9,6 +9,7 @@ import 'package:roll_and_reserve/presentation/blocs/tables/table_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_state.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_utils.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.dart';
+import 'package:roll_and_reserve/presentation/widgets/screen_components/bottom_filter_tables.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/default_app_bar.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/drawer_main.dart';
 
@@ -24,17 +25,10 @@ class _ScreenTablesOfShopState extends State<ScreenTablesOfShop> {
   late ShopEntity currentShop;
 
   @override
-  void initState() {
-    super.initState();
-    context.read<TableBloc>().add(GetTablesByShopEvent(idShop: widget.idShop));
-    ShopBloc shopBloc = BlocProvider.of<ShopBloc>(context);
-    currentShop =
-        shopBloc.state.shops!.firstWhere((shop) => shop.id == widget.idShop);
-  }
-
-  @override
   Widget build(BuildContext context) {
     var scaffoldKey = GlobalKey<ScaffoldState>();
+    ShopBloc shopBloc = BlocProvider.of<ShopBloc>(context);
+    context.read<TableBloc>().add(GetTablesByShopEvent(idShop: widget.idShop));
     return BlocBuilder<TableBloc, TableState>(
       builder: (context, state) {
         if (state.isLoading) {
@@ -42,10 +36,12 @@ class _ScreenTablesOfShopState extends State<ScreenTablesOfShop> {
         } else if (state.errorMessage != null) {
           return Center(child: Text(state.errorMessage!));
         } else if (state.tables != null) {
+          currentShop = shopBloc.state.shops!
+              .firstWhere((shop) => shop.id == widget.idShop);
           LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
           return Scaffold(
             key: scaffoldKey,
-            appBar: DefaultAppBar(scaffoldKey: scaffoldKey),
+            appBar: DefaultAppBar(scaffoldKey: scaffoldKey, ),
             body: Column(
               children: [
                 Padding(
@@ -160,6 +156,9 @@ class _ScreenTablesOfShopState extends State<ScreenTablesOfShop> {
                     child: const Icon(Icons.add),
                   )
                 : Container(),
+            bottomNavigationBar: loginBloc.state.user!.role == 2
+                ? BottomFilterTables(currentShop: currentShop)
+                : null,
           );
         }
         return Container();
