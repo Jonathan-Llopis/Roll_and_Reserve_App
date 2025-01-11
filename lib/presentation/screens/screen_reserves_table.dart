@@ -97,6 +97,7 @@ class _ScreenReservesOfTableState extends State<ScreenReservesOfTable> {
                               setState(() {
                                 _selectedDate = picked;
                               });
+                              // ignore: use_build_context_synchronously
                               context.read<ReserveBloc>().add(
                                     GetReserveByDateEvent(
                                         dateReserve: _selectedDate!,

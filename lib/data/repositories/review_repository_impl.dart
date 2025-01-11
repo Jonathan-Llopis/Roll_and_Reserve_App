@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:roll_and_reserve/data/datasources/review_datasource.dart';
 import 'package:roll_and_reserve/data/datasources/user_datasource.dart';
 import 'package:roll_and_reserve/data/models/review_model.dart';
