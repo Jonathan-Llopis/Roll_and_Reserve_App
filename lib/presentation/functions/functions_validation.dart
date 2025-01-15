@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
+import 'package:roll_and_reserve/domain/entities/shop_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 
 String? basicValidation(String? value) {
@@ -170,4 +171,18 @@ bool isHourTaken(List<ReserveEntity> reservas, DateTime fecha, String horaInicio
     }
   }
   return false;
+}
+
+String? basicValidationTable(String? value, ShopEntity currentShop) {
+  if (value == null || value.isEmpty) {
+    return 'Campo obligatorio';
+  }
+  if (!value.contains(RegExp(r'^[0-9]+$'))) {
+    return 'Debe ser un número';
+  }
+  if(currentShop.tablesShop.any((element) => element == int.parse(value))){
+    return 'El número de mesa ya existe';
+
+  }
+  return null;
 }

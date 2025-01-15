@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:roll_and_reserve/domain/entities/shop_entity.dart';
 import 'package:roll_and_reserve/domain/entities/table_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_event.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
 
 class DialogCreateUpdateTable extends StatefulWidget {
-  final int idShop;
+  final ShopEntity currentShop;
   final TableEntity? table;
 
   const DialogCreateUpdateTable({
-    required this.idShop,
+    required this.currentShop,
     this.table,
     super.key,
   });
@@ -59,7 +60,11 @@ class _DialogCreateUpdateTableState extends State<DialogCreateUpdateTable> {
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                   ),
-                  validator: basicValidationWithNumber,
+                  validator: (value) {
+                    String? error =
+                        basicValidationTable(value, widget.currentShop);
+                    return error;
+                  },
                   keyboardType: TextInputType.number,
                 ),
                 const SizedBox(height: 24.0),
@@ -85,7 +90,7 @@ class _DialogCreateUpdateTableState extends State<DialogCreateUpdateTable> {
                                         int.parse(_tableNameController.text),
                                     stats: "",
                                     reserves: [],
-                                    idShop: widget.idShop,
+                                    idShop: widget.currentShop.id,
                                   ),
                                 ));
                           } else {
@@ -96,7 +101,7 @@ class _DialogCreateUpdateTableState extends State<DialogCreateUpdateTable> {
                                         int.parse(_tableNameController.text),
                                     stats: "",
                                     reserves: [],
-                                    idShop: widget.idShop,
+                                    idShop: widget.currentShop.id,
                                   ),
                                 ));
                           }
@@ -123,7 +128,7 @@ class _DialogCreateUpdateTableState extends State<DialogCreateUpdateTable> {
                           context.read<TableBloc>().add(
                                 DeleteTableEvent(
                                   idTable: widget.table!.id,
-                                  idShop: widget.idShop,
+                                  idShop: widget.currentShop.id,
                                 ),
                               );
                           Navigator.of(context).pop();
@@ -133,7 +138,7 @@ class _DialogCreateUpdateTableState extends State<DialogCreateUpdateTable> {
                       ElevatedButton(
                         onPressed: () {
                           context.go(
-                            '/user/shop/${widget.idShop}/table/${widget.table!.id}',
+                            '/user/shop/${widget.currentShop.id}/table/${widget.table!.id}',
                           );
                         },
                         child: const Text("Gestionar Reservas"),

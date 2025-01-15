@@ -29,7 +29,7 @@ class ShopModel {
         id: json['id_shop'],
         name: json['name'],
         address: json['address'],
-        logoId: json['logo'] ?? "677e565be78534b20cb542b0",
+        logoId: json['logo'] ?? "6785353421a364ee9968160f",
         logo: <int>[],
         averageRaiting: calcularMediaRatings(json['reviews_shop'] ?? []),
         ownerId:
@@ -43,7 +43,7 @@ class ShopModel {
         id: json['id_shop'],
         name: json['name'],
         address: json['address'],
-        logoId: json['logo'] ?? "677e565be78534b20cb542b0",
+        logoId: json['logo'] ?? "6785353421a364ee9968160f",
         logo: <int>[],
         averageRaiting: calcularMediaRatings(json['reviews_shop'] ?? []),
         ownerId: json['owner'] ?? "0",

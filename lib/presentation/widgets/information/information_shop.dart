@@ -121,7 +121,6 @@ class _ShopListInventoryState extends State<InformationShop> {
                   ),
                 ),
                 const SizedBox(height: 8.0),
-                
               ],
             ),
           ),
@@ -129,6 +128,7 @@ class _ShopListInventoryState extends State<InformationShop> {
           Column(
             children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   const Icon(Icons.table_bar, size: 16, color: Colors.grey),
                   const SizedBox(width: 4.0),
@@ -143,6 +143,12 @@ class _ShopListInventoryState extends State<InformationShop> {
               ),
               const SizedBox(height: 8.0),
               buildStars(widget.shop.averageRaiting),
+              loginBloc.state.user!.role == 1 ? IconButton(
+                icon: Icon(Icons.edit, color: Colors.blue),
+                onPressed: () {
+                  context.go('/user/shop_edit/${widget.shop.id}');
+                },
+              ) : Container()
             ],
           ),
         ],

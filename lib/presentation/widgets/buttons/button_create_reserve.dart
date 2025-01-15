@@ -68,7 +68,7 @@ class ButtonCreateReserve extends StatelessWidget {
                   tableId: widget.idTable,
                   usersReserve: [],
                 ),
-                idUser: loginBloc.state.user!.id,
+                idUser: loginBloc.state.user!.role == 2 ? loginBloc.state.user!.id : '',
                 dateReserve: _selectedDate,
               ));
 
