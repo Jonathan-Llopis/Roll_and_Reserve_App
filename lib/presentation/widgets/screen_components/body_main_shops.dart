@@ -81,7 +81,7 @@ class _BodyMainState extends State<BodyMain> {
                       builder: (context) => GestureDetector(
                           onTap: () {
                             loginBloc.state.user!.role == 1
-                                ? context.go('/user/shop_edit/${shop.id}')
+                                ? null
                                 : context.go('/user/shop/${shop.id}');
                           },
                           child: InformationShop(shop: shop)));

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:roll_and_reserve/domain/entities/shop_entity.dart';
 import 'package:roll_and_reserve/domain/entities/table_entity.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_create_reserve.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_create_review.dart';
@@ -61,12 +62,12 @@ Future<void> deleteShop(BuildContext context, int idShop) {
 }
 
 Future<void> showUpdateCreateTableDialog(
-    BuildContext context, int idShop, TableEntity? table) {
+    BuildContext context, ShopEntity currentShop, TableEntity? table) {
   return showDialog(
     context: context,
     builder: (context) {
       return DialogCreateUpdateTable(
-        idShop: idShop,
+        currentShop: currentShop,
         table: table,
       );
     },

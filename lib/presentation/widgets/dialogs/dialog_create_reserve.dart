@@ -4,12 +4,15 @@ import 'package:roll_and_reserve/domain/entities/category_game_entity.dart';
 import 'package:roll_and_reserve/domain/entities/difficulty_entity.dart';
 import 'package:roll_and_reserve/domain/entities/game_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
+import 'package:roll_and_reserve/presentation/functions/functions_utils.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
 import 'package:roll_and_reserve/presentation/widgets/buttons/button_create_reserve.dart';
+import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_components/input_reservation_text.dart';
 
 class DialogCreateReserve extends StatefulWidget {
   final int idTable;
   final DateTime dateReserve;
+
   const DialogCreateReserve({
     required this.idTable,
     required this.dateReserve,
@@ -41,105 +44,79 @@ class _ReserveFormDialogState extends State<DialogCreateReserve> {
     _hourEndController.dispose();
     _descriptionController.dispose();
     _requiredMaterialController.dispose();
-
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     ReserveBloc reserveBloc = BlocProvider.of<ReserveBloc>(context);
-    return AlertDialog(
-      title: const Text("Crear Reserva"),
-      content: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: TextFormField(
-                    controller: _freePlacesController,
-                    decoration: const InputDecoration(
-                      labelText: "Plazas Totales en Mesa",
-                      prefixIcon: Icon(Icons.people),
-                    ),
-                    keyboardType: TextInputType.number,
-                    validator: basicValidationWithNumber),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: TextFormField(
-                  controller: _hourStartController,
-                  decoration: const InputDecoration(
-                    labelText: "Hora de inicio (HH:MM)",
-                    prefixIcon: Icon(Icons.access_time),
-                  ),
-                  keyboardType: TextInputType.datetime,
-                  validator: (value) {
-                    String? error = validateHour(value);
-                    if (error != null) {
-                      return error;
-                    }
-                    if (isHourTaken(
-                        reserveBloc.state.reserves!,
-                        widget.dateReserve,
-                        _hourStartController.text,
-                        _hourEndController.text)) {
-                      return 'La hora ya está cogida ese día';
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: TextFormField(
-                  controller: _hourEndController,
-                  decoration: const InputDecoration(
-                    labelText: "Hora de fin (HH:MM)",
-                    prefixIcon: Icon(Icons.access_time_filled),
-                  ),
-                  keyboardType: TextInputType.datetime,
-                  validator: (value) {
-                    String? error = validateHour(value);
-                    if (error != null) {
-                      return error;
-                    }
-                    if (isHourTaken(
-                        reserveBloc.state.reserves!,
-                        widget.dateReserve,
-                        _hourStartController.text,
-                        _hourEndController.text)) {
-                      return 'La hora ya está cogida ese día';
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: TextFormField(
-                    controller: _descriptionController,
-                    decoration: const InputDecoration(
-                      labelText: "Descripción",
-                      prefixIcon: Icon(Icons.description),
-                    ),
-                    validator: basicValidation),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: TextFormField(
-                    controller: _requiredMaterialController,
-                    decoration: const InputDecoration(
-                      labelText: "Material necesario",
-                      prefixIcon: Icon(Icons.build),
-                    ),
-                    validator: basicValidation),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: DropdownButtonFormField<DifficultyEntity>(
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.85, // Adjust width
+        padding: const EdgeInsets.all(24.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              spreadRadius: 5,
+              blurRadius: 7,
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  InputReservationText(
+                      controller: _freePlacesController,
+                      label: "Plazas Totales en Mesa",
+                      icon: Icons.people,
+                      keyboardType: TextInputType.number,
+                      validator: basicValidationWithNumber),
+                  InputReservationText(
+                      controller: _hourStartController,
+                      label: "Hora de inicio (HH:MM)",
+                      icon: Icons.access_time,
+                      keyboardType: TextInputType.datetime,
+                      validator: (value) => validateTime(
+                          value,
+                          reserveBloc,
+                          widget.dateReserve,
+                          _hourStartController,
+                          _hourEndController)),
+                  InputReservationText(
+                      controller: _hourEndController,
+                      label: "Hora de fin (HH:MM)",
+                      icon: Icons.access_time_filled,
+                      keyboardType: TextInputType.datetime,
+                      validator: (value) => validateTime(
+                          value,
+                          reserveBloc,
+                          widget.dateReserve,
+                          _hourStartController,
+                          _hourEndController)),
+                  InputReservationText(
+                      controller: _descriptionController,
+                      label: "Descripción",
+                      icon: Icons.description,
+                      keyboardType: 
+                       TextInputType.text,
+                      validator: basicValidation),
+                  InputReservationText(
+                      controller: _requiredMaterialController,
+                      label: "Material necesario",
+                      icon: Icons.build,
+                      keyboardType: TextInputType.text,
+                      validator: basicValidation),
+                 DropdownButtonFormField<DifficultyEntity>(
                     decoration: const InputDecoration(
                       labelText: "Dificultad",
                     ),
@@ -156,10 +133,7 @@ class _ReserveFormDialogState extends State<DialogCreateReserve> {
                       });
                     },
                     validator: validateSelectedValue),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: DropdownButtonFormField<GameCategoryEntity>(
+                  DropdownButtonFormField<GameCategoryEntity>(
                     decoration: const InputDecoration(
                       labelText: "Categoría de juego",
                     ),
@@ -176,10 +150,7 @@ class _ReserveFormDialogState extends State<DialogCreateReserve> {
                       });
                     },
                     validator: validateSelectedValue),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: DropdownButtonFormField<GameEntity>(
+                  DropdownButtonFormField<GameEntity>(
                     decoration: const InputDecoration(
                       labelText: "Juego",
                     ),
@@ -196,29 +167,38 @@ class _ReserveFormDialogState extends State<DialogCreateReserve> {
                       });
                     },
                     validator: validateSelectedValue),
+                ],
               ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 20.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text("Cancelar",
+                      style: TextStyle(color: Colors.red)),
+                ),
+                const SizedBox(width: 10.0),
+                ButtonCreateReserve(
+                  formKey: _formKey,
+                  freePlacesController: _freePlacesController,
+                  hourStartController: _hourStartController,
+                  hourEndController: _hourEndController,
+                  descriptionController: _descriptionController,
+                  requiredMaterialController: _requiredMaterialController,
+                  selectedDifficulty: _selectedDifficulty,
+                  selectedGameCategory: _selectedGameCategory,
+                  selectedGame: _selectedGame,
+                  widget: widget,
+                  selectedDate: widget.dateReserve,
+                ),
+              ],
+            ),
+          ],
         ),
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text("Cancelar"),
-        ),
-        ButtonCreateReserve(
-            formKey: _formKey,
-            freePlacesController: _freePlacesController,
-            hourStartController: _hourStartController,
-            hourEndController: _hourEndController,
-            descriptionController: _descriptionController,
-            requiredMaterialController: _requiredMaterialController,
-            selectedDifficulty: _selectedDifficulty,
-            selectedGameCategory: _selectedGameCategory,
-            selectedGame: _selectedGame,
-            widget: widget,
-            selectedDate: widget.dateReserve),
-      ],
     );
   }
+
 }

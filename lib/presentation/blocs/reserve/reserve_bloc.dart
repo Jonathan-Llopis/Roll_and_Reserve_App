@@ -117,12 +117,14 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
           emit(
             ReserveState.success(),
           );
-          add(AddUserToReserveEvent(
-            idReserve: id,
-            idUser: event.idUser,
-            idTable: event.reserve.tableId,
-            dateReserve: event.dateReserve,
-          ));
+          if (event.idUser != '') {
+            add(AddUserToReserveEvent(
+              idReserve: id,
+              idUser: event.idUser,
+              idTable: event.reserve.tableId,
+              dateReserve: event.dateReserve,
+            ));
+          }
         },
       );
     });
@@ -264,6 +266,7 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
     });
     on<GetReserveByDateEvent>((event, emit) async {
       try {
+        emit(ReserveState.loading());
         final reservesFuture = getReserveUseCase(NoParams());
         final categoriesFuture = getAllCategoryGamesUseCase(NoParams());
         final gamesFuture = getAllGameUseCase(NoParams());
@@ -324,6 +327,7 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
         emit(ReserveState.failure("Error inesperado: $e"));
       }
     });
+
     on<GetReservesByShopEvent>((event, emit) async {
       emit(ReserveState.loading());
 

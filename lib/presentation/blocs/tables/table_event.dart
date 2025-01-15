@@ -54,10 +54,11 @@ class GetAvailableTablesEvent extends TableEvent {
   final String dayDate;
   final String startTime;
   final String endTime;
+  final int shopId;
   final List<ReserveEntity> reserves;
   GetAvailableTablesEvent(
-      {required this.dayDate, required this.startTime, required this.endTime, required this.reserves});
+      {required this.dayDate, required this.startTime, required this.endTime, required this.reserves, required this.shopId});
 
   @override
-  List<Object?> get props => [dayDate, startTime, endTime, reserves];
+  List<Object?> get props => [dayDate, startTime, endTime, reserves, shopId];
 }

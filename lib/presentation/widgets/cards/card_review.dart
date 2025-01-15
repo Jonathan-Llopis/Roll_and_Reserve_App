@@ -31,7 +31,7 @@ class CardReview extends StatelessWidget {
             },
           ),
         ),
-        title: Text(review.userNameWriter),
+        title: Text(review.userNameWriter == "" ? "Anónimo" : review.userNameWriter),
         subtitle: Column(
           children: [
             buildStars(review.raiting.toDouble()),
