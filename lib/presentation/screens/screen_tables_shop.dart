@@ -110,7 +110,7 @@ class _ScreenTablesOfShopState extends State<ScreenTablesOfShop> {
                           onTap: () {
                             loginBloc.state.user!.role == 1
                                 ? showUpdateCreateTableDialog(
-                                    context, widget.idShop, table)
+                                    context,currentShop, table)
                                 : context.go(
                                     '/user/shop/${widget.idShop}/table/${table.id}');
                           },
@@ -129,14 +129,6 @@ class _ScreenTablesOfShopState extends State<ScreenTablesOfShop> {
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                SizedBox(height: 6),
-                                Text(
-                                  "Juego de la Mesa",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                SizedBox(height: 6),
                               ],
                             ),
                           ),
@@ -151,7 +143,7 @@ class _ScreenTablesOfShopState extends State<ScreenTablesOfShop> {
             floatingActionButton: loginBloc.state.user!.role == 1
                 ? FloatingActionButton(
                     onPressed: () {
-                      showUpdateCreateTableDialog(context, widget.idShop, null);
+                      showUpdateCreateTableDialog(context, currentShop, null);
                     },
                     child: const Icon(Icons.add),
                   )

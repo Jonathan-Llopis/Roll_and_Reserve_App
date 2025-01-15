@@ -8,6 +8,7 @@ import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_event.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_utils.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FilterTables extends StatefulWidget {
   const FilterTables({super.key, required this.currentShop});
@@ -23,6 +24,29 @@ class _FilterTablesState extends State<FilterTables> {
   final _startTimeController = TextEditingController();
   final _endTimeController = TextEditingController();
 
+   @override
+  void initState() {
+    _loadFilterValues();
+    super.initState();
+  }
+
+  Future<void> _loadFilterValues() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _dateController.text = prefs.getString('date') ?? '';
+      _startTimeController.text = prefs.getString('startTime') ?? '';
+      _endTimeController.text = prefs.getString('endTime') ?? '';
+    });
+  }
+
+  Future<void> _saveFilterValues() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('date', _dateController.text);
+    await prefs.setString('startTime', _startTimeController.text);
+    await prefs.setString('endTime', _endTimeController.text);
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<ReserveBloc, ReserveState>(
@@ -32,7 +56,7 @@ class _FilterTablesState extends State<FilterTables> {
               dayDate: _dateController.text,
               startTime: _startTimeController.text,
               endTime: _endTimeController.text,
-              reserves: state.reserves!));
+              reserves: state.reserves!, shopId: widget.currentShop.id));
           Navigator.of(context).pop();
         } else if (state.errorMessage != null) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -65,7 +89,16 @@ class _FilterTablesState extends State<FilterTables> {
                   labelText: 'Hora de inicio',
                   border: OutlineInputBorder(),
                 ),
-                validator: validateHour,
+                validator:(value) {
+                    String? error = validateHour(value);
+                    if (error != null) {
+                      return error;
+                    }
+                    if(_startTimeController.text.compareTo(_endTimeController.text) >= 0){
+                      return 'La hora de inicio debe ser menor que la de fin';
+                    }
+                    return null;
+                  },
               ),
               const SizedBox(height: 16),
               TextFormField(
@@ -74,7 +107,18 @@ class _FilterTablesState extends State<FilterTables> {
                   labelText: 'Hora de fin',
                   border: OutlineInputBorder(),
                 ),
-                validator: validateHour,
+                validator: (value) {
+                    String? error = validateHour(value);
+                    if (error != null) {
+                      return error;
+                    }
+                    if (_startTimeController.text
+                            .compareTo(_endTimeController.text) >=
+                        0) {
+                      return 'La hora de fin debe ser mayor que la de inicio';
+                    }
+                    return null;
+                  },
               ),
               const SizedBox(height: 16),
               ElevatedButton(
@@ -87,6 +131,7 @@ class _FilterTablesState extends State<FilterTables> {
                           endTime: _endTimeController.text,
                         ));
                   }
+                  _saveFilterValues();
                 },
                 child: const Text('Filtrar'),
               ),

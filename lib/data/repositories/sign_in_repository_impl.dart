@@ -23,7 +23,7 @@ class LoginRepositoryImpl implements LoginRepository {
   Future<Either<Failure, UserEntity>> signInGoogle() async {
     try {
       UserModel user = await dataSource.signInWithGoogle();
-      String tokenGenerado = await userDatasource.getValidToken(user.email);
+      String tokenGenerado = await userDatasource.getValidToken(user.email, "1");
       await sharedPreferences.setString('email', user.email);
       await sharedPreferences.setString('id', user.id);
       await sharedPreferences.setString('token', tokenGenerado);
@@ -43,7 +43,7 @@ class LoginRepositoryImpl implements LoginRepository {
   Future<Either<Failure, UserEntity>> signIn(
       String email, String password) async {
     try {
-      String tokenGenerado = await userDatasource.getValidToken(email);
+      String tokenGenerado = await userDatasource.getValidToken(email, password);
       UserModel user = await dataSource.signIn(email, password);
       await sharedPreferences.setString('token', tokenGenerado);
       await sharedPreferences.setString('email', user.email);
@@ -82,8 +82,8 @@ class LoginRepositoryImpl implements LoginRepository {
         avatar: File(""),
         averageRaiting: 0,
       );
-      await userDatasource.createUser(usuarioRegistro);
-      String tokenGenerado = await userDatasource.getValidToken(email);
+      await userDatasource.createUser(usuarioRegistro, password);
+      String tokenGenerado = await userDatasource.getValidToken(email, password);
       await sharedPreferences.setString('token', tokenGenerado);
       return Right(usuarioRegistro.toUserEntity(File('')));
     } catch (e) {

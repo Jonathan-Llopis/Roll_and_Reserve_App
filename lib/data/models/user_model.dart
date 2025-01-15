@@ -43,10 +43,22 @@ class UserModel {
         role: json['role'] ?? 2,
         name: json['name'] ?? "",
         username: json['username'] ?? "",
-        avatarId: json['avatar'] ?? "67806e4ba1966a340ad6cefd",
+        avatarId: json['avatar'] ?? "678533e56a1e41fd50873dae",
         avatar:File(""),
         averageRaiting: calcularMediaRatings(json['reviews_shop']??[]));
   }
+
+    Map<String, dynamic> crateToJson(String password) {
+    return {
+      'id_google': id,
+      'email': email,
+      'role': role,
+      'name': name,
+      'username': username,
+      'password':password,
+    };
+  }
+
 
   Map<String, dynamic> toJson() {
     return {

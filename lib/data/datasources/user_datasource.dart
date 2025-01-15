@@ -8,8 +8,8 @@ import 'package:roll_and_reserve/data/models/user_model.dart';
 abstract class UserDatasource {
   Future<List<UserModel>> getUsers( String token);
   Future<UserModel> getValidUser(String id, String token);
-  Future<String> getValidToken(String email);
-  Future<bool> createUser(UserModel user);
+  Future<String> getValidToken(String email, String password);
+  Future<bool> createUser(UserModel user, String password);
   Future<dynamic> getUserAvatar(String fileId, String token);
   Future<bool> updateUserInfo(UserModel user, String token);
   Future<String> updateAvatar(UserModel user, String token);
@@ -58,7 +58,7 @@ class UserDatasourceImpl implements UserDatasource {
   }
 
   @override
-  Future<String> getValidToken(String email) async {
+  Future<String> getValidToken(String email, String password) async {
     var uri = Uri.http('localhost:8000', '/users/login');
     final response = await http.post(
       uri,
@@ -67,6 +67,7 @@ class UserDatasourceImpl implements UserDatasource {
       },
       body: jsonEncode({
         'email': email,
+        'password': password,
       }),
     );
 
@@ -79,13 +80,13 @@ class UserDatasourceImpl implements UserDatasource {
   }
 
   @override
-  Future<bool> createUser(UserModel user) async {
+  Future<bool> createUser(UserModel user, String password) async {
     final response = await client.post(
       Uri.parse('http://localhost:8000/users'),
       headers: {
         'Content-Type': 'application/json',
       },
-      body: json.encode(user.toJson()),
+      body: json.encode(user.crateToJson(password)),
     );
     if (response.statusCode == 201) {
       return true;
@@ -97,7 +98,7 @@ class UserDatasourceImpl implements UserDatasource {
   @override
   Future<dynamic> getUserAvatar(String fileId, String token) async {
     if (fileId == "") {
-      fileId = "67806e4ba1966a340ad6cefd";
+      fileId = "678533e56a1e41fd50873dae";
     }
     final response = await http.get(
         Uri.parse('http://localhost:8000/files/download/$fileId'),

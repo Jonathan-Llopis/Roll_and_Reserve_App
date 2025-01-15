@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:roll_and_reserve/data/models/functions_for_models.dart';
+import 'package:roll_and_reserve/domain/entities/table_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_state.dart';
+import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/default_app_bar.dart';
 import 'package:roll_and_reserve/presentation/widgets/cards/card_reserve.dart';
@@ -20,14 +23,17 @@ class ScreenReservesOfTable extends StatefulWidget {
 
 class _ScreenReservesOfTableState extends State<ScreenReservesOfTable> {
   DateTime? _selectedDate;
+  late TableEntity table;
   @override
   void initState() {
-    
     _selectedDate = DateTime.now();
     context.read<ReserveBloc>().add(
           GetReserveByDateEvent(
               dateReserve: _selectedDate!, idTable: widget.idTable),
         );
+    TableBloc tableBloc = BlocProvider.of<TableBloc>(context);
+    table = tableBloc.state.tables!
+        .firstWhere((table) => table.id == widget.idTable);
     super.initState();
   }
 
@@ -41,7 +47,9 @@ class _ScreenReservesOfTableState extends State<ScreenReservesOfTable> {
         );
       } else if (state.errorMessage != null) {
         return Scaffold(
-          appBar: DefaultAppBar(scaffoldKey: scaffoldKey,),
+          appBar: DefaultAppBar(
+            scaffoldKey: scaffoldKey,
+          ),
           body: Center(
             child: Text(
               state.errorMessage!,
@@ -52,7 +60,9 @@ class _ScreenReservesOfTableState extends State<ScreenReservesOfTable> {
       } else if (state.reserves != null) {
         return Scaffold(
           key: scaffoldKey,
-          appBar: DefaultAppBar(scaffoldKey: scaffoldKey, ),
+          appBar: DefaultAppBar(
+            scaffoldKey: scaffoldKey,
+          ),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -67,7 +77,7 @@ class _ScreenReservesOfTableState extends State<ScreenReservesOfTable> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          " Mesa ${widget.idTable}",
+                          " Mesa ${table.numberTable}",
                           style: Theme.of(context)
                               .textTheme
                               .titleLarge
@@ -91,7 +101,7 @@ class _ScreenReservesOfTableState extends State<ScreenReservesOfTable> {
                             final DateTime? picked = await showDatePicker(
                               context: context,
                               locale: const Locale('es', 'ES'),
-                              initialDate: DateTime.now(),
+                              initialDate: _selectedDate ?? DateTime.now(),
                               firstDate: DateTime.now(),
                               lastDate: DateTime(2030),
                             );
@@ -115,10 +125,10 @@ class _ScreenReservesOfTableState extends State<ScreenReservesOfTable> {
                 ),
               ),
               const Divider(height: 1, thickness: 1),
-              const Padding(
+              Padding(
                 padding: EdgeInsets.all(16.0),
                 child: Text(
-                  'Reservas Disponibles',
+                  'Reservas Disponibles para: ${getDate(_selectedDate.toString())}',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
