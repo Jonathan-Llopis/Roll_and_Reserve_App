@@ -84,6 +84,12 @@ class _ScreenRegisterState extends State<ScreenRegister> {
   Widget build(BuildContext context) {
     final loginBloc = BlocProvider.of<LoginBloc>(context);
     return Scaffold(
+       appBar: AppBar(
+          backgroundColor: Color(0xFF6A11CB),
+            iconTheme: IconThemeData(
+              color: Colors.white,
+            ),
+        ),
       endDrawer: const DrawerLogin(),
       body: Container(
         width: double.infinity,

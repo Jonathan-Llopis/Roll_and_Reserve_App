@@ -27,7 +27,7 @@ class DrawerLogin extends StatelessWidget {
               AppLocalizations.of(context)!.find_your_game_table,
             ),
             currentAccountPicture: CircleAvatar(
-              backgroundImage: AssetImage('/assets/images/logo.png'),
+              backgroundImage: AssetImage('assets/icon/logo.png'),
             ),
           ),
           Expanded(
