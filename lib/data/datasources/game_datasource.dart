@@ -25,7 +25,7 @@ class GameRemoteDataSourceImpl implements GameRemoteDataSource {
       final List<dynamic> tableJson = json.decode(response.body);
       return tableJson.map((json) => GameModel.fromJson(json)).toList();
     } else {
-      throw Exception('Error al cargar la game.');
+      throw Exception('Error al cargar los juegos.');
     }
   }
 }

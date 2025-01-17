@@ -29,7 +29,7 @@ class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
       final List<dynamic> reserveJson = json.decode(response.body);
       return reserveJson.map((json) => ReserveModel.fromJson(json)).toList();
     } else {
-      throw Exception('Error al cargar la mesa.');
+      throw Exception('Error al cargar las reservas.');
     }
   }
 
@@ -44,7 +44,7 @@ class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
     if (response.statusCode == 200) {
       return true;
     } else {
-      throw Exception('Error al eliminar la mesa.');
+      throw Exception('Error al eliminar la reserva.');
     }
   }
 
@@ -61,7 +61,7 @@ class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
     if (response.statusCode == 200) {
       return true;
     } else {
-      throw Exception('Error al modificar la mesa: ${response.body}');
+      throw Exception('Error al modificar la reserva: ${response.body}');
     }
   }
 
@@ -96,7 +96,7 @@ Future<int> createReserves(ReserveModel reserve, String token) async {
     if (response.statusCode == 201) {
       return true;
     } else {
-      throw Exception('Error al crear la reserva: ${response.body}');
+      throw Exception('Error al añadir usuario a la reserva: ${response.body}');
     }
   }
 

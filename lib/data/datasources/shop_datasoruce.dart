@@ -112,7 +112,7 @@ class ShopsRemoteDataSourceImpl implements ShopRemoteDataSource {
       var id = jsonDecode(responseBody)[0]['id'];
       return id;
     } else {
-      throw Exception('Error al actualizar la tienda: ${response.statusCode}');
+      throw Exception('Error al actualizar el logo de la tienda: ${response.statusCode}');
     }
   }
 
