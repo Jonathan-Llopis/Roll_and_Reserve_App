@@ -12,6 +12,7 @@ import 'package:roll_and_reserve/presentation/widgets/buttons/button_login_googl
 import 'package:roll_and_reserve/presentation/widgets/screen_components/custom_form_field.dart';
 import 'package:roll_and_reserve/presentation/widgets/buttons/button_login.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/presentation/widgets/screen_components/drawer_login.dart';
 
 class ScreenLogin extends StatefulWidget {
   const ScreenLogin({super.key});
@@ -55,6 +56,7 @@ class _ScreenLoginState extends State<ScreenLogin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+       endDrawer: const DrawerLogin(),
         body: Container(
       width: double.infinity,
       height: double.infinity,
@@ -81,7 +83,8 @@ class _ScreenLoginState extends State<ScreenLogin> {
                 const SizedBox(height: 40),
                 const Text('Roll and Reserve', style: AppTheme.titleStyle),
                 const SizedBox(height: 10),
-                 Text(AppLocalizations.of(context)!.login ,style: AppTheme.subtitleStyle),
+                Text(AppLocalizations.of(context)!.login,
+                    style: AppTheme.subtitleStyle),
                 const SizedBox(height: 30),
                 SizedBox(
                   height: 230,
@@ -119,7 +122,8 @@ class _ScreenLoginState extends State<ScreenLogin> {
                       icon: Icons.lock,
                       validator: (value) {
                         if (value.isEmpty) {
-                          return AppLocalizations.of(context)!.please_enter_your_password;
+                          return AppLocalizations.of(context)!
+                              .please_enter_your_password;
                         }
                         return null;
                       },
@@ -170,7 +174,7 @@ class _ScreenLoginState extends State<ScreenLogin> {
                       );
                     }
                   },
-                  child:  Text(
+                  child: Text(
                     AppLocalizations.of(context)!.you_forgot_your_password,
                     style: TextStyle(color: Colors.white),
                   ),
@@ -180,8 +184,9 @@ class _ScreenLoginState extends State<ScreenLogin> {
                   onPressed: () {
                     context.push('/login/signIn');
                   },
-                  child:  Text(
-                    AppLocalizations.of(context)!.dont_have_an_account_register_here,
+                  child: Text(
+                    AppLocalizations.of(context)!
+                        .dont_have_an_account_register_here,
                     style: TextStyle(color: Colors.white),
                   ),
                 ),

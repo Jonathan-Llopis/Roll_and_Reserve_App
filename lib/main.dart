@@ -8,6 +8,7 @@ import 'package:roll_and_reserve/config/router/routes.dart';
 import 'package:roll_and_reserve/firebase_options.dart';
 import 'package:roll_and_reserve/injection.dart';
 import 'package:roll_and_reserve/presentation/blocs/language/language_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/language/language_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/language/language_state.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
@@ -60,6 +61,7 @@ class MyApp extends StatelessWidget {
       ],
       child: BlocBuilder<LanguageBloc, LanguageState>(
         builder: (context, state) {
+          context.read<LanguageBloc>().add(GetLocaleEvent());
           return MaterialApp.router(
             routerConfig: router,
             debugShowCheckedModeBanner: false,

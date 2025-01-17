@@ -65,7 +65,7 @@ class DrawerMain extends StatelessWidget {
                   },
                 ),
                 ListTile(
-                  leading: Icon(Icons.help, color: Colors.lightBlue),
+                  leading: Icon(Icons.translate, color: Colors.lightBlue),
                   title: Text(AppLocalizations.of(context)!.changeLanguage),
                   onTap: () {
                     changeLanguage(context);

@@ -9,7 +9,7 @@ import 'package:roll_and_reserve/presentation/functions/functions_validation.dar
 import 'package:roll_and_reserve/presentation/widgets/screen_components/custom_form_field.dart';
 import 'package:roll_and_reserve/presentation/widgets/buttons/button_register.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
+import 'package:roll_and_reserve/presentation/widgets/screen_components/drawer_login.dart';
 
 class ScreenRegister extends StatefulWidget {
   const ScreenRegister({super.key});
@@ -84,6 +84,7 @@ class _ScreenRegisterState extends State<ScreenRegister> {
   Widget build(BuildContext context) {
     final loginBloc = BlocProvider.of<LoginBloc>(context);
     return Scaffold(
+      endDrawer: const DrawerLogin(),
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -100,7 +101,8 @@ class _ScreenRegisterState extends State<ScreenRegister> {
                   style: AppTheme.titleStyle,
                 ),
                 const SizedBox(height: 10),
-                 Text(AppLocalizations.of(context)!.sign_in_to_continue, style: AppTheme.subtitleStyle),
+                Text(AppLocalizations.of(context)!.sign_in_to_continue,
+                    style: AppTheme.subtitleStyle),
                 const SizedBox(height: 30),
                 SizedBox(
                   height: 230,
@@ -141,7 +143,8 @@ class _ScreenRegisterState extends State<ScreenRegister> {
                               controller: nameController,
                               labelText: AppLocalizations.of(context)!.name,
                               icon: Icons.person,
-                              validator: (value) => validateName(value, context),
+                              validator: (value) =>
+                                  validateName(value, context),
                               onChanged: (value) {
                                 nameFocus();
                                 riveController?.updateLookNumber(value.length);
@@ -164,9 +167,10 @@ class _ScreenRegisterState extends State<ScreenRegister> {
                           const SizedBox(height: 20),
                           CustomFormField(
                             controller: passwordController,
-                            labelText:AppLocalizations.of(context)!.password,
+                            labelText: AppLocalizations.of(context)!.password,
                             icon: Icons.lock,
-                            validator: (value) => validatePassword(value, context),
+                            validator: (value) =>
+                                validatePassword(value, context),
                             obscureText: !_passwordVisible,
                             focusNode: passwordFocusNode,
                             onChanged: (String value) {},
@@ -189,7 +193,8 @@ class _ScreenRegisterState extends State<ScreenRegister> {
                           const SizedBox(height: 20),
                           CustomFormField(
                             controller: confirmPasswordController,
-                            labelText: AppLocalizations.of(context)!.confirmation_password,
+                            labelText: AppLocalizations.of(context)!
+                                .confirmation_password,
                             icon: Icons.lock,
                             validator: (value) => validateConfirmPassword(
                                 value, passwordController, context),
