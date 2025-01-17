@@ -26,7 +26,7 @@ class ReviewsRemoteDataSourceImpl implements ReviewRemoteDataSource {
       final List<dynamic> reviewJson = json.decode(response.body);
       return reviewJson.map((json) => ReviewModel.fromJson(json)).toList();
     } else {
-      throw Exception('Error al cargar la mesa.');
+      throw Exception('Error al cargar la reseña.');
     }
   }
 
@@ -41,7 +41,7 @@ class ReviewsRemoteDataSourceImpl implements ReviewRemoteDataSource {
     if (response.statusCode == 200) {
       return true;
     } else {
-      throw Exception('Error al eliminar la mesa.');
+      throw Exception('Error al eliminar la reseña.');
     }
   }
 
@@ -58,7 +58,7 @@ class ReviewsRemoteDataSourceImpl implements ReviewRemoteDataSource {
     if (response.statusCode == 201) {
       return true;
     } else {
-      throw Exception('Error al crear el mesa: ${response.body}');
+      throw Exception('Error al crear la reseña: ${response.body}');
     }
   }
 }

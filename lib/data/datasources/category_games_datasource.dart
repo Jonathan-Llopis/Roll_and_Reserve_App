@@ -26,7 +26,7 @@ class CategoryGameRemoteDataSourceImpl implements CategoryGameRemoteDataSource {
       final List<dynamic> tableJson = json.decode(response.body);
       return tableJson.map((json) => GameCategoryModel.fromJson(json)).toList();
     } else {
-      throw Exception('Error al cargar la mesa.');
+      throw Exception('Error al cargar las categoria de juegos.');
     }
   }
 }

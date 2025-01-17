@@ -25,7 +25,7 @@ class DifficultyRemoteDataSourceImpl implements DifficultyRemoteDataSource {
       final List<dynamic> tableJson = json.decode(response.body);
       return tableJson.map((json) => DifficultyModel.fromJson(json)).toList();
     } else {
-      throw Exception('Error al cargar la mesa.');
+      throw Exception('Error al cargar la difficultad.');
     }
   }
 }
