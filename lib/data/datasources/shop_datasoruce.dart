@@ -118,6 +118,9 @@ class ShopsRemoteDataSourceImpl implements ShopRemoteDataSource {
 
   @override
   Future<dynamic> getShopLogo(String fileId, String token) async {
+    if (fileId == ""){
+      fileId = "6785353421a364ee9968160f";
+    }
     final response = await http.get(
         Uri.parse('http://localhost:8000/files/download/$fileId'),
         headers: {

@@ -8,6 +8,8 @@ import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_event.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_utils.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FilterTables extends StatefulWidget {
   const FilterTables({super.key, required this.currentShop});
@@ -23,6 +25,29 @@ class _FilterTablesState extends State<FilterTables> {
   final _startTimeController = TextEditingController();
   final _endTimeController = TextEditingController();
 
+   @override
+  void initState() {
+    _loadFilterValues();
+    super.initState();
+  }
+
+  Future<void> _loadFilterValues() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _dateController.text = prefs.getString('date') ?? '';
+      _startTimeController.text = prefs.getString('startTime') ?? '';
+      _endTimeController.text = prefs.getString('endTime') ?? '';
+    });
+  }
+
+  Future<void> _saveFilterValues() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('date', _dateController.text);
+    await prefs.setString('startTime', _startTimeController.text);
+    await prefs.setString('endTime', _endTimeController.text);
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<ReserveBloc, ReserveState>(
@@ -32,11 +57,11 @@ class _FilterTablesState extends State<FilterTables> {
               dayDate: _dateController.text,
               startTime: _startTimeController.text,
               endTime: _endTimeController.text,
-              reserves: state.reserves!));
+              reserves: state.reserves!, shopId: widget.currentShop.id));
           Navigator.of(context).pop();
         } else if (state.errorMessage != null) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error al cargar reservas')),
+            SnackBar(content: Text( AppLocalizations.of(context)!.error_loading_reservations)),
           );
         }
       },
@@ -49,32 +74,52 @@ class _FilterTablesState extends State<FilterTables> {
             children: [
               TextFormField(
                 controller: _dateController,
-                decoration: const InputDecoration(
-                  labelText: 'Fecha',
+                decoration:  InputDecoration(
+                  labelText:  AppLocalizations.of(context)!.date,
                   border: OutlineInputBorder(),
                 ),
                 onTap: () {
                   selectDate(context, _dateController);
                 },
-                validator: basicValidation,
+                validator:(value) => basicValidation(value, context),
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _startTimeController,
-                decoration: const InputDecoration(
-                  labelText: 'Hora de inicio',
+                decoration:  InputDecoration(
+                  labelText:  AppLocalizations.of(context)!.start_time_hh_mm,
                   border: OutlineInputBorder(),
                 ),
-                validator: validateHour,
+                validator:(value) {
+                    String? error = validateHour(value , context);
+                    if (error != null) {
+                      return error;
+                    }
+                    if(_startTimeController.text.compareTo(_endTimeController.text) >= 0){
+                      return  AppLocalizations.of(context)!.start_time_must_be_less_than_end_time;
+                    }
+                    return null;
+                  },
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _endTimeController,
-                decoration: const InputDecoration(
-                  labelText: 'Hora de fin',
+                decoration:  InputDecoration(
+                  labelText:  AppLocalizations.of(context)!.end_time_hh_mm,
                   border: OutlineInputBorder(),
                 ),
-                validator: validateHour,
+                validator: (value) {
+                    String? error = validateHour(value , context);
+                    if (error != null) {
+                      return error;
+                    }
+                    if (_startTimeController.text
+                            .compareTo(_endTimeController.text) >=
+                        0) {
+                      return  AppLocalizations.of(context)!.end_time_must_be_greater_than_start_time;
+                    }
+                    return null;
+                  },
               ),
               const SizedBox(height: 16),
               ElevatedButton(
@@ -87,8 +132,9 @@ class _FilterTablesState extends State<FilterTables> {
                           endTime: _endTimeController.text,
                         ));
                   }
+                  _saveFilterValues();
                 },
-                child: const Text('Filtrar'),
+                child:  Text( AppLocalizations.of(context)!.filter),
               ),
             ],
           ),

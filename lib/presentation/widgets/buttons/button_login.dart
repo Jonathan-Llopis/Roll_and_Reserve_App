@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ButtonLogin extends StatelessWidget {
   const ButtonLogin({
@@ -37,8 +38,8 @@ class ButtonLogin extends StatelessWidget {
           );
         }
       },
-      child: const Text(
-        'Login',
+      child:  Text(
+        AppLocalizations.of(context)!.login,
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,

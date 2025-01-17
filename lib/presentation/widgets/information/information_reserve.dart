@@ -6,6 +6,7 @@ import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_event.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_reserve.dart';
 import 'package:roll_and_reserve/presentation/widgets/cards/card_user.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class InformationReserve extends StatelessWidget {
   const InformationReserve({
@@ -23,13 +24,16 @@ class InformationReserve extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ReserveBloc reserveBloc = BlocProvider.of<ReserveBloc>(context);
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Juego activo: ${reserve.gameId}',
+            AppLocalizations.of(context)!.active_game(reserveBloc.state.games!
+                .firstWhere((element) => element.id == reserve.gameId)
+                .description),
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 16),
@@ -39,25 +43,29 @@ class InformationReserve extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Horario:',
+                  Text(
+                    AppLocalizations.of(context)!.schedule,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                      'Dia: ${reserve.dayDate}  ${reserve.horaInicio} - ${reserve.horaFin}'),
+                    AppLocalizations.of(context)!.day_schedule(
+                        reserve.dayDate, reserve.horaInicio, reserve.horaFin),
+                    style: TextStyle(color: Colors.black54),
+                  ),
                 ],
               ),
               Chip(
                 label: Text(
-                  '${reserve.freePlaces - reserve.usersReserve.length} lugares libres',
+                  AppLocalizations.of(context)!.free_places(
+                      reserve.freePlaces - reserve.usersReserve.length),
                 ),
                 backgroundColor: Colors.blue.shade50,
               ),
             ],
           ),
           const SizedBox(height: 16),
-          const Text(
-            'Jugadores:',
+          Text(
+            AppLocalizations.of(context)!.players,
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
@@ -73,8 +81,8 @@ class InformationReserve extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          const Text(
-            'Información adicional:',
+          Text(
+            AppLocalizations.of(context)!.additional_information,
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
@@ -132,8 +140,8 @@ class InformationReserve extends StatelessWidget {
                         (reserve.usersReserve
                                 .map((user) => user.id)
                                 .contains(loginBloc.state.user!.id))
-                            ? 'Salir'
-                            : 'Unirse',
+                            ? AppLocalizations.of(context)!.exit
+                            : AppLocalizations.of(context)!.join,
                       ),
                     )
                   : Container(),

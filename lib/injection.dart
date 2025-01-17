@@ -51,6 +51,7 @@ import 'package:roll_and_reserve/domain/usecases/table_usecases/delete_table_use
 import 'package:roll_and_reserve/domain/usecases/reserve_usecases/delete_user_reserve_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/table_usecases/get_all_table_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/table_usecases/update_table_usecase.dart';
+import 'package:roll_and_reserve/presentation/blocs/language/language_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/data/datasources/firebase_auth_datasource.dart';
 import 'package:roll_and_reserve/domain/repositories/login_repository.dart';
@@ -89,7 +90,8 @@ void configureDependencies() async {
       ));
   sl.registerFactory<ReserveBloc>(
       () => ReserveBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
-
+    sl.registerFactory<LanguageBloc>(
+      () => LanguageBloc(sl()));
   // Instancia de Firebase Auth
   sl.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:roll_and_reserve/domain/entities/shop_entity.dart';
 import 'package:roll_and_reserve/domain/entities/table_entity.dart';
+import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_change_language.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_create_reserve.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_create_review.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_create_update_table.dart';
@@ -9,6 +11,7 @@ import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_logout.dart
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_reset_password.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_update_password.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_user_edit.dart';
+import 'package:roll_and_reserve/presentation/widgets/dialogs/dialogo_delete_table.dart';
 
 Future<void> mostrarResetPassword(BuildContext context) {
   return showDialog(
@@ -61,12 +64,12 @@ Future<void> deleteShop(BuildContext context, int idShop) {
 }
 
 Future<void> showUpdateCreateTableDialog(
-    BuildContext context, int idShop, TableEntity? table) {
+    BuildContext context, ShopEntity currentShop, TableEntity? table) {
   return showDialog(
     context: context,
     builder: (context) {
       return DialogCreateUpdateTable(
-        idShop: idShop,
+        currentShop: currentShop,
         table: table,
       );
     },
@@ -92,5 +95,24 @@ Future<void> createReview(BuildContext context, int idShop) {
         return DialogCreateReview(
           idShop: idShop,
         );
+      });
+}
+
+Future<void> deleteTable(BuildContext context, int idTable, int idShop) {
+  return showDialog(
+      context: context,
+      builder: (context) {
+        return DialogoDeleteTable(
+          idTable: idTable,
+          idShop: idShop,
+        );
+      });
+}
+
+Future<void> changeLanguage(BuildContext context) {
+  return showDialog(
+      context: context,
+      builder: (context) {
+        return ChangeLanguageDialog();
       });
 }

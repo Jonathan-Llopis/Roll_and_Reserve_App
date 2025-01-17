@@ -72,7 +72,9 @@ final GoRouter router = GoRouter(
                         int.parse(state.pathParameters['idReserve']!);
                     final idShop =
                         int.parse(state.pathParameters['idTablesShop']!);
-                    return ScreenReserve(idReserve: idReserve, idShop: idShop);
+                    final idTable =
+                        int.parse(state.pathParameters['idTable']!);
+                    return ScreenReserve(idReserve: idReserve, idShop: idShop, idTable: idTable,);
                   },
                 ),
               ],

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_reserves_table.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CardReserve extends StatelessWidget {
   const CardReserve({
@@ -35,7 +36,7 @@ class CardReserve extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Reserva dia: ${reserve.dayDate}",
+                AppLocalizations.of(context)!.reserve_day(reserve.dayDate),
                 style: Theme.of(context)
                     .textTheme
                     .titleMedium
@@ -43,22 +44,26 @@ class CardReserve extends StatelessWidget {
               ),
               const SizedBox(height: 6),
               Text(
-                "Juego: ${reserveBloc.state.games!.firstWhere((game) => game.id == reserve.gameId).description}",
+                AppLocalizations.of(context)!.game_description(reserveBloc
+                    .state.games!
+                    .firstWhere((game) => game.id == reserve.gameId)
+                    .description),
                 style: const TextStyle(fontSize: 14, color: Colors.black87),
               ),
               const SizedBox(height: 6),
               Text(
-                "Total de jugadores en mesa: ${reserve.usersReserve.length} de ${reserve.freePlaces}",
+                AppLocalizations.of(context)!.total_players_at_table(
+                    reserve.usersReserve.length, reserve.freePlaces),
                 style: const TextStyle(fontSize: 14, color: Colors.black87),
               ),
               const SizedBox(height: 6),
               Text(
-                "Hora de inicio: ${reserve.horaInicio}",
+                AppLocalizations.of(context)!.start_time(reserve.horaInicio),
                 style: const TextStyle(fontSize: 14, color: Colors.grey),
               ),
               const SizedBox(height: 6),
               Text(
-                "Hora de fin: ${reserve.horaFin}",
+                AppLocalizations.of(context)!.end_time(reserve.horaFin),
                 style: const TextStyle(fontSize: 14, color: Colors.grey),
               ),
             ],

@@ -27,13 +27,13 @@ class ReviewModel {
         id: json['id_review'],
         raiting: json['raiting'],
         review: json['review'],
-        writerId: json['writer']['id_google'] ?? "",
+        writerId: json['writer'] == null ? "" : json['writer']['id_google'] ?? "",
         reviewedId:
             json['reviewed'] == null ? "" : json['reviewed']['id_google'] ?? "",
         shopReview:
             json['shop_reviews'] == null ? 0 : json['shop_reviews']['id_shop'],
-        userNameWriter: json['writer']['username'] ?? "",
-        avatarIdWriter: json['writer']['avatar'] ?? "",
+        userNameWriter: json['writer'] == null ? "" : json['writer']['userId'] ?? "",
+        avatarIdWriter: json['writer'] == null ? "" : json['writer']['avatar'] ?? "678533e56a1e41fd50873dae",
         avatarWriter:[]);
   }
 
