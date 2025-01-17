@@ -34,7 +34,7 @@ class ReserveRepositoryImpl implements ReserveRepository {
       }).toList();
       return Right(reserveEntities);
     } catch (e) {
-      return Left(Exception('Error al cargar reserve'));
+      return Left(Exception('Error al cargar reservas'));
     }
   }
 
@@ -45,7 +45,7 @@ class ReserveRepositoryImpl implements ReserveRepository {
       await remoteDataSource.deleteReserves(idReserve, token!);
       return const Right(true);
     } catch (e) {
-      return Left(Exception('Error al eliminar el Reserve'));
+      return Left(Exception('Error al eliminar el reserva'));
     }
   }
 
@@ -57,7 +57,7 @@ class ReserveRepositoryImpl implements ReserveRepository {
       await remoteDataSource.updateReserves(shopModel, token!);
       return Right(true);
     } catch (e) {
-      return Left(Exception('Error al actualizar el mesa: ${e.toString()}'));
+      return Left(Exception('Error al actualizar la reserva: ${e.toString()}'));
     }
   }
 
@@ -81,7 +81,7 @@ class ReserveRepositoryImpl implements ReserveRepository {
       await remoteDataSource.addUserToReserve(idReserve, idUser, token!);
       return Right(true);
     } catch (e) {
-      return Left(Exception('Error al añadir jugador: ${e.toString()}'));
+      return Left(Exception('Error al añadir jugador a la reserva: ${e.toString()}'));
     }
   }
 
@@ -93,7 +93,7 @@ class ReserveRepositoryImpl implements ReserveRepository {
       await remoteDataSource.deleteUserToReserve(idReserve, idUser, token!);
       return Right(true);
     } catch (e) {
-      return Left(Exception('Error al eliminar jugador: ${e.toString()}'));
+      return Left(Exception('Error al eliminar jugador de la reserva: ${e.toString()}'));
     }
   }
 

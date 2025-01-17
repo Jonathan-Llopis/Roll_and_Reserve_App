@@ -157,7 +157,7 @@ class UserDatasourceImpl implements UserDatasource {
       var id = jsonDecode(responseBody)[0]['id'];
       return id;
     } else {
-      throw Exception('Error al actualizar el usuario: ${response.statusCode}');
+      throw Exception('Error al actualizar el avatar del usuario: ${response.statusCode}');
     }
   }
 }
