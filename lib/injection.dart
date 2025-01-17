@@ -91,7 +91,7 @@ void configureDependencies() async {
   sl.registerFactory<ReserveBloc>(
       () => ReserveBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
     sl.registerFactory<LanguageBloc>(
-      () => LanguageBloc());
+      () => LanguageBloc(sl()));
   // Instancia de Firebase Auth
   sl.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
 

@@ -7,3 +7,5 @@ class ChangeLanguageEvent extends LanguageEvent {
 
   ChangeLanguageEvent(this.locale);
 }
+
+class GetLocaleEvent extends LanguageEvent {}
