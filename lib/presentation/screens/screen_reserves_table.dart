@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/data/models/functions_for_models.dart';
 import 'package:roll_and_reserve/domain/entities/table_entity.dart';
+import 'package:roll_and_reserve/presentation/blocs/language/language_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_state.dart';
@@ -10,6 +11,7 @@ import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.d
 import 'package:roll_and_reserve/presentation/widgets/screen_components/default_app_bar.dart';
 import 'package:roll_and_reserve/presentation/widgets/cards/card_reserve.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/drawer_main.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ScreenReservesOfTable extends StatefulWidget {
   final int idTable;
@@ -77,17 +79,17 @@ class _ScreenReservesOfTableState extends State<ScreenReservesOfTable> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          " Mesa ${table.numberTable}",
+                        AppLocalizations.of(context)!.table_number(table.numberTable),
                           style: Theme.of(context)
                               .textTheme
                               .titleLarge
                               ?.copyWith(
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.bold,                           
                                   color: Colors.black87),
                         ),
                         const SizedBox(height: 4),
-                        const Text(
-                          "Reservas disponibles",
+                         Text(
+                           AppLocalizations.of(context)!.available_reservations,
                           style: TextStyle(fontSize: 14, color: Colors.grey),
                         ),
                       ],
@@ -98,9 +100,11 @@ class _ScreenReservesOfTableState extends State<ScreenReservesOfTable> {
                             size: 48, color: Colors.green),
                         ElevatedButton(
                           onPressed: () async {
+                            LanguageBloc languageBloc =
+                                BlocProvider.of<LanguageBloc>(context);
                             final DateTime? picked = await showDatePicker(
+                              locale: languageBloc.state.locale,
                               context: context,
-                              locale: const Locale('es', 'ES'),
                               initialDate: _selectedDate ?? DateTime.now(),
                               firstDate: DateTime.now(),
                               lastDate: DateTime(2030),
@@ -117,7 +121,7 @@ class _ScreenReservesOfTableState extends State<ScreenReservesOfTable> {
                                   );
                             }
                           },
-                          child: const Text('Filtrar por fecha'),
+                          child: Text( AppLocalizations.of(context)!.filter_by_date),
                         ),
                       ],
                     ),
@@ -128,7 +132,7 @@ class _ScreenReservesOfTableState extends State<ScreenReservesOfTable> {
               Padding(
                 padding: EdgeInsets.all(16.0),
                 child: Text(
-                  'Reservas Disponibles para: ${getDate(_selectedDate.toString())}',
+                  AppLocalizations.of(context)!.available_reservations_for_date(getDate(_selectedDate.toString())),
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),

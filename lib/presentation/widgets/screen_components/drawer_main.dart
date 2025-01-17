@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DrawerMain extends StatelessWidget {
   const DrawerMain({super.key});
@@ -26,11 +27,12 @@ class DrawerMain extends StatelessWidget {
               ),
             ),
             accountName: Text(
-              userBloc.state.user?.username ?? 'Usuario',
+              userBloc.state.user?.username ??
+                  AppLocalizations.of(context)!.username,
               style: TextStyle(fontSize: 20),
             ),
             accountEmail: Text(
-              userBloc.state.user?.email ?? 'correo@example.com',
+              userBloc.state.user?.email ?? 'email@example.com',
             ),
             currentAccountPicture: CircleAvatar(
               backgroundImage: kIsWeb
@@ -43,28 +45,35 @@ class DrawerMain extends StatelessWidget {
               children: [
                 ListTile(
                   leading: Icon(Icons.home, color: Colors.lightBlue),
-                  title: Text('Inicio'),
+                  title: Text(AppLocalizations.of(context)!.home),
                   onTap: () {
                     context.go('/user');
                   },
                 ),
                 ListTile(
                   leading: Icon(Icons.settings, color: Colors.lightBlue),
-                  title: Text('Configuración'),
+                  title: Text(AppLocalizations.of(context)!.settings),
                   onTap: () {
                     mostrarUserEdit(context);
                   },
                 ),
                 ListTile(
                   leading: Icon(Icons.lock, color: Colors.lightBlue),
-                  title: Text('Cambiar Contraseña'),
+                  title: Text(AppLocalizations.of(context)!.change_password),
                   onTap: () {
                     updatePassword(context);
                   },
                 ),
                 ListTile(
                   leading: Icon(Icons.help, color: Colors.lightBlue),
-                  title: Text('Ayuda'),
+                  title: Text(AppLocalizations.of(context)!.changeLanguage),
+                  onTap: () {
+                    changeLanguage(context);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.help, color: Colors.lightBlue),
+                  title: Text(AppLocalizations.of(context)!.help),
                   onTap: () {},
                 ),
               ],
@@ -74,7 +83,7 @@ class DrawerMain extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.exit_to_app, color: Colors.red),
             title: Text(
-              'Cerrar Sesión',
+              AppLocalizations.of(context)!.logout,
               style: TextStyle(color: Colors.red),
             ),
             onTap: () {

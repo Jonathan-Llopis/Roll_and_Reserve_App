@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:roll_and_reserve/domain/entities/review_entity.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_utils.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CardReview extends StatelessWidget {
   const CardReview({
@@ -31,7 +32,7 @@ class CardReview extends StatelessWidget {
             },
           ),
         ),
-        title: Text(review.userNameWriter == "" ? "Anónimo" : review.userNameWriter),
+        title: Text(review.userNameWriter == "" ?  AppLocalizations.of(context)!.anonymous : review.userNameWriter),
         subtitle: Column(
           children: [
             buildStars(review.raiting.toDouble()),

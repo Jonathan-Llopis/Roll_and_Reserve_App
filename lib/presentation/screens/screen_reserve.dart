@@ -8,6 +8,7 @@ import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_state.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 import 'package:roll_and_reserve/presentation/widgets/information/information_reserve.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ScreenReserve extends StatefulWidget {
   final int idReserve;
@@ -47,7 +48,7 @@ late TableEntity table;
           );
         } else if (state.errorMessage != null) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Error')),
+            appBar: AppBar(title: Text( AppLocalizations.of(context)!.error)),
             body: Center(child: Text(state.errorMessage!)),
           );
         } else if (state.reserves != null) {
@@ -55,7 +56,7 @@ late TableEntity table;
               .firstWhere((reserve) => reserve.id == widget.idReserve);
           return Scaffold(
             appBar: AppBar(
-              title: Text("Mesa: ${table.numberTable}"),
+              title: Text(AppLocalizations.of(context)!.table_number(table.numberTable)),
             ),
             body: InformationReserve(
                 widget: widget,

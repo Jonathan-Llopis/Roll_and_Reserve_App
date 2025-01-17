@@ -4,6 +4,7 @@ import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DialogResetPassword extends StatefulWidget {
   const DialogResetPassword({super.key});
@@ -21,7 +22,7 @@ class _DialogResetPasswordState extends State<DialogResetPassword> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      title: const Text("Recuperar contraseña",
+      title:  Text( AppLocalizations.of(context)!.reset_password,
           style: TextStyle(
             color: Colors.black,
             fontSize: 30,
@@ -29,8 +30,8 @@ class _DialogResetPasswordState extends State<DialogResetPassword> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
-            'Introduce tu email para restablecer tu contraseña',
+           Text(
+            AppLocalizations.of(context)!.enter_your_email_to_reset_password,
             style: TextStyle(
               fontSize: 18,
               color: Colors.black,
@@ -42,20 +43,19 @@ class _DialogResetPasswordState extends State<DialogResetPassword> {
           Form(
             key: formKey,
             child: TextFormField(
-              controller: emailController,
-              style: const TextStyle(color: Colors.black),
-              decoration: const InputDecoration(
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
+                controller: emailController,
+                style: const TextStyle(color: Colors.black),
+                decoration:  InputDecoration(
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
+                  ),
+                  labelText:  AppLocalizations.of(context)!.email,
+                  labelStyle: TextStyle(color: Colors.black),
                 ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                ),
-                labelText: 'Email',
-                labelStyle: TextStyle(color: Colors.black),
-              ),
-              validator: basicValidation
-            ),
+                validator:(value) => basicValidation(value, context)),
           )
         ],
       ),
@@ -68,7 +68,7 @@ class _DialogResetPasswordState extends State<DialogResetPassword> {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: const Text('Cancelar'),
+          child:  Text(AppLocalizations.of(context)!.cancel),
         ),
         TextButton(
           style: TextButton.styleFrom(
@@ -84,7 +84,7 @@ class _DialogResetPasswordState extends State<DialogResetPassword> {
               mostrarResetEmail(context);
             }
           },
-          child: const Text('Aceptar'),
+          child: Text(AppLocalizations.of(context)!.accept),
         ),
       ],
     );

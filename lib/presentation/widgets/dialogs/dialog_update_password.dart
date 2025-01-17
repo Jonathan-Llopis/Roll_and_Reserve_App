@@ -5,6 +5,7 @@ import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
 import 'package:roll_and_reserve/presentation/widgets/buttons/button_update.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_components/input_password.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DialogoUpdatePassword extends StatefulWidget {
   const DialogoUpdatePassword({super.key});
@@ -34,8 +35,8 @@ class _DialogoUserSettingsState extends State<DialogoUpdatePassword> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
-                    "Cambiar Contraseña",
+                   Text(
+                     AppLocalizations.of(context)!.change_password,
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -48,10 +49,10 @@ class _DialogoUserSettingsState extends State<DialogoUpdatePassword> {
                       children: [
                         PasswordInput(
                           controller: _oldPasswordController,
-                          labelText: "Contraseña Actual",
+                          labelText: AppLocalizations.of(context)!.current_password,
                           validator: (value) {
                             final errorMessage = validateCurrentPassword(
-                                value, context.read<LoginBloc>());
+                                value, context.read<LoginBloc>(), context);
                             if (errorMessage != null) {
                               return errorMessage;
                             }
@@ -61,15 +62,15 @@ class _DialogoUserSettingsState extends State<DialogoUpdatePassword> {
                         const SizedBox(height: 12),
                         PasswordInput(
                           controller: _newPasswordController,
-                          labelText: "Nueva Contraseña",
-                          validator: validatePassword,
+                          labelText:  AppLocalizations.of(context)!.new_password,
+                          validator:(value) => validatePassword(value, context),
                         ),
                         const SizedBox(height: 12),
                         PasswordInput(
                           controller: _repeatPasswordController,
-                          labelText: "Repite la Contraseña",
+                          labelText:  AppLocalizations.of(context)!.confirmation_password,
                           validator: (value) => validateConfirmPassword(
-                              value, _newPasswordController),
+                              value, _newPasswordController, context),
                         ),
                       ],
                     ),

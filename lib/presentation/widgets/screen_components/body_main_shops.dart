@@ -6,6 +6,7 @@ import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_state.dart';
 import 'package:roll_and_reserve/presentation/widgets/information/information_shop.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BodyMain extends StatefulWidget {
   const BodyMain({
@@ -55,19 +56,20 @@ class _BodyMainState extends State<BodyMain> {
                     ? Column(
                         children: [
                           Text(
-                            "Bienvenido ${loginBloc.state.user?.username}!,",
+                            AppLocalizations.of(context)!.welcome_user(loginBloc.state.user!.username)
+                            ,
                             textAlign: TextAlign.center,
                             style: TextStyle(fontSize: 18, color: Colors.blue),
                           ),
                           Text(
-                            "Estas son todas las tiendas disponibles.",
+                           AppLocalizations.of(context)!.all_available_shops,
                             textAlign: TextAlign.center,
                             style: TextStyle(fontSize: 18, color: Colors.blue),
                           ),
                         ],
                       )
                     : Text(
-                        "Tiendas registradas a tu nombre:",
+                        AppLocalizations.of(context)!.shops_registered_in_your_name,
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 18, color: Colors.blue),
                       ),
@@ -91,7 +93,7 @@ class _BodyMainState extends State<BodyMain> {
           ),
         );
       } else {
-        return const Center(child: Text("No tienes tiendas"));
+        return  Center(child: Text(AppLocalizations.of(context)!.no_shops));
       }
     });
   }

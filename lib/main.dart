@@ -7,11 +7,14 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:roll_and_reserve/config/router/routes.dart';
 import 'package:roll_and_reserve/firebase_options.dart';
 import 'package:roll_and_reserve/injection.dart';
+import 'package:roll_and_reserve/presentation/blocs/language/language_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/language/language_state.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reviews/reviews_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -51,21 +54,32 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (_) => sl<ReserveBloc>(),
         ),
+        BlocProvider(
+          create: (_) => sl<LanguageBloc>(),
+        ),
       ],
-      child: MaterialApp.router(
-        routerConfig: router,
-        debugShowCheckedModeBanner: false,
-        title: 'Roll and Reserve',
-        theme: ThemeData(primarySwatch: Colors.blue),
-        localizationsDelegates: [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: [
-          Locale('en', ''),
-          Locale('es', ''),
-        ],
+      child: BlocBuilder<LanguageBloc, LanguageState>(
+        builder: (context, state) {
+          return MaterialApp.router(
+            routerConfig: router,
+            debugShowCheckedModeBanner: false,
+            title: 'Roll and Reserve',
+            theme: ThemeData(primarySwatch: Colors.blue),
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: [
+              Locale('en'),
+              Locale('es'),
+              Locale('fr'),
+              Locale('ca'),
+            ],
+            locale: state.locale,
+          );
+        },
       ),
     );
   }

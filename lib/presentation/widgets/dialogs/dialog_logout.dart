@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DialogLogOut extends StatelessWidget {
   const DialogLogOut({super.key});
@@ -12,13 +13,13 @@ class DialogLogOut extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
       return AlertDialog(
-        title: const Text("LogOut del Usuario",
+        title:  Text( AppLocalizations.of(context)!.user_logout,
             style: TextStyle(
               color: Color.fromARGB(255, 0, 0, 0),
               fontSize: 30,
             )),
-        content: const Text(
-          '¿Estas seguro que quieres salir de la aplicación?',
+        content:  Text(
+           AppLocalizations.of(context)!.confirm_logout,
           style: TextStyle(
             fontSize: 18,
             color: Color.fromARGB(255, 0, 0, 0),
@@ -33,7 +34,7 @@ class DialogLogOut extends StatelessWidget {
             onPressed: () {
               Navigator.pop(context);
             },
-            child: const Text('Cancelar'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           TextButton(
             style: TextButton.styleFrom(
@@ -44,7 +45,7 @@ class DialogLogOut extends StatelessWidget {
               context.read<LoginBloc>().add(LogoutButtonPressed());
               context.go('/login');
             },
-            child: const Text('Aceptar'),
+            child: Text(AppLocalizations.of(context)!.accept),
           ),
         ],
       );

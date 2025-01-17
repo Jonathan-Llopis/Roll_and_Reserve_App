@@ -5,7 +5,9 @@ import 'package:roll_and_reserve/domain/entities/shop_entity.dart';
 import 'package:roll_and_reserve/domain/entities/table_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_event.dart';
+import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DialogCreateUpdateTable extends StatefulWidget {
   final ShopEntity currentShop;
@@ -46,7 +48,7 @@ class _DialogCreateUpdateTableState extends State<DialogCreateUpdateTable> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.table == null ? "Crear Nueva Mesa" : "Editar Mesa",
+                  widget.table == null ?  AppLocalizations.of(context)!.create_new_table :  AppLocalizations.of(context)!.edit_table,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -55,14 +57,14 @@ class _DialogCreateUpdateTableState extends State<DialogCreateUpdateTable> {
                 TextFormField(
                   controller: _tableNameController,
                   decoration: InputDecoration(
-                    labelText: "Número de la Mesa",
+                    labelText:  AppLocalizations.of(context)!.table_number_text,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                   ),
                   validator: (value) {
                     String? error =
-                        basicValidationTable(value, widget.currentShop);
+                        basicValidationTable(value, widget.currentShop, context);
                     return error;
                   },
                   keyboardType: TextInputType.number,
@@ -77,7 +79,7 @@ class _DialogCreateUpdateTableState extends State<DialogCreateUpdateTable> {
                         foregroundColor: Colors.black,
                       ),
                       onPressed: () => Navigator.of(context).pop(),
-                      child: const Text("Cancelar"),
+                      child: Text(AppLocalizations.of(context)!.cancel),
                     ),
                     ElevatedButton(
                       onPressed: () {
@@ -108,7 +110,7 @@ class _DialogCreateUpdateTableState extends State<DialogCreateUpdateTable> {
                           Navigator.of(context).pop();
                         }
                       },
-                      child: const Text("Guardar"),
+                      child:  Text( AppLocalizations.of(context)!.save),
                     ),
                   ],
                 ),
@@ -125,15 +127,10 @@ class _DialogCreateUpdateTableState extends State<DialogCreateUpdateTable> {
                           foregroundColor: Colors.red,
                         ),
                         onPressed: () {
-                          context.read<TableBloc>().add(
-                                DeleteTableEvent(
-                                  idTable: widget.table!.id,
-                                  idShop: widget.currentShop.id,
-                                ),
-                              );
-                          Navigator.of(context).pop();
+                          deleteTable(
+                              context, widget.table!.id, widget.currentShop.id);
                         },
-                        child: const Text("Eliminar Mesa"),
+                        child:  Text( AppLocalizations.of(context)!.delete_table),
                       ),
                       ElevatedButton(
                         onPressed: () {
@@ -141,7 +138,7 @@ class _DialogCreateUpdateTableState extends State<DialogCreateUpdateTable> {
                             '/user/shop/${widget.currentShop.id}/table/${widget.table!.id}',
                           );
                         },
-                        child: const Text("Gestionar Reservas"),
+                        child:  Text( AppLocalizations.of(context)!.manage_reservations),
                       ),
                     ],
                   ),

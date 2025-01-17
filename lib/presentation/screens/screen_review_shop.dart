@@ -10,6 +10,7 @@ import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.d
 import 'package:roll_and_reserve/presentation/widgets/cards/card_review.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/default_app_bar.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/drawer_main.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ScreenReviewShop extends StatelessWidget {
   final int idShop;
@@ -44,8 +45,7 @@ class ScreenReviewShop extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            " Tienda ${shopBloc.state.shops!.firstWhere((shop) => shop.id == idShop).name}",
+                          Text( AppLocalizations.of(context)!.shop_name(shopBloc.state.shops!.firstWhere((shop) => shop.id == idShop).name),
                             style: Theme.of(context)
                                 .textTheme
                                 .titleLarge
@@ -54,8 +54,8 @@ class ScreenReviewShop extends StatelessWidget {
                                     color: Colors.black87),
                           ),
                           const SizedBox(height: 4),
-                          const Text(
-                            "Reviews de la tienda.",
+                           Text(
+                            AppLocalizations.of(context)!.shop_reviews,
                             style: TextStyle(fontSize: 14, color: Colors.grey),
                           ),
                         ],
