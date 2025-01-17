@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/config/theme/theme.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ButtonLoginGoogle extends StatelessWidget {
   const ButtonLoginGoogle({
@@ -34,7 +35,7 @@ class ButtonLoginGoogle extends StatelessWidget {
       },
       icon: Image.asset('assets/images/google.png',
           height: 20, width: 20, fit: BoxFit.cover),
-      label: const Text('Google Login', style: AppTheme.googleStyle),
+      label:  Text(AppLocalizations.of(context)!.google_login, style: AppTheme.googleStyle),
     );
   }
 }

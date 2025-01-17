@@ -8,6 +8,7 @@ import 'package:roll_and_reserve/presentation/functions/functions_utils.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
 import 'package:roll_and_reserve/presentation/widgets/buttons/button_create_reserve.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_components/input_reservation_text.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DialogCreateReserve extends StatefulWidget {
   final int idTable;
@@ -77,16 +78,17 @@ class _ReserveFormDialogState extends State<DialogCreateReserve> {
                 children: [
                   InputReservationText(
                       controller: _freePlacesController,
-                      label: "Plazas Totales en Mesa",
+                      label: AppLocalizations.of(context)!.total_seats_at_table,
                       icon: Icons.people,
                       keyboardType: TextInputType.number,
-                      validator: basicValidationWithNumber),
+                      validator:(value) => basicValidationWithNumber(value, context)),
                   InputReservationText(
                       controller: _hourStartController,
-                      label: "Hora de inicio (HH:MM)",
+                      label:  AppLocalizations.of(context)!.start_time_hh_mm,
                       icon: Icons.access_time,
                       keyboardType: TextInputType.datetime,
                       validator: (value) => validateTime(
+                        context,
                           value,
                           reserveBloc,
                           widget.dateReserve,
@@ -94,10 +96,11 @@ class _ReserveFormDialogState extends State<DialogCreateReserve> {
                           _hourEndController)),
                   InputReservationText(
                       controller: _hourEndController,
-                      label: "Hora de fin (HH:MM)",
+                      label:  AppLocalizations.of(context)!.end_time_hh_mm,
                       icon: Icons.access_time_filled,
                       keyboardType: TextInputType.datetime,
                       validator: (value) => validateTime(
+                        context,
                           value,
                           reserveBloc,
                           widget.dateReserve,
@@ -105,68 +108,67 @@ class _ReserveFormDialogState extends State<DialogCreateReserve> {
                           _hourEndController)),
                   InputReservationText(
                       controller: _descriptionController,
-                      label: "Descripción",
+                      label:  AppLocalizations.of(context)!.description,
                       icon: Icons.description,
-                      keyboardType: 
-                       TextInputType.text,
-                      validator: basicValidation),
+                      keyboardType: TextInputType.text,
+                      validator: (value) =>basicValidation(value, context)),
                   InputReservationText(
                       controller: _requiredMaterialController,
-                      label: "Material necesario",
+                      label: AppLocalizations.of(context)!.required_material,
                       icon: Icons.build,
                       keyboardType: TextInputType.text,
-                      validator: basicValidation),
-                 DropdownButtonFormField<DifficultyEntity>(
-                    decoration: const InputDecoration(
-                      labelText: "Dificultad",
-                    ),
-                    value: _selectedDifficulty,
-                    items: reserveBloc.state.difficulties!
-                        .map((difficulty) => DropdownMenuItem(
-                              value: difficulty,
-                              child: Text(difficulty.description),
-                            ))
-                        .toList(),
-                    onChanged: (newValue) {
-                      setState(() {
-                        _selectedDifficulty = newValue;
-                      });
-                    },
-                    validator: validateSelectedValue),
+                      validator:(value) => basicValidation(value, context)),
+                  DropdownButtonFormField<DifficultyEntity>(
+                      decoration:  InputDecoration(
+                        labelText: AppLocalizations.of(context)!.difficulty,
+                      ),
+                      value: _selectedDifficulty,
+                      items: reserveBloc.state.difficulties!
+                          .map((difficulty) => DropdownMenuItem(
+                                value: difficulty,
+                                child: Text(difficulty.description),
+                              ))
+                          .toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          _selectedDifficulty = newValue;
+                        });
+                      },
+                      validator:(value) => validateSelectedValue(value, context)),  
                   DropdownButtonFormField<GameCategoryEntity>(
-                    decoration: const InputDecoration(
-                      labelText: "Categoría de juego",
-                    ),
-                    value: _selectedGameCategory,
-                    items: reserveBloc.state.gameCategories!
-                        .map((category) => DropdownMenuItem(
-                              value: category,
-                              child: Text(category.description),
-                            ))
-                        .toList(),
-                    onChanged: (newValue) {
-                      setState(() {
-                        _selectedGameCategory = newValue;
-                      });
-                    },
-                    validator: validateSelectedValue),
+                      decoration:  InputDecoration(
+                        labelText: AppLocalizations.of(context)!.game_category,
+                      ),
+                      value: _selectedGameCategory,
+                      items: reserveBloc.state.gameCategories!
+                          .map((category) => DropdownMenuItem(
+                                value: category,
+                                child: Text(category.description),
+                              ))
+                          .toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          _selectedGameCategory = newValue;
+                        });
+                      },
+                      validator:(value) => validateSelectedValue(value, context)),
                   DropdownButtonFormField<GameEntity>(
-                    decoration: const InputDecoration(
-                      labelText: "Juego",
-                    ),
-                    value: _selectedGame,
-                    items: reserveBloc.state.games!
-                        .map((game) => DropdownMenuItem(
-                              value: game,
-                              child: Text(game.description),
-                            ))
-                        .toList(),
-                    onChanged: (newValue) {
-                      setState(() {
-                        _selectedGame = newValue;
-                      });
-                    },
-                    validator: validateSelectedValue),
+                      decoration:  InputDecoration(
+                        labelText:  AppLocalizations.of(context)!.game,
+                      ),
+                      value: _selectedGame,
+                      items: reserveBloc.state.games!
+                          .map((game) => DropdownMenuItem(
+                                value: game,
+                                child: Text(game.description),
+                              ))
+                          .toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          _selectedGame = newValue;
+                        });
+                      },
+                      validator:(value) => validateSelectedValue(value, context)),
                 ],
               ),
             ),
@@ -176,7 +178,7 @@ class _ReserveFormDialogState extends State<DialogCreateReserve> {
               children: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text("Cancelar",
+                  child: Text(AppLocalizations.of(context)!.cancel,
                       style: TextStyle(color: Colors.red)),
                 ),
                 const SizedBox(width: 10.0),
@@ -200,5 +202,4 @@ class _ReserveFormDialogState extends State<DialogCreateReserve> {
       ),
     );
   }
-
 }

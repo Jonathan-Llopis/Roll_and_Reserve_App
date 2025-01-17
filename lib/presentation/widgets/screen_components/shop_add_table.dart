@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_state.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_edit_shop.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ShopAddTables extends StatelessWidget {
   const ShopAddTables({
@@ -21,7 +22,7 @@ class ShopAddTables extends StatelessWidget {
         SizedBox(
           child: Row(
             children: [
-              Text('Mesas disponibles:',
+              Text(AppLocalizations.of(context)!.available_tables,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               const Spacer(),
             ],
@@ -34,7 +35,8 @@ class ShopAddTables extends StatelessWidget {
               ? state.tables!
                   .map((table) => Chip(
                       backgroundColor: Colors.teal.shade100,
-                      label: Text("Mesa ${table.numberTable.toString()}")))
+                      label: Text(AppLocalizations.of(context)!
+                          .table_number(table.numberTable))))
                   .toList()
               : [],
         ),
