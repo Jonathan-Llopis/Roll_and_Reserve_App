@@ -127,7 +127,11 @@ class TableBloc extends Bloc<TableEvent, TableState> {
             return !tableOccupied;
           }).toList();
 
-          emit(TableState.getTables(availableTables));
+          final shopTables = availableTables
+              .where((table) => table.idShop == event.shopId)
+              .toList();
+
+          emit(TableState.getTables(shopTables));
         },
       );
     });

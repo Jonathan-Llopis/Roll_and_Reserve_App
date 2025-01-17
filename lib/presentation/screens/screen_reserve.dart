@@ -2,18 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
+import 'package:roll_and_reserve/domain/entities/table_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_state.dart';
+import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 import 'package:roll_and_reserve/presentation/widgets/information/information_reserve.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ScreenReserve extends StatefulWidget {
   final int idReserve;
   final int idShop;
+  final int idTable;
   const ScreenReserve({
     super.key,
     required this.idReserve,
     required this.idShop,
+    required this.idTable,
   });
 
   @override
@@ -21,6 +26,17 @@ class ScreenReserve extends StatefulWidget {
 }
 
 class _ScreenReserveState extends State<ScreenReserve> {
+
+late TableEntity table;
+
+@override
+  void initState() {
+    TableBloc tableBloc = BlocProvider.of<TableBloc>(context);
+    table = tableBloc.state.tables!
+        .firstWhere((table) => table.id == widget.idTable); 
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
@@ -32,7 +48,7 @@ class _ScreenReserveState extends State<ScreenReserve> {
           );
         } else if (state.errorMessage != null) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Error')),
+            appBar: AppBar(title: Text( AppLocalizations.of(context)!.error)),
             body: Center(child: Text(state.errorMessage!)),
           );
         } else if (state.reserves != null) {
@@ -40,7 +56,7 @@ class _ScreenReserveState extends State<ScreenReserve> {
               .firstWhere((reserve) => reserve.id == widget.idReserve);
           return Scaffold(
             appBar: AppBar(
-              title: Text("Mesa: ${reserve.tableId}"),
+              title: Text(AppLocalizations.of(context)!.table_number(table.numberTable)),
             ),
             body: InformationReserve(
                 widget: widget,

@@ -5,6 +5,7 @@ import 'package:roll_and_reserve/config/theme/theme.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ButtonRegister extends StatelessWidget {
   const ButtonRegister(
@@ -30,7 +31,7 @@ class ButtonRegister extends StatelessWidget {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content:
-                    Text('El email o nombre ya existe en la base de datos'),
+                    Text(AppLocalizations.of(context)!.email_or_username_exists),
               ),
             );
           }
@@ -51,7 +52,7 @@ class ButtonRegister extends StatelessWidget {
               email: emailController.text, name: nameController.text));
         },
         style: AppTheme.elevatedButtonAcceptStyle,
-        child: const Text('Register', style: AppTheme.buttonStyle),
+        child:  Text(AppLocalizations.of(context)!.register, style: AppTheme.buttonStyle),
       ),
     );
   }

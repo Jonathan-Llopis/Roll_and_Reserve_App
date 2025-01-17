@@ -13,6 +13,7 @@ import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.d
 import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/shop_add_table.dart';
 import 'package:roll_and_reserve/presentation/widgets/buttons/button_cu_shop.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ScreenEditShop extends StatefulWidget {
   final int? idShop;
@@ -58,7 +59,7 @@ class _ScreenEditShopState extends State<ScreenEditShop> {
         } else if (state.tables != null) {
           return Scaffold(
             appBar: AppBar(
-              title: Text('Editar Tienda'),
+              title: Text(AppLocalizations.of(context)!.edit_shop),
               backgroundColor: Colors.teal,
               centerTitle: true,
             ),
@@ -113,25 +114,26 @@ class _ScreenEditShopState extends State<ScreenEditShop> {
                     TextFormField(
                         controller: _titleController,
                         decoration: InputDecoration(
-                          labelText: 'Título',
+                          labelText: AppLocalizations.of(context)!.shop_name_text,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                           prefixIcon: Icon(Icons.title),
                         ),
-                        validator: basicValidation),
+                        validator: (value) => basicValidation(value, context)),
                     const SizedBox(height: 16),
                     TextFormField(
                         controller: _adressController,
                         maxLines: 2,
                         decoration: InputDecoration(
-                          labelText: 'Dirección',
+                          labelText:
+                              AppLocalizations.of(context)!.shop_direction,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                           prefixIcon: Icon(Icons.location_on),
                         ),
-                        validator: basicValidation),
+                        validator:(value) => basicValidation(value, context)),
                     const SizedBox(height: 16),
                     widget.idShop != 0
                         ? ShopAddTables(
@@ -148,7 +150,7 @@ class _ScreenEditShopState extends State<ScreenEditShop> {
                             context.go('/user');
                           },
                           icon: Icon(Icons.cancel),
-                          label: Text('Cancelar'),
+                          label: Text(AppLocalizations.of(context)!.cancel),
                           style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.grey),
                         ),
@@ -168,7 +170,8 @@ class _ScreenEditShopState extends State<ScreenEditShop> {
                               onPressed: () {
                                 deleteShop(context, widget.idShop!);
                               },
-                              child: Text('Eliminar tienda',
+                              child: Text(
+                                  AppLocalizations.of(context)!.shop_delete,
                                   style: TextStyle(color: Colors.red)),
                             ),
                           ),
@@ -192,8 +195,8 @@ class _ScreenEditShopState extends State<ScreenEditShop> {
         vertical: 20,
       ),
       child: Column(children: <Widget>[
-        const Text(
-          "Añade una imagen de perfil",
+         Text(
+          AppLocalizations.of(context)!.add_profile_image,
           style: TextStyle(
             fontSize: 20.0,
           ),
@@ -208,7 +211,7 @@ class _ScreenEditShopState extends State<ScreenEditShop> {
               takePhoto(ImageSource.camera);
               Navigator.pop(context);
             },
-            label: const Text("Cámara"),
+            label: Text(AppLocalizations.of(context)!.camera),
           ),
           const SizedBox(
             width: 10,
@@ -219,8 +222,8 @@ class _ScreenEditShopState extends State<ScreenEditShop> {
               takePhoto(ImageSource.gallery);
               Navigator.pop(context);
             },
-            label: const Text(
-              "Galería",
+            label:  Text(
+              AppLocalizations.of(context)!.gallery,
             ),
           )
         ])

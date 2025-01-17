@@ -1,12 +1,12 @@
 import 'dart:io';
 import 'dart:ui';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DefaultAppBar extends StatefulWidget implements PreferredSizeWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -74,8 +74,8 @@ class _DefaultAppBarState extends State<DefaultAppBar> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Text(
+                  children: [
+                    const Text(
                       'Roll & Reserve',
                       style: TextStyle(
                         fontSize: 24,
@@ -85,8 +85,8 @@ class _DefaultAppBarState extends State<DefaultAppBar> {
                       ),
                     ),
                     Text(
-                      'Encuentra tu mesa de juego',
-                      style: TextStyle(
+                      AppLocalizations.of(context)!.find_your_game_table,
+                      style: const TextStyle(
                         fontSize: 14,
                         color: Colors.white70,
                       ),
@@ -96,7 +96,6 @@ class _DefaultAppBarState extends State<DefaultAppBar> {
               ],
             ),
             actions: [
-              // Icono de usuario
               Padding(
                 padding: const EdgeInsets.only(right: 16.0),
                 child: GestureDetector(

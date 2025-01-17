@@ -8,6 +8,7 @@ import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_event.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_utils.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class InformationShop extends StatefulWidget {
   const InformationShop({
@@ -96,7 +97,7 @@ class _ShopListInventoryState extends State<InformationShop> {
                       onPressed: () {
                         context.go('/user/shop/${widget.shop.id}');
                       },
-                      child: Text("Editar Mesas"))
+                      child: Text(AppLocalizations.of(context)!.edit_table))
                   : Container(),
             ],
           ),
@@ -121,7 +122,6 @@ class _ShopListInventoryState extends State<InformationShop> {
                   ),
                 ),
                 const SizedBox(height: 8.0),
-                
               ],
             ),
           ),
@@ -129,11 +129,13 @@ class _ShopListInventoryState extends State<InformationShop> {
           Column(
             children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   const Icon(Icons.table_bar, size: 16, color: Colors.grey),
                   const SizedBox(width: 4.0),
                   Text(
-                    'Total Tables: ${widget.shop.tablesShop.length}',
+                    AppLocalizations.of(context)!
+                        .total_tables(widget.shop.tablesShop.length),
                     style: const TextStyle(
                       fontSize: 14,
                       color: Colors.grey,
@@ -143,6 +145,14 @@ class _ShopListInventoryState extends State<InformationShop> {
               ),
               const SizedBox(height: 8.0),
               buildStars(widget.shop.averageRaiting),
+              loginBloc.state.user!.role == 1
+                  ? IconButton(
+                      icon: Icon(Icons.edit, color: Colors.blue),
+                      onPressed: () {
+                        context.go('/user/shop_edit/${widget.shop.id}');
+                      },
+                    )
+                  : Container()
             ],
           ),
         ],

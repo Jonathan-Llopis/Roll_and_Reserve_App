@@ -33,7 +33,7 @@ class ReserveModel {
   factory ReserveModel.fromJson(Map<String, dynamic> json) {
     return ReserveModel(
       id: json['id_reserve'] ?? 0,
-      freePlaces: json['free_places'] ?? 0,
+      freePlaces: json['total_places'] ?? 0,
       dayDate: getDate(json['hour_start']?? "") ,
       horaInicio: getHour(json['hour_start'] ?? ""),
       horaFin: getHour(json['hour_end'] ?? ""),
@@ -50,7 +50,7 @@ class ReserveModel {
   Map<String, dynamic> toJson() {
     return {
       'id_reserve': id,
-      'free_places': freePlaces,
+      'total_places': freePlaces,
       'hour_start': getIsoDate(dayDate, horaInicio),
       'hour_end':  getIsoDate(dayDate, horaFin),
       'description': description,
