@@ -25,7 +25,7 @@ class ShopRepositoryImpl implements ShopsRepository {
      );
      return Right(shopsWithLogo);
    } catch (e) {
-     return Left(Exception('Error al cargar shops'));
+     return Left(Exception('Error al cargar tiendas'));
    }
  }
   @override
@@ -35,7 +35,7 @@ class ShopRepositoryImpl implements ShopsRepository {
       await remoteDataSource.deleteShops(idShops, token!);
       return const Right(true);
     } catch (e) {
-      return Left(Exception('Error al eliminar el Shops'));
+      return Left(Exception('Error al eliminar la tienda'));
     }
   }
 
@@ -51,7 +51,7 @@ class ShopRepositoryImpl implements ShopsRepository {
       return Right(true);
     } catch (e) {
       return Left(
-          Exception('Error al actualizar el inventario: ${e.toString()}'));
+          Exception('Error al actualizar la tienda: ${e.toString()}'));
     }
   }
 
@@ -68,7 +68,7 @@ class ShopRepositoryImpl implements ShopsRepository {
       await remoteDataSource.updateShops(updateShop, token);
       return Right(true);
     } catch (e) {
-      return Left(Exception('Error al crear el tienda: ${e.toString()}'));
+      return Left(Exception('Error al crear la tienda: ${e.toString()}'));
     }
   }
 }

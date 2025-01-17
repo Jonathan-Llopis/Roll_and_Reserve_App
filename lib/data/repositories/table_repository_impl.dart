@@ -19,7 +19,7 @@ class TableRepositoryImpl implements TableRepository {
       final tableModels = await remoteDataSource.getAllTables(token!);
       return Right(tableModels.map((model) => model.toTableEntity()).toList());
     } catch (e) {
-      return Left(Exception('Error al cargar table'));
+      return Left(Exception('Error al cargar la mesa'));
     }
   }
 
@@ -30,7 +30,7 @@ class TableRepositoryImpl implements TableRepository {
       await remoteDataSource.deleteTables(idTable, token!);
       return const Right(true);
     } catch (e) {
-      return Left(Exception('Error al eliminar el Table'));
+      return Left(Exception('Error al eliminar la mesa'));
     }
   }
 
@@ -42,7 +42,7 @@ class TableRepositoryImpl implements TableRepository {
       await remoteDataSource.updateTables(shopModel, token!);
       return Right(true);
     } catch (e) {
-      return Left(Exception('Error al actualizar el mesa: ${e.toString()}'));
+      return Left(Exception('Error al actualizar la mesa: ${e.toString()}'));
     }
   }
 
@@ -54,7 +54,7 @@ class TableRepositoryImpl implements TableRepository {
       await remoteDataSource.createTables(shopModel, token!);
       return Right(true);
     } catch (e) {
-      return Left(Exception('Error al crear el mesa: ${e.toString()}'));
+      return Left(Exception('Error al crear la mesa: ${e.toString()}'));
     }
   }
 }
