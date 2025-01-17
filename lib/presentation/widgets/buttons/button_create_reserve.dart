@@ -9,6 +9,7 @@ import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_event.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_create_reserve.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ButtonCreateReserve extends StatelessWidget {
   const ButtonCreateReserve(
@@ -75,7 +76,7 @@ class ButtonCreateReserve extends StatelessWidget {
           Navigator.of(context).pop();
         }
       },
-      child: const Text("Guardar"),
+      child:  Text( AppLocalizations.of(context)!.save),
     );
   }
 }

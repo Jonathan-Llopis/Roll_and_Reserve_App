@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_event.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FilterShops extends StatefulWidget {
   const FilterShops({super.key});
@@ -51,16 +52,16 @@ class _FilterShopsState extends State<FilterShops> {
           children: [
             TextFormField(
               controller: _nombreTiendaController,
-              decoration: const InputDecoration(
-                labelText: 'Nombre de tienda',
+              decoration:  InputDecoration(
+                labelText:  AppLocalizations.of(context)!.shop_name_text,
                 border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 16),
             TextFormField(
               controller: _localidadTiendaController,
-              decoration: const InputDecoration(
-                labelText: 'Localidad de tienda',
+              decoration:  InputDecoration(
+                labelText:  AppLocalizations.of(context)!.shop_location,
                 border: OutlineInputBorder(),
               ),
             ),
@@ -75,7 +76,7 @@ class _FilterShopsState extends State<FilterShops> {
                   Navigator.of(context).pop();
                 }
               },
-              child: const Text('Filtrar'),
+              child:  Text( AppLocalizations.of(context)!.filter)  ,
             ),
           ],
         ),

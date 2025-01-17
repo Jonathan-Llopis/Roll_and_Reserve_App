@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_event.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/filter_shops.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BottomFilterShops extends StatefulWidget {
   const BottomFilterShops({super.key});
@@ -44,14 +45,14 @@ class _BottomFilterShopsState extends State<BottomFilterShops> {
       items: [
         BottomNavigationBarItem(
           icon: Icon(Icons.delete_outline),
-          label: 'Remove Filters',
+          label: AppLocalizations.of(context)!.remove_filters,
         ),
         BottomNavigationBarItem(
           icon: Icon(
             _isFilterApplied ? Icons.filter_alt : Icons.filter_list,
             color: _isFilterApplied ? Colors.blue : Colors.grey,
           ),
-          label: 'Filter',
+          label: AppLocalizations.of(context)!.filter,
         ),
       ],
       onTap: (index) {

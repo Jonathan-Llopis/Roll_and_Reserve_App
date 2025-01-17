@@ -9,6 +9,7 @@ import 'package:roll_and_reserve/presentation/blocs/tables/table_event.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_utils.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FilterTables extends StatefulWidget {
   const FilterTables({super.key, required this.currentShop});
@@ -60,7 +61,7 @@ class _FilterTablesState extends State<FilterTables> {
           Navigator.of(context).pop();
         } else if (state.errorMessage != null) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error al cargar reservas')),
+            SnackBar(content: Text( AppLocalizations.of(context)!.error_loading_reservations)),
           );
         }
       },
@@ -73,29 +74,29 @@ class _FilterTablesState extends State<FilterTables> {
             children: [
               TextFormField(
                 controller: _dateController,
-                decoration: const InputDecoration(
-                  labelText: 'Fecha',
+                decoration:  InputDecoration(
+                  labelText:  AppLocalizations.of(context)!.date,
                   border: OutlineInputBorder(),
                 ),
                 onTap: () {
                   selectDate(context, _dateController);
                 },
-                validator: basicValidation,
+                validator:(value) => basicValidation(value, context),
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _startTimeController,
-                decoration: const InputDecoration(
-                  labelText: 'Hora de inicio',
+                decoration:  InputDecoration(
+                  labelText:  AppLocalizations.of(context)!.start_time_hh_mm,
                   border: OutlineInputBorder(),
                 ),
                 validator:(value) {
-                    String? error = validateHour(value);
+                    String? error = validateHour(value , context);
                     if (error != null) {
                       return error;
                     }
                     if(_startTimeController.text.compareTo(_endTimeController.text) >= 0){
-                      return 'La hora de inicio debe ser menor que la de fin';
+                      return  AppLocalizations.of(context)!.start_time_must_be_less_than_end_time;
                     }
                     return null;
                   },
@@ -103,19 +104,19 @@ class _FilterTablesState extends State<FilterTables> {
               const SizedBox(height: 16),
               TextFormField(
                 controller: _endTimeController,
-                decoration: const InputDecoration(
-                  labelText: 'Hora de fin',
+                decoration:  InputDecoration(
+                  labelText:  AppLocalizations.of(context)!.end_time_hh_mm,
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) {
-                    String? error = validateHour(value);
+                    String? error = validateHour(value , context);
                     if (error != null) {
                       return error;
                     }
                     if (_startTimeController.text
                             .compareTo(_endTimeController.text) >=
                         0) {
-                      return 'La hora de fin debe ser mayor que la de inicio';
+                      return  AppLocalizations.of(context)!.end_time_must_be_greater_than_start_time;
                     }
                     return null;
                   },
@@ -133,7 +134,7 @@ class _FilterTablesState extends State<FilterTables> {
                   }
                   _saveFilterValues();
                 },
-                child: const Text('Filtrar'),
+                child:  Text( AppLocalizations.of(context)!.filter),
               ),
             ],
           ),

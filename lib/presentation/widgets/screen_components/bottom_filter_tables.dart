@@ -5,6 +5,7 @@ import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_event.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/filter_tables.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BottomFilterTables extends StatefulWidget {
   const BottomFilterTables({
@@ -51,14 +52,14 @@ class _BottomFilterTablesState extends State<BottomFilterTables> {
       items: [
         BottomNavigationBarItem(
           icon: Icon(Icons.delete_outline),
-          label: 'Remove Filters',
+          label: AppLocalizations.of(context)!.remove_filters,
         ),
         BottomNavigationBarItem(
           icon: Icon(
             _isFilterApplied ? Icons.filter_alt : Icons.filter_list,
             color: _isFilterApplied ? Colors.blue : Colors.grey,
           ),
-          label: ' Filtrar Mesas Libres',
+          label: AppLocalizations.of(context)!.filter_free_tables,
         ),
       ],
       onTap: (index) {

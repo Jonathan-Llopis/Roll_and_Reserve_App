@@ -9,7 +9,6 @@ import 'package:roll_and_reserve/presentation/widgets/screen_components/default_
 import 'package:roll_and_reserve/presentation/widgets/screen_components/body_main_shops.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/drawer_main.dart';
 
-
 class ScreenMain extends StatefulWidget {
   const ScreenMain({super.key});
 

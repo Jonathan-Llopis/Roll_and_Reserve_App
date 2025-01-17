@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:roll_and_reserve/domain/entities/table_entity.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class InformationTable extends StatelessWidget {
   const InformationTable({
@@ -18,7 +19,7 @@ class InformationTable extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Mesa ${table.numberTable}",
+            AppLocalizations.of(context)!.table_number(table.numberTable),
             style: Theme.of(context).textTheme.titleLarge!.copyWith(
                   color: Colors.blueAccent,
                   fontWeight: FontWeight.bold,
@@ -34,7 +35,8 @@ class InformationTable extends StatelessWidget {
               ),
               SizedBox(width: 6.0),
               Text(
-                'Reservas: ${table.reserves.length}',
+                AppLocalizations.of(context)!
+                    .reservations(table.reserves.length),
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: Colors.grey[700],
                     ),
@@ -47,13 +49,9 @@ class InformationTable extends StatelessWidget {
             runSpacing: 8.0,
             children: [
               Chip(
-                label: Text('Juego: ${'Juego desconocido'}'),
-                backgroundColor: Colors.blue.shade100,
-                labelStyle: TextStyle(color: Colors.blueAccent),
-              ),
-              Chip(
                 label: Text(
-                  'Reservas: ${table.reserves.length}',
+                  AppLocalizations.of(context)!
+                      .reservations(table.reserves.length),
                 ),
                 backgroundColor: Colors.green.shade100,
                 labelStyle: TextStyle(color: Colors.green),
