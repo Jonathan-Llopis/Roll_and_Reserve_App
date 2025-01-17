@@ -96,7 +96,6 @@ class _DefaultAppBarState extends State<DefaultAppBar> {
               ],
             ),
             actions: [
-              // Icono de usuario
               Padding(
                 padding: const EdgeInsets.only(right: 16.0),
                 child: GestureDetector(
