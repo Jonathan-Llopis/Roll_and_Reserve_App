@@ -6,6 +6,7 @@ import 'package:roll_and_reserve/presentation/blocs/reviews/reviews_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reviews/reviews_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_event.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DialogCreateReview extends StatefulWidget {
   final int idShop;
@@ -25,7 +26,7 @@ class _DialogCreateReviewState extends State<DialogCreateReview> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text("Añadir Reseña"),
+      title: Text( AppLocalizations.of(context)!.add_review),
       content: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -36,12 +37,12 @@ class _DialogCreateReviewState extends State<DialogCreateReview> {
                 controller: _descriptionController,
                 maxLines: 3,
                 decoration: InputDecoration(
-                  labelText: 'Descripción',
+                  labelText:  AppLocalizations.of(context)!.description,
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor, escribe una descripción';
+                    return  AppLocalizations.of(context)!.please_write_a_description;
                   }
                   return null;
                 },
@@ -50,7 +51,7 @@ class _DialogCreateReviewState extends State<DialogCreateReview> {
                 },
               ),
               SizedBox(height: 20),
-              Text('Calificación', style: TextStyle(fontSize: 16)),
+              Text( AppLocalizations.of(context)!.rating, style: TextStyle(fontSize: 16)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: List.generate(5, (index) {
@@ -81,7 +82,7 @@ class _DialogCreateReviewState extends State<DialogCreateReview> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: Text("Cancelar"),
+          child: Text(AppLocalizations.of(context)!.cancel),
         ),
         ElevatedButton(
           onPressed: () {
@@ -102,7 +103,7 @@ class _DialogCreateReviewState extends State<DialogCreateReview> {
               Navigator.pop(context);
             }
           },
-          child: Text("Enviar Reseña"),
+          child: Text( AppLocalizations.of(context)!.add_review),
         ),
       ],
     );

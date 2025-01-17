@@ -12,6 +12,7 @@ import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.d
 import 'package:roll_and_reserve/presentation/widgets/screen_components/bottom_filter_tables.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/default_app_bar.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/drawer_main.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ScreenTablesOfShop extends StatefulWidget {
   final int idShop;
@@ -61,7 +62,7 @@ class _ScreenTablesOfShopState extends State<ScreenTablesOfShop> {
                           SizedBox(height: 4),
                           Row(
                             children: [
-                              Text("Calificación:",
+                              Text( AppLocalizations.of(context)!.rating,
                                   style: TextStyle(fontSize: 14)),
                               SizedBox(width: 8),
                               buildStars(currentShop.averageRaiting),
@@ -78,7 +79,7 @@ class _ScreenTablesOfShopState extends State<ScreenTablesOfShop> {
                           children: [
                             Icon(Icons.storefront,
                                 size: 48, color: Colors.blueAccent),
-                            Text("Todas las Reseñas")
+                            Text( AppLocalizations.of(context)!.all_reviews)
                           ],
                         ),
                       ),
@@ -89,7 +90,7 @@ class _ScreenTablesOfShopState extends State<ScreenTablesOfShop> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Text(
-                    'Mesas Disponibles',
+                    AppLocalizations.of(context)!.available_tables,
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -110,7 +111,7 @@ class _ScreenTablesOfShopState extends State<ScreenTablesOfShop> {
                           onTap: () {
                             loginBloc.state.user!.role == 1
                                 ? showUpdateCreateTableDialog(
-                                    context, widget.idShop, table)
+                                    context,currentShop, table)
                                 : context.go(
                                     '/user/shop/${widget.idShop}/table/${table.id}');
                           },
@@ -124,19 +125,11 @@ class _ScreenTablesOfShopState extends State<ScreenTablesOfShop> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "Mesa ${table.numberTable}",
+                                  AppLocalizations.of(context)!.table_number(table.numberTable),
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                SizedBox(height: 6),
-                                Text(
-                                  "Juego de la Mesa",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                SizedBox(height: 6),
                               ],
                             ),
                           ),
@@ -151,7 +144,7 @@ class _ScreenTablesOfShopState extends State<ScreenTablesOfShop> {
             floatingActionButton: loginBloc.state.user!.role == 1
                 ? FloatingActionButton(
                     onPressed: () {
-                      showUpdateCreateTableDialog(context, widget.idShop, null);
+                      showUpdateCreateTableDialog(context, currentShop, null);
                     },
                     child: const Icon(Icons.add),
                   )

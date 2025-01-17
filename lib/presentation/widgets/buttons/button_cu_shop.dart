@@ -5,6 +5,8 @@ import 'package:roll_and_reserve/domain/entities/shop_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_event.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class ButtonCreateUpdateShop extends StatelessWidget {
   const ButtonCreateUpdateShop({
@@ -37,7 +39,7 @@ class ButtonCreateUpdateShop extends StatelessWidget {
                     id: 0,
                     averageRaiting: 0,
                     logoId: '0',
-                    tablesShop:  [],
+                    tablesShop: [],
                     gamesShop: []),
               ));
         } else {
@@ -57,7 +59,7 @@ class ButtonCreateUpdateShop extends StatelessWidget {
 
         context.go('/user');
       },
-      child: Text('Aceptar'),
+      child: Text(AppLocalizations.of(context)!.accept),
     );
   }
 }

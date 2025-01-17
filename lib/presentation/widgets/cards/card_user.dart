@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:roll_and_reserve/domain/entities/user_entity.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_utils.dart';
 
+
 class CardUser extends StatelessWidget {
   final UserEntity user;
   const CardUser({

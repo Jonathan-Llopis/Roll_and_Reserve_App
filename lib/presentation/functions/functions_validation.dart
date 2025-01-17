@@ -1,38 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
+import 'package:roll_and_reserve/domain/entities/shop_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-String? basicValidation(String? value) {
+String? basicValidation(String? value, BuildContext context) {
   if (value == null || value.isEmpty) {
-    return 'Campo obligatorio';
+    return AppLocalizations.of(context)!.required_field;
   }
   return null;
 }
-String? basicValidationWithNumber(String? value) {
+String? basicValidationWithNumber(String? value, BuildContext context){
   if (value == null || value.isEmpty) {
-    return 'Campo obligatorio';
+    return AppLocalizations.of(context)!.required_field;
   }
   if (!value.contains(RegExp(r'^[0-9]+$'))) {
-    return 'Debe ser un número';
+    return AppLocalizations.of(context)!.must_be_a_number;
   }
   return null;
 }
 
-String? validateSelectedValue(Object? value) {
+String? validateSelectedValue(Object? value, BuildContext context) {
   if (value == null) {
-    return "Selecciona una opción";
+    return AppLocalizations.of(context)!.required_field;
   }
   return null;
 }
 
-String? validateHour(String? value) {
+String? validateHour(String? value, BuildContext context) {
   if (value == null || value.isEmpty) {
-    return "Este campo es obligatorio";
+    return AppLocalizations.of(context)!.required_field;
   }
   final regex = RegExp(r'^\d{2}:\d{2}$');
   if (!regex.hasMatch(value)) {
-    return "El formato debe ser HH:MM";
+    return AppLocalizations.of(context)!.format_must_be_hh_mm;
   }
   
   return null;
@@ -56,91 +58,91 @@ bool isEmailValid(String value) {
   ).hasMatch(value);
 }
 
-String? validateUserName(String? value, LoginBloc loginBloc) {
+String? validateUserName(String? value, LoginBloc loginBloc, BuildContext context) {
   if (value == null || value.isEmpty) {
-    return 'El nombre es obligatorio';
+    return AppLocalizations.of(context)!.required_field;
   }
   final isNameUsed = loginBloc.state.isNameUsed;
   if (isNameUsed != null && isNameUsed) {
-    return 'El nombre ya está en uso.';
+    return AppLocalizations.of(context)!.name_already_in_use;
   }
   return null;
 }
 
-String? validateName(String? value) {
+String? validateName(String? value, BuildContext context) {
   if (value == null || value.isEmpty) {
-    return 'El nombre es obligatorio';
+    return AppLocalizations.of(context)!.required_field;
   }
   return null;
 }
 
-String? validateEmail(String? value, LoginBloc loginBloc) {
+String? validateEmail(String? value, LoginBloc loginBloc, BuildContext context) {
   if (value == null || value.isEmpty) {
-    return 'El email es obligatorio';
+    return AppLocalizations.of(context)!.required_field;
   }
   if (!isEmailValid(value)) {
-    return 'El correo electrónico no es válido';
+    return AppLocalizations.of(context)!.email_invalid;
   }
   final isEmailUsed = loginBloc.state.isEmailUsed;
   if (isEmailUsed != null && isEmailUsed) {
-    return 'El email ya está en uso.';
+    return AppLocalizations.of(context)!.email_already_in_use;
   }
   return null;
 }
 
-String? validatePassword(String? value) {
+String? validatePassword(String? value, BuildContext context) {
   if (value == null || value.isEmpty) {
-    return 'La contraseña es obligatoria';
+    return AppLocalizations.of(context)!.required_field;
   }
   if (value.length < 8) {
-    return 'La contraseña debe tener al menos 8 caracteres';
+    return AppLocalizations.of(context)!.password_must_be_at_least_8_characters;
   }
   if (!hasNumber(value)) {
-    return 'La contraseña debe contener al menos un número';
+    return AppLocalizations.of(context)!.password_must_contain_at_least_one_number;
   }
   if (!hasUppercaseLetter(value)) {
-    return 'La contraseña debe contener al menos una letra mayúscula';
+    return AppLocalizations.of(context)!.password_must_contain_at_least_one_uppercase_letter;
   }
   if (!hasLowercaseLetter(value)) {
-    return 'La contraseña debe contener al menos una letra minúscula';
+    return AppLocalizations.of(context)!.password_must_contain_at_least_one_lowercase_letter;
   }
   return null;
 }
 
 String? validateConfirmPassword(
-    String? value, TextEditingController passwordController) {
+    String? value, TextEditingController passwordController, BuildContext context) {
   if (value == null || value.isEmpty) {
-    return 'La contraseña es obligatoria';
+    return AppLocalizations.of(context)!.required_field;
   }
   if (value.length < 8) {
-    return 'La contraseña debe tener al menos 8 caracteres';
+    return AppLocalizations.of(context)!.password_must_be_at_least_8_characters;
   }
   if (!hasNumber(value)) {
-    return 'La contraseña debe contener al menos un número';
+    return AppLocalizations.of(context)!.password_must_contain_at_least_one_number;
   }
   if (!hasUppercaseLetter(value)) {
-    return 'La contraseña debe contener al menos una letra mayúscula';
+    return AppLocalizations.of(context)!.password_must_contain_at_least_one_uppercase_letter;
   }
   if (!hasLowercaseLetter(value)) {
-    return 'La contraseña debe contener al menos una letra minúscula';
+    return AppLocalizations.of(context)!.password_must_contain_at_least_one_lowercase_letter;
   }
   if (value != passwordController.text) {
-    return 'Las contraseñas no coinciden';
+    return  AppLocalizations.of(context)!.passwords_do_not_match;
   }
   return null;
 }
 
-String? validateCurrentPassword(String? value, LoginBloc loginBloc) {
+String? validateCurrentPassword(String? value, LoginBloc loginBloc, BuildContext context) {
   if (value == null || value.isEmpty) {
-    return 'La contraseña es obligatoria';
+    return  AppLocalizations.of(context)!.required_field;
   } else {
     final validatePassword = loginBloc.state.validatePassword;
     if (validatePassword != null) {
       if (!validatePassword || loginBloc.state.errorMessage != null) {
-        return 'La contraseña no es correcta';
+        return AppLocalizations.of(context)!.password_is_incorrect;
       }
     } else {
-      return 'Error al validar la contraseña';
+      return  AppLocalizations.of(context)!.error_validating_password;
     }
   }
   return null;
@@ -170,4 +172,18 @@ bool isHourTaken(List<ReserveEntity> reservas, DateTime fecha, String horaInicio
     }
   }
   return false;
+}
+
+String? basicValidationTable(String? value, ShopEntity currentShop, BuildContext context) {
+  if (value == null || value.isEmpty) {
+    return  AppLocalizations.of(context)!.required_field;
+  }
+  if (!value.contains(RegExp(r'^[0-9]+$'))) {
+    return  AppLocalizations.of(context)!.must_be_a_number;
+  }
+  if(currentShop.tablesShop.any((element) => element == int.parse(value))){
+    return  AppLocalizations.of(context)!.table_number_already_exists;
+
+  }
+  return null;
 }
