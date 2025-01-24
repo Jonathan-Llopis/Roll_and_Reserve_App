@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:roll_and_reserve/core/use_case.dart';
 import 'package:roll_and_reserve/domain/usecases/table_usecases/create_table_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/table_usecases/delete_table_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/table_usecases/get_all_table_byshop_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/table_usecases/update_table_usecase.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_state.dart';
@@ -14,12 +15,14 @@ class TableBloc extends Bloc<TableEvent, TableState> {
   final GetAllTablesUseCase getTablesUseCase;
   final UpdateTableUseCase updateTablesUseCase;
   final DeleteTableUseCase deleteTablesUseCase;
+  final GetAllTablesByShopUseCase getAllTablesByShopUseCase;
 
   TableBloc(
     this.createTablesUseCase,
     this.getTablesUseCase,
     this.updateTablesUseCase,
     this.deleteTablesUseCase,
+    this.getAllTablesByShopUseCase
   ) : super(const TableState()) {
     on<GetTablesEvent>((event, emit) async {
       emit(TableState.loading());
@@ -83,13 +86,11 @@ class TableBloc extends Bloc<TableEvent, TableState> {
     });
     on<GetTablesByShopEvent>((event, emit) async {
       emit(TableState.loading());
-      final result = await getTablesUseCase(NoParams());
+      final result = await getAllTablesByShopUseCase(GetTablesByShopUseCaseParams(idShop:event.idShop));
       result.fold(
         (failure) =>
             emit(TableState.failure("Fallo al realizar la recuperacion")),
-        (tables) {
-          final tablesByOwner =
-              tables.where((table) => table.idShop == event.idShop).toList();
+        (tablesByOwner) {
           emit(TableState.getTables(tablesByOwner));
         },
       );
