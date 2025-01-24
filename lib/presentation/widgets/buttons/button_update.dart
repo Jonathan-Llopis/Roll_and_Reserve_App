@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
@@ -34,7 +35,7 @@ class ButtonUpdate extends StatelessWidget {
           onPressed: () {
             Navigator.pop(context);
           },
-          child:  Text(AppLocalizations.of(context)!.cancel),
+          child: Text(AppLocalizations.of(context)!.cancel),
         ),
         BlocListener<LoginBloc, LoginState>(
           listener: (context, state) {
@@ -42,7 +43,7 @@ class ButtonUpdate extends StatelessWidget {
               if (_formKey.currentState!.validate()) {
                 context.read<LoginBloc>().add(
                     UpdatePasswordEvent(password: _newPasswordController.text));
-                Navigator.pop(context);
+                context.go('/login');
               }
             }
           },
