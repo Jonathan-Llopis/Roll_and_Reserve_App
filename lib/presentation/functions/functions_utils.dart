@@ -25,7 +25,7 @@ Row buildStars(double rating) {
 
 Future<void> selectDate(
     BuildContext context, TextEditingController controller) async {
-    LanguageBloc languageBloc = BlocProvider.of<LanguageBloc>(context);
+  LanguageBloc languageBloc = BlocProvider.of<LanguageBloc>(context);
   final DateTime? picked = await showDatePicker(
     locale: languageBloc.state.locale,
     context: context,
@@ -40,6 +40,26 @@ Future<void> selectDate(
   }
 }
 
+Future<void> selectTime(BuildContext context, TextEditingController controller) async {
+  final TimeOfDay? pickedTime = await showTimePicker(
+    context: context,
+    initialTime: controller.text != "" ? TimeOfDay.fromDateTime(DateFormat('HH:mm').parse(controller.text)) : TimeOfDay.now(),
+    builder: (BuildContext context, Widget? child) {
+      return MediaQuery(
+        data: MediaQuery.of(context).copyWith(
+            alwaysUse24HourFormat: true),
+        child: child!,
+      );
+    },
+    
+  );
+  if (pickedTime != null) {
+    final localizations = MaterialLocalizations.of(context);
+    final formattedTime = localizations.formatTimeOfDay(pickedTime, alwaysUse24HourFormat: false);
+    controller.text = formattedTime;
+  }
+}
+
 String? validateTime(
     BuildContext context,
     String? value,
@@ -49,8 +69,8 @@ String? validateTime(
     TextEditingController endHour) {
   String? error = validateHour(value, context);
   if (error != null) return error;
-  if (isHourTaken(reserveBloc.state.reserves!, dateReserve,
-      startHour.text, endHour.text)) {
+  if (isHourTaken(
+      reserveBloc.state.reserves!, dateReserve, startHour.text, endHour.text)) {
     return AppLocalizations.of(context)!.time_already_taken_that_day;
   }
   if (startHour.text.compareTo(endHour.text) >= 0) {
@@ -58,6 +78,3 @@ String? validateTime(
   }
   return null;
 }
-
-
-

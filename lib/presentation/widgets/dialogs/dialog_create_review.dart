@@ -10,7 +10,13 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DialogCreateReview extends StatefulWidget {
   final int idShop;
-  const DialogCreateReview({super.key, required this.idShop});
+  final ReviewBloc reviewBloc;
+  final ShopBloc shopBloc;
+  const DialogCreateReview(
+      {super.key,
+      required this.idShop,
+      required this.reviewBloc,
+      required this.shopBloc});
 
   @override
   State<DialogCreateReview> createState() => _DialogCreateReviewState();
@@ -26,7 +32,7 @@ class _DialogCreateReviewState extends State<DialogCreateReview> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text( AppLocalizations.of(context)!.add_review),
+      title: Text(AppLocalizations.of(context)!.add_review),
       content: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -37,12 +43,13 @@ class _DialogCreateReviewState extends State<DialogCreateReview> {
                 controller: _descriptionController,
                 maxLines: 3,
                 decoration: InputDecoration(
-                  labelText:  AppLocalizations.of(context)!.description,
+                  labelText: AppLocalizations.of(context)!.description,
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return  AppLocalizations.of(context)!.please_write_a_description;
+                    return AppLocalizations.of(context)!
+                        .please_write_a_description;
                   }
                   return null;
                 },
@@ -51,7 +58,8 @@ class _DialogCreateReviewState extends State<DialogCreateReview> {
                 },
               ),
               SizedBox(height: 20),
-              Text( AppLocalizations.of(context)!.rating, style: TextStyle(fontSize: 16)),
+              Text(AppLocalizations.of(context)!.rating,
+                  style: TextStyle(fontSize: 16)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: List.generate(5, (index) {
@@ -88,7 +96,7 @@ class _DialogCreateReviewState extends State<DialogCreateReview> {
           onPressed: () {
             if (_formKey.currentState!.validate()) {
               LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
-              context.read<ReviewBloc>().add(CreateReviewEvent(
+              widget.reviewBloc.add(CreateReviewEvent(
                   review: ReviewEntity(
                       id: 0,
                       raiting: _rating,
@@ -99,11 +107,11 @@ class _DialogCreateReviewState extends State<DialogCreateReview> {
                       userNameWriter: '',
                       avatarIdWriter: '',
                       avatarWriter: [])));
-              context.read<ShopBloc>().add(GetShopsEvent());
+              widget.shopBloc.add(GetShopsEvent());
               Navigator.pop(context);
             }
           },
-          child: Text( AppLocalizations.of(context)!.add_review),
+          child: Text(AppLocalizations.of(context)!.add_review),
         ),
       ],
     );

@@ -57,7 +57,7 @@ class InformationReserve extends StatelessWidget {
               Chip(
                 label: Text(
                   AppLocalizations.of(context)!.free_places(
-                      reserve.freePlaces - reserve.usersReserve.length),
+                      reserve.freePlaces - reserve.usersInTables),
                 ),
                 backgroundColor: Colors.blue.shade50,
               ),
@@ -71,9 +71,9 @@ class InformationReserve extends StatelessWidget {
           const SizedBox(height: 8),
           Expanded(
             child: ListView.builder(
-              itemCount: reserve.usersReserve.length,
+              itemCount: reserve.users!.length,
               itemBuilder: (context, index) {
-                final user = reserve.usersReserve[index];
+                final user = reserve.users![index];
                 return CardUser(
                   user: user,
                 );
@@ -104,7 +104,7 @@ class InformationReserve extends StatelessWidget {
               loginBloc.state.user!.role == 2
                   ? ElevatedButton.icon(
                       onPressed: () {
-                        if (reserve.usersReserve
+                        if (reserve.users!
                             .map((user) => user.id)
                             .contains(loginBloc.state.user!.id)) {
                           context
@@ -116,7 +116,7 @@ class InformationReserve extends StatelessWidget {
                                 dateReserve: dateReserve,
                               ));
                         } else {
-                          if (reserve.usersReserve.length <
+                          if (reserve.users!.length <
                               reserve.freePlaces) {
                             context
                                 .read<ReserveBloc>()
@@ -130,14 +130,14 @@ class InformationReserve extends StatelessWidget {
                         }
                       },
                       icon: Icon(
-                        (reserve.usersReserve
+                        (reserve.users!
                                 .map((user) => user.id)
                                 .contains(loginBloc.state.user!.id))
                             ? Icons.logout
                             : Icons.login,
                       ),
                       label: Text(
-                        (reserve.usersReserve
+                        (reserve.users!
                                 .map((user) => user.id)
                                 .contains(loginBloc.state.user!.id))
                             ? AppLocalizations.of(context)!.exit

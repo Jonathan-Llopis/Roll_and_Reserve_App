@@ -57,4 +57,14 @@ class TableRepositoryImpl implements TableRepository {
       return Left(Exception('Error al crear la mesa: ${e.toString()}'));
     }
   }
+  @override
+  Future<Either<Exception, List<TableEntity>>> getAllTablesByShop(int shopId) async {
+    try {
+      final token = sharedPreferences.getString('token');
+      final tableModels = await remoteDataSource.getAllTablesByShop(shopId, token!);
+      return Right(tableModels.map((model) => model.toTableEntity()).toList());
+    } catch (e) {
+      return Left(Exception('Error al cargar las mesas por tienda'));
+    }
+  }
 }

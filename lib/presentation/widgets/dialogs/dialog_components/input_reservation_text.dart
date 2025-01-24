@@ -1,23 +1,21 @@
-
 import 'package:flutter/material.dart';
 
-
 class InputReservationText extends StatelessWidget {
-  const InputReservationText({
-    super.key,
-    required this.controller,
-    required this.label,
-    required this.icon,
-    required this.keyboardType,
-    required this.validator,
-  });
+  const InputReservationText(
+      {super.key,
+      required this.controller,
+      required this.label,
+      required this.icon,
+      required this.keyboardType,
+      required this.validator,
+      this.onTap});
 
   final TextEditingController controller;
   final String label;
   final IconData icon;
   final TextInputType keyboardType;
   final String? Function(String? p1)? validator;
-
+  final VoidCallback? onTap;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -31,6 +29,7 @@ class InputReservationText extends StatelessWidget {
         ),
         keyboardType: keyboardType,
         validator: validator,
+        onTap: onTap,
       ),
     );
   }
