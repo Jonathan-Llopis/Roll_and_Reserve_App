@@ -6,4 +6,7 @@ abstract class ShopsRepository {
   Future<Either<Exception, bool>> deleteShops(int idShops);
   Future<Either<Exception, bool>> updateShops(ShopEntity shops);
   Future<Either<Exception, bool>> createShops(ShopEntity shops);
+  Future<Either<Exception, ShopEntity>> getShop(int idShop);
+  Future<Either<Exception, List<ShopEntity>>> getShopByOwner(String idOwner);
+  
 }

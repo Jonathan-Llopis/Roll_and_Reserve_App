@@ -6,6 +6,11 @@ abstract class ReserveRepository {
   Future<Either<Exception, bool>> deleteReserve(int idReserve);
   Future<Either<Exception, bool>> updateReserve(ReserveEntity reserve);
   Future<Either<Exception, int>> createReserve(ReserveEntity reserve);
-  Future<Either<Exception, bool>> addUserToReserve(int idReserve, String idUser);
-  Future<Either<Exception, bool>> deleteUserOfReserve(int idReserve, String idUser);
+  Future<Either<Exception, bool>> addUserToReserve(
+      int idReserve, String idUser);
+  Future<Either<Exception, bool>> deleteUserOfReserve(
+      int idReserve, String idUser);
+  Future<Either<Exception, List<ReserveEntity>>> getAllReservesByDate(
+      DateTime date, int idTable);
+  Future<Either<Exception, ReserveEntity>> getReserveWithUsers(int idReserve);
 }

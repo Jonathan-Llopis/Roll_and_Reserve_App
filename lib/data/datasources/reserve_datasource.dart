@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:roll_and_reserve/data/models/reserve_model.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 abstract class ReserveRemoteDataSource {
   Future<List<ReserveModel>> getAllReserves(String token);
@@ -9,6 +10,8 @@ abstract class ReserveRemoteDataSource {
   Future<int> createReserves(ReserveModel reserve, String token);
   Future<bool> addUserToReserve(int idReserve, String idUser, String token);
   Future<bool> deleteUserToReserve(int idReserve, String idUser, String token);
+  Future<List<ReserveModel>> getAllReservesByDate(String date, String token, int idTable);
+  Future<ReserveModel> getReserveById(int idReserve, String token);
 }
 
 class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
@@ -19,7 +22,7 @@ class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
   @override
   Future<List<ReserveModel>> getAllReserves(String token) async {
     final response = await client.get(
-      Uri.parse('http://localhost:8000/reserves'),
+      Uri.parse('${dotenv.env['BACKEND']}/reserves'),
       headers: {
         'authorization': 'Bearer $token',
       },
@@ -29,14 +32,14 @@ class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
       final List<dynamic> reserveJson = json.decode(response.body);
       return reserveJson.map((json) => ReserveModel.fromJson(json)).toList();
     } else {
-      throw Exception('Error al cargar la mesa.');
+      throw Exception('Error al cargar las reservas.');
     }
   }
 
   @override
   Future<bool> deleteReserves(int idReserves, String token) async {
     final response = await client.delete(
-      Uri.parse('http://localhost:8000/reserves/$idReserves'),
+      Uri.parse('${dotenv.env['BACKEND']}/reserves/$idReserves'),
       headers: {
         'authorization': 'Bearer $token',
       },
@@ -44,14 +47,14 @@ class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
     if (response.statusCode == 200) {
       return true;
     } else {
-      throw Exception('Error al eliminar la mesa.');
+      throw Exception('Error al eliminar la reserva.');
     }
   }
 
   @override
   Future<bool> updateReserves(ReserveModel reserve, String token) async {
     final response = await client.put(
-      Uri.parse('http://localhost:8000/reserves/${reserve.id}'),
+      Uri.parse('${dotenv.env['BACKEND']}/reserves/${reserve.id}'),
       headers: {
         'Content-Type': 'application/json',
         'authorization': 'Bearer $token',
@@ -61,33 +64,33 @@ class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
     if (response.statusCode == 200) {
       return true;
     } else {
-      throw Exception('Error al modificar la mesa: ${response.body}');
+      throw Exception('Error al modificar la reserva: ${response.body}');
     }
   }
 
   @override
-Future<int> createReserves(ReserveModel reserve, String token) async {
-  final response = await client.post(
-    Uri.parse('http://localhost:8000/reserves'),
-    headers: {
-      'Content-Type': 'application/json',
-      'authorization': 'Bearer $token',
-    },
-    body: json.encode(reserve.toJson()),
-  );
-  if (response.statusCode == 201) {
-    final jsonData = json.decode(response.body);
-    return jsonData['id_reserve'];
-  } else {
-    throw Exception('Error al crear la reserva: ${response.body}');
-  }
-}
-
-
-   @override
-  Future<bool> addUserToReserve(int idReserve, String idUser, String token) async {
+  Future<int> createReserves(ReserveModel reserve, String token) async {
     final response = await client.post(
-      Uri.parse('http://localhost:8000/users/$idUser/reserves/$idReserve'),
+      Uri.parse('${dotenv.env['BACKEND']}/reserves'),
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': 'Bearer $token',
+      },
+      body: json.encode(reserve.toJson()),
+    );
+    if (response.statusCode == 201) {
+      final jsonData = json.decode(response.body);
+      return jsonData['id_reserve'];
+    } else {
+      throw Exception('Error al crear la reserva: ${response.body}');
+    }
+  }
+
+  @override
+  Future<bool> addUserToReserve(
+      int idReserve, String idUser, String token) async {
+    final response = await client.post(
+      Uri.parse('${dotenv.env['BACKEND']}/users/$idUser/reserves/$idReserve'),
       headers: {
         'Content-Type': 'application/json',
         'authorization': 'Bearer $token',
@@ -96,14 +99,15 @@ Future<int> createReserves(ReserveModel reserve, String token) async {
     if (response.statusCode == 201) {
       return true;
     } else {
-      throw Exception('Error al crear la reserva: ${response.body}');
+      throw Exception('Error al añadir usuario a la reserva: ${response.body}');
     }
   }
 
-   @override
-  Future<bool> deleteUserToReserve(int idReserve, String idUser, String token) async {
+  @override
+  Future<bool> deleteUserToReserve(
+      int idReserve, String idUser, String token) async {
     final response = await client.delete(
-      Uri.parse('http://localhost:8000/users/$idUser/reserves/$idReserve'),
+      Uri.parse('${dotenv.env['BACKEND']}/users/$idUser/reserves/$idReserve'),
       headers: {
         'Content-Type': 'application/json',
         'authorization': 'Bearer $token',
@@ -112,7 +116,42 @@ Future<int> createReserves(ReserveModel reserve, String token) async {
     if (response.statusCode == 204) {
       return true;
     } else {
-      throw Exception('Error al borrar usuario de la reserva: ${response.body}');
+      throw Exception(
+          'Error al borrar usuario de la reserva: ${response.body}');
+    }
+  }
+
+  @override
+  Future<List<ReserveModel>> getAllReservesByDate(String date, String token, int idTable) async {
+    final response = await client.get(
+      Uri.parse('${dotenv.env['BACKEND']}/reserves/date/$date/$idTable'),
+      headers: {
+        'authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> reserveJson = json.decode(response.body);
+      return reserveJson.map((json) => ReserveModel.fromJson(json)).toList();
+    } else {
+      throw Exception('Error al cargar las reservas por fecha.');
+    }
+  }
+
+  @override
+  Future<ReserveModel> getReserveById(int idReserve, String token) async {
+    final response = await client.get(
+      Uri.parse('${dotenv.env['BACKEND']}/users/reserves/$idReserve'),
+      headers: {
+        'authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final reserveJson = json.decode(response.body);
+      return ReserveModel.fromJsonWithUsers(reserveJson);
+    } else {
+      throw Exception('Error al cargar la reserva.');
     }
   }
 }

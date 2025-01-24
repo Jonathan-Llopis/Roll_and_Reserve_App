@@ -11,6 +11,8 @@ class ShopModel {
   final String ownerId;
   final List<int> tablesShop;
   final List<int> gamesShop;
+  final double latitude;
+  final double longitude;
 
   ShopModel(
       {required this.id,
@@ -21,21 +23,24 @@ class ShopModel {
       required this.averageRaiting,
       required this.ownerId,
       required this.tablesShop,
-      required this.gamesShop
-      });
+      required this.gamesShop,
+      required this.latitude,
+      required this.longitude});
 
   factory ShopModel.fromJson(Map<String, dynamic> json) {
     return ShopModel(
         id: json['id_shop'],
         name: json['name'],
         address: json['address'],
-        logoId: json['logo'] ?? "6785353421a364ee9968160f",
+        logoId: json['logo'] ?? "678f8573e32f3fa9fd0ed5d6",
         logo: <int>[],
         averageRaiting: calcularMediaRatings(json['reviews_shop'] ?? []),
         ownerId:
             json['owner'] != null ? json['owner']['id_google'] ?? "0" : "0",
         tablesShop: calcularMesasTienda(json['tables_in_shop'] ?? []),
-        gamesShop: crearListaJuegos(json['games'] ?? []));
+        gamesShop: crearListaJuegos(json['games'] ?? []),
+        latitude: json['latitud'] ?? 0.0,
+        longitude: json['longitud'] ?? 0.0);
   }
 
   factory ShopModel.fromJsonCreate(Map<String, dynamic> json) {
@@ -43,15 +48,24 @@ class ShopModel {
         id: json['id_shop'],
         name: json['name'],
         address: json['address'],
-        logoId: json['logo'] ?? "6785353421a364ee9968160f",
+        logoId: json['logo'] ?? "678f8573e32f3fa9fd0ed5d6",
         logo: <int>[],
         averageRaiting: calcularMediaRatings(json['reviews_shop'] ?? []),
         ownerId: json['owner'] ?? "0",
         tablesShop: calcularMesasTienda(json['tables_shop'] ?? []),
-        gamesShop: crearListaJuegos(json['games'] ?? []));
+        gamesShop: crearListaJuegos(json['games'] ?? []),
+        latitude: json['latitud'] ?? 0.0,
+        longitude: json['longitud'] ?? 0.0);
   }
   Map<String, dynamic> toJson() {
-    return {'name': name, 'address': address, 'logo': logoId, 'owner': ownerId};
+    return {
+      'name': name,
+      'address': address,
+      'logo': logoId,
+      'owner': ownerId,
+      'latitud': latitude.toString(),
+      'longitud': longitude.toString()
+    };
   }
 
   ShopEntity toShopEntity(dynamic logoFile) {
@@ -64,7 +78,9 @@ class ShopModel {
         averageRaiting: averageRaiting,
         ownerId: ownerId,
         tablesShop: tablesShop,
-        gamesShop: gamesShop);
+        gamesShop: gamesShop,
+        latitude: latitude,
+        longitude: longitude);
   }
 
   ShopModel addInfo(String newLogoId, int idShop) {
@@ -77,6 +93,8 @@ class ShopModel {
         averageRaiting: averageRaiting,
         ownerId: ownerId,
         tablesShop: tablesShop,
-        gamesShop: gamesShop);
+        gamesShop: gamesShop,
+        latitude: latitude,
+        longitude: longitude);
   }
 }

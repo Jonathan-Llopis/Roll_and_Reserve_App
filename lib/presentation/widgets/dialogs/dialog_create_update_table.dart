@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:roll_and_reserve/domain/entities/shop_entity.dart';
 import 'package:roll_and_reserve/domain/entities/table_entity.dart';
@@ -12,9 +11,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class DialogCreateUpdateTable extends StatefulWidget {
   final ShopEntity currentShop;
   final TableEntity? table;
+  final TableBloc tableBloc;
 
   const DialogCreateUpdateTable({
     required this.currentShop,
+    required this.tableBloc,
     this.table,
     super.key,
   });
@@ -48,7 +49,9 @@ class _DialogCreateUpdateTableState extends State<DialogCreateUpdateTable> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.table == null ?  AppLocalizations.of(context)!.create_new_table :  AppLocalizations.of(context)!.edit_table,
+                  widget.table == null
+                      ? AppLocalizations.of(context)!.create_new_table
+                      : AppLocalizations.of(context)!.edit_table,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -57,14 +60,14 @@ class _DialogCreateUpdateTableState extends State<DialogCreateUpdateTable> {
                 TextFormField(
                   controller: _tableNameController,
                   decoration: InputDecoration(
-                    labelText:  AppLocalizations.of(context)!.table_number_text,
+                    labelText: AppLocalizations.of(context)!.table_number_text,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                   ),
                   validator: (value) {
-                    String? error =
-                        basicValidationTable(value, widget.currentShop, context);
+                    String? error = basicValidationTable(
+                        value, widget.currentShop, context);
                     return error;
                   },
                   keyboardType: TextInputType.number,
@@ -85,32 +88,32 @@ class _DialogCreateUpdateTableState extends State<DialogCreateUpdateTable> {
                       onPressed: () {
                         if (_formKey.currentState?.validate() ?? false) {
                           if (widget.table != null) {
-                            context.read<TableBloc>().add(UpdateTableEvent(
-                                  table: TableEntity(
-                                    id: widget.table!.id,
-                                    numberTable:
-                                        int.parse(_tableNameController.text),
-                                    stats: "",
-                                    reserves: [],
-                                    idShop: widget.currentShop.id,
-                                  ),
-                                ));
+                            widget.tableBloc.add(UpdateTableEvent(
+                              table: TableEntity(
+                                id: widget.table!.id,
+                                numberTable:
+                                    int.parse(_tableNameController.text),
+                                stats: "",
+                                reserves: [],
+                                idShop: widget.currentShop.id,
+                              ),
+                            ));
                           } else {
-                            context.read<TableBloc>().add(CreateTableEvent(
-                                  table: TableEntity(
-                                    id: 0,
-                                    numberTable:
-                                        int.parse(_tableNameController.text),
-                                    stats: "",
-                                    reserves: [],
-                                    idShop: widget.currentShop.id,
-                                  ),
-                                ));
+                            widget.tableBloc.add(CreateTableEvent(
+                              table: TableEntity(
+                                id: 0,
+                                numberTable:
+                                    int.parse(_tableNameController.text),
+                                stats: "",
+                                reserves: [],
+                                idShop: widget.currentShop.id,
+                              ),
+                            ));
                           }
                           Navigator.of(context).pop();
                         }
                       },
-                      child:  Text( AppLocalizations.of(context)!.save),
+                      child: Text(AppLocalizations.of(context)!.save),
                     ),
                   ],
                 ),
@@ -128,9 +131,9 @@ class _DialogCreateUpdateTableState extends State<DialogCreateUpdateTable> {
                         ),
                         onPressed: () {
                           deleteTable(
-                              context, widget.table!.id, widget.currentShop.id);
+                              context, widget.table!.id, widget.currentShop.id, widget.tableBloc);
                         },
-                        child:  Text( AppLocalizations.of(context)!.delete_table),
+                        child: Text(AppLocalizations.of(context)!.delete_table),
                       ),
                       ElevatedButton(
                         onPressed: () {
@@ -138,7 +141,8 @@ class _DialogCreateUpdateTableState extends State<DialogCreateUpdateTable> {
                             '/user/shop/${widget.currentShop.id}/table/${widget.table!.id}',
                           );
                         },
-                        child:  Text( AppLocalizations.of(context)!.manage_reservations),
+                        child: Text(
+                            AppLocalizations.of(context)!.manage_reservations),
                       ),
                     ],
                   ),

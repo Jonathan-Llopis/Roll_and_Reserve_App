@@ -53,7 +53,7 @@ class CardReserve extends StatelessWidget {
               const SizedBox(height: 6),
               Text(
                 AppLocalizations.of(context)!.total_players_at_table(
-                    reserve.usersReserve.length, reserve.freePlaces),
+                    reserve.usersInTables, reserve.freePlaces),
                 style: const TextStyle(fontSize: 14, color: Colors.black87),
               ),
               const SizedBox(height: 6),

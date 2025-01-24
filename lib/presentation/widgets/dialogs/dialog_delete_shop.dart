@@ -10,7 +10,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DialogDeleteShop extends StatelessWidget {
   final int idShop;
-  const DialogDeleteShop({super.key, required this.idShop});
+  final ShopBloc shopBloc;
+  const DialogDeleteShop({super.key, required this.idShop, required this.shopBloc});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +46,7 @@ class DialogDeleteShop extends StatelessWidget {
               foregroundColor: Colors.white,
             ),
             onPressed: () {
-              context.read<ShopBloc>().add(DeleteShopEvent(
+              shopBloc.add(DeleteShopEvent(
                     idShop: idShop,
                     idOwner: state.user!.id,
                   ));

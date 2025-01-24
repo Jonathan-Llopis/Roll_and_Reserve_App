@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:roll_and_reserve/domain/entities/category_game_entity.dart';
 import 'package:roll_and_reserve/domain/entities/difficulty_entity.dart';
@@ -8,7 +9,6 @@ import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_event.dart';
-import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_create_reserve.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ButtonCreateReserve extends StatelessWidget {
@@ -23,8 +23,10 @@ class ButtonCreateReserve extends StatelessWidget {
       required DifficultyEntity? selectedDifficulty,
       required GameCategoryEntity? selectedGameCategory,
       required GameEntity? selectedGame,
-      required this.widget,
-      required DateTime selectedDate})
+      required this.idShop,
+      required this.idTable,
+      required DateTime selectedDate,
+      required  this.reserveBloc})
       : _formKey = formKey,
         _freePlacesController = freePlacesController,
         _hourStartController = hourStartController,
@@ -45,8 +47,10 @@ class ButtonCreateReserve extends StatelessWidget {
   final DifficultyEntity? _selectedDifficulty;
   final GameCategoryEntity? _selectedGameCategory;
   final GameEntity? _selectedGame;
-  final DialogCreateReserve widget;
   final DateTime _selectedDate;
+  final int idTable;
+  final int idShop;
+  final ReserveBloc reserveBloc;
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +58,7 @@ class ButtonCreateReserve extends StatelessWidget {
       onPressed: () {
         if (_formKey.currentState!.validate()) {
           LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
-          context.read<ReserveBloc>().add(CreateReserveEvent(
+          reserveBloc.add(CreateReserveEvent(
                 reserve: ReserveEntity(
                   id: 0,
                   freePlaces: int.parse(_freePlacesController.text),
@@ -66,17 +70,19 @@ class ButtonCreateReserve extends StatelessWidget {
                   difficultyId: _selectedDifficulty!.id,
                   gameCategoryId: _selectedGameCategory!.id,
                   gameId: _selectedGame!.id,
-                  tableId: widget.idTable,
-                  usersReserve: [],
+                  tableId: idTable,
+                  usersInTables: 0,
                 ),
-                idUser: loginBloc.state.user!.role == 2 ? loginBloc.state.user!.id : '',
+                idUser: loginBloc.state.user!.role == 2
+                    ? loginBloc.state.user!.id
+                    : '',
                 dateReserve: _selectedDate,
               ));
 
-          Navigator.of(context).pop();
+          context.go('/user/shop/$idShop/table/$idTable/');
         }
       },
-      child:  Text( AppLocalizations.of(context)!.save),
+      child: Text(AppLocalizations.of(context)!.save),
     );
   }
 }

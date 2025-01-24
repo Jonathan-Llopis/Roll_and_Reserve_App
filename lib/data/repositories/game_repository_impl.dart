@@ -17,7 +17,7 @@ class GameRepositoryImpl implements GameRepository {
       final gameModels = await remoteDataSource.getAllGame(token!);
       return Right(gameModels.map((model) => model.toGameEntity()).toList());
     } catch (e) {
-      return Left(Exception('Error al cargar game'));
+      return Left(Exception('Error al cargar juegos'));
     }
   }
 }

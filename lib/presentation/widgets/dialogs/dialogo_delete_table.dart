@@ -9,20 +9,21 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class DialogoDeleteTable extends StatelessWidget {
   final int idTable;
   final int idShop;
+  final TableBloc tableBloc;
   const DialogoDeleteTable(
-      {super.key, required this.idTable, required this.idShop});
+      {super.key, required this.idTable, required this.idShop, required this.tableBloc});
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
       return AlertDialog(
-        title:  Text( AppLocalizations.of(context)!.delete_table,
+        title: Text(AppLocalizations.of(context)!.delete_table,
             style: TextStyle(
               color: Color.fromARGB(255, 0, 0, 0),
               fontSize: 30,
             )),
-        content:  Text(
-           AppLocalizations.of(context)!.confirm_delete_table,
+        content: Text(
+          AppLocalizations.of(context)!.confirm_delete_table,
           style: TextStyle(
             fontSize: 18,
             color: Color.fromARGB(255, 0, 0, 0),
@@ -37,7 +38,7 @@ class DialogoDeleteTable extends StatelessWidget {
             onPressed: () {
               Navigator.pop(context);
             },
-            child:  Text(AppLocalizations.of(context)!.cancel),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           TextButton(
             style: TextButton.styleFrom(
@@ -45,12 +46,12 @@ class DialogoDeleteTable extends StatelessWidget {
               foregroundColor: Colors.white,
             ),
             onPressed: () {
-              context.read<TableBloc>().add(
-                    DeleteTableEvent(
-                      idTable: idTable,
-                      idShop: idShop,
-                    ),
-                  );
+              tableBloc.add(
+                DeleteTableEvent(
+                  idTable: idTable,
+                  idShop: idShop,
+                ),
+              );
               Navigator.of(context).pop();
               Navigator.of(context).pop();
             },

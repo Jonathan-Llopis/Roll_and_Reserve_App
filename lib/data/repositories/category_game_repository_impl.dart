@@ -19,7 +19,7 @@ class CategoryGameRepositoryImpl implements CategoryGameRepository {
       final categoryGameModels = await remoteDataSource.getAllCategoryGame(token!);
       return Right(categoryGameModels.map((model) => model.toGameCategoryEntity()).toList());
     } catch (e) {
-      return Left(Exception('Error al cargar categoryGame'));
+      return Left(Exception('Error al cargar categorias de juego'));
     }
   }
 }

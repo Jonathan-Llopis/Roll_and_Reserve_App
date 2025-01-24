@@ -6,5 +6,5 @@ abstract class TableRepository {
   Future<Either<Exception, bool>> deleteTable(int idTable);
   Future<Either<Exception, bool>> updateTable(TableEntity table);
   Future<Either<Exception, bool>> createTable(TableEntity table);
-
+  Future<Either<Exception, List<TableEntity>>> getAllTablesByShop(int idShop); 
 }

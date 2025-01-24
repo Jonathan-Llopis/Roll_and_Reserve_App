@@ -19,22 +19,13 @@ class ReserveRepositoryImpl implements ReserveRepository {
     try {
       final token = sharedPreferences.getString('token');
       final reserveModels = await remoteDataSource.getAllReserves(token!);
-      List<Future<List<dynamic>>> avatarFiles =
-          reserveModels.map((reserve) async {
-        List<Future<dynamic>> userAvatars =
-            reserve.usersReserve.map((user) async {
-          return await userDatasource.getUserAvatar(user.avatarId, token);
-        }).toList();
-        return Future.wait(userAvatars);
-      }).toList();
-      List<List<dynamic>> avatars = await Future.wait(avatarFiles);
       List<ReserveEntity> reserveEntities =
           reserveModels.asMap().entries.map((entry) {
-        return entry.value.toReserveEntity(avatars[entry.key]);
+        return entry.value.toReserveEntity();
       }).toList();
       return Right(reserveEntities);
     } catch (e) {
-      return Left(Exception('Error al cargar reserve'));
+      return Left(Exception('Error al cargar reservas'));
     }
   }
 
@@ -45,7 +36,7 @@ class ReserveRepositoryImpl implements ReserveRepository {
       await remoteDataSource.deleteReserves(idReserve, token!);
       return const Right(true);
     } catch (e) {
-      return Left(Exception('Error al eliminar el Reserve'));
+      return Left(Exception('Error al eliminar el reserva'));
     }
   }
 
@@ -57,7 +48,7 @@ class ReserveRepositoryImpl implements ReserveRepository {
       await remoteDataSource.updateReserves(shopModel, token!);
       return Right(true);
     } catch (e) {
-      return Left(Exception('Error al actualizar el mesa: ${e.toString()}'));
+      return Left(Exception('Error al actualizar la reserva: ${e.toString()}'));
     }
   }
 
@@ -81,7 +72,7 @@ class ReserveRepositoryImpl implements ReserveRepository {
       await remoteDataSource.addUserToReserve(idReserve, idUser, token!);
       return Right(true);
     } catch (e) {
-      return Left(Exception('Error al añadir jugador: ${e.toString()}'));
+      return Left(Exception('Error al añadir jugador a la reserva: ${e.toString()}'));
     }
   }
 
@@ -93,8 +84,36 @@ class ReserveRepositoryImpl implements ReserveRepository {
       await remoteDataSource.deleteUserToReserve(idReserve, idUser, token!);
       return Right(true);
     } catch (e) {
-      return Left(Exception('Error al eliminar jugador: ${e.toString()}'));
+      return Left(Exception('Error al eliminar jugador de la reserva: ${e.toString()}'));
     }
   }
-
+  @override
+  Future<Either<Exception, List<ReserveEntity>>> getAllReservesByDate(DateTime date, int tableId) async {
+    try {
+      final token = sharedPreferences.getString('token');
+      final reserveModels = await remoteDataSource.getAllReservesByDate(date.toString(), token!, tableId);
+      List<ReserveEntity> reserveEntities =
+          reserveModels.asMap().entries.map((entry) {
+        return entry.value.toReserveEntity();
+      }).toList();
+      return Right(reserveEntities);
+    } catch (e) {
+      return Left(Exception('Error al cargar reservas por fecha: ${e.toString()}'));
+    }
+  }
+    @override
+      Future<Either<Exception, ReserveEntity>> getReserveWithUsers(int idReserve) async {
+    try {
+      final token = sharedPreferences.getString('token');
+      final reserveModels = await remoteDataSource.getReserveById(idReserve, token!);
+      List<Future<dynamic>> userAvatars = reserveModels.users!.map((user) async {
+        return await userDatasource.getUserAvatar(user.avatarId, token);
+      }).toList();
+      List<dynamic> avatars = await Future.wait(userAvatars);
+      ReserveEntity reserveEntity = reserveModels.toReserveEntityWithUsers(avatars);
+      return Right(reserveEntity);
+    } catch (e) {
+      return Left(Exception('Error al cargar reserve'));
+    }
+  }
 }

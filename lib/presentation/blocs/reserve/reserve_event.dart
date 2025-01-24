@@ -101,3 +101,11 @@ class GetReservesByShopEvent extends ReserveEvent {
   @override
   List<Object?> get props => [currentShop, dateReserve, startTime, endTime];
 }
+
+class GetReserveWithUsers extends ReserveEvent {
+  final int idReserve;
+  GetReserveWithUsers({required this.idReserve});
+
+  @override
+  List<Object?> get props => [idReserve];
+}

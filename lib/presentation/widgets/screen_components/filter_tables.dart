@@ -12,8 +12,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FilterTables extends StatefulWidget {
-  const FilterTables({super.key, required this.currentShop});
+  const FilterTables({super.key, required this.currentShop, required this.reserveBloc, required this.tableBloc});
   final ShopEntity currentShop;
+  final ReserveBloc reserveBloc;
+  final TableBloc tableBloc;
 
   @override
   State<FilterTables> createState() => _FilterTablesState();
@@ -25,7 +27,7 @@ class _FilterTablesState extends State<FilterTables> {
   final _startTimeController = TextEditingController();
   final _endTimeController = TextEditingController();
 
-   @override
+  @override
   void initState() {
     _loadFilterValues();
     super.initState();
@@ -47,21 +49,23 @@ class _FilterTablesState extends State<FilterTables> {
     await prefs.setString('endTime', _endTimeController.text);
   }
 
-
   @override
   Widget build(BuildContext context) {
     return BlocListener<ReserveBloc, ReserveState>(
       listener: (context, state) {
         if (state.reserves != null) {
-          context.read<TableBloc>().add(GetAvailableTablesEvent(
+        widget.tableBloc.add(GetAvailableTablesEvent(
               dayDate: _dateController.text,
               startTime: _startTimeController.text,
               endTime: _endTimeController.text,
-              reserves: state.reserves!, shopId: widget.currentShop.id));
+              reserves: state.reserves!,
+              shopId: widget.currentShop.id));
           Navigator.of(context).pop();
         } else if (state.errorMessage != null) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text( AppLocalizations.of(context)!.error_loading_reservations)),
+            SnackBar(
+                content: Text(
+                    AppLocalizations.of(context)!.error_loading_reservations)),
           );
         }
       },
@@ -74,58 +78,62 @@ class _FilterTablesState extends State<FilterTables> {
             children: [
               TextFormField(
                 controller: _dateController,
-                decoration:  InputDecoration(
-                  labelText:  AppLocalizations.of(context)!.date,
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.date,
                   border: OutlineInputBorder(),
                 ),
                 onTap: () {
                   selectDate(context, _dateController);
                 },
-                validator:(value) => basicValidation(value, context),
+                validator: (value) => basicValidation(value, context),
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _startTimeController,
-                decoration:  InputDecoration(
-                  labelText:  AppLocalizations.of(context)!.start_time_hh_mm,
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.start_time_hh_mm,
                   border: OutlineInputBorder(),
                 ),
-                validator:(value) {
-                    String? error = validateHour(value , context);
-                    if (error != null) {
-                      return error;
-                    }
-                    if(_startTimeController.text.compareTo(_endTimeController.text) >= 0){
-                      return  AppLocalizations.of(context)!.start_time_must_be_less_than_end_time;
-                    }
-                    return null;
-                  },
+                validator: (value) {
+                  String? error = validateHour(value, context);
+                  if (error != null) {
+                    return error;
+                  }
+                  if (_startTimeController.text
+                          .compareTo(_endTimeController.text) >=
+                      0) {
+                    return AppLocalizations.of(context)!
+                        .start_time_must_be_less_than_end_time;
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _endTimeController,
-                decoration:  InputDecoration(
-                  labelText:  AppLocalizations.of(context)!.end_time_hh_mm,
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.end_time_hh_mm,
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) {
-                    String? error = validateHour(value , context);
-                    if (error != null) {
-                      return error;
-                    }
-                    if (_startTimeController.text
-                            .compareTo(_endTimeController.text) >=
-                        0) {
-                      return  AppLocalizations.of(context)!.end_time_must_be_greater_than_start_time;
-                    }
-                    return null;
-                  },
+                  String? error = validateHour(value, context);
+                  if (error != null) {
+                    return error;
+                  }
+                  if (_startTimeController.text
+                          .compareTo(_endTimeController.text) >=
+                      0) {
+                    return AppLocalizations.of(context)!
+                        .end_time_must_be_greater_than_start_time;
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    context.read<ReserveBloc>().add(GetReservesByShopEvent(
+                   widget.reserveBloc.add(GetReservesByShopEvent(
                           currentShop: widget.currentShop,
                           dateReserve: _dateController.text,
                           startTime: _startTimeController.text,
@@ -134,7 +142,7 @@ class _FilterTablesState extends State<FilterTables> {
                   }
                   _saveFilterValues();
                 },
-                child:  Text( AppLocalizations.of(context)!.filter),
+                child: Text(AppLocalizations.of(context)!.filter),
               ),
             ],
           ),

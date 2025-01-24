@@ -5,8 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:roll_and_reserve/domain/entities/shop_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
-import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
-import 'package:roll_and_reserve/presentation/blocs/tables/table_event.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -26,7 +24,6 @@ class _ShopListInventoryState extends State<InformationShop> {
   @override
   void initState() {
     super.initState();
-    context.read<TableBloc>().add(GetTablesEvent());
   }
 
   @override
@@ -92,44 +89,8 @@ class _ShopListInventoryState extends State<InformationShop> {
                 ),
               ),
               const SizedBox(height: 8.0),
-              loginBloc.state.user!.role == 1
-                  ? ElevatedButton(
-                      onPressed: () {
-                        context.go('/user/shop/${widget.shop.id}');
-                      },
-                      child: Text(AppLocalizations.of(context)!.edit_table))
-                  : Container(),
-            ],
-          ),
-          const SizedBox(width: 16.0),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.shop.name,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
-                  ),
-                ),
-                Text(
-                  widget.shop.address,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(height: 8.0),
-              ],
-            ),
-          ),
-          const SizedBox(width: 16.0),
-          Column(
-            children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Icon(Icons.table_bar, size: 16, color: Colors.grey),
                   const SizedBox(width: 4.0),
@@ -145,16 +106,49 @@ class _ShopListInventoryState extends State<InformationShop> {
               ),
               const SizedBox(height: 8.0),
               buildStars(widget.shop.averageRaiting),
-              loginBloc.state.user!.role == 1
-                  ? IconButton(
-                      icon: Icon(Icons.edit, color: Colors.blue),
-                      onPressed: () {
-                        context.go('/user/shop_edit/${widget.shop.id}');
-                      },
-                    )
-                  : Container()
             ],
           ),
+          const SizedBox(width: 16.0),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.shop.name,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 4.0),
+                Text(
+                  widget.shop.address,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(height: 8.0),
+                loginBloc.state.user!.role == 1
+                    ? ElevatedButton(
+                        onPressed: () {
+                          context.go('/user/shop/${widget.shop.id}');
+                        },
+                        child: Text(AppLocalizations.of(context)!.edit_table),
+                      )
+                    : Container(),
+              ],
+            ),
+          ),
+          loginBloc.state.user!.role == 1
+              ? IconButton(
+                  icon: Icon(Icons.edit, color: Colors.blue),
+                  onPressed: () {
+                    context.go('/user/shop_edit/${widget.shop.id}');
+                  },
+                )
+              : Container(),
         ],
       ),
     );

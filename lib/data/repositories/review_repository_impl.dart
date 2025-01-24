@@ -28,7 +28,7 @@ class ReviewRepositoryImpl implements ReviewRepository {
       }).toList();
       return Right(reviewEntities);
     } catch (e) {
-      return Left(Exception('Error al cargar review'));
+      return Left(Exception('Error al cargar reseñas'));
     }
   }
 
@@ -39,7 +39,7 @@ class ReviewRepositoryImpl implements ReviewRepository {
       await remoteDataSource.deleteReviews(idReview, token!);
       return const Right(true);
     } catch (e) {
-      return Left(Exception('Error al eliminar el review'));
+      return Left(Exception('Error al eliminar el reseña'));
     }
   }
 
@@ -51,7 +51,7 @@ class ReviewRepositoryImpl implements ReviewRepository {
       await remoteDataSource.createReviews(shopModel, token!);
       return Right(true);
     } catch (e) {
-      return Left(Exception('Error al crear el review: ${e.toString()}'));
+      return Left(Exception('Error al crear el reseña: ${e.toString()}'));
     }
   }
 }

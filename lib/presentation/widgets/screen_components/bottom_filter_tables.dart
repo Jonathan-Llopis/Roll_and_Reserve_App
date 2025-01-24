@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/domain/entities/shop_entity.dart';
+import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_event.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/filter_tables.dart';
@@ -10,9 +10,14 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class BottomFilterTables extends StatefulWidget {
   const BottomFilterTables({
     required this.currentShop,
+    required this.reserveBloc,
+    required this.tableBloc,
+
     super.key,
   });
   final ShopEntity currentShop;
+  final ReserveBloc reserveBloc;
+  final TableBloc tableBloc;
 
   @override
   State<BottomFilterTables> createState() => _BottomFilterTablesState();
@@ -32,7 +37,7 @@ class _BottomFilterTablesState extends State<BottomFilterTables> {
     setState(() {
       _isFilterApplied = prefs.getString('date')?.isNotEmpty == true ||
           prefs.getString('startTime')?.isNotEmpty == true;
-           prefs.getString('endTime')?.isNotEmpty == true;
+      prefs.getString('endTime')?.isNotEmpty == true;
     });
   }
 
@@ -65,14 +70,16 @@ class _BottomFilterTablesState extends State<BottomFilterTables> {
       onTap: (index) {
         if (index == 0) {
           _clearFilters();
-          context.read<TableBloc>().add(GetTablesByShopEvent(
+         widget.tableBloc.add(GetTablesByShopEvent(
                 idShop: widget.currentShop.id,
               ));
         } else if (index == 1) {
           showModalBottomSheet(
             context: context,
             builder: (BuildContext context) {
-              return FilterTables(currentShop: widget.currentShop);
+              return FilterTables(
+                currentShop: widget.currentShop, reserveBloc: widget.reserveBloc,  tableBloc: widget.tableBloc,
+              );
             },
           );
         }

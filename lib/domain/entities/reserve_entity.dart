@@ -13,21 +13,24 @@ class ReserveEntity {
   final int gameCategoryId;
   final int gameId;
   final int tableId;
-  final List<UserEntity> usersReserve;
+  final int usersInTables;
+  final List<UserEntity>? users;
 
-  ReserveEntity(
-      {required this.id,
-      required this.freePlaces,
-      required this.dayDate,
-      required this.horaInicio,
-      required this.horaFin,
-      required this.description,
-      required this.requiredMaterial,
-      required this.difficultyId,
-      required this.gameCategoryId,
-      required this.gameId,
-      required this.tableId,
-      required this.usersReserve});
+  ReserveEntity({
+    required this.id,
+    required this.freePlaces,
+    required this.dayDate,
+    required this.horaInicio,
+    required this.horaFin,
+    required this.description,
+    required this.requiredMaterial,
+    required this.difficultyId,
+    required this.gameCategoryId,
+    required this.gameId,
+    required this.tableId,
+    required this.usersInTables,
+    this.users,
+  });
 
   ReserveModel toReserveModel() {
     return ReserveModel(
@@ -42,7 +45,7 @@ class ReserveEntity {
       gameCategoryId: gameCategoryId,
       gameId: gameId,
       tableId: tableId,
-      usersReserve: usersReserve.map((user) => user.toUserModel('')).toList(),
+      usersInTables: usersInTables,
     );
   }
 }

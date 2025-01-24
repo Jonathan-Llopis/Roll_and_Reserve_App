@@ -11,11 +11,11 @@ import 'package:roll_and_reserve/presentation/blocs/language/language_bloc.dart'
 import 'package:roll_and_reserve/presentation/blocs/language/language_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/language/language_state.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reviews/reviews_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -44,19 +44,19 @@ class MyApp extends StatelessWidget {
           create: (_) => sl<LoginBloc>(),
         ),
         BlocProvider(
+          create: (_) => sl<LanguageBloc>(),
+        ),
+           BlocProvider(
           create: (_) => sl<ShopBloc>(),
         ),
-        BlocProvider(
+            BlocProvider(
           create: (_) => sl<TableBloc>(),
         ),
-        BlocProvider(
-          create: (_) => sl<ReviewBloc>(),
-        ),
-        BlocProvider(
+           BlocProvider(
           create: (_) => sl<ReserveBloc>(),
         ),
-        BlocProvider(
-          create: (_) => sl<LanguageBloc>(),
+           BlocProvider(
+          create: (_) => sl<ReviewBloc>(),
         ),
       ],
       child: BlocBuilder<LanguageBloc, LanguageState>(

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/domain/entities/shop_entity.dart';
 import 'package:roll_and_reserve/domain/entities/table_entity.dart';
+import 'package:roll_and_reserve/presentation/blocs/reviews/reviews_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_change_language.dart';
-import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_create_reserve.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_create_review.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_create_update_table.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_delete_shop.dart';
@@ -53,12 +56,13 @@ Future<void> updatePassword(BuildContext context) {
       });
 }
 
-Future<void> deleteShop(BuildContext context, int idShop) {
+Future<void> deleteShop(BuildContext context, int idShop, ShopBloc shopBloc) {
   return showDialog(
       context: context,
       builder: (context) {
         return DialogDeleteShop(
           idShop: idShop,
+          shopBloc: shopBloc,
         );
       });
 }
@@ -71,40 +75,33 @@ Future<void> showUpdateCreateTableDialog(
       return DialogCreateUpdateTable(
         currentShop: currentShop,
         table: table,
+        tableBloc: BlocProvider.of<TableBloc>(context),
       );
     },
   );
 }
 
-Future<void> createReserve(
-    BuildContext context, int idTable, DateTime dateReserve) {
-  return showDialog(
-      context: context,
-      builder: (context) {
-        return DialogCreateReserve(
-          idTable: idTable,
-          dateReserve: dateReserve,
-        );
-      });
-}
-
-Future<void> createReview(BuildContext context, int idShop) {
+Future<void> createReview(
+    BuildContext context, ReviewBloc reviewBloc, ShopBloc shopBloc, int idShop) {
   return showDialog(
       context: context,
       builder: (context) {
         return DialogCreateReview(
           idShop: idShop,
+          reviewBloc: reviewBloc,
+          shopBloc: shopBloc,
         );
       });
 }
 
-Future<void> deleteTable(BuildContext context, int idTable, int idShop) {
+Future<void> deleteTable(BuildContext context, int idTable, int idShop, TableBloc tableBloc) {
   return showDialog(
       context: context,
       builder: (context) {
         return DialogoDeleteTable(
           idTable: idTable,
           idShop: idShop,
+          tableBloc: tableBloc,
         );
       });
 }

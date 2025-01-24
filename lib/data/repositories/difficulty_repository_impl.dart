@@ -17,7 +17,7 @@ class DifficultyRepositoryImpl implements DifficultyRepository {
       final difficultyModels = await remoteDataSource.getAllDifficulty(token!);
       return Right(difficultyModels.map((model) => model.toDifficultyEntity()).toList());
     } catch (e) {
-      return Left(Exception('Error al cargar difficulty'));
+      return Left(Exception('Error al cargar dificultades'));
     }
   }
 }

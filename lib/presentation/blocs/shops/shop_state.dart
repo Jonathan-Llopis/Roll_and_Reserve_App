@@ -31,17 +31,16 @@ class ShopState {
         );
   }
 
-    factory ShopState.initial() => const ShopState();
+  factory ShopState.initial() => const ShopState();
 
-    factory ShopState.loading() => const ShopState(isLoading: true);
+  factory ShopState.loading(ShopState state) => state.copyWith(isLoading: true);
 
-    factory ShopState.success() => const ShopState();
+  factory ShopState.success(ShopState state) => state.copyWith(isLoading: false);
 
-    factory ShopState.getShops(List<ShopEntity> shops) => ShopState(shops: shops);
+  factory ShopState.getShops(ShopState state, List<ShopEntity> shops) => state.copyWith(shops: shops, isLoading: false);
 
-    factory ShopState.selectedShop(ShopEntity shopSelected) => ShopState(shop: shopSelected);
+  factory ShopState.selectedShop(ShopState state, ShopEntity shopSelected) => state.copyWith(shop: shopSelected, isLoading: false);
 
-    factory ShopState.failure(String errorMessage) =>
-        ShopState(errorMessage: errorMessage);
+  factory ShopState.failure(ShopState state, String errorMessage) => state.copyWith(errorMessage: errorMessage, isLoading: false);
 
-}
+  }

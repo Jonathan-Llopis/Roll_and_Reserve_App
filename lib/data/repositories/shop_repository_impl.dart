@@ -12,22 +12,53 @@ class ShopRepositoryImpl implements ShopsRepository {
 
   ShopRepositoryImpl(this.remoteDataSource, this.sharedPreferences);
 
- @override
- Future<Either<Exception, List<ShopEntity>>> getAllShops() async {
-   try {
-     final token = sharedPreferences.getString('token');
-     final shopsModels = await remoteDataSource.getAllShops(token!);
-     final shopsWithLogo = await Future.wait(
-       shopsModels.map((model) async {
-         final logo = await remoteDataSource.getShopLogo(model.logoId, token);
-         return model.toShopEntity(logo);
-       }),
-     );
-     return Right(shopsWithLogo);
-   } catch (e) {
-     return Left(Exception('Error al cargar shops'));
-   }
- }
+  @override
+  Future<Either<Exception, List<ShopEntity>>> getAllShops() async {
+    try {
+      final token = sharedPreferences.getString('token');
+      final shopsModels = await remoteDataSource.getAllShops(token!);
+      final shopsWithLogo = await Future.wait(
+        shopsModels.map((model) async {
+          final logo = await remoteDataSource.getShopLogo(model.logoId, token);
+          return model.toShopEntity(logo);
+        }),
+      );
+      return Right(shopsWithLogo);
+    } catch (e) {
+      return Left(Exception('Error al cargar tiendas'));
+    }
+  }
+
+  @override
+  Future<Either<Exception, ShopEntity>> getShop(int idShop) async {
+    try {
+      final token = sharedPreferences.getString('token');
+      final shopModel = await remoteDataSource.getShop(idShop, token!);
+      final logo = await remoteDataSource.getShopLogo(shopModel.logoId, token);
+      final shopEntity = shopModel.toShopEntity(logo);
+      return Right(shopEntity);
+    } catch (e) {
+      return Left(Exception('Error al obtener la tienda'));
+    }
+  }
+
+  @override
+  Future<Either<Exception, List<ShopEntity>>> getShopByOwner(String ownerId) async {
+    try {
+      final token = sharedPreferences.getString('token');
+      final shopsModels = await remoteDataSource.getShopsByOwner(ownerId, token!);
+      final shopsWithLogo = await Future.wait(
+        shopsModels.map((model) async {
+          final logo = await remoteDataSource.getShopLogo(model.logoId, token);
+          return model.toShopEntity(logo);
+        }),
+      );
+      return Right(shopsWithLogo);
+    } catch (e) {
+      return Left(Exception('Error al obtener las tiendas del propietario'));
+    }
+  }
+
   @override
   Future<Either<Exception, bool>> deleteShops(int idShops) async {
     try {
@@ -35,13 +66,12 @@ class ShopRepositoryImpl implements ShopsRepository {
       await remoteDataSource.deleteShops(idShops, token!);
       return const Right(true);
     } catch (e) {
-      return Left(Exception('Error al eliminar el Shops'));
+      return Left(Exception('Error al eliminar la tienda'));
     }
   }
 
   @override
-  Future<Either<Exception, bool>> updateShops(
-      ShopEntity shops) async {
+  Future<Either<Exception, bool>> updateShops(ShopEntity shops) async {
     try {
       final token = sharedPreferences.getString('token');
       String logoId =
@@ -50,8 +80,7 @@ class ShopRepositoryImpl implements ShopsRepository {
       await remoteDataSource.updateShops(shopModel, token);
       return Right(true);
     } catch (e) {
-      return Left(
-          Exception('Error al actualizar el inventario: ${e.toString()}'));
+      return Left(Exception('Error al actualizar la tienda: ${e.toString()}'));
     }
   }
 
@@ -60,15 +89,16 @@ class ShopRepositoryImpl implements ShopsRepository {
     try {
       final token = sharedPreferences.getString('token');
       ShopModel shopModel = shops.toShopModel(null);
-      final shopModelCreated =await remoteDataSource.createShops(shopModel, token!);
-      ShopModel avatarShop = shopModel.addInfo("677e565be78534b20cb542b0  ", shopModelCreated.id);
-      String logoId =
-          await remoteDataSource.updateLogo(avatarShop, token);
-       ShopModel updateShop = shopModel.addInfo(logoId, shopModelCreated.id);
+      final shopModelCreated =
+          await remoteDataSource.createShops(shopModel, token!);
+      ShopModel avatarShop =
+          shopModel.addInfo("677e565be78534b20cb542b0  ", shopModelCreated.id);
+      String logoId = await remoteDataSource.updateLogo(avatarShop, token);
+      ShopModel updateShop = shopModel.addInfo(logoId, shopModelCreated.id);
       await remoteDataSource.updateShops(updateShop, token);
       return Right(true);
     } catch (e) {
-      return Left(Exception('Error al crear el tienda: ${e.toString()}'));
+      return Left(Exception('Error al crear la tienda: ${e.toString()}'));
     }
   }
 }

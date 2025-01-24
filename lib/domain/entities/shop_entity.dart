@@ -10,6 +10,8 @@ class ShopEntity {
   final String ownerId;
   final List<int>  tablesShop;
   final List<int> gamesShop;
+  final double latitude;
+  final double longitude;
 
   ShopEntity(
       {required this.id,
@@ -20,7 +22,9 @@ class ShopEntity {
       required this.logoId,
       required this.ownerId,
       required this.tablesShop,
-      required this.gamesShop});
+      required this.gamesShop,
+      required this.latitude,
+      required this.longitude});
 
   ShopModel toShopModel(String? logoId) {
     return ShopModel(
@@ -32,6 +36,8 @@ class ShopEntity {
         logoId: logoId ?? "677e565be78534b20cb542b0",
         averageRaiting: averageRaiting,
         tablesShop: tablesShop,
-        gamesShop: gamesShop);
+        gamesShop: gamesShop,
+        latitude: latitude,
+        longitude: longitude);
   }
 }

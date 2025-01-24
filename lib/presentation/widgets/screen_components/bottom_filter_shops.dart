@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_event.dart';
@@ -7,7 +6,8 @@ import 'package:roll_and_reserve/presentation/widgets/screen_components/filter_s
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BottomFilterShops extends StatefulWidget {
-  const BottomFilterShops({super.key});
+  final ShopBloc shopBloc;
+  const BottomFilterShops({super.key, required this.shopBloc});
 
   @override
   State<BottomFilterShops> createState() => _BottomFilterShopsState();
@@ -58,12 +58,12 @@ class _BottomFilterShopsState extends State<BottomFilterShops> {
       onTap: (index) {
         if (index == 0) {
           _clearFilters();
-          context.read<ShopBloc>().add(GetShopsEvent());
+          widget.shopBloc.add(GetShopsEvent());
         } else if (index == 1) {
           showModalBottomSheet(
             context: context,
             builder: (BuildContext context) {
-              return FilterShops();
+              return FilterShops(shopBloc: widget.shopBloc);
             },
           ).then((_) {
             _checkFilterStatus();
