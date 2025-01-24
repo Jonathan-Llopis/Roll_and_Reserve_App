@@ -13,6 +13,7 @@ class UserModel {
   final String avatarId;
   final dynamic avatar;
   final double averageRaiting;
+  final bool? reserveConfirmation;
 
   UserModel(
       {required this.id,
@@ -22,7 +23,8 @@ class UserModel {
       required this.username,
       required this.avatar,
       required this.avatarId,
-      required this.averageRaiting});
+      required this.averageRaiting,
+      this.reserveConfirmation});
 
   static UserModel fromUserCredential(UserCredential userCredentials) {
     return UserModel(
@@ -43,22 +45,34 @@ class UserModel {
         role: json['role'] ?? 2,
         name: json['name'] ?? "",
         username: json['username'] ?? "",
-        avatarId: json['avatar'] ?? "678533e56a1e41fd50873dae",
-        avatar:File(""),
-        averageRaiting: calcularMediaRatings(json['reviews_shop']??[]));
+        avatarId: json['avatar'] ?? "678f8551e32f3fa9fd0ed5d4",
+        avatar: File(""),
+        averageRaiting: calcularMediaRatings(json['reviews_shop'] ?? []));
   }
 
-    Map<String, dynamic> crateToJson(String password) {
+    factory UserModel.fromJsonReserve(Map<String, dynamic> json, bool? reserveConfirmation) {
+    return UserModel(
+        id: json['id_google'] ?? "",
+        email: json['email'] ?? "",
+        role: json['role'] ?? 2,
+        name: json['name'] ?? "",
+        username: json['username'] ?? "",
+        avatarId: json['avatar'] ?? "678f8551e32f3fa9fd0ed5d4",
+        avatar: File(""),
+        averageRaiting: calcularMediaRatings(json['reviews_shop'] ?? []),
+        reserveConfirmation: reserveConfirmation);
+  }
+
+  Map<String, dynamic> crateToJson(String password) {
     return {
       'id_google': id,
       'email': email,
       'role': role,
       'name': name,
       'username': username,
-      'password':password,
+      'password': password,
     };
   }
-
 
   Map<String, dynamic> toJson() {
     return {
@@ -70,7 +84,7 @@ class UserModel {
     };
   }
 
-  UserEntity toUserEntity(dynamic avatarFile) {
+  UserEntity toUserEntity(dynamic avatarFile, bool? reserveConfirmation) {
     return UserEntity(
         id: id,
         email: email,
@@ -78,6 +92,7 @@ class UserModel {
         name: name,
         username: username,
         avatar: avatarFile,
-        averageRaiting: averageRaiting);
+        averageRaiting: averageRaiting,
+        reserveConfirmation: reserveConfirmation ?? false);
   }
 }

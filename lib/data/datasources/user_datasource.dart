@@ -4,9 +4,10 @@ import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
 import 'package:roll_and_reserve/data/models/user_model.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 abstract class UserDatasource {
-  Future<List<UserModel>> getUsers( String token);
+  Future<List<UserModel>> getUsers(String token);
   Future<UserModel> getValidUser(String id, String token);
   Future<String> getValidToken(String email, String password);
   Future<bool> createUser(UserModel user, String password);
@@ -20,27 +21,27 @@ class UserDatasourceImpl implements UserDatasource {
   UserDatasourceImpl(this.client);
   List<UserModel> usuarios = [];
 
-    @override
-   Future<List<UserModel>> getUsers( String token) async {
-     final response = await http.get(
-       Uri.parse('http://localhost:8000/users/'),
-       headers: {
-         'authorization': 'Bearer $token',
-       },
-     );
-   
-     if (response.statusCode == 200) {
-       final List jsonList = json.decode(response.body);
-       return jsonList.map((json) => UserModel.fromJson(json)).toList();
-     } else {
-       throw Exception('Error al cargar usuarios');
-     }
-   }
+  @override
+  Future<List<UserModel>> getUsers(String token) async {
+    final response = await http.get(
+      Uri.parse('${dotenv.env['BACKEND']}/users/'),
+      headers: {
+        'authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List jsonList = json.decode(response.body);
+      return jsonList.map((json) => UserModel.fromJson(json)).toList();
+    } else {
+      throw Exception('Error al cargar usuarios');
+    }
+  }
 
   @override
   Future<UserModel> getValidUser(String id, String token) async {
     final response = await client.get(
-      Uri.parse('http://localhost:8000/users/$id'),
+      Uri.parse('${dotenv.env['BACKEND']}/users/$id'),
       headers: {
         'authorization': 'Bearer $token',
       },
@@ -59,9 +60,8 @@ class UserDatasourceImpl implements UserDatasource {
 
   @override
   Future<String> getValidToken(String email, String password) async {
-    var uri = Uri.http('localhost:8000', '/users/login');
     final response = await http.post(
-      uri,
+       Uri.parse('${dotenv.env['BACKEND']}/users/login'),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -82,7 +82,7 @@ class UserDatasourceImpl implements UserDatasource {
   @override
   Future<bool> createUser(UserModel user, String password) async {
     final response = await client.post(
-      Uri.parse('http://localhost:8000/users'),
+      Uri.parse('${dotenv.env['BACKEND']}/users'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -98,10 +98,10 @@ class UserDatasourceImpl implements UserDatasource {
   @override
   Future<dynamic> getUserAvatar(String fileId, String token) async {
     if (fileId == "") {
-      fileId = "678533e56a1e41fd50873dae";
+      fileId = "678f8551e32f3fa9fd0ed5d4";
     }
     final response = await http.get(
-        Uri.parse('http://localhost:8000/files/download/$fileId'),
+        Uri.parse('${dotenv.env['BACKEND']}/files/download/$fileId'),
         headers: {
           'authorization': 'Bearer $token',
         });
@@ -124,7 +124,7 @@ class UserDatasourceImpl implements UserDatasource {
   @override
   Future<bool> updateUserInfo(UserModel user, String token) async {
     final response = await client.put(
-      Uri.parse('http://localhost:8000/users/${user.id}'),
+      Uri.parse('${dotenv.env['BACKEND']}/users/${user.id}'),
       headers: {
         'Content-Type': 'application/json',
         'authorization': 'Bearer $token',
@@ -142,8 +142,9 @@ class UserDatasourceImpl implements UserDatasource {
   Future<String> updateAvatar(UserModel user, String token) async {
     var request = http.MultipartRequest(
       'POST',
-      Uri.parse('http://localhost:8000/files/avatar/${user.id}'),
+      Uri.parse('${dotenv.env['BACKEND']}/files/avatar/${user.id}'),
     );
+     request.headers['authorization'] = 'Bearer $token';
     request.files.add(
       http.MultipartFile.fromBytes(
         'file',
@@ -157,7 +158,8 @@ class UserDatasourceImpl implements UserDatasource {
       var id = jsonDecode(responseBody)[0]['id'];
       return id;
     } else {
-      throw Exception('Error al actualizar el usuario: ${response.statusCode}');
+      throw Exception(
+          'Error al actualizar el avatar del usuario: ${response.statusCode}');
     }
   }
 }

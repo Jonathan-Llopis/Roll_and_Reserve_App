@@ -15,6 +15,7 @@ class ChangeLanguageDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           ListTile(
+            leading: const Icon(Icons.flag, color: Colors.blue),
             title: const Text('English'),
             onTap: () {
               context
@@ -24,6 +25,7 @@ class ChangeLanguageDialog extends StatelessWidget {
             },
           ),
           ListTile(
+            leading: const Icon(Icons.flag, color: Colors.red),
             title: const Text('Español'),
             onTap: () {
               context
@@ -33,6 +35,7 @@ class ChangeLanguageDialog extends StatelessWidget {
             },
           ),
           ListTile(
+            leading: const Icon(Icons.flag, color: Colors.blueAccent),
             title: const Text('Français'),
             onTap: () {
               context
@@ -41,7 +44,8 @@ class ChangeLanguageDialog extends StatelessWidget {
               Navigator.of(context).pop();
             },
           ),
-            ListTile(
+          ListTile(
+            leading: const Icon(Icons.flag, color: Colors.orange),
             title: const Text('Català'),
             onTap: () {
               context

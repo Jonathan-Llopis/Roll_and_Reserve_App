@@ -33,7 +33,7 @@ class LoginRepositoryImpl implements LoginRepository {
       dynamic avatarFile =
           await userDatasource.getUserAvatar(usuerDataBase.avatarId, tokenGenerado);
 
-      return Right(usuerDataBase.toUserEntity(avatarFile));
+      return Right(usuerDataBase.toUserEntity(avatarFile, null));
     } catch (e) {
       return Left(AuthFailure());
     }
@@ -53,7 +53,7 @@ class LoginRepositoryImpl implements LoginRepository {
           await userDatasource.getValidUser(user.id, token!);
       dynamic avatarFile =
           await userDatasource.getUserAvatar(usuerDataBase.avatarId, token);
-      return Right(usuerDataBase.toUserEntity(avatarFile));
+      return Right(usuerDataBase.toUserEntity(avatarFile, null));
     } catch (e) {
       return Left(AuthFailure());
     }
@@ -85,7 +85,7 @@ class LoginRepositoryImpl implements LoginRepository {
       await userDatasource.createUser(usuarioRegistro, password);
       String tokenGenerado = await userDatasource.getValidToken(email, password);
       await sharedPreferences.setString('token', tokenGenerado);
-      return Right(usuarioRegistro.toUserEntity(File('')));
+      return Right(usuarioRegistro.toUserEntity(File(''), null));
     } catch (e) {
       return Left(AuthFailure());
     }
@@ -104,7 +104,7 @@ class LoginRepositoryImpl implements LoginRepository {
             await userDatasource.getValidUser(id!, token!);
         dynamic avatarFile =
             await userDatasource.getUserAvatar(usuerDataBase.avatarId, token);
-        return Right(usuerDataBase.toUserEntity(avatarFile));
+        return Right(usuerDataBase.toUserEntity(avatarFile, null));
       }
     } catch (e) {
       return Left(AuthFailure());
@@ -119,7 +119,7 @@ class LoginRepositoryImpl implements LoginRepository {
           await userDatasource.getValidUser(idUser, token!);
       dynamic avatarFile =
           await userDatasource.getUserAvatar(usuerDataBase.avatarId, token);
-      return Right(usuerDataBase.toUserEntity(avatarFile));
+      return Right(usuerDataBase.toUserEntity(avatarFile, null));
     } catch (e) {
       return Left(AuthFailure());
     }
@@ -215,7 +215,7 @@ class LoginRepositoryImpl implements LoginRepository {
         }).toList();
         List<dynamic> avatars = await Future.wait(avatarFiles);
         List<UserEntity> usersEntity = usersDataBase.asMap().entries.map((entry) {
-          return entry.value.toUserEntity(avatars[entry.key]);
+          return entry.value.toUserEntity(avatars[entry.key], null);
         }).toList();
         return Right(usersEntity);
       } catch (e) {
