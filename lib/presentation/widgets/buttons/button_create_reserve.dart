@@ -72,6 +72,7 @@ class ButtonCreateReserve extends StatelessWidget {
                   gameId: _selectedGame!.id,
                   tableId: idTable,
                   usersInTables: 0,
+                  isEvent: false,
                 ),
                 idUser: loginBloc.state.user!.role == 2
                     ? loginBloc.state.user!.id

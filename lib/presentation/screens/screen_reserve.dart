@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:roll_and_reserve/domain/entities/table_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
@@ -13,13 +14,13 @@ import 'package:roll_and_reserve/presentation/widgets/screen_components/default_
 
 class ScreenReserve extends StatefulWidget {
   final int idReserve;
-  final int idShop;
-  final int idTable;
+  final int? idShop;
+  final int? idTable;
   const ScreenReserve({
     super.key,
     required this.idReserve,
-    required this.idShop,
-    required this.idTable,
+    this.idShop,
+    this.idTable,
   });
 
   @override
@@ -45,21 +46,39 @@ class _ScreenReserveState extends State<ScreenReserve> {
     LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
     return BlocBuilder<ReserveBloc, ReserveState>(
       builder: (context, state) {
+        if (state.reserve == null) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
         return buildContent<ReserveState>(
-            state: state,
-            isLoading: (state) => state.isLoading,
-            errorMessage: (state) => state.errorMessage,
-            hasData: (state) => state.reserves != null,
-            contentBuilder: (state) {
-              return DefaultScaffold(
-                body: InformationReserve(
-                    widget: widget,
-                    reserve: state.reserve!,
-                    loginBloc: loginBloc,
-                    dateReserve:
-                        DateFormat('dd - MM - yyyy').parse(state.reserve!.dayDate)),
-              );
-            });
+          state: state,
+          isLoading: (state) => state.isLoading,
+          errorMessage: (state) => state.errorMessage,
+          hasData: (state) => state.reserve != null,
+          contentBuilder: (state) {
+            return DefaultScaffold(
+              body: InformationReserve(
+                reserve: state.reserve!,
+                loginBloc: loginBloc,
+                dateReserve:
+                    DateFormat('dd - MM - yyyy').parse(state.reserve!.dayDate),
+              ),
+                floatingActionButton: loginBloc.state.user!.role == 2 ? FloatingActionButton(
+                onPressed: () {
+                  context.go('/user/userReserves/gameReserve/${widget.idReserve}/${widget.idTable}/${table.idShop}/confirmationQR');
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                  Icon(Icons.qr_code),
+                  Text('Confirmar', style: TextStyle(fontSize: 10)),
+                  ],
+                ),
+                ): null
+            );
+          },
+        );
       },
     );
   }

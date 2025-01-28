@@ -15,6 +15,8 @@ class ReserveEntity {
   final int tableId;
   final int usersInTables;
   final List<UserEntity>? users;
+  final int? shopId;
+  final bool isEvent;
 
   ReserveEntity({
     required this.id,
@@ -30,6 +32,8 @@ class ReserveEntity {
     required this.tableId,
     required this.usersInTables,
     this.users,
+    this.shopId,
+    required this.isEvent,
   });
 
   ReserveModel toReserveModel() {
@@ -46,6 +50,8 @@ class ReserveEntity {
       gameId: gameId,
       tableId: tableId,
       usersInTables: usersInTables,
+      shopId: shopId,
+      isEvent: isEvent,
     );
   }
 }

@@ -36,8 +36,20 @@ class GetReservesByDateUseCaseParams {
   GetReservesByDateUseCaseParams({required this.date, required this.idTable});
 }
 
-class GetReserveWithUsersUseCaseParams {
+class IdReserveParams {
   final int idReserve;
 
-  GetReserveWithUsersUseCaseParams({ required this.idReserve});
+  IdReserveParams({ required this.idReserve});
+}
+
+class GetReserveFromUsersUseCaseParams {
+  final String idUser;
+
+  GetReserveFromUsersUseCaseParams({ required this.idUser});
+}
+
+class GetEventsParams {
+  final int idShop;
+
+  GetEventsParams({ required this.idShop});
 }

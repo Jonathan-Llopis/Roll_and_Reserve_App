@@ -50,7 +50,7 @@ class _ScreenTablesOfShopState extends State<ScreenTablesOfShop> {
                   state: state,
                   isLoading: (state) => state.isLoading,
                   errorMessage: (state) => state.errorMessage,
-                  hasData: (state) => state.tables != null,
+                  hasData: (state) => state.tablesFromShop != null,
                   contentBuilder: (state) {
                     currentShop = shopBloc.state.shop!;
                     LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
@@ -59,7 +59,7 @@ class _ScreenTablesOfShopState extends State<ScreenTablesOfShop> {
                           currentShop: currentShop,
                           widget: widget,
                           loginBloc: loginBloc,
-                          tables: state.tables!),
+                          tables: state.tablesFromShop!),
                       floatingActionButton: loginBloc.state.user!.role == 1
                           ? FloatingActionButton(
                               onPressed: () {

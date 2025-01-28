@@ -4,20 +4,18 @@ import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_event.dart';
-import 'package:roll_and_reserve/presentation/screens/screen_reserve.dart';
+
 import 'package:roll_and_reserve/presentation/widgets/cards/card_user.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class InformationReserve extends StatelessWidget {
   const InformationReserve({
     super.key,
-    required this.widget,
     required this.reserve,
     required this.loginBloc,
     required this.dateReserve,
   });
 
-  final ScreenReserve widget;
   final ReserveEntity reserve;
   final LoginBloc loginBloc;
   final DateTime dateReserve;
@@ -31,7 +29,9 @@ class InformationReserve extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            AppLocalizations.of(context)!.active_game(reserveBloc.state.games!
+            reserve.isEvent ? "Evento ${reserveBloc.state.games!
+                .firstWhere((element) => element.id == reserve.gameId)
+                .description}" :  AppLocalizations.of(context)!.active_game(reserveBloc.state.games!
                 .firstWhere((element) => element.id == reserve.gameId)
                 .description),
             style: Theme.of(context).textTheme.titleLarge,
@@ -71,7 +71,7 @@ class InformationReserve extends StatelessWidget {
           const SizedBox(height: 8),
           Expanded(
             child: ListView.builder(
-              itemCount: reserve.users!.length,
+              itemCount: reserve.usersInTables,
               itemBuilder: (context, index) {
                 final user = reserve.users![index];
                 return CardUser(
