@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
 import 'package:roll_and_reserve/domain/entities/table_entity.dart';
-import 'package:roll_and_reserve/presentation/screens/screen_reserves_table.dart';
+import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/widgets/cards/card_reserve.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,14 +16,14 @@ import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_event.dart';
 class BodyReservesTable extends StatefulWidget {
   final TableEntity table;
   final DateTime selectedDate;
-  final ScreenReservesOfTable widget;
   final List<ReserveEntity>? reserves;
+  final int idShop;
   const BodyReservesTable(
       {super.key,
       required this.table,
       required this.selectedDate,
-      required this.widget,
-      this.reserves});
+      this.reserves,
+      required this.idShop});
 
   @override
   State<BodyReservesTable> createState() => _BodyReservesTableState();
@@ -32,6 +33,7 @@ class _BodyReservesTableState extends State<BodyReservesTable> {
   @override
   Widget build(BuildContext context) {
     selectedDate ??= widget.selectedDate; 
+    ShopBloc shopBloc = BlocProvider.of<ShopBloc>(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -137,7 +139,11 @@ class _BodyReservesTableState extends State<BodyReservesTable> {
               itemCount: widget.reserves?.length,
               itemBuilder: (context, index) {
                 final reserve = widget.reserves![index];
-                return CardReserve(reserve: reserve, widget: widget.widget);
+                return  GestureDetector(
+              onTap: () {
+                context.go(
+                    '/user/shop/${widget.idShop}/table/${reserve.tableId}/reserve/${reserve.id}');
+              }, child:  CardReserve(reserve: reserve, idShop: widget.idShop, shopState:shopBloc.state,));
               },
             ),
           ),

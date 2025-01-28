@@ -1,0 +1,211 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:roll_and_reserve/domain/entities/category_game_entity.dart';
+import 'package:roll_and_reserve/domain/entities/difficulty_entity.dart';
+import 'package:roll_and_reserve/domain/entities/game_entity.dart';
+import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
+import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/tables/table_event.dart';
+import 'package:roll_and_reserve/presentation/blocs/tables/table_state.dart';
+import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
+import 'package:roll_and_reserve/presentation/functions/state_check.dart';
+import 'package:roll_and_reserve/presentation/widgets/buttons/button_create_event.dart';
+import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_components/input_reservation_text.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/presentation/widgets/screen_components/table_selection_checkbox.dart';
+
+class BodyCreateEvent extends StatefulWidget {
+  final int idShop;
+  final ReserveBloc reserveBloc;
+  final List<ReserveEntity> reserves;
+  final DateTime starteTime;
+  final DateTime endTime;
+
+  const BodyCreateEvent({
+    required this.reserveBloc,
+    required this.reserves,
+    required this.idShop,
+    required this.starteTime,
+    required this.endTime,
+    super.key,
+  });
+
+  @override
+  State<BodyCreateEvent> createState() => _BodyCreateEventState();
+}
+
+class _BodyCreateEventState extends State<BodyCreateEvent> {
+  final _formKey = GlobalKey<FormState>();
+
+  final TextEditingController _freePlacesController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _requiredMaterialController =
+      TextEditingController();
+
+  DifficultyEntity? _selectedDifficulty;
+  GameCategoryEntity? _selectedGameCategory;
+  GameEntity? _selectedGame;
+  List<int> _selectedTableIds = [];
+
+  @override
+  void dispose() {
+    _freePlacesController.dispose();
+    _descriptionController.dispose();
+    _requiredMaterialController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    context.read<TableBloc>().add(GetAvailableTablesEvent(
+        dayDate: DateFormat('dd-MM-yyyy').format(widget.starteTime),
+        startTime: DateFormat('HH:mm').format(widget.starteTime),
+        reserves: widget.reserves,
+        endTime: DateFormat('HH:mm').format(widget.endTime),
+        shopId: widget.idShop));
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    TableBloc tableBloc = context.read<TableBloc>();
+    return BlocBuilder<TableBloc, TableState>(
+      builder: (context, state) {
+        return buildContent<TableState>(
+          state: state,
+          isLoading: (state) => state.isLoading,
+          errorMessage: (state) => state.errorMessage,
+          hasData: (state) => state.tablesFromShop != null,
+          contentBuilder: (state) {
+            return SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      InputReservationText(
+                          controller: _freePlacesController,
+                          label: AppLocalizations.of(context)!
+                              .total_seats_at_table,
+                          icon: Icons.people,
+                          keyboardType: TextInputType.number,
+                          validator: (value) =>
+                              basicValidationWithNumber(value, context)),
+                      InputReservationText(
+                          controller: _descriptionController,
+                          label: AppLocalizations.of(context)!.description,
+                          icon: Icons.description,
+                          keyboardType: TextInputType.text,
+                          validator: (value) =>
+                              basicValidation(value, context)),
+                      InputReservationText(
+                          controller: _requiredMaterialController,
+                          label:
+                              AppLocalizations.of(context)!.required_material,
+                          icon: Icons.build,
+                          keyboardType: TextInputType.text,
+                          validator: (value) =>
+                              basicValidation(value, context)),
+                      DropdownButtonFormField<DifficultyEntity>(
+                          decoration: InputDecoration(
+                            labelText: AppLocalizations.of(context)!.difficulty,
+                          ),
+                          value: _selectedDifficulty,
+                          items: widget.reserveBloc.state.difficulties!
+                              .map((difficulty) => DropdownMenuItem(
+                                    value: difficulty,
+                                    child: Text(difficulty.description),
+                                  ))
+                              .toList(),
+                          onChanged: (newValue) {
+                            setState(() {
+                              _selectedDifficulty = newValue;
+                            });
+                          },
+                          validator: (value) =>
+                              validateSelectedValue(value, context)),
+                      DropdownButtonFormField<GameCategoryEntity>(
+                          decoration: InputDecoration(
+                            labelText:
+                                AppLocalizations.of(context)!.game_category,
+                          ),
+                          value: _selectedGameCategory,
+                          items: widget.reserveBloc.state.gameCategories!
+                              .map((category) => DropdownMenuItem(
+                                    value: category,
+                                    child: Text(category.description),
+                                  ))
+                              .toList(),
+                          onChanged: (newValue) {
+                            setState(() {
+                              _selectedGameCategory = newValue;
+                            });
+                          },
+                          validator: (value) =>
+                              validateSelectedValue(value, context)),
+                      DropdownButtonFormField<GameEntity>(
+                          decoration: InputDecoration(
+                            labelText: AppLocalizations.of(context)!.game,
+                          ),
+                          value: _selectedGame,
+                          items: widget.reserveBloc.state.games!
+                              .map((game) => DropdownMenuItem(
+                                    value: game,
+                                    child: Text(game.description),
+                                  ))
+                              .toList(),
+                          onChanged: (newValue) {
+                            setState(() {
+                              _selectedGame = newValue;
+                            });
+                          },
+                          validator: (value) =>
+                              validateSelectedValue(value, context)),
+                      const SizedBox(height: 20.0),
+                      TableSelectionCheckbox(
+                        tableIds: tableBloc.state.tablesFromShop!
+                            .map((table) => table.id)
+                            .toList(),
+                        onSelectionChanged: (selectedTableIds) {
+                          setState(() {
+                            _selectedTableIds = selectedTableIds;
+                          });
+                        },
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: Text(AppLocalizations.of(context)!.cancel,
+                                style: TextStyle(color: Colors.red)),
+                          ),
+                          const SizedBox(width: 10.0),
+                          ButtonCreateEvent(
+                              formKey: _formKey,
+                              selectedTableIds: _selectedTableIds,
+                              freePlacesController: _freePlacesController,
+                              widget: widget,
+                              descriptionController: _descriptionController,
+                              requiredMaterialController:
+                                  _requiredMaterialController,
+                              selectedDifficulty: _selectedDifficulty,
+                              selectedGameCategory: _selectedGameCategory,
+                              selectedGame: _selectedGame)
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+}

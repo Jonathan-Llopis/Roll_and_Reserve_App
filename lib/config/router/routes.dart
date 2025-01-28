@@ -1,17 +1,20 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/domain/repositories/login_repository.dart';
 import 'package:roll_and_reserve/injection.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reviews/reviews_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_create_event.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_create_reserve.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_qr.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_reserve.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_login.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_register.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_reserves_table.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_reserves_user.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_review_shop.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_edit_shop.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_shop_events.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_tables_shop.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_main.dart';
 import 'package:go_router/go_router.dart';
@@ -24,7 +27,7 @@ final _reserveBloc = sl<ReserveBloc>();
 final _reviewsBloc = sl<ReviewBloc>();
 
 final GoRouter router = GoRouter(
-  initialLocation: '/login',
+  initialLocation: '/user',
   routes: [
     GoRoute(
       name: 'login',
@@ -51,6 +54,75 @@ final GoRouter router = GoRouter(
             return ScreenEditShop(idShop: shopId);
           },
         ),
+        GoRoute(
+            name: 'events',
+            path: 'events/:idShop',
+            builder: (context, state) {
+              final shopId = int.parse(state.pathParameters['idShop']!);
+              return ScreenShopEvents(idShop: shopId);
+            },
+            routes: [
+              GoRoute(
+                name: 'createEvent',
+                path: 'createEvent',
+                builder: (context, state) {
+                  final shopId = int.parse(state.pathParameters['idShop']!);
+                  return ScreenCreateEvent(idShop: shopId);
+                },
+              ),
+              GoRoute(
+                name: 'eventReserve',
+                path: 'eventReserve/:idReserve/:idTable',
+                builder: (context, state) {
+                  final idReserve =
+                      int.parse(state.pathParameters['idReserve']!);
+                  final idTable = int.parse(state.pathParameters['idTable']!);
+                  return ScreenReserve(
+                    idReserve: idReserve,
+                    idTable: idTable,
+                  );
+                },
+              )
+            ]),
+        GoRoute(
+            name: 'userReserves',
+            path: 'userReserves',
+            builder: (context, state) {
+              return ScreenReservesOfUser();
+            },
+            routes: [
+              GoRoute(
+                  name: 'userReserve',
+                  path: 'gameReserve/:idReserve/:idTable/:idShop',
+                  builder: (context, state) {
+                    final idReserve =
+                        int.parse(state.pathParameters['idReserve']!);
+                    final idTable = int.parse(state.pathParameters['idTable']!);
+                    return ScreenReserve(
+                      idReserve: idReserve,
+                      idTable: idTable,
+                    );
+                  },
+                  routes: [
+                    GoRoute(
+                      name: 'confirmationQR',
+                      path: 'confirmationQR',
+                      builder: (context, state) {
+                        final idReserve =
+                            int.parse(state.pathParameters['idReserve']!);
+                        final shopId =
+                            int.parse(state.pathParameters['idShop']!);
+                        final idTable =
+                            int.parse(state.pathParameters['idTable']!);
+                        return QRScannerScreen(
+                          idTable: idTable,
+                          idReserve: idReserve,
+                          idShop: shopId,
+                        );
+                      },
+                    ),
+                  ]),
+            ]),
         GoRoute(
           name: 'tablesShop',
           path: 'shop/:idTablesShop',
@@ -92,11 +164,10 @@ final GoRouter router = GoRouter(
                     );
                   },
                 ),
-                 GoRoute(
+                GoRoute(
                   name: 'createReserve',
                   path: 'createReserve',
                   builder: (context, state) {
-                  
                     final idShop =
                         int.parse(state.pathParameters['idTablesShop']!);
                     final idTable = int.parse(state.pathParameters['idTable']!);

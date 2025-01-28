@@ -109,3 +109,34 @@ class GetReserveWithUsers extends ReserveEvent {
   @override
   List<Object?> get props => [idReserve];
 }
+
+class GetReservesByUserEvent extends ReserveEvent {
+  final String idUser;
+  GetReservesByUserEvent({required this.idUser});
+
+  @override
+  List<Object?> get props => [idUser];
+}
+
+class ConfirmReserveEvent extends ReserveEvent {
+  final int idReserve;
+  final String idUser;
+  ConfirmReserveEvent({required this.idReserve, required this.idUser});
+
+  @override
+  List<Object?> get props => [idReserve, idUser];
+}
+class GetEventsEvent extends ReserveEvent {
+  final int idShop;
+  GetEventsEvent({required this.idShop});
+
+  @override
+  List<Object?> get props => [idShop];
+}
+class CreateEventsEvent extends ReserveEvent {
+  final List<ReserveEntity> reserves;
+  CreateEventsEvent({required this.reserves});
+
+  @override
+  List<Object?> get props => [reserves];
+}
