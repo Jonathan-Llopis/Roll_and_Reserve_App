@@ -11,8 +11,8 @@ import 'package:roll_and_reserve/presentation/blocs/tables/table_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_state.dart';
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
 
-class CardReserve extends StatefulWidget {
-  const CardReserve({
+class CardEvent extends StatefulWidget {
+  const CardEvent({
     super.key,
     required this.reserve,
     required this.idShop,
@@ -24,10 +24,10 @@ class CardReserve extends StatefulWidget {
   final ShopState shopState;
 
   @override
-  State<CardReserve> createState() => _CardReserveState();
+  State<CardEvent> createState() => _CardEventState();
 }
 
-class _CardReserveState extends State<CardReserve> {
+class _CardEventState extends State<CardEvent> {
   @override
   void initState() {
     context.read<TableBloc>().add(GetTablesEvent());
@@ -56,8 +56,6 @@ class _CardReserveState extends State<CardReserve> {
                 contentBuilder: (state) {
                   final shop = shopBloc.state.shops!
                       .firstWhere((shop) => shop.id == widget.idShop);
-                  final table = state.tables!.firstWhere(
-                      (table) => table.id == widget.reserve.tableId);
                   return Card(
                     elevation: 6,
                     shape: RoundedRectangleBorder(
@@ -85,18 +83,10 @@ class _CardReserveState extends State<CardReserve> {
                           ),
                           const SizedBox(height: 6),
                           Text(
-                            AppLocalizations.of(context)!
-                                .table_number(table.numberTable),
-                            style: const TextStyle(
-                                fontSize: 14, color: Colors.black87),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            AppLocalizations.of(context)!.game_description(
-                                reserveBloc.state.games!
+                           "Evento del juego ${reserveBloc.state.games!
                                     .firstWhere((game) =>
                                         game.id == widget.reserve.gameId)
-                                    .description),
+                                    .description}",
                             style: const TextStyle(
                                 fontSize: 14, color: Colors.black87),
                           ),

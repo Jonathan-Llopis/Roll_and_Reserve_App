@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:roll_and_reserve/presentation/blocs/language/language_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_event.dart';
+import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
+import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -40,22 +45,24 @@ Future<void> selectDate(
   }
 }
 
-Future<void> selectTime(BuildContext context, TextEditingController controller) async {
+Future<void> selectTime(
+    BuildContext context, TextEditingController controller) async {
   final TimeOfDay? pickedTime = await showTimePicker(
     context: context,
-    initialTime: controller.text != "" ? TimeOfDay.fromDateTime(DateFormat('HH:mm').parse(controller.text)) : TimeOfDay.now(),
+    initialTime: controller.text != ""
+        ? TimeOfDay.fromDateTime(DateFormat('HH:mm').parse(controller.text))
+        : TimeOfDay.now(),
     builder: (BuildContext context, Widget? child) {
       return MediaQuery(
-        data: MediaQuery.of(context).copyWith(
-            alwaysUse24HourFormat: true),
+        data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
         child: child!,
       );
     },
-    
   );
   if (pickedTime != null) {
     final localizations = MaterialLocalizations.of(context);
-    final formattedTime = localizations.formatTimeOfDay(pickedTime, alwaysUse24HourFormat: false);
+    final formattedTime =
+        localizations.formatTimeOfDay(pickedTime, alwaysUse24HourFormat: false);
     controller.text = formattedTime;
   }
 }
@@ -77,4 +84,55 @@ String? validateTime(
     return AppLocalizations.of(context)!.start_time_must_be_less_than_end_time;
   }
   return null;
+}
+
+Future<void> checkUserLocation(BuildContext context, int idReserve) async {
+  ShopBloc shopBloc = BlocProvider.of<ShopBloc>(context);
+  LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
+
+  bool serviceEnabled;
+  LocationPermission permission;
+
+  // Verificar si los servicios de ubicación están habilitados
+  serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) {
+    // Los servicios de ubicación no están habilitados, no se puede continuar
+    return Future.error('El servicio de ubicación está deshabilitado.');
+  }
+
+  // Verificar los permisos de ubicación
+  permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      // Los permisos están denegados, no se puede continuar
+      return Future.error('Los permisos de ubicación están denegados.');
+    }
+  }
+
+  if (permission == LocationPermission.deniedForever) {
+    // Los permisos están denegados permanentemente, no se puede continuar
+    return Future.error(
+        'Los permisos de ubicación están denegados permanentemente.');
+  }
+
+  // Obtener la posición actual del usuario
+  Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high);
+
+  final double distanceInMeters = Geolocator.distanceBetween(
+    position.latitude,
+    position.longitude,
+    shopBloc.state.shop!.latitude,
+    shopBloc.state.shop!.longitude,
+  );
+
+  if (distanceInMeters <= 100) {
+    confirmReserveDialog(context, 'Tu Reserva ha sido confirmada!', false);
+    context.read<ReserveBloc>().add(ConfirmReserveEvent(
+        idReserve: idReserve, idUser: loginBloc.state.user!.id));
+  } else {
+    confirmReserveDialog(
+        context, 'No estás en la ubicación de la tienda', true);
+  }
 }

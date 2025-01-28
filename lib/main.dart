@@ -1,21 +1,22 @@
-import 'package:firebase_core/firebase_core.dart';
+import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:roll_and_reserve/config/router/routes.dart';
 import 'package:roll_and_reserve/firebase_options.dart';
-import 'package:roll_and_reserve/injection.dart';
-import 'package:roll_and_reserve/presentation/blocs/language/language_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/language/language_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/language/language_state.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/language/language_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reviews/reviews_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
+import 'package:roll_and_reserve/injection.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -33,8 +34,33 @@ void main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  MyAppState createState() => MyAppState();
+}
+
+class MyAppState extends State<MyApp> {
+  late AppLinks _appLinks;
+  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _initDeepLinkListener();
+  }
+
+  void _initDeepLinkListener() async {
+    _appLinks = AppLinks();
+    _appLinks.uriLinkStream.listen((Uri? uri) {
+      if (uri != null) { 
+        final path = uri.path;
+        final parameters = uri.queryParameters;
+        _navigatorKey.currentState?.pushNamed(path, arguments: parameters);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,16 +72,16 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (_) => sl<LanguageBloc>(),
         ),
-           BlocProvider(
+        BlocProvider(
           create: (_) => sl<ShopBloc>(),
         ),
-            BlocProvider(
+        BlocProvider(
           create: (_) => sl<TableBloc>(),
         ),
-           BlocProvider(
+        BlocProvider(
           create: (_) => sl<ReserveBloc>(),
         ),
-           BlocProvider(
+        BlocProvider(
           create: (_) => sl<ReviewBloc>(),
         ),
       ],

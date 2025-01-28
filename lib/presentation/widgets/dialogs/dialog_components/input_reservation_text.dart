@@ -6,14 +6,16 @@ class InputReservationText extends StatelessWidget {
       required this.controller,
       required this.label,
       required this.icon,
-      required this.keyboardType,
+      this.keyboardType,
+      this.readOnly,
       required this.validator,
       this.onTap});
 
   final TextEditingController controller;
   final String label;
   final IconData icon;
-  final TextInputType keyboardType;
+  final TextInputType? keyboardType;
+  final bool? readOnly;
   final String? Function(String? p1)? validator;
   final VoidCallback? onTap;
   @override
@@ -22,6 +24,7 @@ class InputReservationText extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 12.0),
       child: TextFormField(
         controller: controller,
+        readOnly: readOnly ?? false,
         decoration: InputDecoration(
           labelText: label,
           prefixIcon: Icon(icon),

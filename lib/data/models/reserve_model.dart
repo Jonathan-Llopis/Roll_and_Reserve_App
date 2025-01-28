@@ -16,6 +16,8 @@ class ReserveModel {
   final int tableId;
   final int usersInTables;
   final List<UserModel>? users;
+  final int? shopId;
+  final bool isEvent;
 
   ReserveModel({
     required this.id,
@@ -31,6 +33,8 @@ class ReserveModel {
     required this.tableId,
     required this.usersInTables,
     this.users,
+    this.shopId,
+    required this.isEvent,
   });
 
   factory ReserveModel.fromJson(Map<String, dynamic> json) {
@@ -55,8 +59,9 @@ class ReserveModel {
           ? 0
           : json['reserve_table']['id_table'] ?? 0,
       usersInTables: json['users_in_reserve'] != null
-          ? json['users_in_reserve'].length
+          ? json['userReserves'].length
           : 0,
+      isEvent: json['shop_event'] ?? false,
     );
   }
 
@@ -82,12 +87,41 @@ class ReserveModel {
           ? 0
           : json['reserve_table']['id_table'] ?? 0,
       usersInTables: json['users_in_reserve'] != null
-          ? json['users_in_reserve'].length
+          ? json['userReserves'].length
           : 0,
       users: json['userReserves'] != null
           ? List<UserModel>.from(json['userReserves']
               .map((userReserve) => UserModel.fromJsonReserve(userReserve['user'], userReserve['reserva_confirmada'])))
           : null,
+      isEvent: json['shop_event'] ?? false,
+    );
+  }
+
+  factory ReserveModel.fromJsonUsersReserves(Map<String, dynamic> json) {
+    return ReserveModel(
+      id: json['reserve']['id_reserve'] ?? 0,
+      freePlaces: json['reserve']['total_places'] ?? 0,
+      dayDate: getDate(json['reserve']['hour_start'] ?? ""),
+      horaInicio: getHour(json['reserve']['hour_start'] ?? ""),
+      horaFin: getHour(json['reserve']['hour_end'] ?? ""),
+      description: json['reserve']['description'] ?? "",
+      requiredMaterial: json['reserve']['required_material'] ?? "",
+      difficultyId: 0,
+      gameCategoryId: 0,
+      gameId: json['reserve']['reserve_of_game'] == null
+          ? 0
+          : json['reserve']['reserve_of_game']['id_game'] ?? 0,
+      tableId: json['reserve']['reserve_table'] == null
+          ? 0
+          : json['reserve']['reserve_table']['id_table'] ?? 0,
+      usersInTables: json['reserve']['userReserves'] != null
+          ? json['reserve']['userReserves'].length
+          : 0,
+      users: null,
+      shopId: json['reserve']['reserve_table'] == null
+          ? null
+          : json['reserve']['reserve_table']['tables_of_shop']['id_shop'],
+          isEvent: json['shop_event'] ?? false,
     );
   }
 
@@ -103,6 +137,25 @@ class ReserveModel {
       'reserve_game_category': gameCategoryId,
       'reserve_of_game': gameId,
       'reserve_table': tableId,
+      'shop_event' : false,
+      'event_id': 0,
+    };
+  }
+
+  Map<String, dynamic> toJsonEvent() {
+    return {
+      'id_reserve': id,
+      'total_places': freePlaces,
+      'hour_start': getIsoDate(dayDate, horaInicio),
+      'hour_end': getIsoDate(dayDate, horaFin),
+      'description': description,
+      'required_material': requiredMaterial,
+      'difficulty': difficultyId,
+      'reserve_game_category': gameCategoryId,
+      'reserve_of_game': gameId,
+      'reserve_table': tableId,
+      'shop_event' : true,
+      'event_id': "$dayDate-$gameId-$shopId",
     };
   }
 
@@ -119,7 +172,9 @@ class ReserveModel {
         gameCategoryId: gameCategoryId,
         gameId: gameId,
         tableId: tableId,
-        usersInTables: usersInTables);
+        usersInTables: usersInTables,
+        shopId: shopId,
+        isEvent: isEvent);
   }
 
   ReserveEntity toReserveEntityWithUsers(List<dynamic> avatarUser) {
@@ -139,6 +194,7 @@ class ReserveModel {
         return entry.value.toUserEntity(avatarUser[entry.key], entry.value.reserveConfirmation);
       }).toList(),
       usersInTables: users!.length,
+      isEvent: isEvent
     );
   }
 }
