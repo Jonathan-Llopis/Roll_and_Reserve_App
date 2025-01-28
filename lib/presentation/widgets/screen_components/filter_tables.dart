@@ -12,7 +12,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FilterTables extends StatefulWidget {
-  const FilterTables({super.key, required this.currentShop, required this.reserveBloc, required this.tableBloc});
+  const FilterTables(
+      {super.key,
+      required this.currentShop,
+      required this.reserveBloc,
+      required this.tableBloc});
   final ShopEntity currentShop;
   final ReserveBloc reserveBloc;
   final TableBloc tableBloc;
@@ -54,7 +58,7 @@ class _FilterTablesState extends State<FilterTables> {
     return BlocListener<ReserveBloc, ReserveState>(
       listener: (context, state) {
         if (state.reserves != null) {
-        widget.tableBloc.add(GetAvailableTablesEvent(
+          widget.tableBloc.add(GetAvailableTablesEvent(
               dayDate: _dateController.text,
               startTime: _startTimeController.text,
               endTime: _endTimeController.text,
@@ -88,8 +92,10 @@ class _FilterTablesState extends State<FilterTables> {
                 validator: (value) => basicValidation(value, context),
               ),
               const SizedBox(height: 16),
-              TextFormField(
+                TextFormField(
                 controller: _startTimeController,
+                readOnly: true,
+                onTap: () => selectTime(context, _startTimeController),
                 decoration: InputDecoration(
                   labelText: AppLocalizations.of(context)!.start_time_hh_mm,
                   border: OutlineInputBorder(),
@@ -97,20 +103,22 @@ class _FilterTablesState extends State<FilterTables> {
                 validator: (value) {
                   String? error = validateHour(value, context);
                   if (error != null) {
-                    return error;
+                  return error;
                   }
                   if (_startTimeController.text
-                          .compareTo(_endTimeController.text) >=
-                      0) {
-                    return AppLocalizations.of(context)!
-                        .start_time_must_be_less_than_end_time;
+                      .compareTo(_endTimeController.text) >=
+                    0) {
+                  return AppLocalizations.of(context)!
+                    .start_time_must_be_less_than_end_time;
                   }
                   return null;
                 },
-              ),
+                ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _endTimeController,
+                 readOnly: true,
+                onTap: () => selectTime(context, _endTimeController),
                 decoration: InputDecoration(
                   labelText: AppLocalizations.of(context)!.end_time_hh_mm,
                   border: OutlineInputBorder(),
@@ -133,12 +141,12 @@ class _FilterTablesState extends State<FilterTables> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                   widget.reserveBloc.add(GetReservesByShopEvent(
-                          currentShop: widget.currentShop,
-                          dateReserve: _dateController.text,
-                          startTime: _startTimeController.text,
-                          endTime: _endTimeController.text,
-                        ));
+                    widget.reserveBloc.add(GetReservesByShopEvent(
+                      currentShop: widget.currentShop,
+                      dateReserve: _dateController.text,
+                      startTime: _startTimeController.text,
+                      endTime: _endTimeController.text,
+                    ));
                   }
                   _saveFilterValues();
                 },

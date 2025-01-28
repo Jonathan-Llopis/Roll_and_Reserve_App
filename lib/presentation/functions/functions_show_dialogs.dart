@@ -6,6 +6,7 @@ import 'package:roll_and_reserve/presentation/blocs/reviews/reviews_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_change_language.dart';
+import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_confirm_reserve.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_create_review.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_create_update_table.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_delete_shop.dart';
@@ -14,7 +15,7 @@ import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_logout.dart
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_reset_password.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_update_password.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_user_edit.dart';
-import 'package:roll_and_reserve/presentation/widgets/dialogs/dialogo_delete_table.dart';
+import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_delete_table.dart';
 
 Future<void> mostrarResetPassword(BuildContext context) {
   return showDialog(
@@ -81,8 +82,8 @@ Future<void> showUpdateCreateTableDialog(
   );
 }
 
-Future<void> createReview(
-    BuildContext context, ReviewBloc reviewBloc, ShopBloc shopBloc, int idShop) {
+Future<void> createReview(BuildContext context, ReviewBloc reviewBloc,
+    ShopBloc shopBloc, int idShop) {
   return showDialog(
       context: context,
       builder: (context) {
@@ -94,7 +95,8 @@ Future<void> createReview(
       });
 }
 
-Future<void> deleteTable(BuildContext context, int idTable, int idShop, TableBloc tableBloc) {
+Future<void> deleteTable(
+    BuildContext context, int idTable, int idShop, TableBloc tableBloc) {
   return showDialog(
       context: context,
       builder: (context) {
@@ -111,5 +113,14 @@ Future<void> changeLanguage(BuildContext context) {
       context: context,
       builder: (context) {
         return ChangeLanguageDialog();
+      });
+}
+
+Future<void> confirmReserveDialog(
+    BuildContext context, String mensaje, bool error) {
+  return showDialog(
+      context: context,
+      builder: (context) {
+        return DialogConfirmReserve(mensaje: mensaje, error: error);
       });
 }
