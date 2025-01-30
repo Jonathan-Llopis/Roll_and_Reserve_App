@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:roll_and_reserve/data/models/functions_for_models.dart';
 import 'package:roll_and_reserve/domain/entities/shop_entity.dart';
 
@@ -39,8 +41,8 @@ class ShopModel {
             json['owner'] != null ? json['owner']['id_google'] ?? "0" : "0",
         tablesShop: calcularMesasTienda(json['tables_in_shop'] ?? []),
         gamesShop: crearListaJuegos(json['games'] ?? []),
-        latitude: json['latitud'] ?? 0.0,
-        longitude: json['longitud'] ?? 0.0);
+        latitude: json['latitud'] == 0 ? 0.0 : json['latitud'] ?? 0.0,
+        longitude: json['longitud'] == 0 ? 0.0 : json['longitud'] ?? 0.0,);
   }
 
   factory ShopModel.fromJsonCreate(Map<String, dynamic> json) {
@@ -74,7 +76,7 @@ class ShopModel {
         name: name,
         address: address,
         logoId: logoId,
-        logo: logoFile,
+        logo: logoFile?? File(''),
         averageRaiting: averageRaiting,
         ownerId: ownerId,
         tablesShop: tablesShop,
@@ -89,7 +91,7 @@ class ShopModel {
         name: name,
         address: address,
         logoId: newLogoId,
-        logo: logo ?? <int>[],
+        logo: logo ?? File(''),
         averageRaiting: averageRaiting,
         ownerId: ownerId,
         tablesShop: tablesShop,

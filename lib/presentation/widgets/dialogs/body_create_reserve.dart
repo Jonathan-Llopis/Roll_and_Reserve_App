@@ -42,7 +42,6 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
   GameCategoryEntity? _selectedGameCategory;
   GameEntity? _selectedGame;
 
-
   @override
   void dispose() {
     _dayReservationController.dispose();
@@ -70,7 +69,7 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
                   onTap: () async {
                     selectDate(context, _dayReservationController);
                   },
-                  keyboardType: TextInputType.datetime,
+                  readOnly: true,
                   validator: (value) => basicValidation(value, context)),
               InputReservationText(
                   controller: _freePlacesController,
@@ -84,7 +83,7 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
                   label: AppLocalizations.of(context)!.start_time_hh_mm,
                   icon: Icons.access_time,
                   onTap: () => selectTime(context, _hourStartController),
-                  keyboardType: TextInputType.datetime,
+                  readOnly: true,
                   validator: (value) => validateTime(
                       context,
                       value,
@@ -100,7 +99,7 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
                   label: AppLocalizations.of(context)!.end_time_hh_mm,
                   icon: Icons.access_time_filled,
                   onTap: () => selectTime(context, _hourEndController),
-                  keyboardType: TextInputType.datetime,
+                  readOnly: true,
                   validator: (value) => validateTime(
                       context,
                       value,

@@ -20,5 +20,5 @@ Widget buildContent<T>({
     return contentBuilder(state);
   }
 
-  return const Center(child: Text("No hay datos disponibles"));
+  return const Center();
 }
