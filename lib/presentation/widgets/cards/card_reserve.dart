@@ -59,6 +59,9 @@ class _CardReserveState extends State<CardReserve> {
                   final table = state.tables!.firstWhere(
                       (table) => table.id == widget.reserve.tableId);
                   return Card(
+                    color: widget.reserve.isEvent
+                        ? const Color.fromARGB(255, 211, 49, 197)
+                        : const Color.fromARGB(255, 28, 190, 136),
                     elevation: 6,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
@@ -70,8 +73,10 @@ class _CardReserveState extends State<CardReserve> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            AppLocalizations.of(context)!
-                                .reserve_day(widget.reserve.dayDate),
+                            widget.reserve.isEvent
+                                ? "Evento ${widget.reserve.dayDate}"
+                                : AppLocalizations.of(context)!
+                                    .reserve_day(widget.reserve.dayDate),
                             style: Theme.of(context)
                                 .textTheme
                                 .titleMedium
@@ -84,12 +89,14 @@ class _CardReserveState extends State<CardReserve> {
                                 fontSize: 14, color: Colors.black87),
                           ),
                           const SizedBox(height: 6),
-                          Text(
-                            AppLocalizations.of(context)!
-                                .table_number(table.numberTable),
-                            style: const TextStyle(
-                                fontSize: 14, color: Colors.black87),
-                          ),
+                          widget.reserve.isEvent
+                              ? Container()
+                              : Text(
+                                  AppLocalizations.of(context)!
+                                      .table_number(table.numberTable),
+                                  style: const TextStyle(
+                                      fontSize: 14, color: Colors.black87),
+                                ),
                           const SizedBox(height: 6),
                           Text(
                             AppLocalizations.of(context)!.game_description(
@@ -101,27 +108,30 @@ class _CardReserveState extends State<CardReserve> {
                                 fontSize: 14, color: Colors.black87),
                           ),
                           const SizedBox(height: 6),
-                          Text(
-                            AppLocalizations.of(context)!
-                                .total_players_at_table(
-                                    widget.reserve.usersInTables,
-                                    widget.reserve.freePlaces),
-                            style: const TextStyle(
-                                fontSize: 14, color: Colors.black87),
-                          ),
+                          const SizedBox(height: 6),
+                          widget.reserve.isEvent
+                              ? Container()
+                              : Text(
+                                  AppLocalizations.of(context)!
+                                      .total_players_at_table(
+                                          widget.reserve.usersInTables,
+                                          widget.reserve.freePlaces),
+                                  style: const TextStyle(
+                                      fontSize: 14, color: Colors.black87),
+                                ),
                           const SizedBox(height: 6),
                           Text(
                             AppLocalizations.of(context)!
                                 .start_time(widget.reserve.horaInicio),
                             style: const TextStyle(
-                                fontSize: 14, color: Colors.grey),
+                                fontSize: 14, color: Colors.black),
                           ),
                           const SizedBox(height: 6),
                           Text(
                             AppLocalizations.of(context)!
                                 .end_time(widget.reserve.horaFin),
                             style: const TextStyle(
-                                fontSize: 14, color: Colors.grey),
+                                fontSize: 14, color: Colors.black),
                           ),
                         ],
                       ),

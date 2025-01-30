@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_state.dart';
+import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.dart';
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/body_create_event.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/default_scaffold.dart';
@@ -21,6 +22,7 @@ class _ScreenCreateEventState extends State<ScreenCreateEvent> {
   Future<void> _selectDateAndTime() async {
     try {
       DateTime? startDate = await showDatePicker(
+        helpText: "Selecciona la fecha de inicio del evento",
         context: context,
         initialDate: DateTime.now(),
         firstDate: DateTime(2000),
@@ -41,6 +43,7 @@ class _ScreenCreateEventState extends State<ScreenCreateEvent> {
       }
 
       DateTime? endDate = await showDatePicker(
+        helpText: "Selecciona la fecha de fin del evento",
         context: context,
         initialDate: startDate,
         firstDate: startDate,
@@ -51,6 +54,15 @@ class _ScreenCreateEventState extends State<ScreenCreateEvent> {
         throw Exception("Fecha final no seleccionada");
       }
 
+      if (endDate.isBefore(startDate)) {
+        throw Exception(
+            "La fecha final no puede ser anterior a la fecha inicial");
+      }
+
+      if (endDate.difference(startDate).inDays == -1) {
+        throw Exception("El evento debe ser en el mismo dia");
+      }
+
       TimeOfDay? endTime = await showTimePicker(
         context: context,
         initialTime: startTime,
@@ -58,6 +70,23 @@ class _ScreenCreateEventState extends State<ScreenCreateEvent> {
 
       if (endTime == null) {
         throw Exception("Hora final no seleccionada");
+      }
+
+      if (endDate.isAtSameMomentAs(startDate) && 
+          DateTime(endDate.year, endDate.month, endDate.day, endTime.hour, endTime.minute)
+          .isBefore(DateTime(startDate.year, startDate.month, startDate.day, startTime.hour, startTime.minute))) {
+        throw Exception(
+            "La fecha final no puede ser anterior a la fecha inicial");
+      }
+
+      if (endTime.hour < startTime.hour) {
+        throw Exception(
+            "La fecha final no puede ser anterior a la fecha inicial");
+      }
+
+      if (endTime.hour == startTime.hour && endTime.minute < startTime.minute) {
+        throw Exception(
+            "La fecha final no puede ser anterior a la fecha inicial");
       }
 
       setState(() {
@@ -79,7 +108,7 @@ class _ScreenCreateEventState extends State<ScreenCreateEvent> {
         };
       });
     } catch (e) {
-      Navigator.of(context).pop();
+      errorDatePicker(context, e.toString(), widget.idShop);
     }
   }
 

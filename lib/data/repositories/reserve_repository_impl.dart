@@ -91,7 +91,8 @@ class ReserveRepositoryImpl implements ReserveRepository {
   Future<Either<Exception, List<ReserveEntity>>> getAllReservesByDate(DateTime date, int tableId) async {
     try {
       final token = sharedPreferences.getString('token');
-      final reserveModels = await remoteDataSource.getAllReservesByDate(date.toString(), token!, tableId);
+      final formattedDate = "${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+      final reserveModels = await remoteDataSource.getAllReservesByDate(formattedDate, token!, tableId);
       List<ReserveEntity> reserveEntities =
           reserveModels.asMap().entries.map((entry) {
         return entry.value.toReserveEntity();
