@@ -45,15 +45,17 @@ class _BodyEditShopState extends State<BodyEditShop> {
           shopBloc.state.shops!.firstWhere((shop) => shop.id == widget.idShop);
       _titleController.text = shopEdit.name;
       _adressController.text = shopEdit.address;
-      _latitudController.text = shopEdit.latitude == 0 ? "0" : shopEdit.latitude.toString();
-      _longitudController.text = shopEdit.longitude == 0 ? "0" : shopEdit.longitude.toString();
+      _latitudController.text =
+          shopEdit.latitude == 0 ? "0" : shopEdit.latitude.toString();
+      _longitudController.text =
+          shopEdit.longitude == 0 ? "0" : shopEdit.longitude.toString();
       _imageFile = shopEdit.logo;
     } else {
       _titleController.text = '';
       _adressController.text = '';
       _imageFile = null;
-      _latitudController.text = "40.4165";
-      _longitudController.text = "-3.70256";
+      _latitudController.text = "0";
+      _longitudController.text = "0";
     }
     super.initState();
   }
@@ -77,7 +79,9 @@ class _BodyEditShopState extends State<BodyEditShop> {
                         ? (_imageFile is Uint8List
                             ? MemoryImage(_imageFile)
                             : null)
-                        : FileImage(File(_imageFile.path)) as ImageProvider,
+                        : _imageFile != null
+                            ? FileImage(File(_imageFile.path))
+                            : null,
                     backgroundColor: Colors.grey[200],
                   ),
                   Positioned(
