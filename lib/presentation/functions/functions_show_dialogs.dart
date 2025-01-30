@@ -11,6 +11,7 @@ import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_create_revi
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_create_update_table.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_delete_shop.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_email_sent.dart';
+import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_error_datePicker.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_logout.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_reset_password.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_update_password.dart';
@@ -122,5 +123,14 @@ Future<void> confirmReserveDialog(
       context: context,
       builder: (context) {
         return DialogConfirmReserve(mensaje: mensaje, error: error);
+      });
+}
+
+Future<void> errorDatePicker(
+    BuildContext context, String mensaje, int idShop) {
+  return showDialog(
+      context: context,
+      builder: (context) {
+        return DialogErrorDatepicker(mensaje: mensaje, idShop: idShop);
       });
 }

@@ -58,7 +58,7 @@ class _BodyEventsState extends State<BodyEvents> {
                 return GestureDetector(
                   onTap: () {
                     context.go(
-                        '/user/events/${widget.idShop}/eventReserve/${reserve.id}/${reserve.tableId}');
+                        '/user/events/${widget.idShop}/eventReserve/${reserve.id}');
                   },
                   child: CardEvent(
                       reserve: reserve,
