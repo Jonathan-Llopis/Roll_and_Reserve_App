@@ -82,6 +82,7 @@ class _FilterTablesState extends State<FilterTables> {
             children: [
               TextFormField(
                 controller: _dateController,
+                  readOnly: true,
                 decoration: InputDecoration(
                   labelText: AppLocalizations.of(context)!.date,
                   border: OutlineInputBorder(),

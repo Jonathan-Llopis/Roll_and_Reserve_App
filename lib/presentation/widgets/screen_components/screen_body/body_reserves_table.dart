@@ -11,7 +11,7 @@ import 'package:roll_and_reserve/presentation/blocs/language/language_bloc.dart'
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_event.dart';
 
-  DateTime? selectedDate;
+DateTime? selectedDate;
 
 class BodyReservesTable extends StatefulWidget {
   final TableEntity table;
@@ -32,7 +32,7 @@ class BodyReservesTable extends StatefulWidget {
 class _BodyReservesTableState extends State<BodyReservesTable> {
   @override
   Widget build(BuildContext context) {
-    selectedDate ??= widget.selectedDate; 
+    selectedDate ??= widget.selectedDate;
     ShopBloc shopBloc = BlocProvider.of<ShopBloc>(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,7 +70,7 @@ class _BodyReservesTableState extends State<BodyReservesTable> {
                         locale: languageBloc.state.locale,
                         context: context,
                         initialDate: selectedDate,
-                        firstDate: DateTime.now(),
+                        firstDate: DateTime(2020),
                         lastDate: DateTime(2030),
                       );
                       if (picked != null) {
@@ -111,11 +111,21 @@ class _BodyReservesTableState extends State<BodyReservesTable> {
                 child: const Icon(Icons.arrow_back)),
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Text(
-                AppLocalizations.of(context)!.available_reservations_for_date(
-                    getDate(selectedDate.toString())),
-                style:
-                    const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              child: Column(
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!
+                        .available_reservations_for_date(
+                            ""),
+                    style: const TextStyle(
+                        fontSize: 15, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    getDate(selectedDate.toString()),
+                    style: const TextStyle(
+                        fontSize: 15, fontWeight: FontWeight.bold),
+                  ),
+                ],
               ),
             ),
             ElevatedButton(
@@ -139,11 +149,16 @@ class _BodyReservesTableState extends State<BodyReservesTable> {
               itemCount: widget.reserves?.length,
               itemBuilder: (context, index) {
                 final reserve = widget.reserves![index];
-                return  GestureDetector(
-              onTap: () {
-                context.go(
-                    '/user/shop/${widget.idShop}/table/${reserve.tableId}/reserve/${reserve.id}');
-              }, child:  CardReserve(reserve: reserve, idShop: widget.idShop, shopState:shopBloc.state,));
+                return GestureDetector(
+                    onTap: () {
+                      context.go(
+                          '/user/shop/${widget.idShop}/table/${reserve.tableId}/reserve/${reserve.id}');
+                    },
+                    child: CardReserve(
+                      reserve: reserve,
+                      idShop: widget.idShop,
+                      shopState: shopBloc.state,
+                    ));
               },
             ),
           ),

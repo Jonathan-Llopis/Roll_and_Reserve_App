@@ -8,42 +8,40 @@ import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_state.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/tables/table_event.dart';
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
-import 'package:roll_and_reserve/presentation/widgets/information/information_reserve.dart';
+import 'package:roll_and_reserve/presentation/widgets/information/information_event.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/default_scaffold.dart';
 
-class ScreenReserve extends StatefulWidget {
+class ScreenEvent extends StatefulWidget {
   final int idReserve;
   final int? idShop;
-  final int? idTable;
-  const ScreenReserve({
+  const ScreenEvent({
     super.key,
     required this.idReserve,
     this.idShop,
-    this.idTable,
   });
 
   @override
-  State<ScreenReserve> createState() => _ScreenReserveState();
+  State<ScreenEvent> createState() => _ScreenEventState();
 }
 
-class _ScreenReserveState extends State<ScreenReserve> {
+class _ScreenEventState extends State<ScreenEvent> {
   late TableEntity table;
 
   @override
   void initState() {
-    TableBloc tableBloc = BlocProvider.of<TableBloc>(context);
-    table = tableBloc.state.tables!
-        .firstWhere((table) => table.id == widget.idTable);
     context
         .read<ReserveBloc>()
         .add(GetReserveWithUsers(idReserve: widget.idReserve));
+    context.read<TableBloc>().add(GetTablesEvent());
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
+    TableBloc tableBloc = BlocProvider.of<TableBloc>(context);
     return BlocBuilder<ReserveBloc, ReserveState>(
       builder: (context, state) {
         if (state.reserve == null) {
@@ -57,27 +55,23 @@ class _ScreenReserveState extends State<ScreenReserve> {
           errorMessage: (state) => state.errorMessage,
           hasData: (state) => state.reserve != null,
           contentBuilder: (state) {
+            table = tableBloc.state.tables!
+                .firstWhere((table) => table.id == state.reserve!.tableId);
             return DefaultScaffold(
-                body: InformationReserve(
+                body: InformationEvent(
                   reserve: state.reserve!,
                   loginBloc: loginBloc,
                   dateReserve: DateFormat('dd - MM - yyyy')
                       .parse(state.reserve!.dayDate),
-                  idShop: widget.idShop!,
                 ),
                 floatingActionButton: loginBloc.state.user!.role == 2 &&
-                        !state.reserve!.isEvent && DateFormat('HH:mm').parse(state.reserve!.horaInicio)
+                        DateFormat('HH:mm')
+                            .parse(state.reserve!.horaInicio)
                             .isAfter(DateTime.now())
                     ? FloatingActionButton(
                         onPressed: () {
-                          if (GoRouterState.of(context).uri.toString() ==
-                              '/user/userReserves/gameReserve/${widget.idReserve}/${widget.idTable}/${table.idShop}/confirmationQR') {
-                            context.go(
-                                '/user/userReserves/gameReserve/${widget.idReserve}/${widget.idTable}/${table.idShop}/confirmationQR');
-                          } else {
-                            context.go(
-                                '/user/shop/${widget.idTable}/table/${table.idShop}/reserve/${widget.idReserve}/confirmationQR');
-                          }
+                          context.go(
+                              '/user/userReserves/gameReserve/${widget.idReserve}/${state.reserve!.tableId}/${table.idShop}/confirmationQR');
                         },
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
