@@ -13,4 +13,10 @@ abstract class ReserveRepository {
   Future<Either<Exception, List<ReserveEntity>>> getAllReservesByDate(
       DateTime date, int idTable);
   Future<Either<Exception, ReserveEntity>> getReserveWithUsers(int idReserve);
+  Future<Either<Exception, List<ReserveEntity>>> getReservesOfUser(
+      String idUser);
+  Future<Either<Exception, bool>> confirmReserve(int idReserve);
+  Future<Either<Exception, List<int>>> createMultipleReservesEvent(
+      List<ReserveEntity> reserves);
+  Future<Either<Exception, List<ReserveEntity>>> getEvents(int idShop);
 }

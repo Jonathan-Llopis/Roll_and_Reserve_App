@@ -19,7 +19,7 @@ class ScreenEditShop extends StatelessWidget {
           state: state,
           isLoading: (state) => state.isLoading,
           errorMessage: (state) => state.errorMessage,
-          hasData: (state) => state.tables != null,
+          hasData: (state) => state.tablesFromShop != null,
           contentBuilder: (state) {
             return DefaultScaffold(
                 body: BodyEditShop(idShop: idShop, widget: this, state: state));

@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:roll_and_reserve/data/models/shop_model.dart';
 
 class ShopEntity {
@@ -27,11 +30,15 @@ class ShopEntity {
       required this.longitude});
 
   ShopModel toShopModel(String? logoId) {
+     Uint8List? logoBytes;
+     if (logo != null) {
+      logoBytes = logo!.readAsBytesSync();
+    }
     return ShopModel(
         id: id,
         name: name,
         address: address,
-        logo: logo ?? <int>[],
+        logo: logoBytes ?? File(''),
         ownerId: ownerId,
         logoId: logoId ?? "677e565be78534b20cb542b0",
         averageRaiting: averageRaiting,

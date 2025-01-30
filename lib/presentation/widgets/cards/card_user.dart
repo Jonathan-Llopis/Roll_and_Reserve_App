@@ -12,10 +12,10 @@ class CardUser extends StatelessWidget {
     super.key,
     required this.user,
   });
-
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: user.reserveConfirmation! ?Colors.green  :  Colors.red, 
       margin: EdgeInsets.only(bottom: 8),
       child: ListTile(
         leading: ClipOval(

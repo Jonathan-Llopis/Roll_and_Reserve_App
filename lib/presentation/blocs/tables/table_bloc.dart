@@ -90,8 +90,8 @@ class TableBloc extends Bloc<TableEvent, TableState> {
       result.fold(
         (failure) =>
             emit(TableState.failure("Fallo al realizar la recuperacion")),
-        (tablesByOwner) {
-          emit(TableState.getTables(tablesByOwner));
+        (tablesByShop) {
+          emit(TableState.getTablesShop(tablesByShop));
         },
       );
     });
@@ -132,7 +132,7 @@ class TableBloc extends Bloc<TableEvent, TableState> {
               .where((table) => table.idShop == event.shopId)
               .toList();
 
-          emit(TableState.getTables(shopTables));
+           emit(TableState.getTablesShop(shopTables));
         },
       );
     });

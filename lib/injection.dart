@@ -31,6 +31,8 @@ import 'package:roll_and_reserve/domain/usecases/login_usecases/reset_password.d
 import 'package:roll_and_reserve/domain/usecases/login_usecases/sign_up_user_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/login_usecases/update_user_info.dart';
 import 'package:roll_and_reserve/domain/usecases/login_usecases/validate_pass_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/reserve_usecases/confirmate_reserve_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/reserve_usecases/create_event_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/reserve_usecases/create_reserve_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/reserve_usecases/delete_reserve_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/reserve_usecases/get_all_categories_usecase.dart';
@@ -38,7 +40,9 @@ import 'package:roll_and_reserve/domain/usecases/reserve_usecases/get_all_dificu
 import 'package:roll_and_reserve/domain/usecases/reserve_usecases/get_all_games_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/reserve_usecases/get_all_reserve_bydate_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/reserve_usecases/get_all_reserve_usecase.dart';
-import 'package:roll_and_reserve/domain/usecases/reserve_usecases/get_reserve_withUser_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/reserve_usecases/get_events_shop_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/reserve_usecases/get_reserve_withuser_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/reserve_usecases/get_reserves_from_user_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/reserve_usecases/update_reserve_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/review_usecases/create_review_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/review_usecases/delete_review_usecase.dart';
@@ -81,21 +85,16 @@ void configureDependencies() async {
     () => LoginBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(),
         sl(), sl(), sl()),
   );
-  sl.registerFactory<ShopBloc>(() => ShopBloc(sl(), sl(), sl(), sl(), sl(), sl()));
-  sl.registerFactory<TableBloc>(() => TableBloc(
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl()
-      ));
+  sl.registerFactory<ShopBloc>(
+      () => ShopBloc(sl(), sl(), sl(), sl(), sl(), sl()));
+  sl.registerFactory<TableBloc>(() => TableBloc(sl(), sl(), sl(), sl(), sl()));
   sl.registerFactory<ReviewBloc>(() => ReviewBloc(
         sl(),
         sl(),
         sl(),
       ));
-  sl.registerFactory<ReserveBloc>(() =>
-      ReserveBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+  sl.registerFactory<ReserveBloc>(() => ReserveBloc(sl(), sl(), sl(), sl(),
+      sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
   sl.registerFactory<LanguageBloc>(() => LanguageBloc(sl()));
   // Instancia de Firebase Auth
   sl.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
@@ -295,14 +294,25 @@ void configureDependencies() async {
   sl.registerLazySingleton<GetShopUseCase>(
     () => GetShopUseCase(sl()),
   );
-    sl.registerLazySingleton<GetAllShopsByOwnerUseCase>(
+  sl.registerLazySingleton<GetAllShopsByOwnerUseCase>(
     () => GetAllShopsByOwnerUseCase(sl()),
   );
-      sl.registerLazySingleton<GetAllTablesByShopUseCase>(
+  sl.registerLazySingleton<GetAllTablesByShopUseCase>(
     () => GetAllTablesByShopUseCase(sl()),
   );
+  sl.registerLazySingleton<GetReservesFromUserUseCase>(
+    () => GetReservesFromUserUseCase(sl()),
+  );
 
-
+  sl.registerLazySingleton<ConfirmateReserveUsecase>(
+    () => ConfirmateReserveUsecase(sl()),
+  );
+  sl.registerLazySingleton<GetEventsShopUsecase>(
+    () => GetEventsShopUsecase(sl()),
+  );
+  sl.registerLazySingleton<CreateEventsUsecase>(
+    () => CreateEventsUsecase(sl()),
+  );
 
   sl.registerLazySingleton(() => http.Client());
   final sharedPreferences = await SharedPreferences.getInstance();

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
@@ -10,19 +9,17 @@ import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_event.dart';
 import 'package:roll_and_reserve/presentation/widgets/cards/card_user.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class InformationReserve extends StatelessWidget {
-  const InformationReserve({
+class InformationEvent extends StatelessWidget {
+  const InformationEvent({
     super.key,
     required this.reserve,
     required this.loginBloc,
     required this.dateReserve,
-    required this.idShop,
   });
 
   final ReserveEntity reserve;
   final LoginBloc loginBloc;
   final DateTime dateReserve;
-  final int idShop;
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +56,7 @@ class InformationReserve extends StatelessWidget {
                   ),
                 ],
               ),
-             reserve.isEvent ? Container() : Chip(
+              Chip(
                 label: Text(
                   AppLocalizations.of(context)!
                       .free_places(reserve.freePlaces - reserve.usersInTables),
@@ -69,12 +66,12 @@ class InformationReserve extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          reserve.isEvent ? Container() : Text(
+          Text(
             AppLocalizations.of(context)!.players,
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
-          reserve.isEvent ? Container() : Expanded(
+          Expanded(
             child: ListView.builder(
               itemCount: reserve.usersInTables,
               itemBuilder: (context, index) {
@@ -106,7 +103,7 @@ class InformationReserve extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              loginBloc.state.user!.role == 2 && !reserve.isEvent && DateFormat('HH:mm').parse(reserve.horaFin)
+              loginBloc.state.user!.role == 2 && DateFormat('HH:mm').parse(reserve.horaFin)
                             .isAfter(DateTime.now())
                   ? ElevatedButton.icon(
                       onPressed: () {
@@ -149,16 +146,7 @@ class InformationReserve extends StatelessWidget {
                             : AppLocalizations.of(context)!.join,
                       ),
                     )
-                  : reserve.isEvent
-                        ? ElevatedButton.icon(
-                          onPressed: () {
-                            context.go(
-                        '/user/events/$idShop/eventReserve/${reserve.id}');
-                          },
-                          icon: Icon(Icons.event),
-                          label: Text("Ir a Eventos"),
-                        )
-                      : Container(),
+                  : Container(),
             ],
           ),
         ],

@@ -20,8 +20,8 @@ class ReserveRepositoryImpl implements ReserveRepository {
       final token = sharedPreferences.getString('token');
       final reserveModels = await remoteDataSource.getAllReserves(token!);
       List<ReserveEntity> reserveEntities =
-          reserveModels.asMap().entries.map((entry) {
-        return entry.value.toReserveEntity();
+          reserveModels.toList().map((reserveModel) {
+        return reserveModel.toReserveEntity();
       }).toList();
       return Right(reserveEntities);
     } catch (e) {
@@ -91,7 +91,8 @@ class ReserveRepositoryImpl implements ReserveRepository {
   Future<Either<Exception, List<ReserveEntity>>> getAllReservesByDate(DateTime date, int tableId) async {
     try {
       final token = sharedPreferences.getString('token');
-      final reserveModels = await remoteDataSource.getAllReservesByDate(date.toString(), token!, tableId);
+      final formattedDate = "${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+      final reserveModels = await remoteDataSource.getAllReservesByDate(formattedDate, token!, tableId);
       List<ReserveEntity> reserveEntities =
           reserveModels.asMap().entries.map((entry) {
         return entry.value.toReserveEntity();
@@ -114,6 +115,67 @@ class ReserveRepositoryImpl implements ReserveRepository {
       return Right(reserveEntity);
     } catch (e) {
       return Left(Exception('Error al cargar reserve'));
+    }
+  }
+
+  @override
+  Future<Either<Exception, List<ReserveEntity>>> getReservesOfUser(String userId) async {
+    try {
+      final token = sharedPreferences.getString('token');
+      final reserveModels = await remoteDataSource.getReservesOfUser(userId, token!);
+      List<ReserveEntity> reserveEntities =
+          reserveModels.asMap().entries.map((entry) {
+        return entry.value.toReserveEntity();
+      }).toList();
+      return Right(reserveEntities);
+    } catch (e) {
+      return Left(Exception('Error al cargar reservas del usuario: ${e.toString()}'));
+    }
+  }
+  @override
+  Future<Either<Exception, bool>> confirmReserve(int idReserve) async {
+    try {
+      final token = sharedPreferences.getString('token');
+      final idUser = sharedPreferences.getString('id');
+      if (token == null || idUser == null) {
+        throw Exception('Token or user ID is missing');
+      }
+      await remoteDataSource.confirmReserve(idReserve, idUser, token);
+      return Right(true);
+    } catch (e) {
+      return Left(Exception('Error al confirmar la reserva: ${e.toString()}'));
+    }
+  }
+  @override
+  Future<Either<Exception, List<int>>> createMultipleReservesEvent(List<ReserveEntity> reserves) async {
+    try {
+      final token = sharedPreferences.getString('token');
+      if (token == null) {
+        throw Exception('Token is missing');
+      }
+      List<int> reserveIds = [];
+      for (var reserve in reserves) {
+        ReserveModel reserveModel = reserve.toReserveModel();
+        int idReserve = await remoteDataSource.createReservesEvent(reserveModel, token);
+        reserveIds.add(idReserve);
+      }
+      return Right(reserveIds);
+    } catch (e) {
+      return Left(Exception('Error al crear múltiples reservas de evento: ${e.toString()}'));
+    }
+  }
+  @override
+  Future<Either<Exception, List<ReserveEntity>>> getEvents(int idShop) async {
+      try {
+      final token = sharedPreferences.getString('token');
+      final reserveModels = await remoteDataSource.getEvents(idShop, token!);
+      List<ReserveEntity> reserveEntities =
+          reserveModels.toList().map((reserveModel) {
+        return reserveModel.toReserveEntity();
+      }).toList();
+      return Right(reserveEntities);
+    } catch (e) {
+      return Left(Exception('Error al cargar reservas'));
     }
   }
 }

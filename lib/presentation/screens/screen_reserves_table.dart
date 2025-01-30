@@ -33,7 +33,7 @@ class _ScreenReservesOfTableState extends State<ScreenReservesOfTable> {
               dateReserve: _selectedDate!, idTable: widget.idTable),
         );
     TableBloc tableBloc = BlocProvider.of<TableBloc>(context);
-    table = tableBloc.state.tables!
+    table = tableBloc.state.tablesFromShop!
         .firstWhere((table) => table.id == widget.idTable);
     super.initState();
   }
@@ -51,7 +51,7 @@ class _ScreenReservesOfTableState extends State<ScreenReservesOfTable> {
               table: table,
               reserves: state.reserves!,
               selectedDate: _selectedDate!,
-              widget: widget,
+              idShop: widget.idShop,
             ),
             floatingActionButton: FloatingActionButton(
               onPressed: () {

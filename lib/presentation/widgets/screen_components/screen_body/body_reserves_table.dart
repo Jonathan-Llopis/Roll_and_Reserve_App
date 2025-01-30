@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
 import 'package:roll_and_reserve/domain/entities/table_entity.dart';
-import 'package:roll_and_reserve/presentation/screens/screen_reserves_table.dart';
+import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/widgets/cards/card_reserve.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,19 +11,19 @@ import 'package:roll_and_reserve/presentation/blocs/language/language_bloc.dart'
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_event.dart';
 
-  DateTime? selectedDate;
+DateTime? selectedDate;
 
 class BodyReservesTable extends StatefulWidget {
   final TableEntity table;
   final DateTime selectedDate;
-  final ScreenReservesOfTable widget;
   final List<ReserveEntity>? reserves;
+  final int idShop;
   const BodyReservesTable(
       {super.key,
       required this.table,
       required this.selectedDate,
-      required this.widget,
-      this.reserves});
+      this.reserves,
+      required this.idShop});
 
   @override
   State<BodyReservesTable> createState() => _BodyReservesTableState();
@@ -31,7 +32,8 @@ class BodyReservesTable extends StatefulWidget {
 class _BodyReservesTableState extends State<BodyReservesTable> {
   @override
   Widget build(BuildContext context) {
-    selectedDate ??= widget.selectedDate; 
+    selectedDate ??= widget.selectedDate;
+    ShopBloc shopBloc = BlocProvider.of<ShopBloc>(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -68,7 +70,7 @@ class _BodyReservesTableState extends State<BodyReservesTable> {
                         locale: languageBloc.state.locale,
                         context: context,
                         initialDate: selectedDate,
-                        firstDate: DateTime.now(),
+                        firstDate: DateTime(2020),
                         lastDate: DateTime(2030),
                       );
                       if (picked != null) {
@@ -109,11 +111,21 @@ class _BodyReservesTableState extends State<BodyReservesTable> {
                 child: const Icon(Icons.arrow_back)),
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Text(
-                AppLocalizations.of(context)!.available_reservations_for_date(
-                    getDate(selectedDate.toString())),
-                style:
-                    const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              child: Column(
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!
+                        .available_reservations_for_date(
+                            ""),
+                    style: const TextStyle(
+                        fontSize: 15, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    getDate(selectedDate.toString()),
+                    style: const TextStyle(
+                        fontSize: 15, fontWeight: FontWeight.bold),
+                  ),
+                ],
               ),
             ),
             ElevatedButton(
@@ -137,7 +149,16 @@ class _BodyReservesTableState extends State<BodyReservesTable> {
               itemCount: widget.reserves?.length,
               itemBuilder: (context, index) {
                 final reserve = widget.reserves![index];
-                return CardReserve(reserve: reserve, widget: widget.widget);
+                return GestureDetector(
+                    onTap: () {
+                      context.go(
+                          '/user/shop/${widget.idShop}/table/${reserve.tableId}/reserve/${reserve.id}');
+                    },
+                    child: CardReserve(
+                      reserve: reserve,
+                      idShop: widget.idShop,
+                      shopState: shopBloc.state,
+                    ));
               },
             ),
           ),

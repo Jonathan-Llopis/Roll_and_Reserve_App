@@ -8,6 +8,8 @@ class ReserveState {
   final int? idReserve;
   final String? errorMessage;
   final List<ReserveEntity>? reserves;
+  final List<ReserveEntity>? reservesOfUser;
+  final List<ReserveEntity>? eventsShop;
   final ReserveEntity? reserve;
   final List<DifficultyEntity>? difficulties;
   final List<GameEntity>? games;
@@ -21,7 +23,9 @@ class ReserveState {
       this.reserve,
       this.difficulties,
       this.games,
-      this.gameCategories});
+      this.gameCategories,
+      this.reservesOfUser,
+      this.eventsShop});
 
   ReserveState copyWith({
     bool? isLoading,
@@ -32,6 +36,8 @@ class ReserveState {
     List<DifficultyEntity>? difficulties,
     List<GameEntity>? games,
     List<GameCategoryEntity>? gameCategories,
+    List<ReserveEntity>? reservesOfUser,
+    List<ReserveEntity>? eventsShop,
   }) {
     return ReserveState(
         isLoading: isLoading ?? this.isLoading,
@@ -41,34 +47,52 @@ class ReserveState {
         reserve: reserve ?? this.reserve,
         difficulties: difficulties ?? this.difficulties,
         games: games ?? this.games,
-        gameCategories: gameCategories ?? this.gameCategories);
+        gameCategories: gameCategories ?? this.gameCategories,
+        reservesOfUser: reservesOfUser ?? this.reservesOfUser,
+        eventsShop: eventsShop ?? this.eventsShop);
   }
+
   factory ReserveState.initial() => const ReserveState();
 
-  factory ReserveState.loading(ReserveState state) => state.copyWith(isLoading: true);
+  factory ReserveState.loading(ReserveState state) =>
+      state.copyWith(isLoading: true);
 
-  factory ReserveState.success(ReserveState state) => state.copyWith(isLoading: false);
+  factory ReserveState.success(ReserveState state) =>
+      state.copyWith(isLoading: false);
 
-  factory ReserveState.getReserves(ReserveState state, List<ReserveEntity> reserves) =>
+  factory ReserveState.getReserves(
+          ReserveState state, List<ReserveEntity> reserves) =>
       state.copyWith(reserves: reserves, isLoading: false);
 
   factory ReserveState.getReserve(ReserveState state, ReserveEntity reserve) =>
       state.copyWith(reserve: reserve, isLoading: false);
 
-  factory ReserveState.selectedReserve(ReserveState state, ReserveEntity reserveSelected) =>
+  factory ReserveState.getEvents(
+          ReserveState state, List<ReserveEntity> events, List<GameEntity> games) =>
+      state.copyWith(eventsShop: events, isLoading: false, games: games);
+
+  factory ReserveState.selectedReserve(
+          ReserveState state, ReserveEntity reserveSelected) =>
       state.copyWith(reserve: reserveSelected, isLoading: false);
 
   factory ReserveState.failure(ReserveState state, String errorMessage) =>
       state.copyWith(errorMessage: errorMessage, isLoading: false);
 
-  factory ReserveState.getDifficulties(ReserveState state, List<DifficultyEntity> difficulties) =>
+  factory ReserveState.getDifficulties(
+          ReserveState state, List<DifficultyEntity> difficulties) =>
       state.copyWith(difficulties: difficulties, isLoading: false);
 
   factory ReserveState.getGames(ReserveState state, List<GameEntity> games) =>
       state.copyWith(games: games, isLoading: false);
 
-  factory ReserveState.getGameCategories(ReserveState state, List<GameCategoryEntity> gameCategories) =>
+  factory ReserveState.getGameCategories(
+          ReserveState state, List<GameCategoryEntity> gameCategories) =>
       state.copyWith(gameCategories: gameCategories, isLoading: false);
+
+  factory ReserveState.getReservesOfUser(ReserveState state,
+          List<ReserveEntity> reservesOfUser, List<GameEntity> games) =>
+      state.copyWith(
+          reservesOfUser: reservesOfUser, isLoading: false, games: games);
 
   factory ReserveState.getAllData({
     required ReserveState state,

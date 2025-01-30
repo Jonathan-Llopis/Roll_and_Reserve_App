@@ -97,7 +97,7 @@ class ShopsRemoteDataSourceImpl implements ShopRemoteDataSource {
         'authorization': 'Bearer $token',
       },
       body: json.encode(shops.toJson()),
-    );
+    ).timeout(const Duration(seconds: 30));
     if (response.statusCode == 200) {
       return true;
     } else {

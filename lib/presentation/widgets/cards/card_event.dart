@@ -11,8 +11,8 @@ import 'package:roll_and_reserve/presentation/blocs/tables/table_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_state.dart';
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
 
-class CardReserve extends StatefulWidget {
-  const CardReserve({
+class CardEvent extends StatefulWidget {
+  const CardEvent({
     super.key,
     required this.reserve,
     required this.idShop,
@@ -24,10 +24,10 @@ class CardReserve extends StatefulWidget {
   final ShopState shopState;
 
   @override
-  State<CardReserve> createState() => _CardReserveState();
+  State<CardEvent> createState() => _CardEventState();
 }
 
-class _CardReserveState extends State<CardReserve> {
+class _CardEventState extends State<CardEvent> {
   @override
   void initState() {
     context.read<TableBloc>().add(GetTablesEvent());
@@ -56,12 +56,7 @@ class _CardReserveState extends State<CardReserve> {
                 contentBuilder: (state) {
                   final shop = shopBloc.state.shops!
                       .firstWhere((shop) => shop.id == widget.idShop);
-                  final table = state.tables!.firstWhere(
-                      (table) => table.id == widget.reserve.tableId);
                   return Card(
-                    color: widget.reserve.isEvent
-                        ? const Color.fromARGB(255, 211, 49, 197)
-                        : const Color.fromARGB(255, 28, 190, 136),
                     elevation: 6,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
@@ -73,10 +68,8 @@ class _CardReserveState extends State<CardReserve> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.reserve.isEvent
-                                ? "Evento ${widget.reserve.dayDate}"
-                                : AppLocalizations.of(context)!
-                                    .reserve_day(widget.reserve.dayDate),
+                            AppLocalizations.of(context)!
+                                .reserve_day(widget.reserve.dayDate),
                             style: Theme.of(context)
                                 .textTheme
                                 .titleMedium
@@ -89,49 +82,36 @@ class _CardReserveState extends State<CardReserve> {
                                 fontSize: 14, color: Colors.black87),
                           ),
                           const SizedBox(height: 6),
-                          widget.reserve.isEvent
-                              ? Container()
-                              : Text(
-                                  AppLocalizations.of(context)!
-                                      .table_number(table.numberTable),
-                                  style: const TextStyle(
-                                      fontSize: 14, color: Colors.black87),
-                                ),
-                          const SizedBox(height: 6),
                           Text(
-                            AppLocalizations.of(context)!.game_description(
-                                reserveBloc.state.games!
+                           "Evento del juego ${reserveBloc.state.games!
                                     .firstWhere((game) =>
                                         game.id == widget.reserve.gameId)
-                                    .description),
+                                    .description}",
                             style: const TextStyle(
                                 fontSize: 14, color: Colors.black87),
                           ),
                           const SizedBox(height: 6),
-                          const SizedBox(height: 6),
-                          widget.reserve.isEvent
-                              ? Container()
-                              : Text(
-                                  AppLocalizations.of(context)!
-                                      .total_players_at_table(
-                                          widget.reserve.usersInTables,
-                                          widget.reserve.freePlaces),
-                                  style: const TextStyle(
-                                      fontSize: 14, color: Colors.black87),
-                                ),
+                          Text(
+                            AppLocalizations.of(context)!
+                                .total_players_at_table(
+                                    widget.reserve.usersInTables,
+                                    widget.reserve.freePlaces),
+                            style: const TextStyle(
+                                fontSize: 14, color: Colors.black87),
+                          ),
                           const SizedBox(height: 6),
                           Text(
                             AppLocalizations.of(context)!
                                 .start_time(widget.reserve.horaInicio),
                             style: const TextStyle(
-                                fontSize: 14, color: Colors.black),
+                                fontSize: 14, color: Colors.grey),
                           ),
                           const SizedBox(height: 6),
                           Text(
                             AppLocalizations.of(context)!
                                 .end_time(widget.reserve.horaFin),
                             style: const TextStyle(
-                                fontSize: 14, color: Colors.black),
+                                fontSize: 14, color: Colors.grey),
                           ),
                         ],
                       ),
