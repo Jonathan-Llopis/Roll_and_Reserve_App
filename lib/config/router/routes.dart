@@ -6,6 +6,7 @@ import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_create_event.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_create_reserve.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_event.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_qr.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_reserve.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_login.dart';
@@ -72,14 +73,12 @@ final GoRouter router = GoRouter(
               ),
               GoRoute(
                 name: 'eventReserve',
-                path: 'eventReserve/:idReserve/:idTable',
+                path: 'eventReserve/:idReserve',
                 builder: (context, state) {
                   final idReserve =
                       int.parse(state.pathParameters['idReserve']!);
-                  final idTable = int.parse(state.pathParameters['idTable']!);
-                  return ScreenReserve(
+                  return ScreenEvent(
                     idReserve: idReserve,
-                    idTable: idTable,
                   );
                 },
               )
@@ -163,6 +162,25 @@ final GoRouter router = GoRouter(
                       idTable: idTable,
                     );
                   },
+                  routes:  [
+                      GoRoute(
+                      name: 'confirmationReserveQR',
+                      path: 'confirmationQR',
+                      builder: (context, state) {
+                        final idReserve =
+                            int.parse(state.pathParameters['idReserve']!);
+                        final shopId =
+                            int.parse(state.pathParameters['idTablesShop']!);
+                        final idTable =
+                            int.parse(state.pathParameters['idTable']!);
+                        return QRScannerScreen(
+                          idTable: idTable,
+                          idReserve: idReserve,
+                          idShop: shopId,
+                        );
+                      },
+                    ),
+                  ]
                 ),
                 GoRoute(
                   name: 'createReserve',

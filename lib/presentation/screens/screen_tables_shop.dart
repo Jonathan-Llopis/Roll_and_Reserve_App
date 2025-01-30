@@ -29,12 +29,13 @@ class _ScreenTablesOfShopState extends State<ScreenTablesOfShop> {
   @override
   void initState() {
     context.read<ShopBloc>().add(GetShopEvent(idShop: widget.idShop));
-    context.read<TableBloc>().add(GetTablesByShopEvent(idShop: widget.idShop));
+    
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    context.read<TableBloc>().add(GetTablesByShopEvent(idShop: widget.idShop));
     ShopBloc shopBloc = BlocProvider.of<ShopBloc>(context);
     return BlocBuilder<ShopBloc, ShopState>(
       builder: (context, state) {

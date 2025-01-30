@@ -41,57 +41,63 @@ class _DefaultAppBarState extends State<DefaultAppBar> {
             toolbarHeight: 120,
             centerTitle: true,
             titleSpacing: 0,
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const SizedBox(width: 16),
+            title: LayoutBuilder(
+              builder: (context, constraints) {
+              double width = constraints.maxWidth;
+              double logoSize = width * 0.15; // Adjust the size proportionally
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                SizedBox(width: width * 0.04),
                 Container(
-                  width: 70,
-                  height: 70,
+                  width: logoSize,
+                  height: logoSize,
                   decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 6,
-                        offset: const Offset(2, 2),
-                      ),
-                    ],
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 6,
+                    offset: const Offset(2, 2),
+                    ),
+                  ],
                   ),
                   child: ClipOval(
-                    child: Image.asset(
-                      'assets/icon/logo.png',
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Icon(Icons.error, color: Colors.red, size: 40);
-                      },
-                    ),
+                  child: Image.asset(
+                    'assets/icon/logo.png',
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                    return Icon(Icons.error, color: Colors.red, size: logoSize * 0.5);
+                    },
+                  ),
                   ),
                 ),
-                const SizedBox(width: 16),
+                SizedBox(width: width * 0.04),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
-                      'Roll & Reserve',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                        letterSpacing: 1.5,
-                      ),
+                  Text(
+                    'Roll & Reserve',
+                    style: TextStyle(
+                    fontSize: width * 0.075,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                    letterSpacing: 1.5,
                     ),
-                    Text(
-                      AppLocalizations.of(context)!.find_your_game_table,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.white70,
-                      ),
+                  ),
+                  Text(
+                    AppLocalizations.of(context)!.find_your_game_table,
+                    style: TextStyle(
+                    fontSize: width * 0.045,
+                    color: Colors.white70,
                     ),
+                  ),
                   ],
                 ),
-              ],
+                ],
+              );
+              },
             ),
             actions: [
               Padding(
