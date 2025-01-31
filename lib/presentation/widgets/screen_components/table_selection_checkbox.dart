@@ -17,7 +17,7 @@ class TableSelectionCheckbox extends StatefulWidget {
 }
 
 class _TableSelectionCheckboxState extends State<TableSelectionCheckbox> {
-  List<int> _selectedTableIds = [];
+  final List<int> _selectedTableIds = [];
 
   @override
   Widget build(BuildContext context) {
