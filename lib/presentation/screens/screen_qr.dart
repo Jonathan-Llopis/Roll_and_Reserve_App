@@ -13,6 +13,7 @@ import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.d
 import 'package:roll_and_reserve/presentation/functions/functions_utils.dart';
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/default_scaffold.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class QRScannerScreen extends StatefulWidget {
   final int idTable;
@@ -80,32 +81,45 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
                                     final List<Barcode> barcodes =
                                         capture.barcodes;
                                     for (final barcode in barcodes) {
-                                      setState(() {
+                                        setState(() {
                                         scannedCode = barcode.rawValue;
+                                        });
+
+                                        showDialog(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (BuildContext context) {
+                                          return Center(
+                                          child: CircularProgressIndicator(),
+                                          );
+                                        },
+                                        );
+
                                         if (scannedCode ==
-                                            'rollandreserve://app/user/userReserves/${widget.idTable}') {
-                                          final startDate = DateFormat(
-                                                  'dd - MM - yyyy HH:mm')
-                                              .parse(
-                                                  '${state.reserve!.dayDate} ${state.reserve!.horaInicio}');
-                                          if (startDate
-                                              .subtract(Duration(minutes: 5))
-                                              .isBefore(DateTime.now())) {
-                                            checkUserLocation(
-                                                context, widget.idReserve);
-                                          } else {
-                                            confirmReserveDialog(
-                                                context,
-                                                "La sesión de juego aún no ha comenzado",
-                                                true);
-                                          }
+                                          'rollandreserve://app/user/userReserves/${widget.idTable}') {
+                                        final startDate = DateFormat(
+                                            'dd - MM - yyyy HH:mm')
+                                          .parse(
+                                            '${state.reserve!.dayDate} ${state.reserve!.horaInicio}');
+                                        if (startDate
+                                          .subtract(Duration(minutes: 5))
+                                          .isBefore(DateTime.now())) {
+                                          checkUserLocation(
+                                            context, widget.idReserve);
                                         } else {
+                                          Navigator.of(context).pop();
                                           confirmReserveDialog(
-                                              context,
-                                              "Mesa erronea de la reserva",
-                                              true);
+                                            context,
+                                          AppLocalizations.of(context)!.game_session_not_started,
+                                            true);
                                         }
-                                      });
+                                        } else {
+                                        Navigator.of(context).pop();
+                                        confirmReserveDialog(
+                                          context,
+                                           AppLocalizations.of(context)!.wrong_reservation_table,
+                                          true);
+                                        }
                                     }
                                   },
                                 ),
@@ -116,18 +130,13 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      if (scannedCode != null)
-                                        Text(
-                                          'Código escaneado: $scannedCode',
-                                          textAlign: TextAlign.center,
-                                        ),
                                       ElevatedButton(
                                         onPressed: () {
                                           setState(() {
                                             scannedCode = null;
                                           });
                                         },
-                                        child: const Text('Volver a escanear'),
+                                        child:  Text(  AppLocalizations.of(context)!.scan_again),
                                       ),
                                     ],
                                   ),
@@ -138,8 +147,8 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
                         : Center(
                             child: ElevatedButton(
                               onPressed: _requestCameraPermission,
-                              child: const Text(
-                                  'Otorgar permisos de uso de la cámara'),
+                              child: Text(
+                                   AppLocalizations.of(context)!.grant_camera_permission),
                             ),
                           ),
                   );

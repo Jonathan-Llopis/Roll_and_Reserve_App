@@ -32,7 +32,7 @@ class CardUser extends StatelessWidget {
           ),
         ),
         title: Text(user.name),
-        subtitle: buildStars(user.averageRaiting),
+        subtitle: buildStars(user.averageRaiting,),
       ),
     );
   }

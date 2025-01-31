@@ -61,12 +61,12 @@ class ButtonCreateEvent extends StatelessWidget {
               tableId: table,
               usersInTables: 0,
               isEvent: true,
+              shopId: widget.idShop,
             ));
           }
           widget.reserveBloc.add(CreateEventsEvent(reserves: reserves));
-
-          context.go('/user/events/${widget.idShop}');
         }
+        context.go('/user/events/${widget.idShop}');
       },
       child: Text(AppLocalizations.of(context)!.save),
     );
