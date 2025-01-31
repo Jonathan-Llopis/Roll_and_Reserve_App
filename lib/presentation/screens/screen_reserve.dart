@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:roll_and_reserve/domain/entities/table_entity.dart';
+import 'package:roll_and_reserve/domain/entities/user_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_event.dart';
@@ -11,6 +12,7 @@ import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
 import 'package:roll_and_reserve/presentation/widgets/information/information_reserve.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/default_scaffold.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ScreenReserve extends StatefulWidget {
   final int idReserve;
@@ -57,17 +59,25 @@ class _ScreenReserveState extends State<ScreenReserve> {
           errorMessage: (state) => state.errorMessage,
           hasData: (state) => state.reserve != null,
           contentBuilder: (state) {
+          UserEntity? userReserve;
+          if (state.reserve!.users!.any((user) => user.id == loginBloc.state.user!.id)) {
+            userReserve = state.reserve!.users!
+              .firstWhere((user) => user.id == loginBloc.state.user!.id);
+          }
             return DefaultScaffold(
                 body: InformationReserve(
                   reserve: state.reserve!,
                   loginBloc: loginBloc,
                   dateReserve: DateFormat('dd - MM - yyyy')
                       .parse(state.reserve!.dayDate),
-                  idShop: widget.idShop!,
+                  idShop: table.idShop,
                 ),
                 floatingActionButton: loginBloc.state.user!.role == 2 &&
-                        !state.reserve!.isEvent && DateFormat('HH:mm').parse(state.reserve!.horaInicio)
-                            .isAfter(DateTime.now())
+                        !state.reserve!.isEvent &&
+                        DateFormat('dd - MM - yyyy HH:mm')
+                          .parse('${state.reserve!.dayDate} ${state.reserve!.horaInicio}')
+                            .subtract(Duration(minutes: 5))
+                            .isBefore(DateTime.now()) && (userReserve?.reserveConfirmation ?? true) == false 
                     ? FloatingActionButton(
                         onPressed: () {
                           if (GoRouterState.of(context).uri.toString() ==
@@ -76,14 +86,14 @@ class _ScreenReserveState extends State<ScreenReserve> {
                                 '/user/userReserves/gameReserve/${widget.idReserve}/${widget.idTable}/${table.idShop}/confirmationQR');
                           } else {
                             context.go(
-                                '/user/shop/${widget.idTable}/table/${table.idShop}/reserve/${widget.idReserve}/confirmationQR');
+                                '/user/shop/${table.idShop}/table/${widget.idTable}/reserve/${widget.idReserve}/confirmationQR');
                           }
                         },
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(Icons.qr_code),
-                            Text('Confirmar', style: TextStyle(fontSize: 10)),
+                            Text(AppLocalizations.of(context)!.confirm, style: TextStyle(fontSize: 10)),
                           ],
                         ),
                       )

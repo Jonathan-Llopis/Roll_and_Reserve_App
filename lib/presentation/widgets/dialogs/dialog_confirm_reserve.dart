@@ -14,7 +14,7 @@ class DialogConfirmReserve extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
       return AlertDialog(
-        title: Text(error ? AppLocalizations.of(context)!.error : "Reserva Confirmada",
+        title: Text(error ? AppLocalizations.of(context)!.error : AppLocalizations.of(context)!.reserva_confirmada,
             style: TextStyle(
               color: error ? Colors.red : Colors.green,
               fontSize: 30,

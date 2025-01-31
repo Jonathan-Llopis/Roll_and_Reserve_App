@@ -83,19 +83,11 @@ class _CardEventState extends State<CardEvent> {
                           ),
                           const SizedBox(height: 6),
                           Text(
-                           "Evento del juego ${reserveBloc.state.games!
-                                    .firstWhere((game) =>
-                                        game.id == widget.reserve.gameId)
-                                    .description}",
-                            style: const TextStyle(
-                                fontSize: 14, color: Colors.black87),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            AppLocalizations.of(context)!
-                                .total_players_at_table(
-                                    widget.reserve.usersInTables,
-                                    widget.reserve.freePlaces),
+                            AppLocalizations.of(context)!.game_event(reserveBloc
+                                .state.games!
+                                .firstWhere(
+                                    (game) => game.id == widget.reserve.gameId)
+                                .description),
                             style: const TextStyle(
                                 fontSize: 14, color: Colors.black87),
                           ),

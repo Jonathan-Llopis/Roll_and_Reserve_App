@@ -55,7 +55,7 @@ class _ScreenReservesOfTableState extends State<ScreenReservesOfTable> {
             ),
             floatingActionButton: FloatingActionButton(
               onPressed: () {
-                context.go('/user/shop/${widget.idShop}/table/${widget.idTable}/createReserve/');
+                context.go('/user/shop/${widget.idShop}/table/${widget.idTable}/createReserve/${_selectedDate.toString()}');
               },
               child: const Icon(Icons.add),
             ),

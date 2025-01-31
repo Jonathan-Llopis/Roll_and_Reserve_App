@@ -7,6 +7,7 @@ import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.d
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/body_create_event.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/default_scaffold.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ScreenCreateEvent extends StatefulWidget {
   const ScreenCreateEvent({super.key, required this.idShop});
@@ -22,7 +23,7 @@ class _ScreenCreateEventState extends State<ScreenCreateEvent> {
   Future<void> _selectDateAndTime() async {
     try {
       DateTime? startDate = await showDatePicker(
-        helpText: "Selecciona la fecha de inicio del evento",
+        helpText: AppLocalizations.of(context)!.select_start_date,
         context: context,
         initialDate: DateTime.now(),
         firstDate: DateTime(2000),
@@ -30,7 +31,7 @@ class _ScreenCreateEventState extends State<ScreenCreateEvent> {
       );
 
       if (startDate == null) {
-        throw Exception("Fecha inicial no seleccionada");
+        throw Exception(AppLocalizations.of(context)!.start_date_not_selected);
       }
 
       TimeOfDay? startTime = await showTimePicker(
@@ -39,11 +40,11 @@ class _ScreenCreateEventState extends State<ScreenCreateEvent> {
       );
 
       if (startTime == null) {
-        throw Exception("Hora inicial no seleccionada");
+        throw Exception(AppLocalizations.of(context)!.start_time_not_selected);
       }
 
       DateTime? endDate = await showDatePicker(
-        helpText: "Selecciona la fecha de fin del evento",
+        helpText: AppLocalizations.of(context)!.select_end_date,
         context: context,
         initialDate: startDate,
         firstDate: startDate,
@@ -51,16 +52,16 @@ class _ScreenCreateEventState extends State<ScreenCreateEvent> {
       );
 
       if (endDate == null) {
-        throw Exception("Fecha final no seleccionada");
+        throw Exception(AppLocalizations.of(context)!.end_date_not_selected);
       }
 
       if (endDate.isBefore(startDate)) {
         throw Exception(
-            "La fecha final no puede ser anterior a la fecha inicial");
+            AppLocalizations.of(context)!.end_date_before_start_date);
       }
 
       if (endDate.difference(startDate).inDays == -1) {
-        throw Exception("El evento debe ser en el mismo dia");
+        throw Exception(AppLocalizations.of(context)!.event_same_day);
       }
 
       TimeOfDay? endTime = await showTimePicker(
@@ -69,24 +70,26 @@ class _ScreenCreateEventState extends State<ScreenCreateEvent> {
       );
 
       if (endTime == null) {
-        throw Exception("Hora final no seleccionada");
+        throw Exception(AppLocalizations.of(context)!.end_time_not_selected);
       }
 
-      if (endDate.isAtSameMomentAs(startDate) && 
-          DateTime(endDate.year, endDate.month, endDate.day, endTime.hour, endTime.minute)
-          .isBefore(DateTime(startDate.year, startDate.month, startDate.day, startTime.hour, startTime.minute))) {
+      if (endDate.isAtSameMomentAs(startDate) &&
+          DateTime(endDate.year, endDate.month, endDate.day, endTime.hour,
+                  endTime.minute)
+              .isBefore(DateTime(startDate.year, startDate.month, startDate.day,
+                  startTime.hour, startTime.minute))) {
         throw Exception(
-            "La fecha final no puede ser anterior a la fecha inicial");
+            AppLocalizations.of(context)!.end_date_before_start_date);
       }
 
       if (endTime.hour < startTime.hour) {
         throw Exception(
-            "La fecha final no puede ser anterior a la fecha inicial");
+            AppLocalizations.of(context)!.end_date_before_start_date);
       }
 
       if (endTime.hour == startTime.hour && endTime.minute < startTime.minute) {
         throw Exception(
-            "La fecha final no puede ser anterior a la fecha inicial");
+            AppLocalizations.of(context)!.end_date_before_start_date);
       }
 
       setState(() {
@@ -115,6 +118,7 @@ class _ScreenCreateEventState extends State<ScreenCreateEvent> {
   @override
   void initState() {
     super.initState();
+    context.read<ReserveBloc>().add(GetReservesEvent());
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _selectDateAndTime();
     });
@@ -133,7 +137,6 @@ class _ScreenCreateEventState extends State<ScreenCreateEvent> {
     final startDateTime = _selectedDates!['startDateTime']!;
     final endDateTime = _selectedDates!['endDateTime']!;
 
-    context.read<ReserveBloc>().add(GetReservesEvent());
     ReserveBloc reserveBloc = context.read<ReserveBloc>();
 
     return BlocBuilder<ReserveBloc, ReserveState>(
