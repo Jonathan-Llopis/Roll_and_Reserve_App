@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/domain/entities/table_entity.dart';
 
 class TableSelectionCheckbox extends StatefulWidget {
-  final List<int> tableIds;
+  final List<TableEntity> tables;
   final Function(List<int>) onSelectionChanged;
 
   const TableSelectionCheckbox({
-    required this.tableIds,
+    required this.tables,
     required this.onSelectionChanged,
     super.key,
   });
@@ -23,18 +24,18 @@ class _TableSelectionCheckboxState extends State<TableSelectionCheckbox> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Selecciona las mesas a ocupar"),
+        Text(AppLocalizations.of(context)!.select_tables_to_occupy),
         Wrap(
-          children: widget.tableIds.map((tableId) {
+          children: widget.tables.map((table) {
             return CheckboxListTile(
-              title: Text(AppLocalizations.of(context)!.table_number(tableId)),
-              value: _selectedTableIds.contains(tableId),
+              title: Text(AppLocalizations.of(context)!.table_number(table.numberTable)),
+              value: _selectedTableIds.contains(table.id),
               onChanged: (bool? value) {
                 setState(() {
                   if (value == true) {
-                    _selectedTableIds.add(tableId);
+                    _selectedTableIds.add(table.id);
                   } else {
-                    _selectedTableIds.remove(tableId);
+                    _selectedTableIds.remove(table.id);
                   }
                   widget.onSelectionChanged(_selectedTableIds);
                 });

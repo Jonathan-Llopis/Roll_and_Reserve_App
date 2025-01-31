@@ -26,7 +26,8 @@ class ButtonCreateReserve extends StatelessWidget {
       required this.idShop,
       required this.idTable,
       required DateTime selectedDate,
-      required  this.reserveBloc})
+      required this.searchDateTime,
+      required this.reserveBloc})
       : _formKey = formKey,
         _freePlacesController = freePlacesController,
         _hourStartController = hourStartController,
@@ -51,6 +52,7 @@ class ButtonCreateReserve extends StatelessWidget {
   final int idTable;
   final int idShop;
   final ReserveBloc reserveBloc;
+  final DateTime searchDateTime;
 
   @override
   Widget build(BuildContext context) {
@@ -59,26 +61,26 @@ class ButtonCreateReserve extends StatelessWidget {
         if (_formKey.currentState!.validate()) {
           LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
           reserveBloc.add(CreateReserveEvent(
-                reserve: ReserveEntity(
-                  id: 0,
-                  freePlaces: int.parse(_freePlacesController.text),
-                  dayDate: DateFormat('dd - MM - yyyy').format(_selectedDate),
-                  horaInicio: _hourStartController.text,
-                  horaFin: _hourEndController.text,
-                  description: _descriptionController.text,
-                  requiredMaterial: _requiredMaterialController.text,
-                  difficultyId: _selectedDifficulty!.id,
-                  gameCategoryId: _selectedGameCategory!.id,
-                  gameId: _selectedGame!.id,
-                  tableId: idTable,
-                  usersInTables: 0,
-                  isEvent: false,
-                ),
-                idUser: loginBloc.state.user!.role == 2
-                    ? loginBloc.state.user!.id
-                    : '',
-                dateReserve: _selectedDate,
-              ));
+            reserve: ReserveEntity(
+              id: 0,
+              freePlaces: int.parse(_freePlacesController.text),
+              dayDate: DateFormat('dd - MM - yyyy').format(_selectedDate),
+              horaInicio: _hourStartController.text,
+              horaFin: _hourEndController.text,
+              description: _descriptionController.text,
+              requiredMaterial: _requiredMaterialController.text,
+              difficultyId: _selectedDifficulty!.id,
+              gameCategoryId: _selectedGameCategory!.id,
+              gameId: _selectedGame!.id,
+              tableId: idTable,
+              usersInTables: 0,
+              isEvent: false,
+            ),
+            idUser:
+                loginBloc.state.user!.role == 2 ? loginBloc.state.user!.id : '',
+            dateReserve: _selectedDate,
+            searchDateTime: searchDateTime
+          ));
 
           context.go('/user/shop/$idShop/table/$idTable/');
         }
