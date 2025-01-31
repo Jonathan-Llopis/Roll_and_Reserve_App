@@ -136,15 +136,16 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
       ));
       final result = await createReserveUseCase(event.reserve);
       result.fold(
-        (failure) => emit(ReserveState.failure(state, "Fallo al crear tienda")),
+        (failure) =>
+            emit(ReserveState.failure(state, "Fallo al crear reserva")),
         (id) {
           if (event.idUser != '') {
             add(AddUserToReserveEvent(
-              idReserve: id,
-              idUser: event.idUser,
-              idTable: event.reserve.tableId,
-              dateReserve: event.dateReserve,
-            ));
+                idReserve: id,
+                idUser: event.idUser,
+                idTable: event.reserve.tableId,
+                dateReserve: event.dateReserve,
+                searchDateTime: event.searchDateTime));
           }
           emit(
             ReserveState.success(
@@ -218,12 +219,17 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
         (failure) => emit(
             ReserveState.failure(state, "Fallo al agregar usuario a la mesa")),
         (_) {
-          add(GetReserveWithUsers(
-            idReserve: event.idReserve,
-          ));
           add(GetReservesByUserEvent(idUser: event.idUser));
           add(GetReserveByDateEvent(
               dateReserve: event.dateReserve, idTable: event.idTable));
+          add(GetReserveWithUsers(
+            idReserve: event.idReserve,
+          ));
+          emit(
+            ReserveState.success(
+              state,
+            ),
+          );
         },
       );
     });
@@ -238,12 +244,17 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
         (failure) => emit(ReserveState.failure(
             state, "Fallo al eliminar usuario de la mesa")),
         (_) {
-          add(GetReserveWithUsers(
-            idReserve: event.idReserve,
-          ));
           add(GetReservesByUserEvent(idUser: event.idUser));
           add(GetReserveByDateEvent(
               dateReserve: event.dateReserve, idTable: event.idTable));
+          add(GetReserveWithUsers(
+            idReserve: event.idReserve,
+          ));
+          emit(
+            ReserveState.success(
+              state,
+            ),
+          );
         },
       );
     });
@@ -491,35 +502,35 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
     });
     on<GetEventsEvent>((event, emit) async {
       emit(ReserveState.loading(
-      state,
+        state,
       ));
       final eventsFuture =
-        getEventsShopUsecase(GetEventsParams(idShop: event.idShop));
+          getEventsShopUsecase(GetEventsParams(idShop: event.idShop));
       final gamesFuture = getAllGameUseCase(NoParams());
 
       final results = await Future.wait([
-      eventsFuture,
-      gamesFuture,
+        eventsFuture,
+        gamesFuture,
       ]);
 
       final eventsResult = results[0] as Either<Exception, List<ReserveEntity>>;
       final gamesResult = results[1] as Either<Exception, List<GameEntity>>;
 
       eventsResult.fold(
-      (failure) =>
-        emit(ReserveState.failure(state, "Fallo al obtener eventos")),
-      (events) {
-        gamesResult.fold(
         (failure) =>
-          emit(ReserveState.failure(state, "Error al cargar juegos")),
-        (games) {
-          emit(ReserveState.getEvents(state, events, games));
+            emit(ReserveState.failure(state, "Fallo al obtener eventos")),
+        (events) {
+          gamesResult.fold(
+            (failure) =>
+                emit(ReserveState.failure(state, "Error al cargar juegos")),
+            (games) {
+              emit(ReserveState.getEvents(state, events, games));
+            },
+          );
         },
-        );
-      },
       );
     });
-    
+
     on<CreateEventsEvent>((event, emit) async {
       emit(ReserveState.loading(
         state,
@@ -529,8 +540,8 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
         (failure) =>
             emit(ReserveState.failure(state, "Fallo al crear eventos")),
         (ids) {
-          emit(ReserveState.success(state));
           add(GetEventsEvent(idShop: event.reserves.first.shopId!));
+          emit(ReserveState.success(state));
         },
       );
     });

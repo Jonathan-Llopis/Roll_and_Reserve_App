@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart' as coordinates;
 import 'package:geolocator/geolocator.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LocationPicker extends StatefulWidget {
   final double zoomLevel;
@@ -52,7 +53,8 @@ class _LocationPickerState extends State<LocationPicker> {
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       // Los servicios de ubicación no están habilitados, no se puede continuar
-      return Future.error('El servicio de ubicación está deshabilitado.');
+      return Future.error(
+          AppLocalizations.of(context)!.location_service_disabled);
     }
 
     // Verificar los permisos de ubicación
@@ -61,14 +63,15 @@ class _LocationPickerState extends State<LocationPicker> {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         // Los permisos están denegados, no se puede continuar
-        return Future.error('Los permisos de ubicación están denegados.');
+        return Future.error(
+            AppLocalizations.of(context)!.location_permission_denied);
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
       // Los permisos están denegados permanentemente, no se puede continuar
       return Future.error(
-          'Los permisos de ubicación están denegados permanentemente.');
+          AppLocalizations.of(context)!.location_permission_denied_permanently);
     }
 
     // Obtener la posición actual del usuario
@@ -96,7 +99,7 @@ class _LocationPickerState extends State<LocationPicker> {
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  'Error: ${snapshot.error}',
+                  AppLocalizations.of(context)!.error_snapshot(snapshot.error.toString()),
                   style: const TextStyle(color: Colors.white, fontSize: 16.0),
                   textAlign: TextAlign.center,
                 ),
@@ -118,11 +121,12 @@ class _LocationPickerState extends State<LocationPicker> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.all(8.0),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          "Selecciona tu ubicación en el mapa:",
-                          style: TextStyle(
+                          AppLocalizations.of(context)!
+                              .select_your_location_on_map,
+                          style: const TextStyle(
                               fontSize: 16.0, fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),

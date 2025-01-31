@@ -36,11 +36,15 @@ class CreateReserveEvent extends ReserveEvent {
   final ReserveEntity reserve;
   final String idUser;
   final DateTime dateReserve;
+  final DateTime searchDateTime;
   CreateReserveEvent(
-      {required this.reserve, required this.idUser, required this.dateReserve});
+      {required this.reserve,
+      required this.idUser,
+      required this.dateReserve,
+      required this.searchDateTime});
 
   @override
-  List<Object?> get props => [reserve, idUser, dateReserve];
+  List<Object?> get props => [reserve, idUser, dateReserve, searchDateTime];
 }
 
 class DeleteReserveEvent extends ReserveEvent {
@@ -65,14 +69,17 @@ class AddUserToReserveEvent extends ReserveEvent {
   final String idUser;
   final int idTable;
   final DateTime dateReserve;
+  final DateTime searchDateTime;
   AddUserToReserveEvent(
       {required this.idReserve,
       required this.idUser,
       required this.idTable,
-      required this.dateReserve});
+      required this.dateReserve,
+      required this.searchDateTime});
 
   @override
-  List<Object?> get props => [idReserve, idUser, idTable, dateReserve];
+  List<Object?> get props =>
+      [idReserve, idUser, idTable, dateReserve, searchDateTime];
 }
 
 class DeleteUserOfReserveEvent extends ReserveEvent {
@@ -96,7 +103,11 @@ class GetReservesByShopEvent extends ReserveEvent {
   final String startTime;
   final String endTime;
   GetReservesByShopEvent(
-      {required this.currentShop, required this.dateReserve, required this.startTime, required this.endTime});
+      {required this.currentShop,
+      required this.dateReserve,
+      required this.startTime,
+      required this.endTime,
+    });
 
   @override
   List<Object?> get props => [currentShop, dateReserve, startTime, endTime];
@@ -126,6 +137,7 @@ class ConfirmReserveEvent extends ReserveEvent {
   @override
   List<Object?> get props => [idReserve, idUser];
 }
+
 class GetEventsEvent extends ReserveEvent {
   final int idShop;
   GetEventsEvent({required this.idShop});
@@ -133,6 +145,7 @@ class GetEventsEvent extends ReserveEvent {
   @override
   List<Object?> get props => [idShop];
 }
+
 class CreateEventsEvent extends ReserveEvent {
   final List<ReserveEntity> reserves;
   CreateEventsEvent({required this.reserves});

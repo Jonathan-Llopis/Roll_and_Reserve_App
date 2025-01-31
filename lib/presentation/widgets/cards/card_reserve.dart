@@ -74,7 +74,8 @@ class _CardReserveState extends State<CardReserve> {
                         children: [
                           Text(
                             widget.reserve.isEvent
-                                ? "Evento ${widget.reserve.dayDate}"
+                                ? AppLocalizations.of(context)!
+                                    .event_day_date(widget.reserve.dayDate)
                                 : AppLocalizations.of(context)!
                                     .reserve_day(widget.reserve.dayDate),
                             style: Theme.of(context)
