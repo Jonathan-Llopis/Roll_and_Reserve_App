@@ -96,7 +96,7 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
                                         );
 
                                         if (scannedCode ==
-                                          'rollandreserve://app/user/userReserves/${widget.idTable}') {
+                                          'rollandreserve://app/user/userReserves') {
                                         final startDate = DateFormat(
                                             'dd - MM - yyyy HH:mm')
                                           .parse(
