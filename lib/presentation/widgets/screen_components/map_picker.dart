@@ -99,7 +99,8 @@ class _LocationPickerState extends State<LocationPicker> {
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  AppLocalizations.of(context)!.error_snapshot(snapshot.error.toString()),
+                  AppLocalizations.of(context)!
+                      .error_snapshot(snapshot.error.toString()),
                   style: const TextStyle(color: Colors.white, fontSize: 16.0),
                   textAlign: TextAlign.center,
                 ),
@@ -150,11 +151,11 @@ class _LocationPickerState extends State<LocationPicker> {
                           borderRadius: BorderRadius.circular(15.0),
                           child: FlutterMap(
                             options: MapOptions(
-                              center: coordinates.LatLng(
+                              initialZoom: currentZoomLevel,
+                              initialCenter: coordinates.LatLng(
                                   double.parse(widget.latitudeController.text),
                                   double.parse(
                                       widget.longitudeController.text)),
-                              zoom: currentZoomLevel,
                               onTap: widget.displayOnly
                                   ? null
                                   : (tapPosition, point) {
@@ -184,7 +185,7 @@ class _LocationPickerState extends State<LocationPicker> {
                                                   .latitudeController.text),
                                               double.parse(widget
                                                   .longitudeController.text)),
-                                          builder: (ctx) => const Icon(
+                                          child: const Icon(
                                             Icons.location_on,
                                             color: Colors.redAccent,
                                             size: 40.0,

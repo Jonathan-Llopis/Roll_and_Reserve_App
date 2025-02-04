@@ -59,11 +59,12 @@ class _ScreenReserveState extends State<ScreenReserve> {
           errorMessage: (state) => state.errorMessage,
           hasData: (state) => state.reserve != null,
           contentBuilder: (state) {
-          UserEntity? userReserve;
-          if (state.reserve!.users!.any((user) => user.id == loginBloc.state.user!.id)) {
-            userReserve = state.reserve!.users!
-              .firstWhere((user) => user.id == loginBloc.state.user!.id);
-          }
+            UserEntity? userReserve;
+            if (state.reserve!.users!
+                .any((user) => user.id == loginBloc.state.user!.id)) {
+              userReserve = state.reserve!.users!
+                  .firstWhere((user) => user.id == loginBloc.state.user!.id);
+            }
             return DefaultScaffold(
                 body: InformationReserve(
                   reserve: state.reserve!,
@@ -75,9 +76,11 @@ class _ScreenReserveState extends State<ScreenReserve> {
                 floatingActionButton: loginBloc.state.user!.role == 2 &&
                         !state.reserve!.isEvent &&
                         DateFormat('dd - MM - yyyy HH:mm')
-                          .parse('${state.reserve!.dayDate} ${state.reserve!.horaInicio}')
+                            .parse(
+                                '${state.reserve!.dayDate} ${state.reserve!.horaInicio}')
                             .subtract(Duration(minutes: 5))
-                            .isBefore(DateTime.now()) && (userReserve?.reserveConfirmation ?? true) == false 
+                            .isBefore(DateTime.now()) &&
+                        (userReserve?.reserveConfirmation ?? true) == false
                     ? FloatingActionButton(
                         onPressed: () {
                           if (GoRouterState.of(context).uri.toString() ==
@@ -93,7 +96,8 @@ class _ScreenReserveState extends State<ScreenReserve> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(Icons.qr_code),
-                            Text(AppLocalizations.of(context)!.confirm, style: TextStyle(fontSize: 10)),
+                            Text(AppLocalizations.of(context)!.confirm,
+                                style: TextStyle(fontSize: 10)),
                           ],
                         ),
                       )

@@ -5,6 +5,7 @@ import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
+import 'package:roll_and_reserve/presentation/functions/notification_service.dart';
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/bottom_filter_shops.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/screen_body/body_main_shops.dart';
@@ -22,6 +23,7 @@ class _ScreenMainState extends State<ScreenMain> {
   @override
   void initState() {
     super.initState();
+    NotificationService().getToken();
     BlocProvider.of<LoginBloc>(context).add(CheckAuthentication());
     
   }

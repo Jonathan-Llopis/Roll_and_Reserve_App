@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
-import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/widgets/cards/card_reserve.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -23,7 +21,6 @@ class BodyReservesUser extends StatefulWidget {
 class _BodyReservesUserState extends State<BodyReservesUser> {
   @override
   Widget build(BuildContext context) {
-     ShopBloc shopBloc = BlocProvider.of<ShopBloc>(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -67,7 +64,6 @@ class _BodyReservesUserState extends State<BodyReservesUser> {
             child: CardReserve(
               reserve: reserve,
               idShop: reserve.shopId!,
-              shopState: shopBloc.state,
             ),
           );
             },
