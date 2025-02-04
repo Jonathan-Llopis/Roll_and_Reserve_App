@@ -7,31 +7,32 @@ import 'package:roll_and_reserve/data/datasources/firestore_users_datasource.dar
 import 'package:roll_and_reserve/data/datasources/user_datasource.dart';
 import 'package:roll_and_reserve/data/models/user_model.dart';
 import 'package:roll_and_reserve/domain/entities/user_entity.dart';
-import 'package:roll_and_reserve/domain/repositories/login_repository.dart';
+import 'package:roll_and_reserve/domain/repositories/user_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginRepositoryImpl implements LoginRepository {
+class UserRespositoryImpl implements UserRespository {
   final FirebaseAuthDataSource dataSource;
   final SharedPreferences sharedPreferences;
   final FirestoreUsersDatasource firebaseUserDataSource;
   final UserDatasource userDatasource;
 
-  LoginRepositoryImpl(this.dataSource, this.sharedPreferences,
+  UserRespositoryImpl(this.dataSource, this.sharedPreferences,
       this.firebaseUserDataSource, this.userDatasource);
 
   @override
   Future<Either<Failure, UserEntity>> signInGoogle() async {
     try {
       UserModel user = await dataSource.signInWithGoogle();
-      String tokenGenerado = await userDatasource.getValidToken(user.email, "1");
+      String tokenGenerado =
+          await userDatasource.getValidToken(user.email, "1");
       await sharedPreferences.setString('email', user.email);
       await sharedPreferences.setString('id', user.id);
       await sharedPreferences.setString('token', tokenGenerado);
       UserModel usuerDataBase =
           await userDatasource.getValidUser(user.id, tokenGenerado);
 
-      dynamic avatarFile =
-          await userDatasource.getUserAvatar(usuerDataBase.avatarId, tokenGenerado);
+      dynamic avatarFile = await userDatasource.getUserAvatar(
+          usuerDataBase.avatarId, tokenGenerado);
 
       return Right(usuerDataBase.toUserEntity(avatarFile, null));
     } catch (e) {
@@ -43,7 +44,8 @@ class LoginRepositoryImpl implements LoginRepository {
   Future<Either<Failure, UserEntity>> signIn(
       String email, String password) async {
     try {
-      String tokenGenerado = await userDatasource.getValidToken(email, password);
+      String tokenGenerado =
+          await userDatasource.getValidToken(email, password);
       UserModel user = await dataSource.signIn(email, password);
       await sharedPreferences.setString('token', tokenGenerado);
       await sharedPreferences.setString('email', user.email);
@@ -83,7 +85,8 @@ class LoginRepositoryImpl implements LoginRepository {
         averageRaiting: 0,
       );
       await userDatasource.createUser(usuarioRegistro, password);
-      String tokenGenerado = await userDatasource.getValidToken(email, password);
+      String tokenGenerado =
+          await userDatasource.getValidToken(email, password);
       await sharedPreferences.setString('token', tokenGenerado);
       return Right(usuarioRegistro.toUserEntity(File(''), null));
     } catch (e) {
@@ -171,8 +174,9 @@ class LoginRepositoryImpl implements LoginRepository {
   @override
   Future<Either<Failure, bool>> updateUserInfo(UserEntity user) async {
     try {
-        final token = sharedPreferences.getString('token');
-      await firebaseUserDataSource.updateUserInfo(user.name, user.id, user.role);
+      final token = sharedPreferences.getString('token');
+      await firebaseUserDataSource.updateUserInfo(
+          user.name, user.id, user.role);
       String avatarId =
           await userDatasource.updateAvatar(user.toUserModel(null), token!);
       UserModel userModel = user.toUserModel(avatarId);
@@ -196,7 +200,6 @@ class LoginRepositoryImpl implements LoginRepository {
   @override
   Future<Either<Failure, bool>> validatePassword(String password) async {
     try {
-      
       final email = sharedPreferences.getString('email');
       bool isValid = await dataSource.validatePassword(password, email!);
       return Right(isValid);
@@ -205,21 +208,38 @@ class LoginRepositoryImpl implements LoginRepository {
     }
   }
 
-    @override
-    Future<Either<Failure, List<UserEntity>>> getUsersInfo() async {
-      try {
-        final token = sharedPreferences.getString('token');
-        List<UserModel> usersDataBase = await userDatasource.getUsers(token!);
-        List<Future<dynamic>> avatarFiles = usersDataBase.map((user) async {
-          return await userDatasource.getUserAvatar(user.avatarId, token);
-        }).toList();
-        List<dynamic> avatars = await Future.wait(avatarFiles);
-        List<UserEntity> usersEntity = usersDataBase.asMap().entries.map((entry) {
-          return entry.value.toUserEntity(avatars[entry.key], null);
-        }).toList();
-        return Right(usersEntity);
-      } catch (e) {
-          return Left(AuthFailure());
-      }
+  @override
+  Future<Either<Failure, List<UserEntity>>> getUsersInfo() async {
+    try {
+      final token = sharedPreferences.getString('token');
+      List<UserModel> usersDataBase = await userDatasource.getUsers(token!);
+      List<Future<dynamic>> avatarFiles = usersDataBase.map((user) async {
+        return await userDatasource.getUserAvatar(user.avatarId, token);
+      }).toList();
+      List<dynamic> avatars = await Future.wait(avatarFiles);
+      List<UserEntity> usersEntity = usersDataBase.asMap().entries.map((entry) {
+        return entry.value.toUserEntity(avatars[entry.key], null);
+      }).toList();
+      return Right(usersEntity);
+    } catch (e) {
+      return Left(AuthFailure());
     }
+  }
+
+  @override
+  Future<Either<Failure, bool>> updateTokenNotification(String id,
+      String tokenNotification) async {
+    try {
+      final token = sharedPreferences.getString('token');
+      final id = sharedPreferences.getString('id');
+      if (id == null) {
+        return Left(AuthFailure());
+      }
+      await userDatasource.updateTokenNotification(
+          id, tokenNotification, token!);
+      return Right(true);
+    } catch (e) {
+      return Left(AuthFailure());
+    }
+  }
 }

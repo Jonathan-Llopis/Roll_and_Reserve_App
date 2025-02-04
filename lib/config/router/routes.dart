@@ -1,5 +1,6 @@
-import 'package:roll_and_reserve/domain/repositories/login_repository.dart';
+import 'package:roll_and_reserve/domain/repositories/user_repository.dart';
 import 'package:roll_and_reserve/injection.dart';
+import 'package:roll_and_reserve/main.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reviews/reviews_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
@@ -28,6 +29,7 @@ final _reserveBloc = sl<ReserveBloc>();
 final _reviewsBloc = sl<ReviewBloc>();
 
 final GoRouter router = GoRouter(
+  navigatorKey: navigatorKey,
   initialLocation: '/user',
   routes: [
     GoRoute(
@@ -72,19 +74,19 @@ final GoRouter router = GoRouter(
                 },
               ),
               GoRoute(
-                name: 'eventReserve',
-                path: 'eventReserve/:idReserve',
-                builder: (context, state) {
-                  final idReserve =
-                      int.parse(state.pathParameters['idReserve']!);
-                       final shopId = int.parse(state.pathParameters['idShop']!);
-                  return ScreenEvent(
-                    idReserve: idReserve,
-                    idShop: shopId,
-                  );
-                },
-                routes: [
-                   GoRoute(
+                  name: 'eventReserve',
+                  path: 'eventReserve/:idReserve',
+                  builder: (context, state) {
+                    final idReserve =
+                        int.parse(state.pathParameters['idReserve']!);
+                    final shopId = int.parse(state.pathParameters['idShop']!);
+                    return ScreenEvent(
+                      idReserve: idReserve,
+                      idShop: shopId,
+                    );
+                  },
+                  routes: [
+                    GoRoute(
                       name: 'confirmationEventQR',
                       path: 'confirmationQR/:idTable',
                       builder: (context, state) {
@@ -101,8 +103,7 @@ final GoRouter router = GoRouter(
                         );
                       },
                     ),
-                ]
-              )
+                  ])
             ]),
         GoRoute(
             name: 'userReserves',
@@ -226,7 +227,7 @@ final GoRouter router = GoRouter(
     ),
   ],
   redirect: (context, state) async {
-    final isLoggedIn = await di.sl<LoginRepository>().isLoggedIn();
+    final isLoggedIn = await di.sl<UserRespository>().isLoggedIn();
     final sharedPreferences = await SharedPreferences.getInstance();
     final email = sharedPreferences.getString('email');
 

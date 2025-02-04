@@ -13,7 +13,7 @@ import 'package:roll_and_reserve/data/repositories/game_repository_impl.dart';
 import 'package:roll_and_reserve/data/repositories/reserve_repository_impl.dart';
 import 'package:roll_and_reserve/data/repositories/review_repository_impl.dart';
 import 'package:roll_and_reserve/data/repositories/shop_repository_impl.dart';
-import 'package:roll_and_reserve/data/repositories/sign_in_repository_impl.dart';
+import 'package:roll_and_reserve/data/repositories/user_repository_impl.dart';
 import 'package:roll_and_reserve/data/repositories/table_repository_impl.dart';
 import 'package:roll_and_reserve/domain/repositories/category_game_repository.dart';
 import 'package:roll_and_reserve/domain/repositories/difficulty_repository.dart';
@@ -22,15 +22,15 @@ import 'package:roll_and_reserve/domain/repositories/reserve_repository.dart';
 import 'package:roll_and_reserve/domain/repositories/review_repository.dart';
 import 'package:roll_and_reserve/domain/repositories/shop_repository.dart';
 import 'package:roll_and_reserve/domain/repositories/table_respository.dart';
-import 'package:roll_and_reserve/domain/usecases/login_usecases/get_user_info_usecase.dart';
-import 'package:roll_and_reserve/domain/usecases/login_usecases/get_users_info_usecase.dart';
-import 'package:roll_and_reserve/domain/usecases/login_usecases/is_email_used_usecase.dart';
-import 'package:roll_and_reserve/domain/usecases/login_usecases/is_name_used_usecase.dart';
-import 'package:roll_and_reserve/domain/usecases/login_usecases/update_pass_usecase.dart';
-import 'package:roll_and_reserve/domain/usecases/login_usecases/reset_password.dart';
-import 'package:roll_and_reserve/domain/usecases/login_usecases/sign_up_user_usecase.dart';
-import 'package:roll_and_reserve/domain/usecases/login_usecases/update_user_info.dart';
-import 'package:roll_and_reserve/domain/usecases/login_usecases/validate_pass_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/user_usecases/get_user_info_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/user_usecases/get_users_info_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/user_usecases/is_email_used_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/user_usecases/is_name_used_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/user_usecases/update_pass_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/user_usecases/reset_password.dart';
+import 'package:roll_and_reserve/domain/usecases/user_usecases/sign_up_user_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/user_usecases/update_user_info.dart';
+import 'package:roll_and_reserve/domain/usecases/user_usecases/validate_pass_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/reserve_usecases/confirmate_reserve_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/reserve_usecases/create_event_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/reserve_usecases/create_reserve_usecase.dart';
@@ -63,11 +63,11 @@ import 'package:roll_and_reserve/domain/usecases/table_usecases/update_table_use
 import 'package:roll_and_reserve/presentation/blocs/language/language_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/data/datasources/firebase_auth_datasource.dart';
-import 'package:roll_and_reserve/domain/repositories/login_repository.dart';
-import 'package:roll_and_reserve/domain/usecases/login_usecases/get_current_user_usecase.dart';
-import 'package:roll_and_reserve/domain/usecases/login_usecases/sign_in_user_google_usecase.dart';
-import 'package:roll_and_reserve/domain/usecases/login_usecases/sign_in_user_usecase.dart';
-import 'package:roll_and_reserve/domain/usecases/login_usecases/sign_out_user_usecase.dart';
+import 'package:roll_and_reserve/domain/repositories/user_repository.dart';
+import 'package:roll_and_reserve/domain/usecases/user_usecases/get_current_user_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/user_usecases/sign_in_user_google_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/user_usecases/sign_in_user_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/user_usecases/sign_out_user_usecase.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
@@ -133,8 +133,8 @@ void configureDependencies() async {
 
   // Repositorios
 
-  sl.registerLazySingleton<LoginRepository>(
-    () => LoginRepositoryImpl(
+  sl.registerLazySingleton<UserRespository>(
+    () => UserRespositoryImpl(
       sl<FirebaseAuthDataSource>(),
       sl(),
       sl(),
