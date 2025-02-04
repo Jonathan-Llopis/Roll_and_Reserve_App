@@ -573,5 +573,162 @@
    "@changeLanguage":{
     "description" : "Text for chaning language"
    }
+  ,
+
+
+  "update": "Update",
+  "@update": {
+    "description": "Label for update button"
+  },
+  "go_to_events": "Go to Events",
+  "@go_to_events": {
+    "description": "Label for going to events"
+  },
+  "events": "Events",
+  "@events": {
+    "description": "Label for events"
+  },
+  "your_reservations": "Your Reservations",
+  "@your_reservations": {
+    "description": "Label for your reservations"
+  },
+  "select_tables_to_occupy": "Select the tables to occupy",
+  "@select_tables_to_occupy": {
+    "description": "Prompt to select the tables to occupy"
+  },
+  "select_start_date": "Select the start date of the event",
+  "@select_start_date": {
+    "description": "Help text for selecting the start date of the event"
+  },
+  "start_date_not_selected": "Start date not selected",
+  "@start_date_not_selected": {
+    "description": "Error message for start date not selected"
+  },
+  "start_time_not_selected": "Start time not selected",
+  "@start_time_not_selected": {
+    "description": "Error message for start time not selected"
+  },
+  "select_end_date": "Select the end date of the event",
+  "@select_end_date": {
+    "description": "Help text for selecting the end date of the event"
+  },
+  "end_date_not_selected": "End date not selected",
+  "@end_date_not_selected": {
+    "description": "Error message for end date not selected"
+  },
+  "end_date_before_start_date": "End date cannot be before start date",
+  "@end_date_before_start_date": {
+    "description": "Error message for end date before start date"
+  },
+  "event_same_day": "The event must be on the same day",
+  "@event_same_day": {
+    "description": "Error message for event must be on the same day"
+  },
+  "end_time_not_selected": "End time not selected",
+  "@end_time_not_selected": {
+    "description": "Error message for end time not selected"
+  },
+  "game_session_not_started": "The game session has not started yet",
+  "@game_session_not_started": {
+    "description": "Message indicating the game session has not started"
+  },
+  "wrong_reservation_table": "Wrong reservation table",
+  "@wrong_reservation_table": {
+    "description": "Error message indicating the reservation table is wrong"
+  },
+  "scan_again": "Scan Again",
+  "@scan_again": {
+    "description": "Label for scan again button"
+  },
+  "grant_camera_permission": "Grant camera permission",
+  "@grant_camera_permission": {
+    "description": "Label for granting camera permission"
+  },
+  "location_service_disabled": "Location service is disabled.",
+  "@location_service_disabled": {
+    "description": "Message indicating that the location service is disabled"
+  },
+  "location_permission_denied": "Location permissions are denied.",
+  "@location_permission_denied": {
+    "description": "Message indicating that the location permissions are denied"
+  },
+  "location_permission_denied_permanently": "Location permissions are permanently denied.",
+  "@location_permission_denied_permanently": {
+    "description": "Message indicating that the location permissions are permanently denied"
+  },
+  "reservation_confirmed": "Your reservation has been confirmed!",
+  "@reservation_confirmed": {
+    "description": "Message indicating that the reservation has been confirmed"
+  },
+  "not_in_shop_location": "You are not in the shop location",
+  "@not_in_shop_location": {
+    "description": "Message indicating the user is not in the shop location"
+  },
+  "game_event": "Game Event: {gameEvent}",
+  "@game_event": {
+    "description": "Label for game event",
+    "placeholders": {
+      "gameEvent": {
+        "type": "String",
+        "example": "Chess Tournament"
+      }
+    }
+  },
+  "event_day_date": "Event: {dayDate}",
+  "@event_day_date": {
+    "description": "Label for event day date",
+    "placeholders": {
+      "dayDate": {
+        "type": "String",
+        "example": "2023-10-15"
+      }
+    }
+  },
+  "reserva_confirmada": "Reservation Confirmed",
+  "@reserva_confirmada": {
+    "description": "Message indicating that the reservation has been confirmed in Spanish"
+  },
+  "select_your_location_on_map": "Select your location on the map:",
+  "@select_your_location_on_map": {
+    "description": "Prompt to select your location on the map"
+  },
+  "error_snapshot": "Error: {snapshotError}",
+  "@error_snapshot": {
+    "description": "Error message with snapshot error",
+    "placeholders": {
+      "snapshotError": {
+        "type": "String",
+        "example": "Network error"
+      }
+    }
+  },
+  "store_events": "Store Events",
+  "@store_events": {
+    "description": "Label for store events"
+  },
+  "your_reservations": "Your Reservations",
+  "@your_reservations": {
+    "description": "Label for your reservations"
+  },
+  "confirm": "Confirm",
+  "@confirm": {
+    "description": "Label for confirm button"
+  },
+  "english": "English",
+  "@english": {
+    "description": "Label for English language"
+  },
+  "spanish": "Spanish",
+  "@spanish": {
+    "description": "Label for Spanish language"
+  },
+  "french": "French",
+  "@french": {
+    "description": "Label for French language"
+  },
+  "catalan": "Catalan",
+  "@catalan": {
+    "description": "Label for Catalan language"
+  }
 }
 

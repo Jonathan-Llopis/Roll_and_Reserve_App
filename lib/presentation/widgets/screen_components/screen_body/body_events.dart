@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/widgets/cards/card_event.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 DateTime? selectedDate;
 
@@ -30,43 +31,47 @@ class _BodyEventsState extends State<BodyEvents> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Eventos de la Tienda",
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold, color: Colors.black87),
-                  ),
-                  const SizedBox(height: 4),
-                ],
-              ),
+          Text(
+             AppLocalizations.of(context)!.store_events,
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.bold, color: Colors.black87),
+          ),
+          const SizedBox(height: 4),
             ],
+          ),
+        ],
           ),
         ),
         const Divider(height: 1, thickness: 1),
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            child: ListView.builder(
-              itemCount: widget.events?.length,
-              itemBuilder: (context, index) {
-                final reserve = widget.events![index];
-                return GestureDetector(
-                  onTap: () {
-                    context.go(
-                        '/user/events/${widget.idShop}/eventReserve/${reserve.id}');
-                  },
-                  child: CardEvent(
-                      reserve: reserve,
-                      idShop: widget.idShop,
-                      shopState: shopBloc.state),
-                );
-              },
-            ),
+        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+        child: SingleChildScrollView(
+          child: ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: widget.events?.length,
+            itemBuilder: (context, index) {
+          final reserve = widget.events![index];
+          return GestureDetector(
+            onTap: () {
+              context.go(
+              '/user/events/${widget.idShop}/eventReserve/${reserve.id}');
+            },
+            child: CardEvent(
+            reserve: reserve,
+            idShop: widget.idShop,
+            shopState: shopBloc.state),
+          );
+            },
+          ),
+        ),
           ),
         ),
       ],
