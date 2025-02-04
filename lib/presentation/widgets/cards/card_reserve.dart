@@ -16,12 +16,10 @@ class CardReserve extends StatefulWidget {
     super.key,
     required this.reserve,
     required this.idShop,
-    required this.shopState,
   });
 
   final ReserveEntity reserve;
   final int idShop;
-  final ShopState shopState;
 
   @override
   State<CardReserve> createState() => _CardReserveState();
@@ -74,7 +72,8 @@ class _CardReserveState extends State<CardReserve> {
                         children: [
                           Text(
                             widget.reserve.isEvent
-                                ? "Evento ${widget.reserve.dayDate}"
+                                ? AppLocalizations.of(context)!
+                                    .event_day_date(widget.reserve.dayDate)
                                 : AppLocalizations.of(context)!
                                     .reserve_day(widget.reserve.dayDate),
                             style: Theme.of(context)

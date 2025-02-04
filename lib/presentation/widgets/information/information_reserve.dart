@@ -34,7 +34,7 @@ class InformationReserve extends StatelessWidget {
         children: [
           Text(
             reserve.isEvent
-                ? "Evento ${reserveBloc.state.games!.firstWhere((element) => element.id == reserve.gameId).description}"
+                ?  AppLocalizations.of(context)!.game_event(reserveBloc.state.games!.firstWhere((element) => element.id == reserve.gameId).description)
                 : AppLocalizations.of(context)!.active_game(reserveBloc
                     .state.games!
                     .firstWhere((element) => element.id == reserve.gameId)
@@ -106,7 +106,8 @@ class InformationReserve extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              loginBloc.state.user!.role == 2 && !reserve.isEvent && DateFormat('HH:mm').parse(reserve.horaFin)
+              loginBloc.state.user!.role == 2 && !reserve.isEvent &&  DateFormat('dd - MM - yyyy HH:mm')
+                          .parse('${reserve.dayDate} ${reserve.horaInicio}')
                             .isAfter(DateTime.now())
                   ? ElevatedButton.icon(
                       onPressed: () {
@@ -130,6 +131,7 @@ class InformationReserve extends StatelessWidget {
                                   idUser: loginBloc.state.user!.id,
                                   idTable: reserve.tableId,
                                   dateReserve: dateReserve,
+                                  searchDateTime: dateReserve
                                 ));
                           }
                         }
@@ -156,7 +158,7 @@ class InformationReserve extends StatelessWidget {
                         '/user/events/$idShop/eventReserve/${reserve.id}');
                           },
                           icon: Icon(Icons.event),
-                          label: Text("Ir a Eventos"),
+                          label: Text(AppLocalizations.of(context)!.go_to_events),
                         )
                       : Container(),
             ],

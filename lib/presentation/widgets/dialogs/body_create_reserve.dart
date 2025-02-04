@@ -14,11 +14,13 @@ class BodyCreateReserve extends StatefulWidget {
   final int idTable;
   final int idShop;
   final ReserveBloc reserveBloc;
+  final DateTime searchDateTime;
 
   const BodyCreateReserve({
     required this.idTable,
     required this.reserveBloc,
     required this.idShop,
+    required this.searchDateTime,
     super.key,
   });
 
@@ -200,6 +202,7 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
                         : DateFormat('dd-MM-yyyy')
                             .parse(_dayReservationController.text),
                     reserveBloc: widget.reserveBloc,
+                    searchDateTime: widget.searchDateTime,
                   ),
                 ],
               ),

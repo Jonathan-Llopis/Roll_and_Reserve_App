@@ -35,7 +35,7 @@ class CardReview extends StatelessWidget {
         title: Text(review.userNameWriter == "" ?  AppLocalizations.of(context)!.anonymous : review.userNameWriter),
         subtitle: Column(
           children: [
-            buildStars(review.raiting.toDouble()),
+            buildStars(review.raiting.toDouble(),),
             Text(review.review),
           ],
         ),

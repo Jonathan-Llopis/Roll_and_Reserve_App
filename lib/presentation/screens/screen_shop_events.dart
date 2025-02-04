@@ -37,18 +37,19 @@ class _ScreenShopEventsState extends State<ScreenShopEvents> {
           hasData: (state) => state.eventsShop != null,
           contentBuilder: (state) {
             return DefaultScaffold(
-              body: BodyEvents(
-                events: state.eventsShop!,
-                idShop: widget.idShop,
-              ),
-              floatingActionButton:   loginBloc.state.user!.role == 1
+                body: BodyEvents(
+                  events: state.eventsShop!,
+                  idShop: widget.idShop,
+                ),
+                floatingActionButton: loginBloc.state.user!.role == 1
                     ? FloatingActionButton(
-                onPressed: () {
-                  context.go('/user/events/${widget.idShop}/createEvent');
-                },
-                child: Icon(Icons.add),
-              ) : null
-            );
+                        onPressed: () {
+                          context
+                              .go('/user/events/${widget.idShop}/createEvent');
+                        },
+                        child: Icon(Icons.add),
+                      )
+                    : null);
           });
     });
   }

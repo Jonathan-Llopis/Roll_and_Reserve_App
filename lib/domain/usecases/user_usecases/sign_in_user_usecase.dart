@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:roll_and_reserve/core/failure.dart';
 import 'package:roll_and_reserve/core/use_case.dart';
-import '../../repositories/login_repository.dart';
+import '../../repositories/user_repository.dart';
 
 class SigninUserUseCase implements UseCase<void, LoginParams> {
-  final LoginRepository repository;
+  final UserRespository repository;
   SigninUserUseCase(this.repository);
 
   @override

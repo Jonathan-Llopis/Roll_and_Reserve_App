@@ -17,6 +17,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:roll_and_reserve/presentation/functions/notification_service.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -29,8 +32,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
   configureDependencies();
+  await NotificationService().initialize();
   runApp(MyApp());
 }
 
@@ -43,7 +46,6 @@ class MyApp extends StatefulWidget {
 
 class MyAppState extends State<MyApp> {
   late AppLinks _appLinks;
-  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   void initState() {
@@ -54,10 +56,11 @@ class MyAppState extends State<MyApp> {
   void _initDeepLinkListener() async {
     _appLinks = AppLinks();
     _appLinks.uriLinkStream.listen((Uri? uri) {
-      if (uri != null) { 
-        final path = uri.path;
+      if (uri != null) {
+        var path = uri.path;
         final parameters = uri.queryParameters;
-        _navigatorKey.currentState?.pushNamed(path, arguments: parameters);
+        path = path.replaceAll(RegExp(r'/\d+$'), '');
+        router.go(path, extra: parameters);
       }
     });
   }

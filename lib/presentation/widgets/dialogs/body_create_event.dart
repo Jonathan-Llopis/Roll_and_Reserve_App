@@ -71,7 +71,6 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
 
   @override
   Widget build(BuildContext context) {
-    TableBloc tableBloc = context.read<TableBloc>();
     return BlocBuilder<TableBloc, TableState>(
       builder: (context, state) {
         return buildContent<TableState>(
@@ -167,9 +166,7 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
                               validateSelectedValue(value, context)),
                       const SizedBox(height: 20.0),
                       TableSelectionCheckbox(
-                        tableIds: tableBloc.state.tablesFromShop!
-                            .map((table) => table.id)
-                            .toList(),
+                        tables: state.tablesFromShop!,
                         onSelectionChanged: (selectedTableIds) {
                           setState(() {
                             _selectedTableIds = selectedTableIds;

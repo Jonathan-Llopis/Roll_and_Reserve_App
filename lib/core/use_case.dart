@@ -53,3 +53,10 @@ class GetEventsParams {
 
   GetEventsParams({ required this.idShop});
 }
+
+class UpdateTokenNotificationParams {
+  final String userId;
+  final String token;
+
+  UpdateTokenNotificationParams({required this.userId, required this.token});
+}

@@ -8,4 +8,4 @@ COPY . /app/
 RUN flutter pub get
 
 # Comando para iniciar la aplicación en un emulador o dispositivo conectado
-CMD ["tail", "-f", "/dev/null"]
+CMD ["flutter run -d web-server --web-hostname=0.0.0.0 --web-port=8080"]

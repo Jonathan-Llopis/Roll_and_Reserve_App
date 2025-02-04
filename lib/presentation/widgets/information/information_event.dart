@@ -31,7 +31,7 @@ class InformationEvent extends StatelessWidget {
         children: [
           Text(
             reserve.isEvent
-                ? "Evento ${reserveBloc.state.games!.firstWhere((element) => element.id == reserve.gameId).description}"
+                ?  AppLocalizations.of(context)!.game_event(reserveBloc.state.games!.firstWhere((element) => element.id == reserve.gameId).description)
                 : AppLocalizations.of(context)!.active_game(reserveBloc
                     .state.games!
                     .firstWhere((element) => element.id == reserve.gameId)
@@ -103,8 +103,10 @@ class InformationEvent extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              loginBloc.state.user!.role == 2 && DateFormat('HH:mm').parse(reserve.horaFin)
-                            .isAfter(DateTime.now())
+              loginBloc.state.user!.role == 2 &&
+                      DateFormat('dd - MM - yyyy HH:mm')
+                          .parse('${reserve.dayDate} ${reserve.horaInicio}')
+                          .isAfter(DateTime.now())
                   ? ElevatedButton.icon(
                       onPressed: () {
                         if (reserve.users!
@@ -127,6 +129,7 @@ class InformationEvent extends StatelessWidget {
                                   idUser: loginBloc.state.user!.id,
                                   idTable: reserve.tableId,
                                   dateReserve: dateReserve,
+                                  searchDateTime: DateTime.now()
                                 ));
                           }
                         }

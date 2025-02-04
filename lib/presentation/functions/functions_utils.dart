@@ -93,30 +93,23 @@ Future<void> checkUserLocation(BuildContext context, int idReserve) async {
   bool serviceEnabled;
   LocationPermission permission;
 
-  // Verificar si los servicios de ubicación están habilitados
+
   serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
-    // Los servicios de ubicación no están habilitados, no se puede continuar
-    return Future.error('El servicio de ubicación está deshabilitado.');
+    return Future.error( AppLocalizations.of(context)!.grant_camera_permission);
   }
-
-  // Verificar los permisos de ubicación
   permission = await Geolocator.checkPermission();
   if (permission == LocationPermission.denied) {
     permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied) {
-      // Los permisos están denegados, no se puede continuar
-      return Future.error('Los permisos de ubicación están denegados.');
+      return Future.error( AppLocalizations.of(context)!.location_service_disabled);
     }
   }
 
   if (permission == LocationPermission.deniedForever) {
-    // Los permisos están denegados permanentemente, no se puede continuar
     return Future.error(
-        'Los permisos de ubicación están denegados permanentemente.');
+        AppLocalizations.of(context)!.location_permission_denied);
   }
-
-  // Obtener la posición actual del usuario
   Position position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high);
 
@@ -128,11 +121,13 @@ Future<void> checkUserLocation(BuildContext context, int idReserve) async {
   );
 
   if (distanceInMeters <= 100) {
-    confirmReserveDialog(context, 'Tu Reserva ha sido confirmada!', false);
+    Navigator.of(context).pop();
+    confirmReserveDialog(context,  AppLocalizations.of(context)!.reservation_confirmed, false);
     context.read<ReserveBloc>().add(ConfirmReserveEvent(
         idReserve: idReserve, idUser: loginBloc.state.user!.id));
   } else {
+    Navigator.of(context).pop();
     confirmReserveDialog(
-        context, 'No estás en la ubicación de la tienda', true);
+        context,  AppLocalizations.of(context)!.not_in_shop_location, true);
   }
 }

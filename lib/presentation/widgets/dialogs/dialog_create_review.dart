@@ -107,7 +107,8 @@ class _DialogCreateReviewState extends State<DialogCreateReview> {
                       userNameWriter: '',
                       avatarIdWriter: '',
                       avatarWriter: [])));
-              widget.shopBloc.add(GetShopsEvent());
+              context.read<ShopBloc>().add(GetShopsEvent());
+               context.read<ShopBloc>().add(GetShopEvent(idShop: widget.idShop));
               Navigator.pop(context);
             }
           },

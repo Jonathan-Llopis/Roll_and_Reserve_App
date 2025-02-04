@@ -53,7 +53,7 @@ class DrawerMain extends StatelessWidget {
                 userBloc.state.user!.role == 2
                     ? ListTile(
                         leading: Icon(Icons.qr_code, color: Colors.lightBlue),
-                        title: Text("Tus reservas"),
+                        title: Text(AppLocalizations.of(context)!.your_reservations),
                         onTap: () {
                           context.go('/user/userReserves');
                         },

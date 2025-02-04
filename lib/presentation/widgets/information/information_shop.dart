@@ -29,6 +29,9 @@ class _ShopListInventoryState extends State<InformationShop> {
   @override
   Widget build(BuildContext context) {
     LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 600;
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
       padding: const EdgeInsets.all(20.0),
@@ -44,14 +47,15 @@ class _ShopListInventoryState extends State<InformationShop> {
           ),
         ],
       ),
-      child: Row(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                width: 100,
-                height: 100,
+                width: isSmallScreen ? 80 : 100,
+                height: isSmallScreen ? 80 : 100,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16.0),
                   color: Colors.grey[200],
@@ -88,94 +92,94 @@ class _ShopListInventoryState extends State<InformationShop> {
                         ),
                 ),
               ),
-              const SizedBox(height: 12.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.table_bar, size: 18, color: Colors.grey),
-                  const SizedBox(width: 6.0),
-                  Text(
-                    AppLocalizations.of(context)!
-                        .total_tables(widget.shop.tablesShop.length),
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey,
+              const SizedBox(width: 20.0),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.shop.name,
+                      style: TextStyle(
+                        fontSize: isSmallScreen ? 18 : 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12.0),
-              buildStars(widget.shop.averageRaiting),
-            ],
-          ),
-          const SizedBox(width: 20.0),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.shop.name,
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                ),
-                const SizedBox(height: 6.0),
-                Text(
-                  widget.shop.address,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(height: 12.0),
-                SizedBox(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      loginBloc.state.user!.role == 1
-                          ? ElevatedButton(
-                              onPressed: () {
-                                context.go('/user/shop/${widget.shop.id}');
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12.0),
-                                ),
-                              ),
-                              child: Text(
-                                  AppLocalizations.of(context)!.edit_table),
-                            )
-                          : Container(),
-                      const SizedBox(height: 8.0),
-                      ElevatedButton(
-                        onPressed: () {
-                          context.go('/user/events/${widget.shop.id}');
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.0),
+                    const SizedBox(height: 6.0),
+                    Text(
+                      widget.shop.address,
+                      style: TextStyle(
+                        fontSize: isSmallScreen ? 14 : 16,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    const SizedBox(height: 12.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const Icon(Icons.table_bar, size: 18, color: Colors.grey),
+                        const SizedBox(width: 6.0),
+                        Text(
+                          AppLocalizations.of(context)!
+                              .total_tables(widget.shop.tablesShop.length),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
                           ),
                         ),
-                        child: const Text("Eventos"),
+                      ],
+                    ),
+                    const SizedBox(height: 12.0),
+                    buildStars(widget.shop.averageRaiting),
+                    const SizedBox(height: 12.0),
+                    SizedBox(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          loginBloc.state.user!.role == 1
+                              ? ElevatedButton(
+                                  onPressed: () {
+                                    context.go('/user/shop/${widget.shop.id}');
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.blue,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12.0),
+                                    ),
+                                  ),
+                                  child: Text(
+                                      AppLocalizations.of(context)!.edit_table),
+                                )
+                              : Container(),
+                          const SizedBox(height: 8.0),
+                          ElevatedButton(
+                            onPressed: () {
+                              context.go('/user/events/${widget.shop.id}');
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                            ),
+                            child: Text(AppLocalizations.of(context)!.events),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                )
-              ],
-            ),
+                    )
+                  ],
+                ),
+              ),
+              loginBloc.state.user!.role == 1
+                  ? IconButton(
+                      icon: const Icon(Icons.edit, color: Colors.blue),
+                      onPressed: () {
+                        context.go('/user/shop_edit/${widget.shop.id}');
+                      },
+                    )
+                  : Container(),
+            ],
           ),
-          loginBloc.state.user!.role == 1
-              ? IconButton(
-                  icon: const Icon(Icons.edit, color: Colors.blue),
-                  onPressed: () {
-                    context.go('/user/shop_edit/${widget.shop.id}');
-                  },
-                )
-              : Container(),
         ],
       ),
     );
