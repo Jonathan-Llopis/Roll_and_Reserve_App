@@ -16,12 +16,10 @@ class CardReserve extends StatefulWidget {
     super.key,
     required this.reserve,
     required this.idShop,
-    required this.shopState,
   });
 
   final ReserveEntity reserve;
   final int idShop;
-  final ShopState shopState;
 
   @override
   State<CardReserve> createState() => _CardReserveState();
