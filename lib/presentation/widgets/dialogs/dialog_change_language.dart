@@ -16,7 +16,7 @@ class ChangeLanguageDialog extends StatelessWidget {
         children: [
           ListTile(
             leading: const Icon(Icons.flag, color: Colors.blue),
-            title: const Text('English'),
+            title:  Text(AppLocalizations.of(context)!.english),
             onTap: () {
               context
                   .read<LanguageBloc>()
@@ -26,7 +26,7 @@ class ChangeLanguageDialog extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.flag, color: Colors.red),
-            title: const Text('Español'),
+            title:  Text(AppLocalizations.of(context)!.spanish),
             onTap: () {
               context
                   .read<LanguageBloc>()
@@ -36,7 +36,7 @@ class ChangeLanguageDialog extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.flag, color: Colors.blueAccent),
-            title: const Text('Français'),
+            title:  Text(AppLocalizations.of(context)!.french),
             onTap: () {
               context
                   .read<LanguageBloc>()
@@ -46,7 +46,7 @@ class ChangeLanguageDialog extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.flag, color: Colors.orange),
-            title: const Text('Català'),
+            title:  Text(AppLocalizations.of(context)!.catalan),
             onTap: () {
               context
                   .read<LanguageBloc>()

@@ -14,6 +14,7 @@ abstract class UserDatasource {
   Future<dynamic> getUserAvatar(String fileId, String token);
   Future<bool> updateUserInfo(UserModel user, String token);
   Future<String> updateAvatar(UserModel user, String token);
+  Future<bool> updateTokenNotification(String id, String tokenNotificacion, String token);
 }
 
 class UserDatasourceImpl implements UserDatasource {
@@ -160,6 +161,23 @@ class UserDatasourceImpl implements UserDatasource {
     } else {
       throw Exception(
           'Error al actualizar el avatar del usuario: ${response.statusCode}');
+    }
+  }
+  @override
+  Future<bool> updateTokenNotification(String id, String tokenNotificacion, String token) async {
+    final response = await client.put(
+      Uri.parse('${dotenv.env['BACKEND']}/users/$id/token'),
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': 'Bearer $token',
+      },
+      body: json.encode({'token_notificacion': tokenNotificacion}),
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Error al actualizar el token de notificación: ${response.body}');
     }
   }
 }

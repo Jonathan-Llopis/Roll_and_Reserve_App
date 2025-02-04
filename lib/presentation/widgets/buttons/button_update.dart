@@ -61,7 +61,7 @@ class ButtonUpdate extends StatelessWidget {
                     ),
                   );
             },
-            child: const Text("Actualizar"),
+            child: Text(AppLocalizations.of(context)!.update),
           ),
         ),
       ],
