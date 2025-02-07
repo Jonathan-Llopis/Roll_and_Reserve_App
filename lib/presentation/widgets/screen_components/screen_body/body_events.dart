@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
+import 'package:roll_and_reserve/presentation/functions/notification_service.dart';
 import 'package:roll_and_reserve/presentation/widgets/cards/card_event.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 DateTime? selectedDate;
 
@@ -37,14 +37,42 @@ class _BodyEventsState extends State<BodyEvents> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-          Text(
-             AppLocalizations.of(context)!.store_events,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold, color: Colors.black87),
-          ),
-          const SizedBox(height: 4),
+              Text(
+          'Store Events',
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold, color: Colors.black87),
+              ),
+              const SizedBox(height: 4),
             ],
           ),
+            FutureBuilder<bool>(
+            future: NotificationService().checkSubscriptionStatus(widget.idShop),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+              }
+              bool isSubscribed = snapshot.data ?? false;
+              return ElevatedButton.icon(
+              onPressed: () async {
+                if (isSubscribed) {
+                await NotificationService().unsubscribeFromTopic(widget.idShop);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Unsubscribed')),
+                );
+                } else {
+                await NotificationService().subscribeToTopic(widget.idShop);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Subscribed')),
+                );
+                }
+                setState(() {});
+              },
+              icon: Icon(isSubscribed ? Icons.notifications_off : Icons.notifications),
+              label: Text(isSubscribed ? 'Unsubscribe' : 'Subscribe'),
+              );
+            },
+            ),
+          
         ],
           ),
         ),
