@@ -14,7 +14,8 @@ abstract class UserDatasource {
   Future<dynamic> getUserAvatar(String fileId, String token);
   Future<bool> updateUserInfo(UserModel user, String token);
   Future<String> updateAvatar(UserModel user, String token);
-  Future<bool> updateTokenNotification(String id, String tokenNotificacion, String token);
+  Future<bool> updateTokenNotification(
+      String id, String tokenNotificacion, String token);
 }
 
 class UserDatasourceImpl implements UserDatasource {
@@ -42,7 +43,7 @@ class UserDatasourceImpl implements UserDatasource {
   @override
   Future<UserModel> getValidUser(String id, String token) async {
     final response = await client.get(
-      Uri.parse('${dotenv.env['BACKEND']}/users/$id'),
+      Uri.parse('${dotenv.env['BACKEND']}/users/google/$id'),
       headers: {
         'authorization': 'Bearer $token',
       },
@@ -62,7 +63,7 @@ class UserDatasourceImpl implements UserDatasource {
   @override
   Future<String> getValidToken(String email, String password) async {
     final response = await http.post(
-       Uri.parse('${dotenv.env['BACKEND']}/users/login'),
+      Uri.parse('${dotenv.env['BACKEND']}/users/login'),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -99,7 +100,7 @@ class UserDatasourceImpl implements UserDatasource {
   @override
   Future<dynamic> getUserAvatar(String fileId, String token) async {
     if (fileId == "") {
-      fileId = "678f8551e32f3fa9fd0ed5d4";
+      fileId = "67a5f4203e8ff99db430b779";
     }
     final response = await http.get(
         Uri.parse('${dotenv.env['BACKEND']}/files/download/$fileId'),
@@ -145,11 +146,12 @@ class UserDatasourceImpl implements UserDatasource {
       'POST',
       Uri.parse('${dotenv.env['BACKEND']}/files/avatar/${user.id}'),
     );
-     request.headers['authorization'] = 'Bearer $token';
+    request.headers['authorization'] = 'Bearer $token';
+    final bytes = await File(user.avatar.path).readAsBytes();
     request.files.add(
       http.MultipartFile.fromBytes(
         'file',
-        user.avatar,
+        bytes,
         filename: 'avatar',
       ),
     );
@@ -163,8 +165,10 @@ class UserDatasourceImpl implements UserDatasource {
           'Error al actualizar el avatar del usuario: ${response.statusCode}');
     }
   }
+
   @override
-  Future<bool> updateTokenNotification(String id, String tokenNotificacion, String token) async {
+  Future<bool> updateTokenNotification(
+      String id, String tokenNotificacion, String token) async {
     final response = await client.put(
       Uri.parse('${dotenv.env['BACKEND']}/users/$id/token'),
       headers: {
@@ -177,7 +181,8 @@ class UserDatasourceImpl implements UserDatasource {
     if (response.statusCode == 200) {
       return true;
     } else {
-      throw Exception('Error al actualizar el token de notificación: ${response.body}');
+      throw Exception(
+          'Error al actualizar el token de notificación: ${response.body}');
     }
   }
 }
