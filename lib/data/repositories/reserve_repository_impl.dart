@@ -57,7 +57,7 @@ class ReserveRepositoryImpl implements ReserveRepository {
     try {
       final token = sharedPreferences.getString('token');
       ReserveModel shopModel = reserve.toReserveModel();
-      int idReserve = await remoteDataSource.createReserves(shopModel, token!);
+      int idReserve = await remoteDataSource.createReserves(shopModel, token!, reserve.shopId!);
       return Right(idReserve);
     } catch (e) {
       return Left(Exception('Error al crear la reserva: ${e.toString()}'));
@@ -156,7 +156,7 @@ class ReserveRepositoryImpl implements ReserveRepository {
       List<int> reserveIds = [];
       for (var reserve in reserves) {
         ReserveModel reserveModel = reserve.toReserveModel();
-        int idReserve = await remoteDataSource.createReservesEvent(reserveModel, token);
+        int idReserve = await remoteDataSource.createReservesEvent(reserveModel, token, reserve.shopId!);
         reserveIds.add(idReserve);
       }
       return Right(reserveIds);

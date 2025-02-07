@@ -90,14 +90,16 @@ class ShopsRemoteDataSourceImpl implements ShopRemoteDataSource {
 
   @override
   Future<bool> updateShops(ShopModel shops, String token) async {
-    final response = await client.put(
-      Uri.parse('${dotenv.env['BACKEND']}/shops/${shops.id}'),
-      headers: {
-        'Content-Type': 'application/json',
-        'authorization': 'Bearer $token',
-      },
-      body: json.encode(shops.toJson()),
-    ).timeout(const Duration(seconds: 30));
+    final response = await client
+        .put(
+          Uri.parse('${dotenv.env['BACKEND']}/shops/${shops.id}'),
+          headers: {
+            'Content-Type': 'application/json',
+            'authorization': 'Bearer $token',
+          },
+          body: json.encode(shops.toJson()),
+        )
+        .timeout(const Duration(seconds: 30));
     if (response.statusCode == 200) {
       return true;
     } else {
@@ -139,7 +141,7 @@ class ShopsRemoteDataSourceImpl implements ShopRemoteDataSource {
     request.files.add(
       http.MultipartFile.fromBytes(
         'file',
-        shop.logo,
+        shop.logo.toList(),
         filename: 'logo',
       ),
     );
@@ -157,7 +159,7 @@ class ShopsRemoteDataSourceImpl implements ShopRemoteDataSource {
   @override
   Future<dynamic> getShopLogo(String fileId, String token) async {
     if (fileId == "") {
-      fileId = "678f8573e32f3fa9fd0ed5d6";
+      fileId = "67a5f44b3e8ff99db430b77b";
     }
     final response = await http.get(
         Uri.parse('${dotenv.env['BACKEND']}/files/download/$fileId'),

@@ -19,10 +19,10 @@ class BodyMain extends StatefulWidget {
 }
 
 class _BodyMainState extends State<BodyMain> {
+  
   @override
-  void initState() {
+  Widget build(BuildContext context) {
     final loginBloc = BlocProvider.of<LoginBloc>(context);
-
     if (loginBloc.state.user!.role == 2) {
       context.read<ShopBloc>().add(GetShopsEvent());
     } else {
@@ -30,11 +30,6 @@ class _BodyMainState extends State<BodyMain> {
           .read<ShopBloc>()
           .add(GetShopsByOwnerEvent(owner: loginBloc.state.user!.id));
     }
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return BlocBuilder<ShopBloc, ShopState>(builder: (context, state) {
       final loginBloc = BlocProvider.of<LoginBloc>(context);
       return buildContent<ShopState>(
