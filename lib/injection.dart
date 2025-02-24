@@ -1,4 +1,5 @@
 import 'package:roll_and_reserve/data/datasources/category_games_datasource.dart';
+import 'package:roll_and_reserve/data/datasources/chat_datasource.dart';
 import 'package:roll_and_reserve/data/datasources/difficulty_datasource.dart';
 import 'package:roll_and_reserve/data/datasources/firestore_users_datasource.dart';
 import 'package:roll_and_reserve/data/datasources/game_datasource.dart';
@@ -8,6 +9,7 @@ import 'package:roll_and_reserve/data/datasources/shop_datasoruce.dart';
 import 'package:roll_and_reserve/data/datasources/table_datasource.dart';
 import 'package:roll_and_reserve/data/datasources/user_datasource.dart';
 import 'package:roll_and_reserve/data/repositories/category_game_repository_impl.dart';
+import 'package:roll_and_reserve/data/repositories/chat_repository_impl.dart';
 import 'package:roll_and_reserve/data/repositories/difficulty_repository_impl.dart';
 import 'package:roll_and_reserve/data/repositories/game_repository_impl.dart';
 import 'package:roll_and_reserve/data/repositories/reserve_repository_impl.dart';
@@ -16,12 +18,15 @@ import 'package:roll_and_reserve/data/repositories/shop_repository_impl.dart';
 import 'package:roll_and_reserve/data/repositories/user_repository_impl.dart';
 import 'package:roll_and_reserve/data/repositories/table_repository_impl.dart';
 import 'package:roll_and_reserve/domain/repositories/category_game_repository.dart';
+import 'package:roll_and_reserve/domain/repositories/chat_repository.dart';
 import 'package:roll_and_reserve/domain/repositories/difficulty_repository.dart';
 import 'package:roll_and_reserve/domain/repositories/game_repository.dart';
 import 'package:roll_and_reserve/domain/repositories/reserve_repository.dart';
 import 'package:roll_and_reserve/domain/repositories/review_repository.dart';
 import 'package:roll_and_reserve/domain/repositories/shop_repository.dart';
 import 'package:roll_and_reserve/domain/repositories/table_respository.dart';
+import 'package:roll_and_reserve/domain/usecases/chat_usecases/send_message_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/chat_usecases/start_chat_usecases.dart';
 import 'package:roll_and_reserve/domain/usecases/user_usecases/get_user_info_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/user_usecases/get_users_info_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/user_usecases/is_email_used_usecase.dart';
@@ -60,6 +65,7 @@ import 'package:roll_and_reserve/domain/usecases/reserve_usecases/delete_user_re
 import 'package:roll_and_reserve/domain/usecases/table_usecases/get_all_table_byshop_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/table_usecases/get_all_table_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/table_usecases/update_table_usecase.dart';
+import 'package:roll_and_reserve/presentation/blocs/chat/chat_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/language/language_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/data/datasources/firebase_auth_datasource.dart';
@@ -96,6 +102,7 @@ void configureDependencies() async {
   sl.registerFactory<ReserveBloc>(() => ReserveBloc(sl(), sl(), sl(), sl(),
       sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
   sl.registerFactory<LanguageBloc>(() => LanguageBloc(sl()));
+  sl.registerFactory<ChatBloc>(() => ChatBloc(sl(), sl()));
   // Instancia de Firebase Auth
   sl.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
 
@@ -130,7 +137,9 @@ void configureDependencies() async {
   sl.registerLazySingleton<ReserveRemoteDataSource>(
     () => ReservesRemoteDataSourceImpl(sl()),
   );
-
+  sl.registerLazySingleton<ChatRemoteDataSource>(
+    () => ChatRemoteDataSourceImpl(),
+  );
   // Repositorios
 
   sl.registerLazySingleton<UserRespository>(
@@ -185,6 +194,11 @@ void configureDependencies() async {
       sl(),
     ),
   );
+  sl.registerLazySingleton<ChatRepository>(
+    () => ChatRepositoryImpl(sl()
+    ),
+  );
+
   // Casos de uso
   sl.registerLazySingleton<GetCurrentUserUseCase>(
     () => GetCurrentUserUseCase(sl()),
@@ -313,7 +327,12 @@ void configureDependencies() async {
   sl.registerLazySingleton<CreateEventsUsecase>(
     () => CreateEventsUsecase(sl()),
   );
-
+  sl.registerLazySingleton<StartChatUseCase>(
+    () => StartChatUseCase(sl()),
+  );
+  sl.registerLazySingleton<SendMessageUseCase>(
+    () => SendMessageUseCase(sl()),
+  );
   sl.registerLazySingleton(() => http.Client());
   final sharedPreferences = await SharedPreferences.getInstance();
   sl.registerLazySingleton(() => sharedPreferences);
