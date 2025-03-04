@@ -100,7 +100,7 @@ class UserDatasourceImpl implements UserDatasource {
   @override
   Future<dynamic> getUserAvatar(String fileId, String token) async {
     if (fileId == "") {
-      fileId = "67a5f4203e8ff99db430b779";
+      fileId = "67c4bf09ae01906bd75ace8d";
     }
     final response = await http.get(
         Uri.parse('${dotenv.env['BACKEND']}/files/download/$fileId'),

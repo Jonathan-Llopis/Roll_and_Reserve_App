@@ -398,6 +398,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.2.0"
+  elegant_notification:
+    dependency: "direct main"
+    description:
+      name: elegant_notification
+      sha256: c640df49f572b7882d440fa4eec072de1d3a86c90d74f31dba587b2b0276386e
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.2"
   equatable:
     dependency: "direct main"
     description:
@@ -1386,6 +1394,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.2"
+  searchable_paginated_dropdown:
+    dependency: "direct main"
+    description:
+      name: searchable_paginated_dropdown
+      sha256: "2cc35d7bc747a5d209688e4a3b8c5633385fba1e17a26ff195c1a3e410bdaaef"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.3.0"
   shared_preferences:
     dependency: "direct main"
     description:

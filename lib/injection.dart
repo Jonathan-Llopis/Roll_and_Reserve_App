@@ -27,6 +27,7 @@ import 'package:roll_and_reserve/domain/repositories/shop_repository.dart';
 import 'package:roll_and_reserve/domain/repositories/table_respository.dart';
 import 'package:roll_and_reserve/domain/usecases/chat_usecases/send_message_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/chat_usecases/start_chat_usecases.dart';
+import 'package:roll_and_reserve/domain/usecases/reserve_usecases/search_games_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/user_usecases/get_user_info_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/user_usecases/get_users_info_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/user_usecases/is_email_used_usecase.dart';
@@ -100,7 +101,7 @@ void configureDependencies() async {
         sl(),
       ));
   sl.registerFactory<ReserveBloc>(() => ReserveBloc(sl(), sl(), sl(), sl(),
-      sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+      sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
   sl.registerFactory<LanguageBloc>(() => LanguageBloc(sl()));
   sl.registerFactory<ChatBloc>(() => ChatBloc(sl(), sl()));
   // Instancia de Firebase Auth
@@ -333,6 +334,10 @@ void configureDependencies() async {
   sl.registerLazySingleton<SendMessageUseCase>(
     () => SendMessageUseCase(sl()),
   );
+   sl.registerLazySingleton<SearchGamesUseCase>(
+    () => SearchGamesUseCase(sl()),
+  );
+
   sl.registerLazySingleton(() => http.Client());
   final sharedPreferences = await SharedPreferences.getInstance();
   sl.registerLazySingleton(() => sharedPreferences);
