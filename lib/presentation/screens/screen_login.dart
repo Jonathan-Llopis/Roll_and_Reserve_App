@@ -1,3 +1,5 @@
+import 'package:elegant_notification/elegant_notification.dart';
+import 'package:elegant_notification/resources/stacked_options.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/config/theme/theme.dart';
@@ -73,9 +75,17 @@ class _ScreenLoginState extends State<ScreenLogin> {
               child: BlocConsumer<LoginBloc, LoginState>(
                   listener: (context, state) {
                 if (state.errorMessage != null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.errorMessage!)),
-                  );
+                 ElegantNotification.error(
+                    width: 360,
+                    isDismissable: false,
+                    stackedOptions: StackedOptions(
+                      key: 'bottomRight',
+                      type: StackedType.above,
+                      itemOffset: const Offset(-5, -5),
+                    ),
+                    title:  Text(state.errorMessage!),
+                    description: const Text('Usuario o contraseña incorrectos'),
+                  ).show(context);
                 } else if (state.email != null && state.email != "NO_USER") {
                   context.go('/user', extra: state.email);
                 }

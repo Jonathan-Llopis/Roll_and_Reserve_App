@@ -11,8 +11,8 @@ class ReserveModel {
   final String description;
   final String requiredMaterial;
   final int difficultyId;
-  final int gameCategoryId;
   final int gameId;
+  final String gameName;
   final int tableId;
   final int usersInTables;
   final List<UserModel>? users;
@@ -28,8 +28,8 @@ class ReserveModel {
     required this.description,
     required this.requiredMaterial,
     required this.difficultyId,
-    required this.gameCategoryId,
     required this.gameId,
+    required this.gameName,
     required this.tableId,
     required this.usersInTables,
     this.users,
@@ -49,18 +49,17 @@ class ReserveModel {
       difficultyId: json['difficulty'] == null
           ? 0
           : json['difficulty']['id_difficulty'] ?? 0,
-      gameCategoryId: json['reserve_game_category'] == null
-          ? 0
-          : json['reserve_game_category']['id_game_category'] ?? 0,
       gameId: json['reserve_of_game'] == null
           ? 0
           : json['reserve_of_game']['id_game'] ?? 0,
+      gameName: json['reserve_of_game'] == null
+          ? ""
+          : json['reserve_of_game']['name'] ?? "",
       tableId: json['reserve_table'] == null
           ? 0
           : json['reserve_table']['id_table'] ?? 0,
-      usersInTables: json['users_in_reserve'] != null
-          ? json['userReserves'].length
-          : 0,
+      usersInTables:
+          json['users_in_reserve'] != null ? json['userReserves'].length : 0,
       isEvent: json['shop_event'] ?? false,
     );
   }
@@ -77,21 +76,21 @@ class ReserveModel {
       difficultyId: json['difficulty'] == null
           ? 0
           : json['difficulty']['id_difficulty'] ?? 0,
-      gameCategoryId: json['reserve_game_category'] == null
-          ? 0
-          : json['reserve_game_category']['id_game_category'] ?? 0,
       gameId: json['reserve_of_game'] == null
           ? 0
           : json['reserve_of_game']['id_game'] ?? 0,
+      gameName: json['reserve_of_game'] == null
+          ? ""
+          : json['reserve_of_game']['name'] ?? "",
       tableId: json['reserve_table'] == null
           ? 0
           : json['reserve_table']['id_table'] ?? 0,
-      usersInTables: json['users_in_reserve'] != null
-          ? json['userReserves'].length
-          : 0,
+      usersInTables:
+          json['users_in_reserve'] != null ? json['userReserves'].length : 0,
       users: json['userReserves'] != null
-          ? List<UserModel>.from(json['userReserves']
-              .map((userReserve) => UserModel.fromJsonReserve(userReserve['user'], userReserve['reserva_confirmada'])))
+          ? List<UserModel>.from(json['userReserves'].map((userReserve) =>
+              UserModel.fromJsonReserve(
+                  userReserve['user'], userReserve['reserva_confirmada'])))
           : null,
       isEvent: json['shop_event'] ?? false,
     );
@@ -107,10 +106,12 @@ class ReserveModel {
       description: json['reserve']['description'] ?? "",
       requiredMaterial: json['reserve']['required_material'] ?? "",
       difficultyId: 0,
-      gameCategoryId: 0,
       gameId: json['reserve']['reserve_of_game'] == null
           ? 0
           : json['reserve']['reserve_of_game']['id_game'] ?? 0,
+      gameName: json['reserve']['reserve_of_game'] == null
+          ? ""
+          : json['reserve']['reserve_of_game']['name'] ?? "",
       tableId: json['reserve']['reserve_table'] == null
           ? 0
           : json['reserve']['reserve_table']['id_table'] ?? 0,
@@ -121,24 +122,21 @@ class ReserveModel {
       shopId: json['reserve']['reserve_table'] == null
           ? null
           : json['reserve']['reserve_table']['tables_of_shop']['id_shop'],
-          isEvent: json['shop_event'] ?? false,
+      isEvent: json['shop_event'] ?? false,
     );
   }
-
   Map<String, dynamic> toJson() {
     return {
-      'id_reserve': id,
       'total_places': freePlaces,
       'hour_start': getIsoDate(dayDate, horaInicio),
       'hour_end': getIsoDate(dayDate, horaFin),
       'description': description,
+      'shop_event': isEvent,
       'required_material': requiredMaterial,
-      'difficulty': difficultyId,
-      'reserve_game_category': gameCategoryId,
-      'reserve_of_game': gameId,
-      'reserve_table': tableId,
-      'shop_event' : false,
-      'event_id': 0,
+      'difficulty_id': difficultyId,
+      'reserve_of_game_id': gameId,
+      'game_name': gameName,
+      'reserve_table_id': tableId,
     };
   }
 
@@ -151,10 +149,10 @@ class ReserveModel {
       'description': description,
       'required_material': requiredMaterial,
       'difficulty': difficultyId,
-      'reserve_game_category': gameCategoryId,
-      'reserve_of_game': gameId,
-      'reserve_table': tableId,
-      'shop_event' : true,
+      'reserve_of_game_id': gameId,
+      'game_name': gameName,
+      'reserve_table_id': tableId,
+      'shop_event': true,
       'event_id': "$dayDate-$gameId-$shopId",
     };
   }
@@ -169,8 +167,8 @@ class ReserveModel {
         description: description,
         requiredMaterial: requiredMaterial,
         difficultyId: difficultyId,
-        gameCategoryId: gameCategoryId,
         gameId: gameId,
+        gameName: gameName,
         tableId: tableId,
         usersInTables: usersInTables,
         shopId: shopId,
@@ -179,22 +177,22 @@ class ReserveModel {
 
   ReserveEntity toReserveEntityWithUsers(List<dynamic> avatarUser) {
     return ReserveEntity(
-      id: id,
-      freePlaces: freePlaces,
-      dayDate: dayDate,
-      horaInicio: horaInicio,
-      horaFin: horaFin,
-      description: description,
-      requiredMaterial: requiredMaterial,
-      difficultyId: difficultyId,
-      gameCategoryId: gameCategoryId,
-      gameId: gameId,
-      tableId: tableId,
-      users: users?.asMap().entries.map((entry) {
-        return entry.value.toUserEntity(avatarUser[entry.key], entry.value.reserveConfirmation);
-      }).toList(),
-      usersInTables: users!.length,
-      isEvent: isEvent
-    );
+        id: id,
+        freePlaces: freePlaces,
+        dayDate: dayDate,
+        horaInicio: horaInicio,
+        horaFin: horaFin,
+        description: description,
+        requiredMaterial: requiredMaterial,
+        difficultyId: difficultyId,
+        gameId: gameId,
+        gameName: gameName,
+        tableId: tableId,
+        users: users?.asMap().entries.map((entry) {
+          return entry.value.toUserEntity(
+              avatarUser[entry.key], entry.value.reserveConfirmation);
+        }).toList(),
+        usersInTables: users!.length,
+        isEvent: isEvent);
   }
 }

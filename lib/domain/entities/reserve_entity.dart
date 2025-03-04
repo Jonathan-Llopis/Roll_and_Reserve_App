@@ -10,8 +10,8 @@ class ReserveEntity {
   final String description;
   final String requiredMaterial;
   final int difficultyId;
-  final int gameCategoryId;
   final int gameId;
+  final String gameName;
   final int tableId;
   final int usersInTables;
   final List<UserEntity>? users;
@@ -27,8 +27,8 @@ class ReserveEntity {
     required this.description,
     required this.requiredMaterial,
     required this.difficultyId,
-    required this.gameCategoryId,
     required this.gameId,
+    required this.gameName,
     required this.tableId,
     required this.usersInTables,
     this.users,
@@ -46,8 +46,8 @@ class ReserveEntity {
       description: description,
       requiredMaterial: requiredMaterial,
       difficultyId: difficultyId,
-      gameCategoryId: gameCategoryId,
       gameId: gameId,
+      gameName: gameName,
       tableId: tableId,
       usersInTables: usersInTables,
       shopId: shopId,

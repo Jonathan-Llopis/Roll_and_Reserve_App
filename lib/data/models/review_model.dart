@@ -37,7 +37,7 @@ class ReviewModel {
             json['writer'] == null ? "" : json['writer']['username'] ?? "",
         avatarIdWriter: json['writer'] == null
             ? ""
-            : json['writer']['avatar'] ?? "67a5f4203e8ff99db430b779",
+            : json['writer']['avatar'] ?? "67c4bf09ae01906bd75ace8d",
         avatarWriter: []);
   }
 

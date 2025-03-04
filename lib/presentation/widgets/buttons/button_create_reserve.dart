@@ -35,7 +35,6 @@ class ButtonCreateReserve extends StatelessWidget {
         _descriptionController = descriptionController,
         _requiredMaterialController = requiredMaterialController,
         _selectedDifficulty = selectedDifficulty,
-        _selectedGameCategory = selectedGameCategory,
         _selectedDate = selectedDate,
         _selectedGame = selectedGame;
 
@@ -46,7 +45,6 @@ class ButtonCreateReserve extends StatelessWidget {
   final TextEditingController _descriptionController;
   final TextEditingController _requiredMaterialController;
   final DifficultyEntity? _selectedDifficulty;
-  final GameCategoryEntity? _selectedGameCategory;
   final GameEntity? _selectedGame;
   final DateTime _selectedDate;
   final int idTable;
@@ -70,8 +68,9 @@ class ButtonCreateReserve extends StatelessWidget {
               description: _descriptionController.text,
               requiredMaterial: _requiredMaterialController.text,
               difficultyId: _selectedDifficulty!.id,
-              gameCategoryId: _selectedGameCategory!.id,
               gameId: _selectedGame!.id,
+              gameName: _selectedGame.description,
+              shopId: idShop,
               tableId: idTable,
               usersInTables: 0,
               isEvent: false,
