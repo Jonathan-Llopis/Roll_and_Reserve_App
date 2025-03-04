@@ -36,7 +36,10 @@ class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
     if (response.statusCode == 200) {
       final List<dynamic> reserveJson = json.decode(response.body);
       return reserveJson.map((json) => ReserveModel.fromJson(json)).toList();
-    } else {
+    } else if (response.statusCode == 204) {
+      return [];
+    }
+    else {
       throw Exception('Error al cargar las reservas.');
     }
   }
@@ -140,7 +143,10 @@ class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
     if (response.statusCode == 200) {
       final List<dynamic> reserveJson = json.decode(response.body);
       return reserveJson.map((json) => ReserveModel.fromJson(json)).toList();
-    } else {
+    } else if (response.statusCode == 204) {
+      return [];
+    }
+    else {
       throw Exception('Error al cargar las reservas por fecha.');
     }
   }
@@ -177,7 +183,10 @@ class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
       return reserveJson
           .map((json) => ReserveModel.fromJsonUsersReserves(json))
           .toList();
-    } else {
+    }else if (response.statusCode == 204) {
+      return [];
+    } 
+    else {
       throw Exception('Error al cargar las reservas por fecha.');
     }
   }
@@ -230,7 +239,10 @@ class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
     if (response.statusCode == 200) {
       final List<dynamic> reserveJson = json.decode(response.body);
       return reserveJson.map((json) => ReserveModel.fromJson(json)).toList();
-    } else {
+    }else if (response.statusCode == 204) {
+      return [];
+    }
+     else {
       throw Exception('Error al cargar los eventos de la tienda.');
     }
   }

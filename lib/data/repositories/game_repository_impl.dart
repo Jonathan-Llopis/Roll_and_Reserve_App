@@ -20,4 +20,14 @@ class GameRepositoryImpl implements GameRepository {
       return Left(Exception('Error al cargar juegos'));
     }
   }
+  @override
+  Future<Either<Exception, List<GameEntity>>> searchGameByName(String name) async {
+    try {
+      final token = sharedPreferences.getString('token');
+      final gameModels = await remoteDataSource.searchGameByName(token!, name);
+      return Right(gameModels.map((model) => model.toGameEntity()).toList());
+    } catch (e) {
+      return Left(Exception('Error al buscar juegos por nombre'));
+    }
+  }
 }

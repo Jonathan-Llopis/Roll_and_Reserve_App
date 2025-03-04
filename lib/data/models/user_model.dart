@@ -45,7 +45,7 @@ class UserModel {
         role: json['role'] ?? 2,
         name: json['name'] ?? "",
         username: json['username'] ?? "",
-        avatarId: json['avatar'] ?? "67a5f4203e8ff99db430b779",
+        avatarId: json['avatar'] ?? "67c4bf09ae01906bd75ace8d",
         avatar: File(""),
         averageRaiting: calcularMediaRatings(json['reviews_shop'] ?? []));
   }
@@ -58,7 +58,7 @@ class UserModel {
         role: json['role'] ?? 2,
         name: json['name'] ?? "",
         username: json['username'] ?? "",
-        avatarId: json['avatar'] ?? "67a5f4203e8ff99db430b779",
+        avatarId: json['avatar'] ?? "67c4bf09ae01906bd75ace8d",
         avatar: File(""),
         averageRaiting: calcularMediaRatings(json['reviews_shop'] ?? []),
         reserveConfirmation: reserveConfirmation);
