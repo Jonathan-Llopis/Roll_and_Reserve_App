@@ -45,19 +45,20 @@ class UserModel {
         role: json['role'] ?? 2,
         name: json['name'] ?? "",
         username: json['username'] ?? "",
-        avatarId: json['avatar'] ?? "678f8551e32f3fa9fd0ed5d4",
+        avatarId: json['avatar'] ?? "67c4bf09ae01906bd75ace8d",
         avatar: File(""),
         averageRaiting: calcularMediaRatings(json['reviews_shop'] ?? []));
   }
 
-    factory UserModel.fromJsonReserve(Map<String, dynamic> json, bool? reserveConfirmation) {
+  factory UserModel.fromJsonReserve(
+      Map<String, dynamic> json, bool? reserveConfirmation) {
     return UserModel(
         id: json['id_google'] ?? "",
         email: json['email'] ?? "",
         role: json['role'] ?? 2,
         name: json['name'] ?? "",
         username: json['username'] ?? "",
-        avatarId: json['avatar'] ?? "678f8551e32f3fa9fd0ed5d4",
+        avatarId: json['avatar'] ?? "67c4bf09ae01906bd75ace8d",
         avatar: File(""),
         averageRaiting: calcularMediaRatings(json['reviews_shop'] ?? []),
         reserveConfirmation: reserveConfirmation);
