@@ -31,18 +31,18 @@ class ShopModel {
 
   factory ShopModel.fromJson(Map<String, dynamic> json) {
     return ShopModel(
-        id: json['id_shop'],
-        name: json['name'],
-        address: json['address'],
-        logoId: json['logo'] ?? "678f8573e32f3fa9fd0ed5d6",
-        logo: <int>[],
-        averageRaiting: calcularMediaRatings(json['reviews_shop'] ?? []),
-        ownerId:
-            json['owner'] != null ? json['owner']['id_google'] ?? "0" : "0",
-        tablesShop: calcularMesasTienda(json['tables_in_shop'] ?? []),
-        gamesShop: crearListaJuegos(json['games'] ?? []),
-        latitude: json['latitud'] == 0 ? 0.0 : json['latitud'] ?? 0.0,
-        longitude: json['longitud'] == 0 ? 0.0 : json['longitud'] ?? 0.0,);
+      id: json['id_shop'],
+      name: json['name'],
+      address: json['address'],
+      logoId: json['logo'] ?? "67c4bf45ae01906bd75ace8f",
+      logo: <int>[],
+      averageRaiting: calcularMediaRatings(json['reviews_shop'] ?? []),
+      ownerId: json['owner'] != null ? json['owner']['id_google'] ?? "0" : "0",
+      tablesShop: calcularMesasTienda(json['tables_in_shop'] ?? []),
+      gamesShop: crearListaJuegos(json['games'] ?? []),
+      latitude: json['latitud'] == 0 ? 0.0 : json['latitud'] ?? 0.0,
+      longitude: json['longitud'] == 0 ? 0.0 : json['longitud'] ?? 0.0,
+    );
   }
 
   factory ShopModel.fromJsonCreate(Map<String, dynamic> json) {
@@ -50,7 +50,7 @@ class ShopModel {
         id: json['id_shop'],
         name: json['name'],
         address: json['address'],
-        logoId: json['logo'] ?? "678f8573e32f3fa9fd0ed5d6",
+        logoId: json['logo'] ?? "67c4bf45ae01906bd75ace8f",
         logo: <int>[],
         averageRaiting: calcularMediaRatings(json['reviews_shop'] ?? []),
         ownerId: json['owner'] ?? "0",
@@ -76,7 +76,7 @@ class ShopModel {
         name: name,
         address: address,
         logoId: logoId,
-        logo: logoFile?? File(''),
+        logo: logoFile ?? File(''),
         averageRaiting: averageRaiting,
         ownerId: ownerId,
         tablesShop: tablesShop,

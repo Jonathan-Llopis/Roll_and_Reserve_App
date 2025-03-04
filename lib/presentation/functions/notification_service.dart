@@ -101,4 +101,38 @@ class NotificationService {
       );
     }
   }
+
+  Future<void> subscribeToTopic(int idShop) async {
+    try {
+      await _firebaseMessaging.subscribeToTopic('$idShop');
+      debugPrint('Suscrito al topic $idShop');
+    } catch (e) {
+      debugPrint('Error al suscribirse al topic: $e');
+    }
+  }
+
+  Future<void> unsubscribeFromTopic(int idShop) async {
+    try {
+      await _firebaseMessaging.unsubscribeFromTopic('$idShop');
+      debugPrint('Desuscrito del topic $idShop');
+    } catch (e) {
+      debugPrint('Error al desuscribirse del topic: $e');
+    }
+  }
+
+  Future<bool> checkSubscriptionStatus(int idShop) async {
+    try {
+      final topics = await _firebaseMessaging.getInitialMessage();
+      if (topics != null && topics.data.containsKey('$idShop')) {
+        debugPrint('Actualmente suscrito al topic shop_$idShop');
+        return true;
+      } else {
+        debugPrint('No suscrito al topic $idShop');
+        return false;
+      }
+    } catch (e) {
+      debugPrint('Error al verificar la suscripción al topic: $e');
+      return false;
+    }
+  }
 }

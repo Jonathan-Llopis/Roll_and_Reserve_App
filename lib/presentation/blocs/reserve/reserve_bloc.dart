@@ -20,6 +20,7 @@ import 'package:roll_and_reserve/domain/usecases/reserve_usecases/get_all_reserv
 import 'package:roll_and_reserve/domain/usecases/reserve_usecases/get_events_shop_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/reserve_usecases/get_reserve_withuser_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/reserve_usecases/get_reserves_from_user_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/reserve_usecases/search_games_usecase.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_state.dart';
 
@@ -38,6 +39,7 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
   final ConfirmateReserveUsecase confirmateReserveUsecase;
   final GetEventsShopUsecase getEventsShopUsecase;
   final CreateEventsUsecase createEventsUsecase;
+  final SearchGamesUseCase searchGamesUseCase;
 
   ReserveBloc(
       this.createReserveUseCase,
@@ -53,7 +55,8 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
       this.getReservesOfUserUseCase,
       this.confirmateReserveUsecase,
       this.getEventsShopUsecase,
-      this.createEventsUsecase)
+      this.createEventsUsecase,
+      this.searchGamesUseCase)
       : super(const ReserveState()) {
     on<GetReservesEvent>((event, emit) async {
       try {
@@ -543,6 +546,19 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
           add(GetEventsEvent(idShop: event.reserves.first.shopId!));
           emit(ReserveState.success(state));
         },
+      );
+    });
+    on<SearchGameByNameEvent>((event, emit) async {
+      emit(ReserveState.loading(
+      state,
+      ));
+      final result = await searchGamesUseCase(event.gameName);
+      result.fold(
+      (failure) => emit(
+        ReserveState.failure(state, "Fallo al realizar la búsqueda")),
+      (games) {
+        emit(ReserveState.searchGames(state, games));
+      },
       );
     });
   }
