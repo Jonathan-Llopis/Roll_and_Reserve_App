@@ -5,6 +5,7 @@ import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reviews/reviews_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_chat.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_create_event.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_create_reserve.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_event.dart';
@@ -55,6 +56,13 @@ final GoRouter router = GoRouter(
           builder: (context, state) {
             final shopId = int.parse(state.pathParameters['idEditShop']!);
             return ScreenEditShop(idShop: shopId);
+          },
+        ),
+        GoRoute(
+          name: 'chat',
+          path: 'chat',
+          builder: (context, state) {
+            return ChatScreen();
           },
         ),
         GoRoute(

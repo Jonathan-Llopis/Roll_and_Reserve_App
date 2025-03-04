@@ -153,3 +153,11 @@ class CreateEventsEvent extends ReserveEvent {
   @override
   List<Object?> get props => [reserves];
 }
+
+class SearchGameByNameEvent extends ReserveEvent {
+  final String gameName;
+  SearchGameByNameEvent({required this.gameName});
+
+  @override
+  List<Object?> get props => [gameName];
+}

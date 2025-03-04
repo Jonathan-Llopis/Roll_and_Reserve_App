@@ -13,6 +13,7 @@ class ReserveState {
   final ReserveEntity? reserve;
   final List<DifficultyEntity>? difficulties;
   final List<GameEntity>? games;
+  final List<GameEntity>? searchedGames;
   final List<GameCategoryEntity>? gameCategories;
 
   const ReserveState(
@@ -23,6 +24,7 @@ class ReserveState {
       this.reserve,
       this.difficulties,
       this.games,
+      this.searchedGames,
       this.gameCategories,
       this.reservesOfUser,
       this.eventsShop});
@@ -35,6 +37,7 @@ class ReserveState {
     ReserveEntity? reserve,
     List<DifficultyEntity>? difficulties,
     List<GameEntity>? games,
+    List<GameEntity>? searchedGames,
     List<GameCategoryEntity>? gameCategories,
     List<ReserveEntity>? reservesOfUser,
     List<ReserveEntity>? eventsShop,
@@ -47,6 +50,7 @@ class ReserveState {
         reserve: reserve ?? this.reserve,
         difficulties: difficulties ?? this.difficulties,
         games: games ?? this.games,
+        searchedGames: searchedGames ?? this.searchedGames,
         gameCategories: gameCategories ?? this.gameCategories,
         reservesOfUser: reservesOfUser ?? this.reservesOfUser,
         eventsShop: eventsShop ?? this.eventsShop);
@@ -93,6 +97,9 @@ class ReserveState {
           List<ReserveEntity> reservesOfUser, List<GameEntity> games) =>
       state.copyWith(
           reservesOfUser: reservesOfUser, isLoading: false, games: games);
+  factory ReserveState.searchGames(
+          ReserveState state, List<GameEntity> searchedGames) =>
+      state.copyWith(searchedGames: searchedGames, isLoading: false);
 
   factory ReserveState.getAllData({
     required ReserveState state,

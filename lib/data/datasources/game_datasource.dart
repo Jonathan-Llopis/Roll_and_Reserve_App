@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 abstract class GameRemoteDataSource {
   Future<List<GameModel>> getAllGame(String token);
+  Future<List<GameModel>> searchGameByName(String name, String token);
 }
 
 class GameRemoteDataSourceImpl implements GameRemoteDataSource {
@@ -26,6 +27,24 @@ class GameRemoteDataSourceImpl implements GameRemoteDataSource {
       return tableJson.map((json) => GameModel.fromJson(json)).toList();
     } else {
       throw Exception('Error al cargar los juegos.');
+    }
+  }
+  @override
+  Future<List<GameModel>> searchGameByName(String token, String name) async {
+    final response = await client.get(
+      Uri.parse('${dotenv.env['BACKEND']}/games/search/$name'),
+      headers: {
+        'authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> tableJson = json.decode(response.body);
+      return tableJson.map((json) => GameModel.fromJson(json)).toList();
+    } else if (response.statusCode == 204) {
+      return [];
+    } else {
+      throw Exception('Error al buscar los juegos.');
     }
   }
 }

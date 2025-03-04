@@ -60,3 +60,7 @@ class UpdateTokenNotificationParams {
 
   UpdateTokenNotificationParams({required this.userId, required this.token});
 }
+class SendMessageParams {
+  final String message;
+  SendMessageParams(this.message);
+}

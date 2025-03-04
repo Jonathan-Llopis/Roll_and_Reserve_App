@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/config/router/routes.dart';
 import 'package:roll_and_reserve/firebase_options.dart';
+import 'package:roll_and_reserve/presentation/blocs/chat/chat_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/language/language_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/language/language_state.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
@@ -86,6 +87,9 @@ class MyAppState extends State<MyApp> {
         ),
         BlocProvider(
           create: (_) => sl<ReviewBloc>(),
+        ),
+       BlocProvider(
+          create: (_) => sl<ChatBloc>(),
         ),
       ],
       child: BlocBuilder<LanguageBloc, LanguageState>(

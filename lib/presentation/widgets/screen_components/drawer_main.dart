@@ -83,7 +83,9 @@ class DrawerMain extends StatelessWidget {
                 ListTile(
                   leading: Icon(Icons.help, color: Colors.lightBlue),
                   title: Text(AppLocalizations.of(context)!.help),
-                  onTap: () {},
+                  onTap: () {
+                    context.go('/user/chat');
+                  },
                 ),
               ],
             ),

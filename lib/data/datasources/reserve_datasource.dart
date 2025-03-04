@@ -7,7 +7,7 @@ abstract class ReserveRemoteDataSource {
   Future<List<ReserveModel>> getAllReserves(String token);
   Future<bool> deleteReserves(int idReserves, String token);
   Future<bool> updateReserves(ReserveModel reserve, String token);
-  Future<int> createReserves(ReserveModel reserve, String token);
+  Future<int> createReserves(ReserveModel reserve, String token, int idShop);
   Future<bool> addUserToReserve(int idReserve, String idUser, String token);
   Future<bool> deleteUserToReserve(int idReserve, String idUser, String token);
   Future<List<ReserveModel>> getAllReservesByDate(
@@ -15,7 +15,7 @@ abstract class ReserveRemoteDataSource {
   Future<ReserveModel> getReserveById(int idReserve, String token);
   Future<List<ReserveModel>> getReservesOfUser(String idUser, String token);
   Future<bool> confirmReserve(int idReserve, String idUser, String token);
-  Future<int> createReservesEvent(ReserveModel reserve, String token);
+  Future<int> createReservesEvent(ReserveModel reserve, String token, int idShop);
   Future<List<ReserveModel>> getEvents(int idShop, String token);
 }
 
@@ -36,7 +36,10 @@ class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
     if (response.statusCode == 200) {
       final List<dynamic> reserveJson = json.decode(response.body);
       return reserveJson.map((json) => ReserveModel.fromJson(json)).toList();
-    } else {
+    } else if (response.statusCode == 204) {
+      return [];
+    }
+    else {
       throw Exception('Error al cargar las reservas.');
     }
   }
@@ -74,9 +77,9 @@ class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
   }
 
   @override
-  Future<int> createReserves(ReserveModel reserve, String token) async {
+  Future<int> createReserves(ReserveModel reserve, String token, int idShop) async {
     final response = await client.post(
-      Uri.parse('${dotenv.env['BACKEND']}/reserves'),
+      Uri.parse('${dotenv.env['BACKEND']}/reserves/$idShop'),
       headers: {
         'Content-Type': 'application/json',
         'authorization': 'Bearer $token',
@@ -140,7 +143,10 @@ class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
     if (response.statusCode == 200) {
       final List<dynamic> reserveJson = json.decode(response.body);
       return reserveJson.map((json) => ReserveModel.fromJson(json)).toList();
-    } else {
+    } else if (response.statusCode == 204) {
+      return [];
+    }
+    else {
       throw Exception('Error al cargar las reservas por fecha.');
     }
   }
@@ -177,7 +183,10 @@ class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
       return reserveJson
           .map((json) => ReserveModel.fromJsonUsersReserves(json))
           .toList();
-    } else {
+    }else if (response.statusCode == 204) {
+      return [];
+    } 
+    else {
       throw Exception('Error al cargar las reservas por fecha.');
     }
   }
@@ -201,9 +210,9 @@ class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
   }
 
   @override
-  Future<int> createReservesEvent(ReserveModel reserve, String token) async {
+  Future<int> createReservesEvent(ReserveModel reserve, String token, int idShop) async {
     final response = await client.post(
-      Uri.parse('${dotenv.env['BACKEND']}/reserves'),
+      Uri.parse('${dotenv.env['BACKEND']}/reserves/$idShop'),
       headers: {
         'Content-Type': 'application/json',
         'authorization': 'Bearer $token',
@@ -230,7 +239,10 @@ class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
     if (response.statusCode == 200) {
       final List<dynamic> reserveJson = json.decode(response.body);
       return reserveJson.map((json) => ReserveModel.fromJson(json)).toList();
-    } else {
+    }else if (response.statusCode == 204) {
+      return [];
+    }
+     else {
       throw Exception('Error al cargar los eventos de la tienda.');
     }
   }
