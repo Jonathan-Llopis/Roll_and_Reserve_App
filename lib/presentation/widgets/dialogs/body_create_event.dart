@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:roll_and_reserve/domain/entities/category_game_entity.dart';
 import 'package:roll_and_reserve/domain/entities/difficulty_entity.dart';
 import 'package:roll_and_reserve/domain/entities/game_entity.dart';
 import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
@@ -15,6 +14,7 @@ import 'package:roll_and_reserve/presentation/widgets/buttons/button_create_even
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_components/input_reservation_text.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/table_selection_checkbox.dart';
+import 'package:searchable_paginated_dropdown/searchable_paginated_dropdown.dart';
 
 class BodyCreateEvent extends StatefulWidget {
   final int idShop;
@@ -45,7 +45,6 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
       TextEditingController();
 
   DifficultyEntity? _selectedDifficulty;
-  GameCategoryEntity? _selectedGameCategory;
   GameEntity? _selectedGame;
   List<int> _selectedTableIds = [];
 
@@ -86,6 +85,51 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
                   key: _formKey,
                   child: Column(
                     children: [
+                      SearchableDropdownFormField<GameEntity>.paginated(
+                        backgroundDecoration: (Widget child) => Container(
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(4.0)),
+                            border: Border.all(
+                              color: const Color(0xFF000000),
+                              width: 1.0,
+                              style: BorderStyle.solid,
+                              strokeAlign: BorderSide.strokeAlignInside,
+                            ),
+                          ),
+                          child: child,
+                        ),
+                        hintText: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(AppLocalizations.of(context)!.game,
+                              style: TextStyle(fontSize: 16.0)),
+                        ),
+                        margin: const EdgeInsets.all(0),
+                        paginatedRequest: (int page, String? searchKey) async {
+                          final result = await widget.reserveBloc
+                              .searchGamesUseCase(searchKey ?? 'all');
+                          return result.fold(
+                            (failure) => [],
+                            (games) => games
+                                .map((game) => SearchableDropdownMenuItem(
+                                      value: game,
+                                      label: game.description,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(16.0),
+                                        child: Text(game.description),
+                                      ),
+                                    ))
+                                .toList(),
+                          );
+                        },
+                        validator: (value) =>
+                            validateSelectedValue(value, context),
+                        onChanged: (GameEntity? value) {
+                          setState(() {
+                            _selectedGame = value;
+                          });
+                        },
+                      ),
                       InputReservationText(
                           controller: _freePlacesController,
                           label: AppLocalizations.of(context)!
@@ -127,43 +171,6 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
                           },
                           validator: (value) =>
                               validateSelectedValue(value, context)),
-                      DropdownButtonFormField<GameCategoryEntity>(
-                          decoration: InputDecoration(
-                            labelText:
-                                AppLocalizations.of(context)!.game_category,
-                          ),
-                          value: _selectedGameCategory,
-                          items: widget.reserveBloc.state.gameCategories!
-                              .map((category) => DropdownMenuItem(
-                                    value: category,
-                                    child: Text(category.description),
-                                  ))
-                              .toList(),
-                          onChanged: (newValue) {
-                            setState(() {
-                              _selectedGameCategory = newValue;
-                            });
-                          },
-                          validator: (value) =>
-                              validateSelectedValue(value, context)),
-                      DropdownButtonFormField<GameEntity>(
-                          decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)!.game,
-                          ),
-                          value: _selectedGame,
-                          items: widget.reserveBloc.state.games!
-                              .map((game) => DropdownMenuItem(
-                                    value: game,
-                                    child: Text(game.description),
-                                  ))
-                              .toList(),
-                          onChanged: (newValue) {
-                            setState(() {
-                              _selectedGame = newValue;
-                            });
-                          },
-                          validator: (value) =>
-                              validateSelectedValue(value, context)),
                       const SizedBox(height: 20.0),
                       TableSelectionCheckbox(
                         tables: state.tablesFromShop!,
@@ -191,7 +198,6 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
                               requiredMaterialController:
                                   _requiredMaterialController,
                               selectedDifficulty: _selectedDifficulty,
-                              selectedGameCategory: _selectedGameCategory,
                               selectedGame: _selectedGame)
                         ],
                       ),

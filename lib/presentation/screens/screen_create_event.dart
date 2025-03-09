@@ -10,8 +10,10 @@ import 'package:roll_and_reserve/presentation/widgets/screen_components/default_
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ScreenCreateEvent extends StatefulWidget {
-  const ScreenCreateEvent({super.key, required this.idShop});
+  const ScreenCreateEvent(
+      {super.key, required this.idShop, required this.appBar});
   final int idShop;
+  final PreferredSizeWidget appBar;
 
   @override
   State<ScreenCreateEvent> createState() => _ScreenCreateEventState();
@@ -139,26 +141,27 @@ class _ScreenCreateEventState extends State<ScreenCreateEvent> {
 
     ReserveBloc reserveBloc = context.read<ReserveBloc>();
 
-    return BlocBuilder<ReserveBloc, ReserveState>(
-      builder: (context, state) {
-        return buildContent<ReserveState>(
-          state: state,
-          isLoading: (state) => state.isLoading,
-          errorMessage: (state) => state.errorMessage,
-          hasData: (state) => state.reserves != null,
-          contentBuilder: (state) {
-            return DefaultScaffold(
-              body: BodyCreateEvent(
+    return DefaultScaffold(
+      appBar: widget.appBar,
+      body: BlocBuilder<ReserveBloc, ReserveState>(
+        builder: (context, state) {
+          return buildContent<ReserveState>(
+            state: state,
+            isLoading: (state) => state.isLoading,
+            errorMessage: (state) => state.errorMessage,
+            hasData: (state) => state.reserves != null,
+            contentBuilder: (state) {
+              return BodyCreateEvent(
                 reserveBloc: reserveBloc,
                 reserves: state.reserves!,
                 idShop: widget.idShop,
                 starteTime: startDateTime,
                 endTime: endDateTime,
-              ),
-            );
-          },
-        );
-      },
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

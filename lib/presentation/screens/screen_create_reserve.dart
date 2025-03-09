@@ -10,10 +10,12 @@ class ScreenCreateReserve extends StatefulWidget {
       {super.key,
       required this.idTable,
       required this.idShop,
-      required this.searchDateTimeString});
+      required this.searchDateTimeString,
+      required this.appBar});
   final int idTable;
   final int idShop;
   final String searchDateTimeString;
+  final PreferredSizeWidget appBar;
 
   @override
   State<ScreenCreateReserve> createState() => _ScreenCreateReserveState();
@@ -26,11 +28,12 @@ class _ScreenCreateReserveState extends State<ScreenCreateReserve> {
     DateTime searchDateTime =
         DateFormat("yyyy-MM-dd").parse(widget.searchDateTimeString);
     return DefaultScaffold(
+        appBar: widget.appBar,
         body: BodyCreateReserve(
-      idTable: widget.idTable,
-      reserveBloc: reserveBloc,
-      idShop: widget.idShop,
-      searchDateTime: searchDateTime,
-    ));
+          idTable: widget.idTable,
+          reserveBloc: reserveBloc,
+          idShop: widget.idShop,
+          searchDateTime: searchDateTime,
+        ));
   }
 }

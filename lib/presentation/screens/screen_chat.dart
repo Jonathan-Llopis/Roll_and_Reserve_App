@@ -4,7 +4,6 @@ import 'package:roll_and_reserve/presentation/blocs/chat/chat_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/chat/chat_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/chat/chat_state.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:google_generative_ai/google_generative_ai.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -17,7 +16,7 @@ class _ChatScreenState extends State<ChatScreen> {
   final FocusNode _focusNode = FocusNode();
   @override
   void initState() {
-    context.read<ChatBloc>().add(const OnChatStart());
+    context.read<ChatBloc>().add(OnChatStart(context: context));
     super.initState();
   }
 
@@ -146,7 +145,7 @@ class BodyMessages extends StatelessWidget {
 
     return BlocBuilder<ChatBloc, ChatState>(
       builder: (context, state) {
-        if (state.chat != null) {
+        if (state.messages.isNotEmpty) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (scrollController.hasClients) {
               scrollController
@@ -157,21 +156,14 @@ class BodyMessages extends StatelessWidget {
           return ListView.builder(
             controller: scrollController,
             itemBuilder: (context, index) {
-              if (index == 0) {
-                return const SizedBox.shrink();
-              }
-              final content = state.chat.history.toList()[index];
-              final text = content.parts
-                  .whereType<TextPart>()
-                  .map((e) => e.text)
-                  .join("");
+              final text = state.messages[index]['text'] ?? '';
 
               return ChatMessage(
                 text: text,
-                isFromUser: content.role == 'user',
+                isFromUser: state.messages[index]['role'] == 'user',
               );
             },
-            itemCount: state.chat.history.length,
+            itemCount: state.messages.length,
           );
         } else {
           return Center(child: Text('Cargando chat...'));
@@ -194,7 +186,7 @@ class ChatMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Row(
         mainAxisAlignment:
             isFromUser ? MainAxisAlignment.end : MainAxisAlignment.start,
@@ -202,30 +194,60 @@ class ChatMessage extends StatelessWidget {
           Flexible(
             child: Container(
               constraints: const BoxConstraints(maxWidth: 600),
-              decoration: BoxDecoration(
-                color: isFromUser ? Colors.blue[100] : Colors.grey[300],
-                borderRadius: BorderRadius.circular(18),
+                decoration: BoxDecoration(
+                color: isFromUser
+                  ? const Color.fromARGB(255, 173, 216, 230) // Fondo más claro para el usuario
+                  : const Color.fromARGB(255, 207, 206, 206), // Fondo más claro para el bot
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(isFromUser ? 20 : 5),
+                  topRight: Radius.circular(isFromUser ? 5 : 20),
+                  bottomLeft: Radius.circular(20),
+                  bottomRight: Radius.circular(20),
+                ),
+                border: Border.all(
+                  color: isFromUser
+                      ? Colors.blue.shade200 // Borde sutil para el usuario
+                      : Colors.grey.shade300, // Borde sutil para el bot
+                  width: 1,
+                ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 4,
-                    offset: Offset(2, 2),
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 8,
+                    offset: const Offset(2, 4),
                   ),
                 ],
               ),
-              padding: const EdgeInsets.symmetric(
-                vertical: 15,
-                horizontal: 20,
-              ),
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
               margin: const EdgeInsets.only(bottom: 8),
-              child: MarkdownBody(
-                data: text,
-                styleSheet: MarkdownStyleSheet(
-                  p: TextStyle(
-                    fontSize: 16,
-                    color: isFromUser ? Colors.black87 : Colors.black54,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    isFromUser ? 'You' : 'Bot',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                      color: isFromUser
+                          ? Colors.blue.shade800 // Color más vibrante para el usuario
+                          : Colors.grey.shade800, // Color más suave para el bot
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 6),
+                  MarkdownBody(
+                    data: text,
+                    styleSheet: MarkdownStyleSheet(
+                      p: TextStyle(
+                        fontSize: 16,
+                        height: 1.5,
+                        color: isFromUser
+                            ? Colors.blue.shade900 // Texto más oscuro para el usuario
+                            : Colors.grey.shade900, // Texto más oscuro para el bot
+                      ),
+                      textAlign: WrapAlignment.spaceBetween, // Texto justificado
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

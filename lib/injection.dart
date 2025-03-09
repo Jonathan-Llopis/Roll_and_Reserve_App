@@ -55,7 +55,7 @@ import 'package:roll_and_reserve/domain/usecases/review_usecases/delete_review_u
 import 'package:roll_and_reserve/domain/usecases/review_usecases/get_all_review_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/shop_usecases/create_shop_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/shop_usecases/delete_shop_usecase.dart';
-import 'package:roll_and_reserve/domain/usecases/shop_usecases/get_all_shops_byowner_usecase%20copy.dart';
+import 'package:roll_and_reserve/domain/usecases/shop_usecases/get_all_shops_byowner_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/shop_usecases/get_all_shops_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/shop_usecases/get_shops_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/shop_usecases/update_shop_usecase.dart';
@@ -196,7 +196,7 @@ void configureDependencies() async {
     ),
   );
   sl.registerLazySingleton<ChatRepository>(
-    () => ChatRepositoryImpl(sl()
+    () => ChatRepositoryImpl(sl(),
     ),
   );
 
