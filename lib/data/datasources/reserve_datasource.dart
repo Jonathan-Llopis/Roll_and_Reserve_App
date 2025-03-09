@@ -121,7 +121,7 @@ class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
         'authorization': 'Bearer $token',
       },
     );
-    if (response.statusCode == 204) {
+    if (response.statusCode == 200) {
       return true;
     } else {
       throw Exception(

@@ -8,9 +8,8 @@ import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DefaultAppBar extends StatefulWidget implements PreferredSizeWidget {
-  final GlobalKey<ScaffoldState> scaffoldKey;
   const DefaultAppBar(
-      {super.key, required this.scaffoldKey});
+      {super.key,});
 
   @override
   State<DefaultAppBar> createState() => _DefaultAppBarState();
@@ -103,8 +102,8 @@ class _DefaultAppBarState extends State<DefaultAppBar> {
               Padding(
                 padding: const EdgeInsets.only(right: 16.0),
                 child: GestureDetector(
-                  onTap: () {
-                    widget.scaffoldKey.currentState?.openEndDrawer();
+                    onTap: () {
+                    Scaffold.of(context).openEndDrawer();
                   },
                   child: Container(
                     width: 50,

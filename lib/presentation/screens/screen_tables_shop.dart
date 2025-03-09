@@ -17,7 +17,10 @@ import 'package:roll_and_reserve/presentation/widgets/screen_components/screen_b
 
 class ScreenTablesOfShop extends StatefulWidget {
   final int idShop;
-  const ScreenTablesOfShop({super.key, required this.idShop});
+
+  final PreferredSizeWidget appBar;
+  const ScreenTablesOfShop(
+      {super.key, required this.idShop, required this.appBar});
 
   @override
   State<ScreenTablesOfShop> createState() => _ScreenTablesOfShopState();
@@ -30,56 +33,85 @@ class _ScreenTablesOfShopState extends State<ScreenTablesOfShop> {
   Widget build(BuildContext context) {
     context.read<TableBloc>().add(GetTablesByShopEvent(idShop: widget.idShop));
     context.read<ShopBloc>().add(GetShopEvent(idShop: widget.idShop));
-     context.read<ShopBloc>().add(GetShopsEvent());
+    context.read<ShopBloc>().add(GetShopsEvent());
+
     ShopBloc shopBloc = BlocProvider.of<ShopBloc>(context);
-    return BlocBuilder<ShopBloc, ShopState>(
-      builder: (context, state) {
-        return buildContent<ShopState>(
-          state: state,
-          isLoading: (state) => state.isLoading,
-          errorMessage: (state) => state.errorMessage,
-          hasData: (state) => state.shop != null,
-          contentBuilder: (state) {
-            return BlocBuilder<TableBloc, TableState>(
-              builder: (context, state) {
-                return buildContent<TableState>(
-                  state: state,
-                  isLoading: (state) => state.isLoading,
-                  errorMessage: (state) => state.errorMessage,
-                  hasData: (state) => state.tablesFromShop != null,
-                  contentBuilder: (state) {
-                    currentShop = shopBloc.state.shop!;
-                    LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
-                    return DefaultScaffold(
-                      body: BodyTablesShop(
+    LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
+    return DefaultScaffold(
+      appBar: widget.appBar,
+      body: BlocBuilder<ShopBloc, ShopState>(
+        builder: (context, state) {
+          return buildContent<ShopState>(
+            state: state,
+            isLoading: (state) => state.isLoading,
+            errorMessage: (state) => state.errorMessage,
+            hasData: (state) => state.shop != null,
+            contentBuilder: (state) {
+              return BlocBuilder<TableBloc, TableState>(
+                builder: (context, state) {
+                  return buildContent<TableState>(
+                    state: state,
+                    isLoading: (state) => state.isLoading,
+                    errorMessage: (state) => state.errorMessage,
+                    hasData: (state) => state.tablesFromShop != null,
+                    contentBuilder: (state) {
+                      currentShop = shopBloc.state.shop!;
+                      return BodyTablesShop(
                           currentShop: currentShop,
                           widget: widget,
                           loginBloc: loginBloc,
-                          tables: state.tablesFromShop!),
-                      floatingActionButton: loginBloc.state.user!.role == 1
-                          ? FloatingActionButton(
-                              onPressed: () {
-                                showUpdateCreateTableDialog(
-                                    context, currentShop, null);
-                              },
-                              child: const Icon(Icons.add),
-                            )
-                          : Container(),
-                      bottomNavigationBar: loginBloc.state.user!.role == 2
-                          ? BottomFilterTables(
-                              currentShop: currentShop,
-                              reserveBloc: context.read<ReserveBloc>(),
-                              tableBloc: context.read<TableBloc>(),
-                            )
-                          : null,
-                    );
-                  },
+                          tables: state.tablesFromShop!);
+                    },
+                  );
+                },
+              );
+            },
+          );
+        },
+      ),
+      floatingActionButton: BlocBuilder<ShopBloc, ShopState>(
+        builder: (context, state) {
+          return buildContent<ShopState>(
+            state: state,
+            isLoading: (state) => state.isLoading,
+            errorMessage: (state) => state.errorMessage,
+            hasData: (state) => state.shop != null,
+            contentBuilder: (state) {
+              currentShop = shopBloc.state.shop!;
+              return loginBloc.state.user!.role == 1
+                  ? FloatingActionButton(
+                      onPressed: () {
+                        showUpdateCreateTableDialog(context, currentShop, null);
+                      },
+                      child: const Icon(Icons.add),
+                    )
+                  : Container();
+            },
+          );
+        },
+      ),
+      bottomNavigationBar: BlocBuilder<ShopBloc, ShopState>(
+        builder: (context, state) {
+          return buildContent<ShopState>(
+            state: state,
+            isLoading: (state) => state.isLoading,
+            errorMessage: (state) => state.errorMessage,
+            hasData: (state) => state.shop != null,
+            contentBuilder: (state) {
+              currentShop = shopBloc.state.shop!;
+              if (loginBloc.state.user!.role == 2) {
+                return BottomFilterTables(
+                  currentShop: currentShop,
+                  reserveBloc: context.read<ReserveBloc>(),
+                  tableBloc: context.read<TableBloc>(),
                 );
-              },
-            );
-          },
-        );
-      },
+              } else {
+                return SizedBox.shrink();
+              }
+            },
+          );
+        },
+      ),
     );
   }
 }

@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 abstract class UseCase<Type, Params> {
   Future<Type> call(Params params);
 }
@@ -63,4 +65,8 @@ class UpdateTokenNotificationParams {
 class SendMessageParams {
   final String message;
   SendMessageParams(this.message);
+}
+class Context{
+  final BuildContext context;
+  Context(this.context);
 }

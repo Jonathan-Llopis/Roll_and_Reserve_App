@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:roll_and_reserve/domain/entities/category_game_entity.dart';
 import 'package:roll_and_reserve/domain/entities/difficulty_entity.dart';
 import 'package:roll_and_reserve/domain/entities/game_entity.dart';
 import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
@@ -19,7 +18,6 @@ class ButtonCreateEvent extends StatelessWidget {
     required TextEditingController descriptionController,
     required TextEditingController requiredMaterialController,
     required DifficultyEntity? selectedDifficulty,
-    required GameCategoryEntity? selectedGameCategory,
     required GameEntity? selectedGame,
   })  : _formKey = formKey,
         _selectedTableIds = selectedTableIds,
@@ -27,7 +25,7 @@ class ButtonCreateEvent extends StatelessWidget {
         _descriptionController = descriptionController,
         _requiredMaterialController = requiredMaterialController,
         _selectedDifficulty = selectedDifficulty,
-        _selectedGameCategory = selectedGameCategory,
+
         _selectedGame = selectedGame;
 
   final GlobalKey<FormState> _formKey;
@@ -37,7 +35,6 @@ class ButtonCreateEvent extends StatelessWidget {
   final TextEditingController _descriptionController;
   final TextEditingController _requiredMaterialController;
   final DifficultyEntity? _selectedDifficulty;
-  final GameCategoryEntity? _selectedGameCategory;
   final GameEntity? _selectedGame;
 
   @override

@@ -8,16 +8,15 @@ import 'package:roll_and_reserve/presentation/functions/state_check.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/default_scaffold.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/screen_body/body_reserves_user.dart';
 
-
 class ScreenReservesOfUser extends StatefulWidget {
-  const ScreenReservesOfUser({super.key});
+  final PreferredSizeWidget appBar;
+  const ScreenReservesOfUser({super.key, required this.appBar});
 
   @override
   State<ScreenReservesOfUser> createState() => _ScreenReservesOfUserState();
 }
 
 class _ScreenReservesOfUserState extends State<ScreenReservesOfUser> {
-
   @override
   void initState() {
     LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
@@ -37,10 +36,10 @@ class _ScreenReservesOfUserState extends State<ScreenReservesOfUser> {
           hasData: (state) => state.reservesOfUser != null,
           contentBuilder: (state) {
             return DefaultScaffold(
+              appBar: widget.appBar,
               body: BodyReservesUser(
                 reserves: state.reservesOfUser!,
               ),
-             
             );
           });
     });

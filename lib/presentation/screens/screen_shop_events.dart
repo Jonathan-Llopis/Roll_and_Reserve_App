@@ -11,7 +11,10 @@ import 'package:roll_and_reserve/presentation/widgets/screen_components/screen_b
 
 class ScreenShopEvents extends StatefulWidget {
   final int idShop;
-  const ScreenShopEvents({super.key, required this.idShop});
+
+  final PreferredSizeWidget appBar;
+  const ScreenShopEvents(
+      {super.key, required this.idShop, required this.appBar});
 
   @override
   State<ScreenShopEvents> createState() => _ScreenShopEventsState();
@@ -37,6 +40,7 @@ class _ScreenShopEventsState extends State<ScreenShopEvents> {
           hasData: (state) => state.eventsShop != null,
           contentBuilder: (state) {
             return DefaultScaffold(
+                appBar: widget.appBar,
                 body: BodyEvents(
                   events: state.eventsShop!,
                   idShop: widget.idShop,

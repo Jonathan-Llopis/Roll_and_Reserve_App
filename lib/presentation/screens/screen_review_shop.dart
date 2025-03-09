@@ -12,7 +12,10 @@ import 'package:roll_and_reserve/presentation/widgets/screen_components/screen_b
 
 class ScreenReviewShop extends StatefulWidget {
   final int idShop;
-  const ScreenReviewShop({super.key, required this.idShop});
+
+  final PreferredSizeWidget appBar;
+  const ScreenReviewShop(
+      {super.key, required this.idShop, required this.appBar});
 
   @override
   State<ScreenReviewShop> createState() => _ScreenReviewShopState();
@@ -40,6 +43,7 @@ class _ScreenReviewShopState extends State<ScreenReviewShop> {
             hasData: (state) => state.reviews != null,
             contentBuilder: (state) {
               return DefaultScaffold(
+                  appBar: widget.appBar,
                   body: BodyReviewShop(
                       shopBloc: shopBloc,
                       idShop: widget.idShop,

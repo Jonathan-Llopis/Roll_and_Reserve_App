@@ -17,10 +17,13 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class ScreenEvent extends StatefulWidget {
   final int idReserve;
   final int? idShop;
+
+  final PreferredSizeWidget appBar;
   const ScreenEvent({
     super.key,
     required this.idReserve,
     this.idShop,
+    required this.appBar,
   });
 
   @override
@@ -55,6 +58,7 @@ class _ScreenEventState extends State<ScreenEvent> {
                   .firstWhere((user) => user.id == loginBloc.state.user!.id);
             }
             return DefaultScaffold(
+                appBar: widget.appBar,
                 body: InformationEvent(
                   reserve: state.reserve!,
                   loginBloc: loginBloc,
