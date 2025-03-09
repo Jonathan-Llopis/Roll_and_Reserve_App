@@ -12,7 +12,8 @@ import 'package:roll_and_reserve/presentation/widgets/screen_components/screen_b
 import 'package:roll_and_reserve/presentation/widgets/screen_components/default_scaffold.dart';
 
 class ScreenMain extends StatefulWidget {
-  const ScreenMain({super.key});
+  final PreferredSizeWidget appBar;
+  const ScreenMain({super.key, required this.appBar});
 
   @override
   State<ScreenMain> createState() => _ScreenMainState();
@@ -25,7 +26,6 @@ class _ScreenMainState extends State<ScreenMain> {
     super.initState();
     NotificationService().getToken();
     BlocProvider.of<LoginBloc>(context).add(CheckAuthentication());
-    
   }
 
   @override
@@ -38,6 +38,7 @@ class _ScreenMainState extends State<ScreenMain> {
           hasData: (state) => state.user != null,
           contentBuilder: (state) {
             return DefaultScaffold(
+                appBar: widget.appBar,
                 body: BodyMain(),
                 floatingActionButton: state.user!.role == 1
                     ? FloatingActionButton(
@@ -47,8 +48,11 @@ class _ScreenMainState extends State<ScreenMain> {
                         child: const Icon(Icons.add),
                       )
                     : null,
-                bottomNavigationBar:
-                    state.user!.role == 2 ? BottomFilterShops(shopBloc: context.read<ShopBloc>(),) : null);
+                bottomNavigationBar: state.user!.role == 2
+                    ? BottomFilterShops(
+                        shopBloc: context.read<ShopBloc>(),
+                      )
+                    : null);
           });
     });
   }

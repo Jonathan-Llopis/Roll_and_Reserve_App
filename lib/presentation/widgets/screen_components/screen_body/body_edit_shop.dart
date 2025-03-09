@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:roll_and_reserve/domain/entities/shop_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
-import 'package:roll_and_reserve/presentation/blocs/tables/table_state.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_edit_shop.dart';
@@ -19,11 +18,10 @@ class BodyEditShop extends StatefulWidget {
       {super.key,
       required this.idShop,
       required this.widget,
-      required this.state});
+    });
   final int? idShop;
   final ScreenEditShop widget;
-  final TableState state;
-
+ 
   @override
   State<BodyEditShop> createState() => _BodyEditShopState();
 }

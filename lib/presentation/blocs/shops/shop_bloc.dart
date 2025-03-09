@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/core/use_case.dart';
 import 'package:roll_and_reserve/domain/usecases/shop_usecases/create_shop_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/shop_usecases/delete_shop_usecase.dart';
-import 'package:roll_and_reserve/domain/usecases/shop_usecases/get_all_shops_byowner_usecase%20copy.dart';
+import 'package:roll_and_reserve/domain/usecases/shop_usecases/get_all_shops_byowner_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/shop_usecases/get_all_shops_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/shop_usecases/get_shops_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/shop_usecases/update_shop_usecase.dart';

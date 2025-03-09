@@ -47,6 +47,7 @@ class DrawerMain extends StatelessWidget {
                   leading: Icon(Icons.home, color: Colors.lightBlue),
                   title: Text(AppLocalizations.of(context)!.home),
                   onTap: () {
+                    Navigator.pop(context);
                     context.go('/user');
                   },
                 ),
@@ -55,6 +56,7 @@ class DrawerMain extends StatelessWidget {
                         leading: Icon(Icons.qr_code, color: Colors.lightBlue),
                         title: Text(AppLocalizations.of(context)!.your_reservations),
                         onTap: () {
+                          Navigator.pop(context);
                           context.go('/user/userReserves');
                         },
                       )
@@ -63,6 +65,7 @@ class DrawerMain extends StatelessWidget {
                   leading: Icon(Icons.settings, color: Colors.lightBlue),
                   title: Text(AppLocalizations.of(context)!.settings),
                   onTap: () {
+                    Navigator.pop(context);
                     mostrarUserEdit(context);
                   },
                 ),
@@ -70,6 +73,7 @@ class DrawerMain extends StatelessWidget {
                   leading: Icon(Icons.lock, color: Colors.lightBlue),
                   title: Text(AppLocalizations.of(context)!.change_password),
                   onTap: () {
+                    Navigator.pop(context);
                     updatePassword(context);
                   },
                 ),
@@ -77,6 +81,7 @@ class DrawerMain extends StatelessWidget {
                   leading: Icon(Icons.translate, color: Colors.lightBlue),
                   title: Text(AppLocalizations.of(context)!.changeLanguage),
                   onTap: () {
+                    Navigator.pop(context);
                     changeLanguage(context);
                   },
                 ),
@@ -84,6 +89,7 @@ class DrawerMain extends StatelessWidget {
                   leading: Icon(Icons.help, color: Colors.lightBlue),
                   title: Text(AppLocalizations.of(context)!.help),
                   onTap: () {
+                    Navigator.pop(context);
                     context.go('/user/chat');
                   },
                 ),

@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
+
 abstract class ChatRepository {
-  Future<dynamic> startChat();
-  Future<dynamic> sendMessage(String message);
+  Future<String> startChat(BuildContext context);
+  Future<String> sendMessage(String message);
 }

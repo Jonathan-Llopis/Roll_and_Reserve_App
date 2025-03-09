@@ -19,11 +19,14 @@ class QRScannerScreen extends StatefulWidget {
   final int idTable;
   final int idReserve;
   final int idShop;
+
+  final PreferredSizeWidget appBar;
   const QRScannerScreen(
       {super.key,
       required this.idTable,
       required this.idReserve,
-      required this.idShop});
+      required this.idShop,
+      required this.appBar});
 
   @override
   State<QRScannerScreen> createState() => _QRScannerScreenState();
@@ -71,6 +74,7 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
                 hasData: (state) => state.reserve != null,
                 contentBuilder: (state) {
                   return DefaultScaffold(
+                    appBar: widget.appBar,
                     body: cameraPermissionGranted
                         ? Column(
                             children: [
@@ -81,45 +85,47 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
                                     final List<Barcode> barcodes =
                                         capture.barcodes;
                                     for (final barcode in barcodes) {
-                                        setState(() {
+                                      setState(() {
                                         scannedCode = barcode.rawValue;
-                                        });
+                                      });
 
-                                        showDialog(
+                                      showDialog(
                                         context: context,
                                         barrierDismissible: false,
                                         builder: (BuildContext context) {
                                           return Center(
-                                          child: CircularProgressIndicator(),
+                                            child: CircularProgressIndicator(),
                                           );
                                         },
-                                        );
+                                      );
 
-                                        if (scannedCode ==
+                                      if (scannedCode ==
                                           'rollandreserve://app/user/userReserves') {
                                         final startDate = DateFormat(
-                                            'dd - MM - yyyy HH:mm')
-                                          .parse(
-                                            '${state.reserve!.dayDate} ${state.reserve!.horaInicio}');
+                                                'dd - MM - yyyy HH:mm')
+                                            .parse(
+                                                '${state.reserve!.dayDate} ${state.reserve!.horaInicio}');
                                         if (startDate
-                                          .subtract(Duration(minutes: 5))
-                                          .isBefore(DateTime.now())) {
+                                            .subtract(Duration(minutes: 5))
+                                            .isBefore(DateTime.now())) {
                                           checkUserLocation(
-                                            context, widget.idReserve);
+                                              context, widget.idReserve);
                                         } else {
                                           Navigator.of(context).pop();
                                           confirmReserveDialog(
-                                            context,
-                                          AppLocalizations.of(context)!.game_session_not_started,
-                                            true);
+                                              context,
+                                              AppLocalizations.of(context)!
+                                                  .game_session_not_started,
+                                              true);
                                         }
-                                        } else {
+                                      } else {
                                         Navigator.of(context).pop();
                                         confirmReserveDialog(
-                                          context,
-                                           AppLocalizations.of(context)!.wrong_reservation_table,
-                                          true);
-                                        }
+                                            context,
+                                            AppLocalizations.of(context)!
+                                                .wrong_reservation_table,
+                                            true);
+                                      }
                                     }
                                   },
                                 ),
@@ -136,7 +142,9 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
                                             scannedCode = null;
                                           });
                                         },
-                                        child:  Text(  AppLocalizations.of(context)!.scan_again),
+                                        child: Text(
+                                            AppLocalizations.of(context)!
+                                                .scan_again),
                                       ),
                                     ],
                                   ),
@@ -147,8 +155,8 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
                         : Center(
                             child: ElevatedButton(
                               onPressed: _requestCameraPermission,
-                              child: Text(
-                                   AppLocalizations.of(context)!.grant_camera_permission),
+                              child: Text(AppLocalizations.of(context)!
+                                  .grant_camera_permission),
                             ),
                           ),
                   );
