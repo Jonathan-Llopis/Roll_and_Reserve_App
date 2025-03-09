@@ -17,8 +17,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<OnChatStart>((event, emit) async {
       emit(ChatState.loading(state));
       try {
-        final chat = await startChatUseCase(NoParams());
-        emit(ChatState.success(state, chat));
+        final responseIA = await startChatUseCase(Context(event.context));
+        final List<Map<String, String>> messagesUpdate = [{'role': 'IA', 'text': responseIA}];
+        emit(ChatState.success(state, messagesUpdate));
       } catch (e) {
         emit(state.copyWith(isLoading: false));
       }
@@ -26,11 +27,15 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
     on<OnChatSendMessage>((event, emit) async {
       emit(ChatState.loading(state));
+      final List<Map<String, String>> messagesUpdate  = List.from(state.messages)..add({'role': 'user', 'text': event.message});
+      emit(ChatState.userMessage(state, messagesUpdate));
+      emit(ChatState.loading(state));
       try {
-        final chat = await sendMessageUseCase(SendMessageParams(event.message));
-        emit(ChatState.success(state, chat));
+      final responseIA = await sendMessageUseCase(SendMessageParams(event.message));
+      final List<Map<String, String>> messagesUpdateIA  = List.from(state.messages)..add({'role': 'IA', 'text': responseIA});
+      emit(ChatState.success(state, messagesUpdateIA));
       } catch (e) {
-        emit(state.copyWith(isLoading: false));
+      emit(state.copyWith(isLoading: false));
       }
     });
   }

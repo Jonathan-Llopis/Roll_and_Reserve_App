@@ -18,11 +18,14 @@ class ScreenReserve extends StatefulWidget {
   final int idReserve;
   final int? idShop;
   final int? idTable;
+
+  final PreferredSizeWidget appBar;
   const ScreenReserve({
     super.key,
     required this.idReserve,
     this.idShop,
     this.idTable,
+    required this.appBar,
   });
 
   @override
@@ -66,6 +69,7 @@ class _ScreenReserveState extends State<ScreenReserve> {
                   .firstWhere((user) => user.id == loginBloc.state.user!.id);
             }
             return DefaultScaffold(
+                appBar: widget.appBar,
                 body: InformationReserve(
                   reserve: state.reserve!,
                   loginBloc: loginBloc,
