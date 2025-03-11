@@ -144,10 +144,10 @@ class _DialogoUserSettingsState extends State<DialogoUserSettings> {
                                     name: _nombreRealController.text,
                                     averageRaiting: state.user!.averageRaiting,
                                     role: state.user!.role,
+                                    notifications: state.user!.notifications,
                                   ),
                                 ),
                               );
-                          Navigator.pop(context);
                           Navigator.pop(context);
                         },
                         child:  Text( AppLocalizations.of(context)!.save),

@@ -13,6 +13,7 @@ import 'package:roll_and_reserve/domain/usecases/user_usecases/sign_up_user_usec
 import 'package:roll_and_reserve/domain/usecases/user_usecases/update_pass_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/user_usecases/update_user_info.dart';
 import 'package:roll_and_reserve/domain/usecases/user_usecases/validate_pass_usecase.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'login_event.dart';
 import 'login_state.dart';
 
@@ -90,9 +91,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<LoginGoogle>((event, emit) async {
       emit(LoginState.loading());
       final result = await signInUserGoogleUseCase(LoginParamsGoogle());
-      result.fold(
-        (failure) => emit(LoginState.failure("Fallo al realizar el login")),
-        (_) => emit(LoginState.success('')),
+      await result.fold(
+      (failure) async => emit(LoginState.failure("Fallo al realizar el login")),
+      (_) async {
+        final prefs = await SharedPreferences.getInstance();
+        final email = prefs.getString('email') ?? '';
+        emit(LoginState.success(email));
+      },
       );
     });
     on<ResetPassword>((event, emit) async {

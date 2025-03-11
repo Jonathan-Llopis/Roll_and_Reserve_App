@@ -16,7 +16,11 @@ class _ChatScreenState extends State<ChatScreen> {
   final FocusNode _focusNode = FocusNode();
   @override
   void initState() {
-    context.read<ChatBloc>().add(OnChatStart(context: context));
+    ChatBloc chatBloc = context.read<ChatBloc>();
+    if (chatBloc.state.messages.isEmpty) {
+      context.read<ChatBloc>().add(OnChatStart(context: context));
+    }
+
     super.initState();
   }
 
@@ -34,8 +38,11 @@ class _ChatScreenState extends State<ChatScreen> {
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 8.0),
-              child: Text(
-                "Ayuda",
+              child: IconButton(
+                icon: Icon(Icons.refresh),
+                onPressed: () {
+                  context.read<ChatBloc>().add(OnChatStart(context: context));
+                },
               ),
             ),
           ],
@@ -49,10 +56,10 @@ class _ChatScreenState extends State<ChatScreen> {
               focusNode: _focusNode,
             ),
           ],
-        ));
+        )
+        );
   }
 }
-
 class InputText extends StatelessWidget {
   const InputText({super.key, required this.focusNode});
 
@@ -67,45 +74,54 @@ class InputText extends StatelessWidget {
           margin: EdgeInsets.zero,
           child: Padding(
             padding: const EdgeInsets.symmetric(
-              vertical: 25,
+              vertical: 10,
               horizontal: 15,
             ),
             child: Row(
               children: [
                 Expanded(
-                  child: TextField(
-                    autofocus: true,
-                    focusNode: focusNode,
-                    controller: textController,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(15),
-                      hintText: 'Envia un mensaje',
-                      border: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(14),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxHeight: 150, // Maximum height for the TextField
+                    ),
+                    child: Scrollbar(
+                      child: TextField(
+                        autofocus: true,
+                        focusNode: focusNode,
+                        controller: textController,
+                        maxLines: 6,
+                        minLines: 1,
+                        decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.all(15),
+                          hintText: 'Envia un mensaje',
+                          border: OutlineInputBorder(
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(14),
+                            ),
+                            borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(14),
+                            ),
+                            borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                          ),
                         ),
-                        borderSide: BorderSide(
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(14),
-                        ),
-                        borderSide: BorderSide(
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
+                        onSubmitted: (_) {
+                          context.read<ChatBloc>().add(
+                                OnChatSendMessage(
+                                  message: textController.text,
+                                ),
+                              );
+                          textController.clear();
+                          focusNode.requestFocus();
+                        },
                       ),
                     ),
-                    onSubmitted: (_) {
-                      context.read<ChatBloc>().add(
-                            OnChatSendMessage(
-                              message: textController.text,
-                            ),
-                          );
-                      textController.clear();
-                      focusNode.requestFocus();
-                    },
                   ),
                 ),
                 const SizedBox.square(
@@ -194,10 +210,12 @@ class ChatMessage extends StatelessWidget {
           Flexible(
             child: Container(
               constraints: const BoxConstraints(maxWidth: 600),
-                decoration: BoxDecoration(
+              decoration: BoxDecoration(
                 color: isFromUser
-                  ? const Color.fromARGB(255, 173, 216, 230) // Fondo más claro para el usuario
-                  : const Color.fromARGB(255, 207, 206, 206), // Fondo más claro para el bot
+                    ? const Color.fromARGB(
+                        255, 173, 216, 230) // Fondo más claro para el usuario
+                    : const Color.fromARGB(
+                        255, 207, 206, 206), // Fondo más claro para el bot
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(isFromUser ? 20 : 5),
                   topRight: Radius.circular(isFromUser ? 5 : 20),
@@ -229,7 +247,8 @@ class ChatMessage extends StatelessWidget {
                       fontWeight: FontWeight.w700,
                       fontSize: 14,
                       color: isFromUser
-                          ? Colors.blue.shade800 // Color más vibrante para el usuario
+                          ? Colors.blue
+                              .shade800 // Color más vibrante para el usuario
                           : Colors.grey.shade800, // Color más suave para el bot
                     ),
                   ),
@@ -241,10 +260,13 @@ class ChatMessage extends StatelessWidget {
                         fontSize: 16,
                         height: 1.5,
                         color: isFromUser
-                            ? Colors.blue.shade900 // Texto más oscuro para el usuario
-                            : Colors.grey.shade900, // Texto más oscuro para el bot
+                            ? Colors.blue
+                                .shade900 // Texto más oscuro para el usuario
+                            : Colors
+                                .grey.shade900, // Texto más oscuro para el bot
                       ),
-                      textAlign: WrapAlignment.spaceBetween, // Texto justificado
+                      textAlign:
+                          WrapAlignment.spaceBetween, // Texto justificado
                     ),
                   ),
                 ],

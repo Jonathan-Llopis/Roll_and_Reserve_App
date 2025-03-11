@@ -4,13 +4,24 @@ class FirestoreUsersDatasource {
   Future<void> registerUser(String email, String nombre, String id) async {
     DocumentReference users =
         FirebaseFirestore.instance.collection('Users').doc(id);
-    await users.set({'email': email, 'name': nombre, 'rol': 2, 'id': id});
+    await users.set({'email': email, 'name': nombre, 'rol': 2, 'id': id,  'notifications': []});
   }
 
-  Future<void> updateUserInfo(String nombre, String id, int role) async {
+  Future<void> updateUserInfo(String nombre, String id, int role, List<int> notifications) async {
     DocumentReference users =
         FirebaseFirestore.instance.collection('Users').doc(id);
-    await users.update({'name': nombre, 'rol': role,});
+    await users.update({'name': nombre, 'rol': role, 'notifications': notifications });
+  }
+
+  Future<List<int>> getUserNotifications(String id) async {
+    DocumentReference users =
+        FirebaseFirestore.instance.collection('Users').doc(id);
+    DocumentSnapshot snapshot = await users.get();
+    if (snapshot.exists) {
+      return List<int>.from(snapshot['notifications']);
+    } else {
+      return [];
+    }
   }
 
 
