@@ -9,6 +9,7 @@ class UserEntity {
   final dynamic avatar;
   final double averageRaiting;
   final bool? reserveConfirmation;
+  final List<int> notifications;
 
   UserEntity(
       {required this.email,
@@ -18,7 +19,8 @@ class UserEntity {
       required this.name,
       required this.username,
       required this.role,
-      this.reserveConfirmation});
+      this.reserveConfirmation,
+      required this.notifications});
 
   UserModel toUserModel(String? avatarIdUpdate) {
     return UserModel(
@@ -29,6 +31,7 @@ class UserEntity {
         role: role,
         avatarId: avatarIdUpdate ?? "",
         avatar: avatar,
-        averageRaiting: averageRaiting);
+        averageRaiting: averageRaiting,
+        notifications: notifications,);
   }
 }

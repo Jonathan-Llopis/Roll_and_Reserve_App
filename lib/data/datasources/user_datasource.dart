@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
+import 'package:http_parser/http_parser.dart' as http_parser;
 import 'dart:convert';
 import 'package:roll_and_reserve/data/models/user_model.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -147,22 +148,31 @@ class UserDatasourceImpl implements UserDatasource {
       Uri.parse('${dotenv.env['BACKEND']}/files/avatar/${user.id}'),
     );
     request.headers['authorization'] = 'Bearer $token';
-    final bytes = await File(user.avatar.path).readAsBytes();
+
+    var file = File(user.avatar.path);
+    if (!await file.exists()) {
+      throw Exception('El archivo no existe: ${user.avatar.path}');
+    }
     request.files.add(
-      http.MultipartFile.fromBytes(
+      await http.MultipartFile.fromPath(
         'file',
-        bytes,
-        filename: 'avatar',
+        user.avatar.path,
+        contentType: http_parser.MediaType('image', 'png'),
       ),
     );
-    var response = await request.send();
+    var streamedResponse = await request.send();
+    var response = await http.Response.fromStream(streamedResponse);
     if (response.statusCode == 201) {
-      var responseBody = await response.stream.bytesToString();
-      var id = jsonDecode(responseBody)[0]['id'];
-      return id;
+      if (response.body.isNotEmpty) {
+        var jsonResponse = jsonDecode(response.body);
+        var id = jsonResponse[0]['id'].toString();
+        return id;
+      } else {
+        throw Exception('Error: Empty response body');
+      }
     } else {
       throw Exception(
-          'Error al actualizar el avatar del usuario: ${response.statusCode}');
+          'Error al actualizar el avatar del usuario: ${response.statusCode}, Body: ${response.body}');
     }
   }
 

@@ -7,12 +7,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:285149567188:android:3bcfbb020855df58774341",
+        "mobilesdk_app_id": "1:285149567188:android:c4df20e09002f995774341",
         "android_client_info": {
-          "package_name": "com.example.rollAndReserve"
+          "package_name": "com.example.rollandreserve"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "285149567188-5auq4pqso5fno4n3dv9sbt62qt2hkt50.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.rollandreserve",
+            "certificate_hash": "823c52bcb05af7cb2f17d4135caade6e87b55d67"
+          }
+        },
         {
           "client_id": "285149567188-cjcvpikn18c1dhtargt5itmp4nolco0r.apps.googleusercontent.com",
           "client_type": 3
