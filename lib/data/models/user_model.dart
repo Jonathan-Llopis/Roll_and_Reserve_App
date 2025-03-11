@@ -14,6 +14,7 @@ class UserModel {
   final dynamic avatar;
   final double averageRaiting;
   final bool? reserveConfirmation;
+  List<int> notifications;
 
   UserModel(
       {required this.id,
@@ -24,6 +25,7 @@ class UserModel {
       required this.avatar,
       required this.avatarId,
       required this.averageRaiting,
+      required this.notifications,
       this.reserveConfirmation});
 
   static UserModel fromUserCredential(UserCredential userCredentials) {
@@ -35,7 +37,8 @@ class UserModel {
         role: 2,
         avatarId: "",
         avatar: File(""),
-        averageRaiting: 0);
+        averageRaiting: 0,
+        notifications: [],);
   }
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -47,7 +50,9 @@ class UserModel {
         username: json['username'] ?? "",
         avatarId: json['avatar'] ?? "67c4bf09ae01906bd75ace8d",
         avatar: File(""),
-        averageRaiting: calcularMediaRatings(json['reviews_shop'] ?? []));
+        notifications: json['notifications'] ?? [],
+        averageRaiting: calcularMediaRatings(json['reviews_shop'] ?? [],
+        ));
   }
 
   factory UserModel.fromJsonReserve(
@@ -61,7 +66,8 @@ class UserModel {
         avatarId: json['avatar'] ?? "67c4bf09ae01906bd75ace8d",
         avatar: File(""),
         averageRaiting: calcularMediaRatings(json['reviews_shop'] ?? []),
-        reserveConfirmation: reserveConfirmation);
+        reserveConfirmation: reserveConfirmation,
+        notifications: json['notifications'] ?? []);
   }
 
   Map<String, dynamic> crateToJson(String password) {
@@ -72,6 +78,7 @@ class UserModel {
       'name': name,
       'username': username,
       'password': password,
+      'notifications': notifications,
     };
   }
 
@@ -82,6 +89,7 @@ class UserModel {
       'role': role,
       'name': name,
       'username': username,
+      'notifications': notifications,
     };
   }
 
@@ -94,6 +102,7 @@ class UserModel {
         username: username,
         avatar: avatarFile,
         averageRaiting: averageRaiting,
-        reserveConfirmation: reserveConfirmation ?? false);
+        reserveConfirmation: reserveConfirmation ?? false,
+        notifications: notifications);
   }
 }

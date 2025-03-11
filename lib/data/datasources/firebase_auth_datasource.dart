@@ -31,27 +31,35 @@ class FirebaseAuthDataSource {
 
   Future<UserModel> signInWithGoogle() async {
     UserCredential userCredentials;
-    if (kIsWeb) {
-      GoogleAuthProvider googleProvider = GoogleAuthProvider();
+    try {
+      if (kIsWeb) {
+        GoogleAuthProvider googleProvider = GoogleAuthProvider();
 
-      googleProvider
-          .addScope('https://www.googleapis.com/auth/contacts.readonly');
-      googleProvider.setCustomParameters({'login_hint': 'user@example.com'});
+        googleProvider
+            .addScope('https://www.googleapis.com/auth/contacts.readonly');
+        googleProvider.setCustomParameters({'login_hint': 'user@example.com'});
 
-      userCredentials =
-          await FirebaseAuth.instance.signInWithPopup(googleProvider);
-    } else {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      final GoogleSignInAuthentication? googleAuth =
-          await googleUser?.authentication;
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
-      );
-      userCredentials =
-          await FirebaseAuth.instance.signInWithCredential(credential);
+        userCredentials =
+            await FirebaseAuth.instance.signInWithPopup(googleProvider);
+      } else {
+        final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+        if (googleUser == null) {
+          throw FirebaseAuthException(
+              code: 'ERROR_ABORTED_BY_USER', message: 'Sign in aborted by user');
+        }
+        final GoogleSignInAuthentication? googleAuth =
+            await googleUser.authentication;
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth?.accessToken,
+          idToken: googleAuth?.idToken,
+        );
+        userCredentials =
+            await FirebaseAuth.instance.signInWithCredential(credential);
+      }
+      return UserModel.fromUserCredential(userCredentials);
+    } catch (e) {
+      rethrow;
     }
-    return UserModel.fromUserCredential(userCredentials);
   }
 
   Future<void> resetPassword(String email) async {

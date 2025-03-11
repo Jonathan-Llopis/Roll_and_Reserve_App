@@ -18,27 +18,48 @@ class UserRespositoryImpl implements UserRespository {
 
   UserRespositoryImpl(this.dataSource, this.sharedPreferences,
       this.firebaseUserDataSource, this.userDatasource);
+      @override
+      Future<Either<Failure, UserEntity>> signInGoogle() async {
+        try {
+          UserModel user = await dataSource.signInWithGoogle();
+          bool isUserRegistered = await firebaseUserDataSource.isEmailUsed(user.email);
 
-  @override
-  Future<Either<Failure, UserEntity>> signInGoogle() async {
-    try {
-      UserModel user = await dataSource.signInWithGoogle();
-      String tokenGenerado =
-          await userDatasource.getValidToken(user.email, "1");
-      await sharedPreferences.setString('email', user.email);
-      await sharedPreferences.setString('id', user.id);
-      await sharedPreferences.setString('token', tokenGenerado);
-      UserModel usuerDataBase =
-          await userDatasource.getValidUser(user.id, tokenGenerado);
+          if (!isUserRegistered) {
+            firebaseUserDataSource.registerUser(
+              user.email,
+              user.name,
+              user.id,
+            );
 
-      dynamic avatarFile = await userDatasource.getUserAvatar(
-          usuerDataBase.avatarId, tokenGenerado);
+            UserModel usuarioRegistro = UserModel(
+              email: user.email,
+              id: user.id,
+              name: user.name,
+              username: user.username,
+              role: 2,
+              avatarId: user.avatarId,
+              avatar: File(""),
+              averageRaiting: 0,
+              notifications: [],
+            );
+            await userDatasource.createUser(usuarioRegistro, "1");
+          }
 
-      return Right(usuerDataBase.toUserEntity(avatarFile, null));
-    } catch (e) {
-      return Left(AuthFailure());
-    }
-  }
+          await sharedPreferences.setString('email', user.email);
+          await sharedPreferences.setString('id', user.id);
+
+          String tokenGenerado = await userDatasource.getValidToken(user.email, "1");
+          await sharedPreferences.setString('token', tokenGenerado);
+
+          UserModel usuerDataBase = await userDatasource.getValidUser(user.id, tokenGenerado);
+          dynamic avatarFile = await userDatasource.getUserAvatar(usuerDataBase.avatarId, tokenGenerado);
+
+          return Right(usuerDataBase.toUserEntity(avatarFile, null));
+        } catch (e) {
+          print('Error during Google Sign-In: $e');
+          return Left(AuthFailure());
+        }
+      }
 
   @override
   Future<Either<Failure, UserEntity>> signIn(
@@ -83,6 +104,7 @@ class UserRespositoryImpl implements UserRespository {
         avatarId: user.avatarId,
         avatar: File(""),
         averageRaiting: 0,
+        notifications: [],
       );
       await userDatasource.createUser(usuarioRegistro, password);
       String tokenGenerado =
@@ -105,6 +127,8 @@ class UserRespositoryImpl implements UserRespository {
         final id = sharedPreferences.getString('id');
         UserModel usuerDataBase =
             await userDatasource.getValidUser(id!, token!);
+        usuerDataBase.notifications =
+            await firebaseUserDataSource.getUserNotifications(id);
         dynamic avatarFile =
             await userDatasource.getUserAvatar(usuerDataBase.avatarId, token);
         return Right(usuerDataBase.toUserEntity(avatarFile, null));
@@ -174,13 +198,18 @@ class UserRespositoryImpl implements UserRespository {
   @override
   Future<Either<Failure, bool>> updateUserInfo(UserEntity user) async {
     try {
+      late UserModel userModel;
       final token = sharedPreferences.getString('token');
       await firebaseUserDataSource.updateUserInfo(
-          user.name, user.id, user.role);
-      String avatarId =
-          await userDatasource.updateAvatar(user.toUserModel(null), token!);
-      UserModel userModel = user.toUserModel(avatarId);
-      await userDatasource.updateUserInfo(userModel, token);
+          user.name, user.id, user.role, user.notifications);
+      if (user.avatar != null) {
+        String avatarId =
+            await userDatasource.updateAvatar(user.toUserModel(null), token!);
+        userModel = user.toUserModel(avatarId);
+      } else {
+        userModel = user.toUserModel(null);
+      }
+      await userDatasource.updateUserInfo(userModel, token!);
       return Right(true);
     } catch (e) {
       return Left(AuthFailure());
@@ -227,8 +256,8 @@ class UserRespositoryImpl implements UserRespository {
   }
 
   @override
-  Future<Either<Failure, bool>> updateTokenNotification(String id,
-      String tokenNotification) async {
+  Future<Either<Failure, bool>> updateTokenNotification(
+      String id, String tokenNotification) async {
     try {
       final token = sharedPreferences.getString('token');
       final id = sharedPreferences.getString('id');
