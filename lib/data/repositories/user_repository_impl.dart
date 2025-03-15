@@ -18,48 +18,52 @@ class UserRespositoryImpl implements UserRespository {
 
   UserRespositoryImpl(this.dataSource, this.sharedPreferences,
       this.firebaseUserDataSource, this.userDatasource);
-      @override
-      Future<Either<Failure, UserEntity>> signInGoogle() async {
-        try {
-          UserModel user = await dataSource.signInWithGoogle();
-          bool isUserRegistered = await firebaseUserDataSource.isEmailUsed(user.email);
+  @override
+  Future<Either<Failure, UserEntity>> signInGoogle() async {
+    try {
+      UserModel user = await dataSource.signInWithGoogle();
+      bool isUserRegistered =
+          await firebaseUserDataSource.isEmailUsed(user.email);
 
-          if (!isUserRegistered) {
-            firebaseUserDataSource.registerUser(
-              user.email,
-              user.name,
-              user.id,
-            );
+      if (!isUserRegistered) {
+        firebaseUserDataSource.registerUser(
+          user.email,
+          user.name,
+          user.id,
+        );
 
-            UserModel usuarioRegistro = UserModel(
-              email: user.email,
-              id: user.id,
-              name: user.name,
-              username: user.username,
-              role: 2,
-              avatarId: user.avatarId,
-              avatar: File(""),
-              averageRaiting: 0,
-              notifications: [],
-            );
-            await userDatasource.createUser(usuarioRegistro, "1");
-          }
-
-          await sharedPreferences.setString('email', user.email);
-          await sharedPreferences.setString('id', user.id);
-
-          String tokenGenerado = await userDatasource.getValidToken(user.email, "1");
-          await sharedPreferences.setString('token', tokenGenerado);
-
-          UserModel usuerDataBase = await userDatasource.getValidUser(user.id, tokenGenerado);
-          dynamic avatarFile = await userDatasource.getUserAvatar(usuerDataBase.avatarId, tokenGenerado);
-
-          return Right(usuerDataBase.toUserEntity(avatarFile, null));
-        } catch (e) {
-          print('Error during Google Sign-In: $e');
-          return Left(AuthFailure());
-        }
+        UserModel usuarioRegistro = UserModel(
+          email: user.email,
+          id: user.id,
+          name: user.name,
+          username: user.username,
+          role: 2,
+          avatarId: user.avatarId,
+          avatar: File(""),
+          averageRaiting: 0,
+          notifications: [],
+        );
+        await userDatasource.createUser(usuarioRegistro, "1");
       }
+
+      await sharedPreferences.setString('email', user.email);
+      await sharedPreferences.setString('id', user.id);
+
+      String tokenGenerado =
+          await userDatasource.getValidToken(user.email, "1");
+      await sharedPreferences.setString('token', tokenGenerado);
+
+      UserModel usuerDataBase =
+          await userDatasource.getValidUser(user.id, tokenGenerado);
+      dynamic avatarFile = await userDatasource.getUserAvatar(
+          usuerDataBase.avatarId, tokenGenerado);
+
+      return Right(usuerDataBase.toUserEntity(avatarFile, null));
+    } catch (e) {
+      print('Error during Google Sign-In: $e');
+      return Left(AuthFailure());
+    }
+  }
 
   @override
   Future<Either<Failure, UserEntity>> signIn(
@@ -220,6 +224,8 @@ class UserRespositoryImpl implements UserRespository {
   Future<Either<Failure, bool>> updatePassword(String password) async {
     try {
       await dataSource.updatePassword(password);
+      await userDatasource.updatePassword(
+          sharedPreferences.getString('id')!, "1", password, "1");
       return Right(true);
     } catch (e) {
       return Left(AuthFailure());
