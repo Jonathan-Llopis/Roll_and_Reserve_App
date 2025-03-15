@@ -42,19 +42,15 @@ class FirebaseAuthDataSource {
         userCredentials =
             await FirebaseAuth.instance.signInWithPopup(googleProvider);
       } else {
-        final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-        if (googleUser == null) {
-          throw FirebaseAuthException(
-              code: 'ERROR_ABORTED_BY_USER', message: 'Sign in aborted by user');
-        }
+        final GoogleSignIn googleSignIn = GoogleSignIn();
+        await googleSignIn.signOut(); // Ensure the user can choose the account
+        final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
         final GoogleSignInAuthentication? googleAuth =
-            await googleUser.authentication;
+        await googleUser?.authentication;
         final credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth?.accessToken,
-          idToken: googleAuth?.idToken,
-        );
-        userCredentials =
-            await FirebaseAuth.instance.signInWithCredential(credential);
+        accessToken: googleAuth?.accessToken, idToken: googleAuth?.idToken);
+
+        userCredentials = await auth.signInWithCredential(credential);
       }
       return UserModel.fromUserCredential(userCredentials);
     } catch (e) {

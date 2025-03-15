@@ -17,6 +17,7 @@ abstract class UserDatasource {
   Future<String> updateAvatar(UserModel user, String token);
   Future<bool> updateTokenNotification(
       String id, String tokenNotificacion, String token);
+  Future <bool> updatePassword(String id, String oldPassword, String newPassword, String token);
 }
 
 class UserDatasourceImpl implements UserDatasource {
@@ -193,6 +194,26 @@ class UserDatasourceImpl implements UserDatasource {
     } else {
       throw Exception(
           'Error al actualizar el token de notificación: ${response.body}');
+    }
+  }
+  @override
+  Future<bool> updatePassword(String id, String oldPassword, String newPassword, String token) async {
+    final response = await client.put(
+      Uri.parse('${dotenv.env['BACKEND']}/users/$id/password'),
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': 'Bearer $token',
+      },
+      body: json.encode({
+        'oldPassword': oldPassword,
+        'newPassword': newPassword,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Error al actualizar la contraseña: ${response.body}');
     }
   }
 }

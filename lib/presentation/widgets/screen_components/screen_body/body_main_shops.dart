@@ -52,8 +52,10 @@ class _BodyMainState extends State<BodyMain> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  AppLocalizations.of(context)!.welcome_user(
-                                      loginBloc.state.user!.username),
+                                    AppLocalizations.of(context)!.welcome_user(
+                                      loginBloc.state.user!.username.length > 15 
+                                      ? '${loginBloc.state.user!.username.substring(0, 15)}...' 
+                                      : loginBloc.state.user!.username),
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleLarge

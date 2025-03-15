@@ -34,35 +34,49 @@ class _ScreenReviewShopState extends State<ScreenReviewShop> {
     ReviewBloc reviewBloc = BlocProvider.of<ReviewBloc>(context);
     LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
     ShopBloc shopBloc = BlocProvider.of<ShopBloc>(context);
-    return BlocBuilder<ReviewBloc, ReviewState>(
-      builder: (context, state) {
-        return buildContent<ReviewState>(
-            state: state,
-            isLoading: (state) => state.isLoading,
-            errorMessage: (state) => state.errorMessage,
-            hasData: (state) => state.reviews != null,
-            contentBuilder: (state) {
-              return DefaultScaffold(
-                  appBar: widget.appBar,
-                  body: BodyReviewShop(
-                      shopBloc: shopBloc,
-                      idShop: widget.idShop,
-                      reviews: state.reviews!),
-                  floatingActionButton: loginBloc.state.user!.role == 1
-                      ? Container()
-                      : state.reviews!.any((review) =>
-                              review.writerId == loginBloc.state.user!.id)
-                          ? Container()
-                          : FloatingActionButton(
-                              backgroundColor: Colors.deepPurple,
-                              child: const Icon(Icons.add),
-                              onPressed: () {
-                                createReview(context, reviewBloc, shopBloc,
-                                    widget.idShop);
-                              },
-                            ));
-            });
-      },
-    );
+
+    return DefaultScaffold(
+        appBar: widget.appBar,
+        body: BlocBuilder<ReviewBloc, ReviewState>(
+          builder: (context, state) {
+            return buildContent<ReviewState>(
+              state: state,
+              isLoading: (state) => state.isLoading,
+              errorMessage: (state) => state.errorMessage,
+              hasData: (state) => state.reviews != null,
+              contentBuilder: (state) {
+                return BodyReviewShop(
+                    shopBloc: shopBloc,
+                    idShop: widget.idShop,
+                    reviews: state.reviews!);
+              },
+            );
+          },
+        ),
+        floatingActionButton: loginBloc.state.user!.role == 1
+            ? Container()
+            :  BlocBuilder<ReviewBloc, ReviewState>(
+          builder: (context, state) {
+            return buildContent<ReviewState>(
+              state: state,
+              isLoading: (state) => state.isLoading,
+              errorMessage: (state) => state.errorMessage,
+              hasData: (state) => state.reviews != null,
+              contentBuilder: (state) {
+                return  state.reviews!.any(
+                    (review) => review.writerId == loginBloc.state.user!.id)
+                ? Container()
+                : FloatingActionButton(
+                    backgroundColor: Colors.deepPurple,
+                    child: const Icon(Icons.add),
+                    onPressed: () {
+                      createReview(
+                          context, reviewBloc, shopBloc, widget.idShop);
+                    },
+                  );
+              },
+            );
+          },
+        ));
   }
 }
