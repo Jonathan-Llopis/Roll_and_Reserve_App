@@ -79,7 +79,10 @@ class _BodyMainState extends State<BodyMain> {
                               style:
                                   TextStyle(fontSize: 18, color: Colors.blue),
                             ),
-                      const Icon(Icons.map_sharp, size: 48, color: Colors.blue),
+                      GestureDetector(onTap:(){
+                        context.go('/user/map');
+                      },
+                      child:  const Icon(Icons.map_sharp, size: 48, color: Colors.blue)),
                     ],
                   ),
                 ),

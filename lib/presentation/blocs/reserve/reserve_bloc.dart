@@ -21,6 +21,7 @@ import 'package:roll_and_reserve/domain/usecases/reserve_usecases/get_events_sho
 import 'package:roll_and_reserve/domain/usecases/reserve_usecases/get_reserve_withuser_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/reserve_usecases/get_reserves_from_user_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/reserve_usecases/search_games_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/user_usecases/get_last_ten_usecase.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_state.dart';
 
@@ -40,6 +41,7 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
   final GetEventsShopUsecase getEventsShopUsecase;
   final CreateEventsUsecase createEventsUsecase;
   final SearchGamesUseCase searchGamesUseCase;
+  final GetLastTenPlayersUseCase getLastTenPlayersUseCase;
 
   ReserveBloc(
       this.createReserveUseCase,
@@ -56,7 +58,8 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
       this.confirmateReserveUsecase,
       this.getEventsShopUsecase,
       this.createEventsUsecase,
-      this.searchGamesUseCase)
+      this.searchGamesUseCase,
+      this.getLastTenPlayersUseCase)
       : super(const ReserveState()) {
     on<GetReservesEvent>((event, emit) async {
       try {
@@ -561,5 +564,18 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
       },
       );
     });
+    on<GetLastTenPlayersEvent>((event, emit) async {
+    emit(ReserveState.loading(
+      state,
+    ));
+    final result = await getLastTenPlayersUseCase(IdGoogleParams(googleId: event.idGoogle));
+    result.fold(
+      (failure) => emit(
+          ReserveState.failure(state, "Fallo al obtener los últimos diez jugadores")),
+      (players) {
+        emit(ReserveState.getLastUsers(state, players));
+      },
+    );
+  });
   }
 }

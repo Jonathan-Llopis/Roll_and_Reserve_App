@@ -71,7 +71,7 @@ class _ScreenReviewShopState extends State<ScreenReviewShop> {
                     child: const Icon(Icons.add),
                     onPressed: () {
                       createReview(
-                          context, reviewBloc, shopBloc, widget.idShop);
+                          context, reviewBloc, widget.idShop, null);
                     },
                   );
               },

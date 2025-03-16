@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:roll_and_reserve/data/models/reserve_model.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:roll_and_reserve/data/models/user_model.dart';
 
 abstract class ReserveRemoteDataSource {
   Future<List<ReserveModel>> getAllReserves(String token);
@@ -17,6 +18,7 @@ abstract class ReserveRemoteDataSource {
   Future<bool> confirmReserve(int idReserve, String idUser, String token);
   Future<int> createReservesEvent(ReserveModel reserve, String token, int idShop);
   Future<List<ReserveModel>> getEvents(int idShop, String token);
+  Future<List<UserModel>> getLastTenPlayers(String idGoogle, String token);
 }
 
 class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
@@ -244,6 +246,24 @@ class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
     }
      else {
       throw Exception('Error al cargar los eventos de la tienda.');
+    }
+  }
+  @override
+  Future<List<UserModel>> getLastTenPlayers(String idGoogle, String token) async {
+    final response = await client.get(
+      Uri.parse('${dotenv.env['BACKEND']}/reserves/last_ten_players/$idGoogle'),
+      headers: {
+        'authorization': 'Bearer $token',
+      },
+    );
+    if (response.statusCode == 200) {
+      final List<dynamic> playersJson = json.decode(response.body);
+      return playersJson.map((json) => UserModel.fromJson(json)).toList();
+    } else if (response.statusCode == 204) {
+      return [];
+    }
+    else {
+      throw Exception('Error al cargar los últimos diez jugadores.');
     }
   }
 }

@@ -34,18 +34,18 @@ class TableState {
 
   factory TableState.initial() => const TableState();
 
-  factory TableState.loading() => const TableState(isLoading: true);
+  factory TableState.loading() => const TableState(isLoading: true, errorMessage: null);
 
-  factory TableState.success() => const TableState();
+  factory TableState.success() => const TableState( errorMessage: null);
 
   factory TableState.getTables(List<TableEntity> tables) =>
-      TableState(tables: tables);
+      TableState(tables: tables, errorMessage: null);
       
   factory TableState.getTablesShop(List<TableEntity> tables) =>
-      TableState(tablesFromShop: tables);
+      TableState(tablesFromShop: tables,errorMessage: null);
 
   factory TableState.selectedTable(TableEntity tableSelected) =>
-      TableState(table: tableSelected);
+      TableState(table: tableSelected, errorMessage: null);
 
   factory TableState.failure(String errorMessage) =>
       TableState(errorMessage: errorMessage);

@@ -13,7 +13,7 @@ abstract class UserRespository {
   Future<Either<Failure, bool>> isEmailUsed(String email);
   Future<Either<Failure, bool>> isNameUsed(String name);
   Future<Either<Failure, bool>> updateUserInfo(UserEntity user);
-  Future<Either<Failure, bool>> updatePassword(String password);
+  Future<Either<Failure, bool>> updatePassword(String password, String oldPassword);
   Future<Either<Failure, bool>> validatePassword(String password);
   Future<Either<Failure, UserEntity>> getUserInfo(String idUser);
   Future<Either<Failure, List<UserEntity>>> getUsersInfo();

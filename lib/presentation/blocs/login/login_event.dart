@@ -62,11 +62,12 @@ class UpdateUserInfoEvent extends LoginEvent {
 
 class UpdatePasswordEvent extends LoginEvent {
   final String password;
+  final String oldPassword;
 
-  UpdatePasswordEvent({required this.password});
+  UpdatePasswordEvent({required this.password, required this.oldPassword});
 
   @override
-  List<Object?> get props => [password];
+  List<Object?> get props => [password, oldPassword];
 }
 
 class ValidatePasswordEvent extends LoginEvent {

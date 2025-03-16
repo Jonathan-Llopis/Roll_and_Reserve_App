@@ -7,7 +7,7 @@ class UpdatePasswordUsecase {
 
   UpdatePasswordUsecase(this.repository);
 
-  Future<Either<Failure, void>> call(String email) async {
-    return await repository.updatePassword(email);
+  Future<Either<Failure, void>> call(String password, String oldPassword) async {
+    return await repository.updatePassword(password, oldPassword);
   }
 }

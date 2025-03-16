@@ -159,6 +159,9 @@ class UserRespositoryImpl implements UserRespository {
   @override
   Future<Either<Failure, void>> logout() async {
     try {
+      final token = sharedPreferences.getString('token');
+      final id = sharedPreferences.getString('id');
+      await userDatasource.updateTokenNotification(id!, " ", token!);
       await dataSource.logout();
       await sharedPreferences.remove('id');
       await sharedPreferences.remove('email');
@@ -221,11 +224,13 @@ class UserRespositoryImpl implements UserRespository {
   }
 
   @override
-  Future<Either<Failure, bool>> updatePassword(String password) async {
+  Future<Either<Failure, bool>> updatePassword(
+      String password, String oldPassword) async {
     try {
+      final token = sharedPreferences.getString('token');
       await dataSource.updatePassword(password);
       await userDatasource.updatePassword(
-          sharedPreferences.getString('id')!, "1", password, "1");
+          sharedPreferences.getString('id')!, oldPassword, password, token!);
       return Right(true);
     } catch (e) {
       return Left(AuthFailure());

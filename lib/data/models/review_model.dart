@@ -9,7 +9,7 @@ class ReviewModel {
   final String avatarIdWriter;
   final dynamic avatarWriter;
   final String reviewedId;
-  final int shopReview;
+  final int? shopReview;
 
   ReviewModel(
       {required this.id,
@@ -17,7 +17,7 @@ class ReviewModel {
       required this.review,
       required this.writerId,
       required this.reviewedId,
-      required this.shopReview,
+      this.shopReview,
       required this.userNameWriter,
       required this.avatarIdWriter,
       required this.avatarWriter});
@@ -45,8 +45,9 @@ class ReviewModel {
         'id_review': id,
         'raiting': raiting,
         'review': review,
-        'writer': writerId,
-        'shop_reviews': shopReview
+        'writter_id': writerId,
+        'reviewed_id': reviewedId,
+        'shop_reviews_id': shopReview
       };
 
   ReviewEntity toReviewEntity(dynamic avatarFile) {
@@ -56,7 +57,7 @@ class ReviewModel {
         review: review,
         writerId: writerId,
         reviewedId: reviewedId,
-        shopReview: shopReview,
+        shopReview: shopReview ?? 0,
         avatarWriter: avatarFile,
         avatarIdWriter: avatarIdWriter,
         userNameWriter: userNameWriter);

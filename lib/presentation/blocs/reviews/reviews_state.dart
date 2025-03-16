@@ -25,7 +25,7 @@ class ReviewState {
     return ReviewState(
         isLoading: isLoading ?? this.isLoading,
         idReview: idReview ?? this.idReview,
-        errorMessage: errorMessage ?? this.errorMessage,
+        errorMessage: errorMessage,
         reviews: reviews ?? this.reviews,
         review: review ?? this.review
         );
@@ -33,13 +33,13 @@ class ReviewState {
 
     factory ReviewState.initial() => const ReviewState();
 
-    factory ReviewState.loading() => const ReviewState(isLoading: true);
+    factory ReviewState.loading() => const ReviewState(isLoading: true, errorMessage: null);
 
-    factory ReviewState.success() => const ReviewState();
+    factory ReviewState.success() => const ReviewState(errorMessage: null);
 
-    factory ReviewState.getReview(List<ReviewEntity> reviews) => ReviewState(reviews: reviews);
+    factory ReviewState.getReview(List<ReviewEntity> reviews) => ReviewState(reviews: reviews, errorMessage: null);
 
-    factory ReviewState.selectedReview(ReviewEntity reviewSelected) => ReviewState(review: reviewSelected);
+    factory ReviewState.selectedReview(ReviewEntity reviewSelected) => ReviewState(review: reviewSelected, errorMessage: null);
 
     factory ReviewState.failure(String errorMessage) =>
         ReviewState(errorMessage: errorMessage);

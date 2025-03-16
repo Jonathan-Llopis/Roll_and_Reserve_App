@@ -49,7 +49,7 @@ dependencies:
   flutter_localization: ^0.3.1
   flutter_localizations:
     sdk: flutter
-  flutter_map: ^8.0.0
+  flutter_map: ^8.1.1
   flutter_markdown: ^0.7.6+2
   flutter_native_splash: ^2.4.3
   flutter_offline: ^4.0.0
@@ -102,6 +102,7 @@ flutter:
     - assets/images/error-image.png
     - .env
     - assets/icon/icon_notification.png
+    - assets/images/dice.svg
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -140,11 +141,20 @@ flutter_launcher_icons:
     image_path: "assets/icon/logo.png"
 
 flutter_native_splash:
-  color: "#0e0e1a"
+  color: "#1d18ad"
   image: assets/icon/logo.png
+  branding: assets/icon/logo.png
+  color_dark: "#1d18ad"
+  image_dark: assets/icon/logo.png
+  branding_dark: assets/icon/logo.png
+
   android_12:
     image: assets/icon/logo.png
-    color: "#0e0e1a"
+    icon_background_color: "#1d18ad"
+    image_dark: assets/icon/logo.png
+    icon_background_color_dark: "#1d18ad"
+
+  web: false
   android: true
   ios: true
 

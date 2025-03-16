@@ -173,7 +173,7 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
                 label: AppLocalizations.of(context)!.required_material,
                 icon: Icons.build,
                 keyboardType: TextInputType.text,
-                validator: (value) => basicValidation(value, context),
+                validator: (value) => null,
               ),
               const SizedBox(height: 16.0),
               DropdownButtonFormField<DifficultyEntity>(

@@ -35,7 +35,7 @@ class LoginState {
     return LoginState(
         isLoading: isLoading ?? this.isLoading,
         email: email ?? this.email,
-        errorMessage: errorMessage ?? this.errorMessage,
+        errorMessage: errorMessage,
         isEmailUsed: isEmailUsed ?? this.isEmailUsed,
         isNameUsed: isNameUsed ?? this.isNameUsed,
         id: id ?? this.id,
@@ -46,11 +46,11 @@ class LoginState {
 
   factory LoginState.initial() => const LoginState();
 
-  factory LoginState.loading() => const LoginState(isLoading: true);
+  factory LoginState.loading() => const LoginState(isLoading: true, errorMessage: null);
 
-  factory LoginState.success(String email) => LoginState(email: email);
+  factory LoginState.success(String email) => LoginState(email: email, errorMessage: null);
 
-  factory LoginState.isLogedIn(UserEntity user) => LoginState(user: user);
+  factory LoginState.isLogedIn(UserEntity user) => LoginState(user: user, errorMessage: null);
 
   factory LoginState.failure(String errorMessage) =>
       LoginState(errorMessage: errorMessage);

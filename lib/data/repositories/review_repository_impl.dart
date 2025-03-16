@@ -54,4 +54,5 @@ class ReviewRepositoryImpl implements ReviewRepository {
       return Left(Exception('Error al crear el reseña: ${e.toString()}'));
     }
   }
+  
 }

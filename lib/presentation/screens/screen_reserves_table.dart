@@ -5,6 +5,9 @@ import 'package:roll_and_reserve/domain/entities/table_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/tables/table_event.dart';
+import 'package:roll_and_reserve/presentation/blocs/tables/table_state.dart';
+import 'package:roll_and_reserve/presentation/functions/state_check.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/screen_body/body_reserves_table.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/default_scaffold.dart';
 
@@ -35,9 +38,7 @@ class _ScreenReservesOfTableState extends State<ScreenReservesOfTable> {
           GetReserveByDateEvent(
               dateReserve: _selectedDate!, idTable: widget.idTable),
         );
-    TableBloc tableBloc = BlocProvider.of<TableBloc>(context);
-    table = tableBloc.state.tablesFromShop!
-        .firstWhere((table) => table.id == widget.idTable);
+    context.read<TableBloc>().add(GetTablesByShopEvent(idShop: widget.idShop));
     super.initState();
   }
 
@@ -45,11 +46,23 @@ class _ScreenReservesOfTableState extends State<ScreenReservesOfTable> {
   Widget build(BuildContext context) {
     return DefaultScaffold(
       appBar: widget.appBar,
-      body: BodyReservesTable(
-        table: table,
-        selectedDate: _selectedDate!,
-        idShop: widget.idShop,
-      ),
+      body: BlocBuilder<TableBloc, TableState>(builder: (context, state) {
+        return buildContent<TableState>(
+          state: state,
+          isLoading: (state) => state.isLoading,
+          errorMessage: (state) => state.errorMessage,
+          hasData: (state) => state.tablesFromShop != null,
+          contentBuilder: (state) {
+            table = state.tablesFromShop!
+                .firstWhere((table) => table.id == widget.idTable);
+            return BodyReservesTable(
+              table: table,
+              selectedDate: _selectedDate!,
+              idShop: widget.idShop,
+            );
+          },
+        );
+      }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           context.go(

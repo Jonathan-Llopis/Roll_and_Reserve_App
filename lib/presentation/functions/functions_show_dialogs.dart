@@ -84,14 +84,14 @@ Future<void> showUpdateCreateTableDialog(
 }
 
 Future<void> createReview(BuildContext context, ReviewBloc reviewBloc,
-    ShopBloc shopBloc, int idShop) {
+ int? idShop, String? idUser) {
   return showDialog(
       context: context,
       builder: (context) {
         return DialogCreateReview(
-          idShop: idShop,
+          idShop: idShop ?? 0,
           reviewBloc: reviewBloc,
-          shopBloc: shopBloc,
+          idUser: idUser ?? "",
         );
       });
 }

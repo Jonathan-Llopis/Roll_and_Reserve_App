@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
+import 'package:roll_and_reserve/domain/entities/user_entity.dart';
 
 abstract class ReserveRepository {
   Future<Either<Exception, List<ReserveEntity>>> getAllReserves();
@@ -19,4 +20,6 @@ abstract class ReserveRepository {
   Future<Either<Exception, List<int>>> createMultipleReservesEvent(
       List<ReserveEntity> reserves);
   Future<Either<Exception, List<ReserveEntity>>> getEvents(int idShop);
+  Future<Either<Exception, List<UserEntity>>>
+      getLastTenPlayers(String idGoogle);
 }

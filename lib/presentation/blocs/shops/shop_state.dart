@@ -33,13 +33,13 @@ class ShopState {
 
   factory ShopState.initial() => const ShopState();
 
-  factory ShopState.loading(ShopState state) => state.copyWith(isLoading: true);
+  factory ShopState.loading(ShopState state) => state.copyWith(isLoading: true, errorMessage: null);
 
-  factory ShopState.success(ShopState state) => state.copyWith(isLoading: false);
+  factory ShopState.success(ShopState state) => state.copyWith(isLoading: false, errorMessage: null);
 
-  factory ShopState.getShops(ShopState state, List<ShopEntity> shops) => state.copyWith(shops: shops, isLoading: false);
+  factory ShopState.getShops(ShopState state, List<ShopEntity> shops) => state.copyWith(shops: shops, isLoading: false,errorMessage: null);
 
-  factory ShopState.selectedShop(ShopState state, ShopEntity shopSelected) => state.copyWith(shop: shopSelected, isLoading: false);
+  factory ShopState.selectedShop(ShopState state, ShopEntity shopSelected) => state.copyWith(shop: shopSelected, isLoading: false,errorMessage: null);
 
   factory ShopState.failure(ShopState state, String errorMessage) => state.copyWith(errorMessage: errorMessage, isLoading: false);
 

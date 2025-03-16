@@ -135,7 +135,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
     on<UpdatePasswordEvent>((event, emit) async {
       emit(LoginState.loading());
-      final result = await updatePasswordUsecase(event.password);
+      final result = await updatePasswordUsecase(event.password, event.oldPassword);
       result.fold(
         (failure) =>
             emit(LoginState.failure("Fallo al realizar la recuperacion")),

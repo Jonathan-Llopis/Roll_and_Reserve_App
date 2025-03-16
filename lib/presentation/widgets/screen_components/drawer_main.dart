@@ -54,7 +54,8 @@ class DrawerMain extends StatelessWidget {
                 userBloc.state.user!.role == 2
                     ? ListTile(
                         leading: Icon(Icons.qr_code, color: Colors.lightBlue),
-                        title: Text(AppLocalizations.of(context)!.your_reservations),
+                        title: Text(
+                            AppLocalizations.of(context)!.your_reservations),
                         onTap: () {
                           Navigator.pop(context);
                           context.go('/user/userReserves');
@@ -67,6 +68,14 @@ class DrawerMain extends StatelessWidget {
                   onTap: () {
                     Navigator.pop(context);
                     mostrarUserEdit(context);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.person_pin_sharp, color: Colors.lightBlue),
+                  title: Text("Ultimos jugadores"),
+                  onTap: () {
+                    Navigator.pop(context);
+                    context.go('/user/lastUsers');
                   },
                 ),
                 ListTile(

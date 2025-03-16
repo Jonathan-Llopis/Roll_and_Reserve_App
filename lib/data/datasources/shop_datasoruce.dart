@@ -69,7 +69,10 @@ class ShopsRemoteDataSourceImpl implements ShopRemoteDataSource {
     if (response.statusCode == 200) {
       final List<dynamic> shopsJson = json.decode(response.body);
       return shopsJson.map((json) => ShopModel.fromJson(json)).toList();
-    } else {
+    }else if (response.statusCode == 204) {
+      return [];
+    } 
+    else {
       throw Exception('Error al cargar las tiendas del propietario.');
     }
   }

@@ -3,6 +3,7 @@ import 'package:roll_and_reserve/data/datasources/reserve_datasource.dart';
 import 'package:roll_and_reserve/data/datasources/user_datasource.dart';
 import 'package:roll_and_reserve/data/models/reserve_model.dart';
 import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
+import 'package:roll_and_reserve/domain/entities/user_entity.dart';
 import 'package:roll_and_reserve/domain/repositories/reserve_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -176,6 +177,23 @@ class ReserveRepositoryImpl implements ReserveRepository {
       return Right(reserveEntities);
     } catch (e) {
       return Left(Exception('Error al cargar reservas'));
+    }
+  }
+  @override
+  Future<Either<Exception, List<UserEntity>>> getLastTenPlayers(String idUser) async {
+    try {
+      final token = sharedPreferences.getString('token');
+      final players = await remoteDataSource.getLastTenPlayers(idUser, token!);
+       List<Future<dynamic>> userAvatars = players.map((user) async {
+        return await userDatasource.getUserAvatar(user.avatarId, token);
+      }).toList();
+      List<dynamic> avatars = await Future.wait(userAvatars);
+      List<UserEntity> userEntities = players.asMap().entries.map((entry) {
+        return players[entry.key].toUserEntity(avatars[entry.key], null);
+      }).toList();
+      return Right(userEntities);
+    } catch (e) {
+      return Left(Exception('Error al obtener los últimos diez jugadores: ${e.toString()}'));
     }
   }
 }

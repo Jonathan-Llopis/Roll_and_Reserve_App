@@ -167,6 +167,11 @@ class _LocationPickerState extends State<LocationPicker> {
                                             point.longitude.toString();
                                       });
                                     },
+                              interactionOptions: InteractionOptions(
+                                flags: InteractiveFlag.drag |
+                                    InteractiveFlag.pinchZoom |
+                                    InteractiveFlag.doubleTapZoom,
+                              ),
                             ),
                             children: [
                               TileLayer(

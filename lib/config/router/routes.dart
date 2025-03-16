@@ -5,6 +5,8 @@ import 'package:roll_and_reserve/presentation/screens/screen_chat.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_create_event.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_create_reserve.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_event.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_last_players.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_map_shops.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_qr.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_reserve.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_login.dart';
@@ -13,6 +15,7 @@ import 'package:roll_and_reserve/presentation/screens/screen_reserves_table.dart
 import 'package:roll_and_reserve/presentation/screens/screen_reserves_user.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_review_shop.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_edit_shop.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_review_user.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_shop_events.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_tables_shop.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_main.dart';
@@ -49,7 +52,8 @@ final GoRouter router = GoRouter(
           pageBuilder: (context, state) => CustomTransitionPage(
             key: state.pageKey,
             child: const ScreenRegister(),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
               return child;
             },
           ),
@@ -75,7 +79,8 @@ final GoRouter router = GoRouter(
             return CustomTransitionPage(
               key: state.pageKey,
               child: ScreenEditShop(idShop: shopId, appBar: appBar),
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
                 return child;
               },
             );
@@ -88,11 +93,36 @@ final GoRouter router = GoRouter(
             return CustomTransitionPage(
               key: state.pageKey,
               child: ChatScreen(),
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
                 return child;
               },
             );
           },
+        ),
+        GoRoute(
+          name: 'lastUsers',
+          path: '/lastUsers',
+          pageBuilder: (context, state) => CustomTransitionPage(
+            key: state.pageKey,
+            child: ScreenLastPlayers(appBar: appBar),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              return child;
+            },
+          ),
+        ),
+        GoRoute(
+          name: 'map',
+          path: '/map',
+          pageBuilder: (context, state) => CustomTransitionPage(
+            key: state.pageKey,
+            child: StoreMap(),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              return child;
+            },
+          ),
         ),
         GoRoute(
           name: 'events',
@@ -102,7 +132,8 @@ final GoRouter router = GoRouter(
             return CustomTransitionPage(
               key: state.pageKey,
               child: ScreenShopEvents(idShop: shopId, appBar: appBar),
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
                 return child;
               },
             );
@@ -116,7 +147,8 @@ final GoRouter router = GoRouter(
                 return CustomTransitionPage(
                   key: state.pageKey,
                   child: ScreenCreateEvent(idShop: shopId, appBar: appBar),
-                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
                     return child;
                   },
                 );
@@ -130,8 +162,10 @@ final GoRouter router = GoRouter(
                 final shopId = int.parse(state.pathParameters['idShop']!);
                 return CustomTransitionPage(
                   key: state.pageKey,
-                  child: ScreenEvent(idReserve: idReserve, idShop: shopId, appBar: appBar),
-                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                  child: ScreenEvent(
+                      idReserve: idReserve, idShop: shopId, appBar: appBar),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
                     return child;
                   },
                 );
@@ -141,13 +175,19 @@ final GoRouter router = GoRouter(
                   name: 'confirmationEventQR',
                   path: 'confirmationQR/:idTable',
                   pageBuilder: (context, state) {
-                    final idReserve = int.parse(state.pathParameters['idReserve']!);
+                    final idReserve =
+                        int.parse(state.pathParameters['idReserve']!);
                     final shopId = int.parse(state.pathParameters['idShop']!);
                     final idTable = int.parse(state.pathParameters['idTable']!);
                     return CustomTransitionPage(
                       key: state.pageKey,
-                      child: QRScannerScreen(idTable: idTable, idReserve: idReserve, idShop: shopId, appBar: appBar),
-                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                      child: QRScannerScreen(
+                          idTable: idTable,
+                          idReserve: idReserve,
+                          idShop: shopId,
+                          appBar: appBar),
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
                         return child;
                       },
                     );
@@ -164,7 +204,8 @@ final GoRouter router = GoRouter(
             return CustomTransitionPage(
               key: state.pageKey,
               child: ScreenReservesOfUser(appBar: appBar),
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
                 return child;
               },
             );
@@ -178,8 +219,10 @@ final GoRouter router = GoRouter(
                 final idTable = int.parse(state.pathParameters['idTable']!);
                 return CustomTransitionPage(
                   key: state.pageKey,
-                  child: ScreenReserve(idReserve: idReserve, idTable: idTable, appBar: appBar),
-                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                  child: ScreenReserve(
+                      idReserve: idReserve, idTable: idTable, appBar: appBar),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
                     return child;
                   },
                 );
@@ -189,13 +232,19 @@ final GoRouter router = GoRouter(
                   name: 'confirmationQR',
                   path: 'confirmationQR',
                   pageBuilder: (context, state) {
-                    final idReserve = int.parse(state.pathParameters['idReserve']!);
+                    final idReserve =
+                        int.parse(state.pathParameters['idReserve']!);
                     final shopId = int.parse(state.pathParameters['idShop']!);
                     final idTable = int.parse(state.pathParameters['idTable']!);
                     return CustomTransitionPage(
                       key: state.pageKey,
-                      child: QRScannerScreen(idTable: idTable, idReserve: idReserve, idShop: shopId, appBar: appBar),
-                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                      child: QRScannerScreen(
+                          idTable: idTable,
+                          idReserve: idReserve,
+                          idShop: shopId,
+                          appBar: appBar),
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
                         return child;
                       },
                     );
@@ -213,7 +262,8 @@ final GoRouter router = GoRouter(
             return CustomTransitionPage(
               key: state.pageKey,
               child: ScreenTablesOfShop(idShop: idShop, appBar: appBar),
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
                 return child;
               },
             );
@@ -227,7 +277,8 @@ final GoRouter router = GoRouter(
                 return CustomTransitionPage(
                   key: state.pageKey,
                   child: ScreenReviewShop(idShop: idShop, appBar: appBar),
-                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
                     return child;
                   },
                 );
@@ -241,8 +292,10 @@ final GoRouter router = GoRouter(
                 final idShop = int.parse(state.pathParameters['idTablesShop']!);
                 return CustomTransitionPage(
                   key: state.pageKey,
-                  child: ScreenReservesOfTable(idTable: tableId, idShop: idShop, appBar: appBar),
-                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                  child: ScreenReservesOfTable(
+                      idTable: tableId, idShop: idShop, appBar: appBar),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
                     return child;
                   },
                 );
@@ -252,13 +305,20 @@ final GoRouter router = GoRouter(
                   name: 'gameReserve',
                   path: 'reserve/:idReserve',
                   pageBuilder: (context, state) {
-                    final idReserve = int.parse(state.pathParameters['idReserve']!);
-                    final idShop = int.parse(state.pathParameters['idTablesShop']!);
+                    final idReserve =
+                        int.parse(state.pathParameters['idReserve']!);
+                    final idShop =
+                        int.parse(state.pathParameters['idTablesShop']!);
                     final idTable = int.parse(state.pathParameters['idTable']!);
                     return CustomTransitionPage(
                       key: state.pageKey,
-                      child: ScreenReserve(idReserve: idReserve, idShop: idShop, idTable: idTable, appBar: appBar),
-                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                      child: ScreenReserve(
+                          idReserve: idReserve,
+                          idShop: idShop,
+                          idTable: idTable,
+                          appBar: appBar),
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
                         return child;
                       },
                     );
@@ -268,13 +328,21 @@ final GoRouter router = GoRouter(
                       name: 'confirmationReserveQR',
                       path: 'confirmationQR',
                       pageBuilder: (context, state) {
-                        final idReserve = int.parse(state.pathParameters['idReserve']!);
-                        final shopId = int.parse(state.pathParameters['idTablesShop']!);
-                        final idTable = int.parse(state.pathParameters['idTable']!);
+                        final idReserve =
+                            int.parse(state.pathParameters['idReserve']!);
+                        final shopId =
+                            int.parse(state.pathParameters['idTablesShop']!);
+                        final idTable =
+                            int.parse(state.pathParameters['idTable']!);
                         return CustomTransitionPage(
                           key: state.pageKey,
-                          child: QRScannerScreen(idTable: idTable, idReserve: idReserve, idShop: shopId, appBar: appBar),
-                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                          child: QRScannerScreen(
+                              idTable: idTable,
+                              idReserve: idReserve,
+                              idShop: shopId,
+                              appBar: appBar),
+                          transitionsBuilder:
+                              (context, animation, secondaryAnimation, child) {
                             return child;
                           },
                         );
@@ -286,13 +354,19 @@ final GoRouter router = GoRouter(
                   name: 'createReserve',
                   path: 'createReserve/:dateSearch',
                   pageBuilder: (context, state) {
-                    final idShop = int.parse(state.pathParameters['idTablesShop']!);
+                    final idShop =
+                        int.parse(state.pathParameters['idTablesShop']!);
                     final idTable = int.parse(state.pathParameters['idTable']!);
                     final dateSearch = state.pathParameters['dateSearch'];
                     return CustomTransitionPage(
                       key: state.pageKey,
-                      child: ScreenCreateReserve(idShop: idShop, idTable: idTable, searchDateTimeString: dateSearch!, appBar: appBar),
-                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                      child: ScreenCreateReserve(
+                          idShop: idShop,
+                          idTable: idTable,
+                          searchDateTimeString: dateSearch!,
+                          appBar: appBar),
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
                         return child;
                       },
                     );

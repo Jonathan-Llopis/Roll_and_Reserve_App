@@ -51,8 +51,8 @@ class UserModel {
         avatarId: json['avatar'] ?? "67c4bf09ae01906bd75ace8d",
         avatar: File(""),
         notifications: json['notifications'] ?? [],
-        averageRaiting: calcularMediaRatings(json['reviews_shop'] ?? [],
-        ));
+        averageRaiting: (json["average_raiting"] as num?)?.toDouble()  ?? 0.0,
+        );
   }
 
   factory UserModel.fromJsonReserve(
@@ -65,7 +65,7 @@ class UserModel {
         username: json['username'] ?? "",
         avatarId: json['avatar'] ?? "67c4bf09ae01906bd75ace8d",
         avatar: File(""),
-        averageRaiting: calcularMediaRatings(json['reviews_shop'] ?? []),
+        averageRaiting: (json["average_raiting"] as num?)?.toDouble() ?? 0.0,
         reserveConfirmation: reserveConfirmation,
         notifications: json['notifications'] ?? []);
   }

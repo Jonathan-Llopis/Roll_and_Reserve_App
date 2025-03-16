@@ -29,7 +29,7 @@ class ReviewEntity {
         review: review,
         writerId: writerId,
         reviewedId: reviewedId,
-        shopReview: shopReview,
+        shopReview: shopReview == 0 ? null : shopReview,
         avatarWriter: avatarWriter,
         avatarIdWriter:  "",
         userNameWriter: userNameWriter);

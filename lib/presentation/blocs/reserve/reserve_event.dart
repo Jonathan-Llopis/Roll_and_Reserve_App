@@ -161,3 +161,11 @@ class SearchGameByNameEvent extends ReserveEvent {
   @override
   List<Object?> get props => [gameName];
 }
+
+class GetLastTenPlayersEvent extends ReserveEvent {
+  final String idGoogle;
+  GetLastTenPlayersEvent({required this.idGoogle});
+
+  @override
+  List<Object?> get props => [idGoogle];
+}
