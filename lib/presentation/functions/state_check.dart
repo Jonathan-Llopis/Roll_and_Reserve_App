@@ -6,6 +6,7 @@ Widget buildContent<T>({
   required String? Function(T) errorMessage,
   required bool Function(T) hasData,
   required Widget Function(T) contentBuilder,
+  required BuildContext context,
 }) {
   if (isLoading(state)) {
     return const Center(child: CircularProgressIndicator());
@@ -13,7 +14,20 @@ Widget buildContent<T>({
 
   final error = errorMessage(state);
   if (error != null) {
-    return Center(child: Text(error));
+    return Center(
+        child: Column(
+      children: [
+        Text(error),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => context.widget),
+            );
+          },
+          child: const Text('Recargar página'),
+        ),
+      ],
+    ));
   }
 
   if (hasData(state)) {

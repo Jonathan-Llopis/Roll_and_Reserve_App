@@ -46,6 +46,7 @@ class _ScreenTablesOfShopState extends State<ScreenTablesOfShop> {
             isLoading: (state) => state.isLoading,
             errorMessage: (state) => state.errorMessage,
             hasData: (state) => state.shop != null,
+            context: context,
             contentBuilder: (state) {
               return BlocBuilder<TableBloc, TableState>(
                 builder: (context, state) {
@@ -54,6 +55,7 @@ class _ScreenTablesOfShopState extends State<ScreenTablesOfShop> {
                     isLoading: (state) => state.isLoading,
                     errorMessage: (state) => state.errorMessage,
                     hasData: (state) => state.tablesFromShop != null,
+                    context: context,
                     contentBuilder: (state) {
                       currentShop = shopBloc.state.shop!;
                       return BodyTablesShop(
@@ -76,6 +78,7 @@ class _ScreenTablesOfShopState extends State<ScreenTablesOfShop> {
             isLoading: (state) => state.isLoading,
             errorMessage: (state) => state.errorMessage,
             hasData: (state) => state.shop != null,
+            context: context,
             contentBuilder: (state) {
               currentShop = shopBloc.state.shop!;
               return loginBloc.state.user!.role == 1
@@ -97,6 +100,7 @@ class _ScreenTablesOfShopState extends State<ScreenTablesOfShop> {
             isLoading: (state) => state.isLoading,
             errorMessage: (state) => state.errorMessage,
             hasData: (state) => state.shop != null,
+            context: context,
             contentBuilder: (state) {
               currentShop = shopBloc.state.shop!;
               if (loginBloc.state.user!.role == 2) {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:roll_and_reserve/domain/entities/table_entity.dart';
 import 'package:roll_and_reserve/domain/entities/user_entity.dart';
@@ -10,6 +9,7 @@ import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_state.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_qr.dart';
 import 'package:roll_and_reserve/presentation/widgets/information/information_reserve.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/default_scaffold.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -38,7 +38,7 @@ class _ScreenReserveState extends State<ScreenReserve> {
   @override
   void initState() {
     TableBloc tableBloc = BlocProvider.of<TableBloc>(context);
-    table = tableBloc.state.tables!
+    table = tableBloc.state.tablesFromShop!
         .firstWhere((table) => table.id == widget.idTable);
     context
         .read<ReserveBloc>()
@@ -49,66 +49,91 @@ class _ScreenReserveState extends State<ScreenReserve> {
   @override
   Widget build(BuildContext context) {
     LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
-    return BlocBuilder<ReserveBloc, ReserveState>(
-      builder: (context, state) {
-        if (state.reserve == null) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-        return buildContent<ReserveState>(
-          state: state,
-          isLoading: (state) => state.isLoading,
-          errorMessage: (state) => state.errorMessage,
-          hasData: (state) => state.reserve != null,
-          contentBuilder: (state) {
-            UserEntity? userReserve;
-            if (state.reserve!.users!
-                .any((user) => user.id == loginBloc.state.user!.id)) {
-              userReserve = state.reserve!.users!
-                  .firstWhere((user) => user.id == loginBloc.state.user!.id);
+    return DefaultScaffold(
+        appBar: widget.appBar,
+        body: BlocBuilder<ReserveBloc, ReserveState>(
+          builder: (context, state) {
+            if (state.reserve == null) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
             }
-            return DefaultScaffold(
-                appBar: widget.appBar,
-                body: InformationReserve(
+            return buildContent<ReserveState>(
+              state: state,
+              isLoading: (state) => state.isLoading,
+              errorMessage: (state) => state.errorMessage,
+              hasData: (state) => state.reserve != null,
+              context: context,
+              contentBuilder: (state) {
+                return InformationReserve(
                   reserve: state.reserve!,
                   loginBloc: loginBloc,
                   dateReserve: DateFormat('dd - MM - yyyy')
                       .parse(state.reserve!.dayDate),
                   idShop: table.idShop,
-                ),
-                floatingActionButton: loginBloc.state.user!.role == 2 &&
-                        !state.reserve!.isEvent &&
-                        DateFormat('dd - MM - yyyy HH:mm')
-                            .parse(
-                                '${state.reserve!.dayDate} ${state.reserve!.horaInicio}')
-                            .subtract(Duration(minutes: 5))
-                            .isBefore(DateTime.now()) &&
-                        (userReserve?.reserveConfirmation ?? true) == false
-                    ? FloatingActionButton(
-                        onPressed: () {
-                          if (GoRouterState.of(context).uri.toString() ==
-                              '/user/userReserves/gameReserve/${widget.idReserve}/${widget.idTable}/${table.idShop}/confirmationQR') {
-                            context.go(
-                                '/user/userReserves/gameReserve/${widget.idReserve}/${widget.idTable}/${table.idShop}/confirmationQR');
-                          } else {
-                            context.go(
-                                '/user/shop/${table.idShop}/table/${widget.idTable}/reserve/${widget.idReserve}/confirmationQR');
-                          }
-                        },
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.qr_code),
-                            Text(AppLocalizations.of(context)!.confirm,
-                                style: TextStyle(fontSize: 10)),
-                          ],
-                        ),
-                      )
-                    : null);
+                );
+              },
+            );
           },
-        );
-      },
-    );
+        ),
+        floatingActionButton: BlocBuilder<ReserveBloc, ReserveState>(
+          builder: (context, state) {
+            if (state.reserve == null) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            return buildContent<ReserveState>(
+                state: state,
+                isLoading: (state) => state.isLoading,
+                errorMessage: (state) => state.errorMessage,
+                hasData: (state) => state.reserve != null,
+                context: context,
+                contentBuilder: (state) {
+                  UserEntity? userReserve;
+                  if (state.reserve!.users!
+                      .any((user) => user.id == loginBloc.state.user!.id)) {
+                    userReserve = state.reserve!.users!.firstWhere(
+                        (user) => user.id == loginBloc.state.user!.id);
+                  }
+                  return loginBloc.state.user!.role == 2 &&
+                          !state.reserve!.isEvent &&
+                          DateFormat('dd - MM - yyyy HH:mm')
+                              .parse(
+                                  '${state.reserve!.dayDate} ${state.reserve!.horaInicio}')
+                              .subtract(Duration(minutes: 5))
+                              .isBefore(DateTime.now()) &&
+                          (userReserve?.reserveConfirmation ?? true) == false
+                      ? FloatingActionButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                pageBuilder:
+                                    (context, animation1, animation2) =>
+                                        QRScannerScreen(
+                                  idReserve: widget.idReserve,
+                                  idTable: widget.idTable!,
+                                  idShop: table.idShop,
+                                  appBar: widget.appBar,
+                                ),
+                                transitionDuration: Duration.zero,
+                                reverseTransitionDuration: Duration.zero,
+                              ),
+                            );
+                          },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.qr_code),
+                              Text(AppLocalizations.of(context)!.confirm,
+                                  style: TextStyle(fontSize: 10)),
+                            ],
+                          ),
+                        )
+                      : SizedBox.shrink();
+                });
+          },
+        ));
   }
 }

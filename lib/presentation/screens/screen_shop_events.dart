@@ -38,6 +38,7 @@ class _ScreenShopEventsState extends State<ScreenShopEvents> {
           isLoading: (state) => state.isLoading,
           errorMessage: (state) => state.errorMessage,
           hasData: (state) => state.eventsShop != null,
+          context: context,
           contentBuilder: (state) {
             return DefaultScaffold(
                 appBar: widget.appBar,

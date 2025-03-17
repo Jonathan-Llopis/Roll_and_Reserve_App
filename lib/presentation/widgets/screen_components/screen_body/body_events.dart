@@ -57,6 +57,7 @@ class _BodyEventsState extends State<BodyEvents> {
                     isLoading: (state) => state.isLoading,
                     errorMessage: (state) => state.errorMessage,
                     hasData: (state) => state.user != null,
+                    context: context,
                     contentBuilder: (state) {
                       return FutureBuilder<bool>(
                         future: NotificationService()

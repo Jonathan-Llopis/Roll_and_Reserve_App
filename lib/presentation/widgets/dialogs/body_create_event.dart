@@ -77,6 +77,7 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
           isLoading: (state) => state.isLoading,
           errorMessage: (state) => state.errorMessage,
           hasData: (state) => state.tablesFromShop != null,
+          context: context,
           contentBuilder: (state) {
             return SingleChildScrollView(
               child: Padding(

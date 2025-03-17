@@ -9,13 +9,11 @@ import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_state.dart';
-import 'package:roll_and_reserve/presentation/functions/functions_utils.dart';
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
+import 'package:roll_and_reserve/presentation/widgets/cards/card_shop_map.dart';
 
 class StoreMap extends StatefulWidget {
-  final double zoomLevel;
-
-  const StoreMap({super.key, this.zoomLevel = 12.0});
+  const StoreMap({super.key});
 
   @override
   State<StoreMap> createState() => _StoreMapState();
@@ -30,7 +28,7 @@ class _StoreMapState extends State<StoreMap> {
   @override
   void initState() {
     context.read<ShopBloc>().add(GetShopsEvent());
-    currentZoomLevel = widget.zoomLevel;
+    currentZoomLevel = 12;
     super.initState();
   }
 
@@ -118,6 +116,7 @@ class _StoreMapState extends State<StoreMap> {
                   isLoading: (state) => state.isLoading,
                   errorMessage: (state) => state.errorMessage,
                   hasData: (state) => state.shops != null,
+                  context: context,
                   contentBuilder: (state) {
                     return Scaffold(
                       appBar: AppBar(
@@ -138,15 +137,6 @@ class _StoreMapState extends State<StoreMap> {
                                 _currentLocation!.latitude,
                                 _currentLocation!.longitude,
                               ),
-                              onTap: (tapPosition, point) {
-                                setState(() {
-                                  _currentLocation = point;
-                                  latitudeController.text =
-                                      point.latitude.toString();
-                                  longitudeController.text =
-                                      point.longitude.toString();
-                                });
-                              },
                               interactionOptions: InteractionOptions(
                                 flags: InteractiveFlag.drag |
                                     InteractiveFlag.pinchZoom |
@@ -156,8 +146,7 @@ class _StoreMapState extends State<StoreMap> {
                             children: [
                               TileLayer(
                                 urlTemplate:
-                                    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                subdomains: ['a', 'b', 'c'],
+                                    'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                               ),
                               MarkerLayer(
                                 markers: state.shops!
@@ -171,60 +160,7 @@ class _StoreMapState extends State<StoreMap> {
                                           onTap: () {
                                             showModalBottomSheet(
                                               context: context,
-                                              builder: (context) => Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                  vertical: 16.0,
-                                                  horizontal: 8.0,
-                                                ),
-                                                child: SizedBox(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.9,
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Text(
-                                                        store.name,
-                                                        style: const TextStyle(
-                                                          fontSize: 20,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                      const SizedBox(height: 8),
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Text(
-                                                            'Rating:',
-                                                            style:
-                                                                const TextStyle(
-                                                              fontSize: 16,
-                                                            ),
-                                                          ),
-                                                          buildStars(store
-                                                              .averageRaiting),
-                                                        ],
-                                                      ),
-                                                      const SizedBox(height: 8),
-                                                      Text(
-                                                        store.address,
-                                                        style: const TextStyle(
-                                                          fontSize: 14,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
+                                                builder: (context) => CardShopMap(store: store,),
                                             );
                                           },
                                           child: Container(

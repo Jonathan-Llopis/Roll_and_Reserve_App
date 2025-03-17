@@ -28,8 +28,6 @@ class CardReserve extends StatefulWidget {
 class _CardReserveState extends State<CardReserve> {
   @override
   void initState() {
-    context.read<TableBloc>().add(GetTablesEvent());
-    context.read<ShopBloc>().add(GetShopsEvent());
     super.initState();
   }
 
@@ -43,6 +41,7 @@ class _CardReserveState extends State<CardReserve> {
         isLoading: (state) => state.isLoading,
         errorMessage: (state) => state.errorMessage,
         hasData: (state) => state.shops != null,
+        context: context,
         contentBuilder: (state) {
           return BlocBuilder<TableBloc, TableState>(
             builder: (context, state) {
@@ -50,11 +49,12 @@ class _CardReserveState extends State<CardReserve> {
                 state: state,
                 isLoading: (state) => state.isLoading,
                 errorMessage: (state) => state.errorMessage,
-                hasData: (state) => state.tables != null,
+                hasData: (state) => state.tablesFromShop != null,
+                context: context,
                 contentBuilder: (state) {
                   final shop = shopBloc.state.shops!
                       .firstWhere((shop) => shop.id == widget.idShop);
-                  final table = state.tables!.firstWhere(
+                  final table = state.tablesFromShop!.firstWhere(
                       (table) => table.id == widget.reserve.tableId);
                   return Card(
                     color: widget.reserve.isEvent

@@ -45,6 +45,7 @@ class _CardEventState extends State<CardEvent> {
         isLoading: (state) => state.isLoading,
         errorMessage: (state) => state.errorMessage,
         hasData: (state) => state.shops != null,
+        context: context,
         contentBuilder: (state) {
           return BlocBuilder<TableBloc, TableState>(
             builder: (context, state) {
@@ -53,6 +54,7 @@ class _CardEventState extends State<CardEvent> {
                 isLoading: (state) => state.isLoading,
                 errorMessage: (state) => state.errorMessage,
                 hasData: (state) => state.tables != null,
+                context: context,
                 contentBuilder: (state) {
                   final shop = shopBloc.state.shops!
                       .firstWhere((shop) => shop.id == widget.idShop);

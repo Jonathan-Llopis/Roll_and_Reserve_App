@@ -44,6 +44,7 @@ class _ScreenReviewShopState extends State<ScreenReviewShop> {
               isLoading: (state) => state.isLoading,
               errorMessage: (state) => state.errorMessage,
               hasData: (state) => state.reviews != null,
+              context: context,
               contentBuilder: (state) {
                 return BodyReviewShop(
                     shopBloc: shopBloc,
@@ -62,6 +63,7 @@ class _ScreenReviewShopState extends State<ScreenReviewShop> {
               isLoading: (state) => state.isLoading,
               errorMessage: (state) => state.errorMessage,
               hasData: (state) => state.reviews != null,
+              context: context,
               contentBuilder: (state) {
                 return  state.reviews!.any(
                     (review) => review.writerId == loginBloc.state.user!.id)

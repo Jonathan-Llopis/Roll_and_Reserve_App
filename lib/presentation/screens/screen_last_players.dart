@@ -40,6 +40,7 @@ class _ScreenLastPlayersState extends State<ScreenLastPlayers> {
             isLoading: (state) => state.isLoading,
             errorMessage: (state) => state.errorMessage,
             hasData: (state) => state.lastUsers != null,
+            context: context,
             contentBuilder: (state) {
               return BodyLastPlayers(
                   idUser: loginBloc.state.user!.id, users: state.lastUsers ?? [],);

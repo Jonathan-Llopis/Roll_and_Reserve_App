@@ -170,30 +170,6 @@ final GoRouter router = GoRouter(
                   },
                 );
               },
-              routes: [
-                GoRoute(
-                  name: 'confirmationEventQR',
-                  path: 'confirmationQR/:idTable',
-                  pageBuilder: (context, state) {
-                    final idReserve =
-                        int.parse(state.pathParameters['idReserve']!);
-                    final shopId = int.parse(state.pathParameters['idShop']!);
-                    final idTable = int.parse(state.pathParameters['idTable']!);
-                    return CustomTransitionPage(
-                      key: state.pageKey,
-                      child: QRScannerScreen(
-                          idTable: idTable,
-                          idReserve: idReserve,
-                          idShop: shopId,
-                          appBar: appBar),
-                      transitionsBuilder:
-                          (context, animation, secondaryAnimation, child) {
-                        return child;
-                      },
-                    );
-                  },
-                ),
-              ],
             ),
           ],
         ),
@@ -210,49 +186,7 @@ final GoRouter router = GoRouter(
               },
             );
           },
-          routes: [
-            GoRoute(
-              name: 'userReserve',
-              path: 'gameReserve/:idReserve/:idTable/:idShop',
-              pageBuilder: (context, state) {
-                final idReserve = int.parse(state.pathParameters['idReserve']!);
-                final idTable = int.parse(state.pathParameters['idTable']!);
-                return CustomTransitionPage(
-                  key: state.pageKey,
-                  child: ScreenReserve(
-                      idReserve: idReserve, idTable: idTable, appBar: appBar),
-                  transitionsBuilder:
-                      (context, animation, secondaryAnimation, child) {
-                    return child;
-                  },
-                );
-              },
-              routes: [
-                GoRoute(
-                  name: 'confirmationQR',
-                  path: 'confirmationQR',
-                  pageBuilder: (context, state) {
-                    final idReserve =
-                        int.parse(state.pathParameters['idReserve']!);
-                    final shopId = int.parse(state.pathParameters['idShop']!);
-                    final idTable = int.parse(state.pathParameters['idTable']!);
-                    return CustomTransitionPage(
-                      key: state.pageKey,
-                      child: QRScannerScreen(
-                          idTable: idTable,
-                          idReserve: idReserve,
-                          idShop: shopId,
-                          appBar: appBar),
-                      transitionsBuilder:
-                          (context, animation, secondaryAnimation, child) {
-                        return child;
-                      },
-                    );
-                  },
-                ),
-              ],
-            ),
-          ],
+          
         ),
         GoRoute(
           name: 'tablesShop',
@@ -301,55 +235,6 @@ final GoRouter router = GoRouter(
                 );
               },
               routes: [
-                GoRoute(
-                  name: 'gameReserve',
-                  path: 'reserve/:idReserve',
-                  pageBuilder: (context, state) {
-                    final idReserve =
-                        int.parse(state.pathParameters['idReserve']!);
-                    final idShop =
-                        int.parse(state.pathParameters['idTablesShop']!);
-                    final idTable = int.parse(state.pathParameters['idTable']!);
-                    return CustomTransitionPage(
-                      key: state.pageKey,
-                      child: ScreenReserve(
-                          idReserve: idReserve,
-                          idShop: idShop,
-                          idTable: idTable,
-                          appBar: appBar),
-                      transitionsBuilder:
-                          (context, animation, secondaryAnimation, child) {
-                        return child;
-                      },
-                    );
-                  },
-                  routes: [
-                    GoRoute(
-                      name: 'confirmationReserveQR',
-                      path: 'confirmationQR',
-                      pageBuilder: (context, state) {
-                        final idReserve =
-                            int.parse(state.pathParameters['idReserve']!);
-                        final shopId =
-                            int.parse(state.pathParameters['idTablesShop']!);
-                        final idTable =
-                            int.parse(state.pathParameters['idTable']!);
-                        return CustomTransitionPage(
-                          key: state.pageKey,
-                          child: QRScannerScreen(
-                              idTable: idTable,
-                              idReserve: idReserve,
-                              idShop: shopId,
-                              appBar: appBar),
-                          transitionsBuilder:
-                              (context, animation, secondaryAnimation, child) {
-                            return child;
-                          },
-                        );
-                      },
-                    ),
-                  ],
-                ),
                 GoRoute(
                   name: 'createReserve',
                   path: 'createReserve/:dateSearch',

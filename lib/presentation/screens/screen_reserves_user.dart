@@ -34,11 +34,13 @@ class _ScreenReservesOfUserState extends State<ScreenReservesOfUser> {
           isLoading: (state) => state.isLoading,
           errorMessage: (state) => state.errorMessage,
           hasData: (state) => state.reservesOfUser != null,
+          context: context,
           contentBuilder: (state) {
             return DefaultScaffold(
               appBar: widget.appBar,
               body: BodyReservesUser(
                 reserves: state.reservesOfUser!,
+                appBar: widget.appBar,
               ),
             );
           });

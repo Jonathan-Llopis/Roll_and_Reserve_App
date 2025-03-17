@@ -25,82 +25,82 @@ class TableBloc extends Bloc<TableEvent, TableState> {
     this.getAllTablesByShopUseCase
   ) : super(const TableState()) {
     on<GetTablesEvent>((event, emit) async {
-      emit(TableState.loading());
+      emit(TableState.loading(state));
       final result = await getTablesUseCase(NoParams());
       result.fold(
         (failure) =>
-            emit(TableState.failure("Fallo al realizar la recuperacion")),
-        (tables) => emit(TableState.getTables(tables)),
+            emit(TableState.failure(state,"Fallo al realizar la recuperacion")),
+        (tables) => emit(TableState.getTables(state,tables)),
       );
     });
     on<GetTableEvent>((event, emit) async {
-      emit(TableState.loading());
+      emit(TableState.loading(state));
       final result = await getTablesUseCase(NoParams());
       result.fold(
         (failure) =>
-            emit(TableState.failure("Fallo al realizar la recuperacion")),
+            emit(TableState.failure(state,"Fallo al realizar la recuperacion")),
         (tables) {
           final table = tables.firstWhere((table) => table.id == event.idTable);
-          emit(TableState.selectedTable(table));
+          emit(TableState.selectedTable(state,table));
         },
       );
     });
     on<CreateTableEvent>((event, emit) async {
-      emit(TableState.loading());
+      emit(TableState.loading(state));
       final result = await createTablesUseCase(event.table);
       result.fold(
-        (failure) => emit(TableState.failure("Fallo al crear tienda")),
+        (failure) => emit(TableState.failure(state,"Fallo al crear tienda")),
         (_) {
           emit(
-            TableState.success(),
+            TableState.success(state),
           );
           add(GetTablesByShopEvent(idShop: event.table.idShop));
         },
       );
     });
     on<UpdateTableEvent>((event, emit) async {
-      emit(TableState.loading());
+      emit(TableState.loading(state));
       final result = await updateTablesUseCase(event.table);
       result.fold(
-        (failure) => emit(TableState.failure("Fallo al actualizar tienda")),
+        (failure) => emit(TableState.failure(state,"Fallo al actualizar tienda")),
         (_) {
           emit(
-            TableState.success(),
+            TableState.success(state),
           );
           add(GetTablesByShopEvent(idShop: event.table.idShop));
         },
       );
     });
     on<DeleteTableEvent>((event, emit) async {
-      emit(TableState.loading());
+      emit(TableState.loading(state));
       final result = await deleteTablesUseCase(event.idTable);
       result.fold(
-        (failure) => emit(TableState.failure("Fallo al eliminar tienda")),
+        (failure) => emit(TableState.failure(state,"Fallo al eliminar tienda")),
         (_) {
           emit(
-            TableState.success(),
+            TableState.success(state),
           );
           add(GetTablesByShopEvent(idShop: event.idShop));
         },
       );
     });
     on<GetTablesByShopEvent>((event, emit) async {
-      emit(TableState.loading());
+      emit(TableState.loading(state));
       final result = await getAllTablesByShopUseCase(GetTablesByShopUseCaseParams(idShop:event.idShop));
       result.fold(
         (failure) =>
-            emit(TableState.failure("Fallo al realizar la recuperacion")),
+            emit(TableState.failure(state,"Fallo al realizar la recuperacion")),
         (tablesByShop) {
-          emit(TableState.getTablesShop(tablesByShop));
+          emit(TableState.getTablesShop(state,tablesByShop));
         },
       );
     });
     on<GetAvailableTablesEvent>((event, emit) async {
-      emit(TableState.loading());
+      emit(TableState.loading(state));
       final result = await getTablesUseCase(NoParams());
       result.fold(
         (failure) =>
-            emit(TableState.failure("Falló al realizar la recuperación")),
+            emit(TableState.failure(state,"Falló al realizar la recuperación")),
         (tables) async {
           final availableTables = tables.where((table) {
             final tableOccupied = table.reserves.any((reserveId) {
@@ -132,7 +132,7 @@ class TableBloc extends Bloc<TableEvent, TableState> {
               .where((table) => table.idShop == event.shopId)
               .toList();
 
-           emit(TableState.getTablesShop(shopTables));
+           emit(TableState.getTablesShop(state,shopTables));
         },
       );
     });

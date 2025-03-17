@@ -32,21 +32,21 @@ class TableState {
         tablesFromShop: tablesFromShop ?? this.tablesFromShop);
   }
 
-  factory TableState.initial() => const TableState();
+  factory TableState.initial(TableState state) => state.copyWith();
 
-  factory TableState.loading() => const TableState(isLoading: true, errorMessage: null);
+  factory TableState.loading(TableState state) => state.copyWith(isLoading: true);
 
-  factory TableState.success() => const TableState( errorMessage: null);
+  factory TableState.success(TableState state) => state.copyWith(isLoading: false);
 
-  factory TableState.getTables(List<TableEntity> tables) =>
-      TableState(tables: tables, errorMessage: null);
+  factory TableState.getTables(TableState state, List<TableEntity> tables) =>
+      state.copyWith(tables: tables,  isLoading: false, errorMessage: null);
       
-  factory TableState.getTablesShop(List<TableEntity> tables) =>
-      TableState(tablesFromShop: tables,errorMessage: null);
+  factory TableState.getTablesShop(TableState state, List<TableEntity> tables) =>
+      state.copyWith(tablesFromShop: tables, isLoading: false, errorMessage: null);
 
-  factory TableState.selectedTable(TableEntity tableSelected) =>
-      TableState(table: tableSelected, errorMessage: null);
+  factory TableState.selectedTable(TableState state, TableEntity tableSelected) =>
+      state.copyWith(table: tableSelected, isLoading: false, errorMessage: null);
 
-  factory TableState.failure(String errorMessage) =>
-      TableState(errorMessage: errorMessage);
+  factory TableState.failure(TableState state, String errorMessage) =>
+      state.copyWith(errorMessage: errorMessage, isLoading: false);
 }

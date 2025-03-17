@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:roll_and_reserve/domain/entities/user_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
@@ -10,6 +9,7 @@ import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_state.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_event.dart';
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_qr.dart';
 import 'package:roll_and_reserve/presentation/widgets/information/information_event.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/default_scaffold.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -50,6 +50,7 @@ class _ScreenEventState extends State<ScreenEvent> {
           isLoading: (state) => state.isLoading,
           errorMessage: (state) => state.errorMessage,
           hasData: (state) => state.reserve != null,
+          context: context,
           contentBuilder: (state) {
             UserEntity? userReserve;
             if (state.reserve!.users!
@@ -74,8 +75,20 @@ class _ScreenEventState extends State<ScreenEvent> {
                         (userReserve?.reserveConfirmation ?? true) == false
                     ? FloatingActionButton(
                         onPressed: () {
-                          context.go(
-                              '/user/events/${widget.idShop}/eventReserve/${widget.idReserve}/confirmationQR/${state.reserve!.tableId}');
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder: (context, animation1, animation2) =>
+                                  QRScannerScreen(
+                                idReserve: widget.idReserve,
+                                idShop: widget.idShop ?? 0,
+                                idTable: state.reserve!.tableId,
+                                appBar: widget.appBar,
+                              ),
+                              transitionDuration: Duration.zero,
+                              reverseTransitionDuration: Duration.zero,
+                            ),
+                          );
                         },
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,

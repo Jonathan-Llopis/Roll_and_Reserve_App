@@ -18,89 +18,89 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
     this.deleteReviewUseCase,
   ) : super(const ReviewState()) {
     on<GetReviewsEvent>((event, emit) async {
-      emit(ReviewState.loading());
+      emit(ReviewState.loading(state));
       final result = await getReviewUseCase(NoParams());
       result.fold(
         (failure) =>
-            emit(ReviewState.failure("Fallo al realizar la recuperacion")),
-        (reviewss) => emit(ReviewState.getReview(reviewss)),
+            emit(ReviewState.failure(state, "Fallo al realizar la recuperacion")),
+        (reviewss) => emit(ReviewState.getReview(state,reviewss)),
       );
     });
 
     on<GetReviewEvent>((event, emit) async {
-      emit(ReviewState.loading());
+      emit(ReviewState.loading(state));
       final result = await getReviewUseCase(NoParams());
       result.fold(
         (failure) =>
-            emit(ReviewState.failure("Fallo al realizar la recuperacion")),
+            emit(ReviewState.failure(state,"Fallo al realizar la recuperacion")),
         (reviewss) {
           final reviews = reviewss.firstWhere((reviews) => reviews.id == event.idReview);
-          emit(ReviewState.selectedReview(reviews));
+          emit(ReviewState.selectedReview(state,reviews));
         },
       );
     });
     on<CreateReviewEvent>((event, emit) async {
-      emit(ReviewState.loading());
+      emit(ReviewState.loading(state));
       final result = await createReviewUseCase(event.review);
       result.fold(
-        (failure) => emit(ReviewState.failure("Fallo al crear tienda")),
+        (failure) => emit(ReviewState.failure(state,"Fallo al crear tienda")),
         (_) {
           emit(
-            ReviewState.success(),
+            ReviewState.success(state),
           );
           add(GetReviewByShopEvent(idShop: event.review.shopReview));
         },
       );
     });
     on<DeleteReviewEvent>((event, emit) async {
-      emit(ReviewState.loading());
+      emit(ReviewState.loading(state));
       final result = await deleteReviewUseCase(event.idReview);
       result.fold(
-        (failure) => emit(ReviewState.failure("Fallo al eliminar tienda")),
+        (failure) => emit(ReviewState.failure(state,"Fallo al eliminar tienda")),
         (_) {
           emit(
-            ReviewState.success(),
+            ReviewState.success(state),
           );
           add(GetReviewsEvent());
         },
       );
     });
     on<GetReviewByShopEvent>((event, emit) async {
-      emit(ReviewState.loading());
+      emit(ReviewState.loading(state));
       final result = await getReviewUseCase(NoParams());
       result.fold(
         (failure) =>
-            emit(ReviewState.failure("Fallo al realizar la recuperacion")),
+            emit(ReviewState.failure(state,"Fallo al realizar la recuperacion")),
         (reviewss) {
           final reviewssByOwner =
               reviewss.where((reviews) => reviews.shopReview == event.idShop).toList();
-          emit(ReviewState.getReview(reviewssByOwner));
+          emit(ReviewState.getReview(state,reviewssByOwner));
         },
       );
     });
     on<GetReviewByUserEvent>((event, emit) async {
-      emit(ReviewState.loading());
+      emit(ReviewState.loading(state));
       final result = await getReviewUseCase(NoParams());
       result.fold(
         (failure) =>
-            emit(ReviewState.failure("Fallo al realizar la recuperacion")),
+            emit(ReviewState.failure(state,"Fallo al realizar la recuperacion")),
         (reviewss) {
           final reviewssByOwner =
               reviewss.where((reviews) => reviews.reviewedId == event.idUser).toList();
-          emit(ReviewState.getReview(reviewssByOwner));
+          emit(ReviewState.getReview(state,reviewssByOwner));
         },
       );
     });
     on<GetReviewByWritterEvent>((event, emit) async {
-      emit(ReviewState.loading());
+      emit(ReviewState.loading(state));
       final result = await getReviewUseCase(NoParams());
       result.fold(
         (failure) =>
-            emit(ReviewState.failure("Fallo al realizar la recuperacion")),
+            emit(ReviewState.failure(state,"Fallo al realizar la recuperacion")),
         (reviewss) {
           final reviewssByOwner =
               reviewss.where((reviews) => reviews.writerId == event.idWritter).toList();
-          emit(ReviewState.getReview(reviewssByOwner));
+          emit(ReviewState.getReview(state,reviewssByOwner));
         },
       );
     });

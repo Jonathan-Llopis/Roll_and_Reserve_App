@@ -175,9 +175,7 @@ class _LocationPickerState extends State<LocationPicker> {
                             ),
                             children: [
                               TileLayer(
-                                urlTemplate:
-                                    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                subdomains: ['a', 'b', 'c'],
+                                urlTemplate:  'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                               ),
                               MarkerLayer(
                                 markers: _currentLocation != null

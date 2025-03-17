@@ -7,9 +7,11 @@ import 'package:go_router/go_router.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_review_user.dart';
 
 class DrawerMain extends StatelessWidget {
-  const DrawerMain({super.key});
+  const DrawerMain({super.key, required this.appBar});
+  final PreferredSizeWidget appBar;
 
   @override
   Widget build(BuildContext context) {
@@ -19,25 +21,40 @@ class DrawerMain extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          UserAccountsDrawerHeader(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/appbar_back.jpg'),
-                fit: BoxFit.cover,
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      ScreenReviewUser(
+                    appBar: appBar,
+                  ),
+                  transitionDuration: Duration.zero,
+                  reverseTransitionDuration: Duration.zero,
+                ),
+              );
+            },
+            child: UserAccountsDrawerHeader(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/appbar_back.jpg'),
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-            accountName: Text(
-              userBloc.state.user?.username ??
-                  AppLocalizations.of(context)!.username,
-              style: TextStyle(fontSize: 20),
-            ),
-            accountEmail: Text(
-              userBloc.state.user?.email ?? 'email@example.com',
-            ),
-            currentAccountPicture: CircleAvatar(
-              backgroundImage: kIsWeb
-                  ? MemoryImage(userBloc.state.user!.avatar!)
-                  : FileImage(File(userBloc.state.user!.avatar.path)),
+              accountName: Text(
+                userBloc.state.user?.username ??
+                    AppLocalizations.of(context)!.username,
+                style: TextStyle(fontSize: 20),
+              ),
+              accountEmail: Text(
+                userBloc.state.user?.email ?? 'email@example.com',
+              ),
+              currentAccountPicture: CircleAvatar(
+                backgroundImage: kIsWeb
+                    ? MemoryImage(userBloc.state.user!.avatar!)
+                    : FileImage(File(userBloc.state.user!.avatar.path)),
+              ),
             ),
           ),
           Expanded(
@@ -71,7 +88,8 @@ class DrawerMain extends StatelessWidget {
                   },
                 ),
                 ListTile(
-                  leading: Icon(Icons.person_pin_sharp, color: Colors.lightBlue),
+                  leading:
+                      Icon(Icons.person_pin_sharp, color: Colors.lightBlue),
                   title: Text("Ultimos jugadores"),
                   onTap: () {
                     Navigator.pop(context);

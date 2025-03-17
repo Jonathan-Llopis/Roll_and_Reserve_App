@@ -58,114 +58,120 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ShopBloc, ShopState>(builder: (context, state) {
-      return buildContent<ShopState>(
-        state: state,
-        isLoading: (state) => state.isLoading,
-        errorMessage: (state) => state.errorMessage,
-        hasData: (state) => state.shop != null,
-        contentBuilder: (state) {
-          return BlocBuilder<ReserveBloc, ReserveState>(
-            builder: (context, state) {
-              return buildContent<ReserveState>(
-                state: state,
-                isLoading: (state) => state.isLoading,
-                errorMessage: (state) => state.errorMessage,
-                hasData: (state) => state.reserve != null,
-                contentBuilder: (state) {
-                  return DefaultScaffold(
-                    appBar: widget.appBar,
-                    body: cameraPermissionGranted
-                        ? Column(
-                            children: [
-                              Expanded(
-                                flex: 4,
-                                child: MobileScanner(
-                                  onDetect: (capture) {
-                                    final List<Barcode> barcodes =
-                                        capture.barcodes;
-                                    for (final barcode in barcodes) {
-                                      setState(() {
-                                        scannedCode = barcode.rawValue;
-                                      });
+    return DefaultScaffold(
+      appBar: widget.appBar,
+      body: cameraPermissionGranted
+          ? BlocBuilder<ShopBloc, ShopState>(
+              builder: (context, state) {
+                return buildContent<ShopState>(
+                  state: state,
+                  isLoading: (state) => state.isLoading,
+                  errorMessage: (state) => state.errorMessage,
+                  hasData: (state) => state.shop != null,
+                  context: context,
+                  contentBuilder: (state) {
+                    return BlocBuilder<ReserveBloc, ReserveState>(
+                      builder: (context, state) {
+                        return buildContent<ReserveState>(
+                          state: state,
+                          isLoading: (state) => state.isLoading,
+                          errorMessage: (state) => state.errorMessage,
+                          hasData: (state) => state.reserve != null,
+                          context: context,
+                          contentBuilder: (state) {
+                            return Column(
+                              children: [
+                                Expanded(
+                                  flex: 4,
+                                  child: MobileScanner(
+                                    onDetect: (capture) {
+                                      final List<Barcode> barcodes =
+                                          capture.barcodes;
+                                      for (final barcode in barcodes) {
+                                        setState(() {
+                                          scannedCode = barcode.rawValue;
+                                        });
 
-                                      showDialog(
-                                        context: context,
-                                        barrierDismissible: false,
-                                        builder: (BuildContext context) {
-                                          return Center(
-                                            child: CircularProgressIndicator(),
-                                          );
-                                        },
-                                      );
+                                        showDialog(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          builder: (BuildContext context) {
+                                            return Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            );
+                                          },
+                                        );
 
-                                      if (scannedCode ==
-                                          'rollandreserve://app/user/userReserves') {
-                                        final startDate = DateFormat(
-                                                'dd - MM - yyyy HH:mm')
-                                            .parse(
-                                                '${state.reserve!.dayDate} ${state.reserve!.horaInicio}');
-                                        if (startDate
-                                            .subtract(Duration(minutes: 5))
-                                            .isBefore(DateTime.now())) {
-                                          checkUserLocation(
-                                              context, widget.idReserve);
+                                        if (scannedCode ==
+                                            'rollandreserve://app/user/userReserves') {
+                                          final startDate = DateFormat(
+                                                  'dd - MM - yyyy HH:mm')
+                                              .parse(
+                                                  '${state.reserve!.dayDate} ${state.reserve!.horaInicio}');
+                                          if (startDate
+                                              .subtract(Duration(minutes: 5))
+                                              .isBefore(DateTime.now())) {
+                                            checkUserLocation(
+                                                context, widget.idReserve);
+                                          } else {
+                                            Navigator.of(context).pop();
+                                            confirmReserveDialog(
+                                                context,
+                                                AppLocalizations.of(context)!
+                                                    .game_session_not_started,
+                                                true);
+                                          }
                                         } else {
                                           Navigator.of(context).pop();
                                           confirmReserveDialog(
                                               context,
                                               AppLocalizations.of(context)!
-                                                  .game_session_not_started,
+                                                  .wrong_reservation_table,
                                               true);
                                         }
-                                      } else {
-                                        Navigator.of(context).pop();
-                                        confirmReserveDialog(
-                                            context,
-                                            AppLocalizations.of(context)!
-                                                .wrong_reservation_table,
-                                            true);
                                       }
-                                    }
-                                  },
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            scannedCode = null;
-                                          });
-                                        },
-                                        child: Text(
-                                            AppLocalizations.of(context)!
-                                                .scan_again),
-                                      ),
-                                    ],
+                                    },
                                   ),
                                 ),
-                              ),
-                            ],
-                          )
-                        : Center(
-                            child: ElevatedButton(
-                              onPressed: _requestCameraPermission,
-                              child: Text(AppLocalizations.of(context)!
-                                  .grant_camera_permission),
-                            ),
-                          ),
-                  );
-                },
-              );
-            },
-          );
-        },
-      );
-    });
+                                Expanded(
+                                  flex: 1,
+                                  child: Center(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              scannedCode = null;
+                                            });
+                                          },
+                                          child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .scan_again),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+            )
+          : Center(
+              child: ElevatedButton(
+                onPressed: _requestCameraPermission,
+                child:
+                    Text(AppLocalizations.of(context)!.grant_camera_permission),
+              ),
+            ),
+    );
   }
 }

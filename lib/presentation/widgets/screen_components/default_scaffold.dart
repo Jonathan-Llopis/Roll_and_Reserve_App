@@ -22,7 +22,7 @@ class DefaultScaffold extends StatelessWidget {
       floatingActionButton:
           floatingActionButton,
       bottomNavigationBar: bottomNavigationBar,
-      endDrawer: const DrawerMain(),
+      endDrawer:  DrawerMain(appBar: appBar),
     );
   }
 }

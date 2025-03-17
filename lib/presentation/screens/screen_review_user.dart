@@ -37,6 +37,7 @@ class _ScreenReviewUserState extends State<ScreenReviewUser> {
             isLoading: (state) => state.isLoading,
             errorMessage: (state) => state.errorMessage,
             hasData: (state) => state.reviews != null,
+            context: context,
             contentBuilder: (state) {
               return BodyReviewUser(
                   idUser: loginBloc.state.user!.id, reviews: state.reviews!);

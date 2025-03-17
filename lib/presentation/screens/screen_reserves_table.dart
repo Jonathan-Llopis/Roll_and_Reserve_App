@@ -52,6 +52,7 @@ class _ScreenReservesOfTableState extends State<ScreenReservesOfTable> {
           isLoading: (state) => state.isLoading,
           errorMessage: (state) => state.errorMessage,
           hasData: (state) => state.tablesFromShop != null,
+          context: context,
           contentBuilder: (state) {
             table = state.tablesFromShop!
                 .firstWhere((table) => table.id == widget.idTable);

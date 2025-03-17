@@ -69,4 +69,6 @@ class SendMessageParams {
 class Context{
   final BuildContext context;
   Context(this.context);
+
+  static void go(String s) {}
 }

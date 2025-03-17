@@ -150,6 +150,7 @@ class _ScreenCreateEventState extends State<ScreenCreateEvent> {
             isLoading: (state) => state.isLoading,
             errorMessage: (state) => state.errorMessage,
             hasData: (state) => state.reserves != null,
+            context: context,
             contentBuilder: (state) {
               return BodyCreateEvent(
                 reserveBloc: reserveBloc,

@@ -36,6 +36,7 @@ class _ScreenMainState extends State<ScreenMain> {
           isLoading: (state) => state.isLoading,
           errorMessage: (state) => state.errorMessage,
           hasData: (state) => state.user != null,
+          context: context,
           contentBuilder: (state) {
             return DefaultScaffold(
                 appBar: widget.appBar,

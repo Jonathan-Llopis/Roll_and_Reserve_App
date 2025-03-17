@@ -37,6 +37,7 @@ class _BodyMainState extends State<BodyMain> {
           isLoading: (state) => state.isLoading,
           errorMessage: (state) => state.errorMessage,
           hasData: (state) => state.shops != null,
+          context: context,
           contentBuilder: (state) {
             return Column(
               children: <Widget>[
