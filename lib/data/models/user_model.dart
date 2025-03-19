@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:roll_and_reserve/data/models/functions_for_models.dart';
 import 'package:roll_and_reserve/domain/entities/user_entity.dart';
 
 class UserModel {

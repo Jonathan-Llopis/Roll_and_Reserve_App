@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart' as coordinates;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -10,7 +9,7 @@ import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_state.dart';
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
-import 'package:roll_and_reserve/presentation/widgets/cards/card_shop_map.dart';
+import 'package:roll_and_reserve/presentation/widgets/screen_components/map_marker.dart';
 
 class StoreMap extends StatefulWidget {
   const StoreMap({super.key});
@@ -156,45 +155,7 @@ class _StoreMapState extends State<StoreMap> {
                                         height: 40.0,
                                         point: coordinates.LatLng(
                                             store.latitude, store.longitude),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            showModalBottomSheet(
-                                              context: context,
-                                                builder: (context) => CardShopMap(store: store,),
-                                            );
-                                          },
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.black
-                                                      .withOpacity(0.5),
-                                                  offset: Offset(0, 2),
-                                                  blurRadius: 4,
-                                                ),
-                                              ],
-                                              border: Border.all(
-                                                color: Colors.black,
-                                                width: 2,
-                                              ),
-                                            ),
-                                            child: SvgPicture.asset(
-                                              'assets/images/dice.svg',
-                                              colorFilter: ColorFilter.mode(
-                                                store.ownerId ==
-                                                        loginBloc.state.user!.id
-                                                    ? Colors.blue
-                                                    : Colors.redAccent,
-                                                BlendMode.srcIn,
-                                              ),
-                                              width: 15.0,
-                                              height: 15.0,
-                                            ),
-                                          ),
-                                        ),
+                                        child: MapMarker(loginBloc: loginBloc, store: store),
                                       ),
                                     )
                                     .toList(),

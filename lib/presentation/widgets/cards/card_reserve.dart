@@ -4,10 +4,8 @@ import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
-import 'package:roll_and_reserve/presentation/blocs/shops/shop_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_state.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
-import 'package:roll_and_reserve/presentation/blocs/tables/table_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_state.dart';
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
 
