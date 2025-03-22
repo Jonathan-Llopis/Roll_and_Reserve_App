@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 Widget buildContent<T>({
   required T state,
@@ -19,11 +20,9 @@ Widget buildContent<T>({
       children: [
         Text(error),
         ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => context.widget),
-            );
-          },
+            onPressed: () {
+              context.go('/user');
+            },
           child: const Text('Recargar página'),
         ),
       ],

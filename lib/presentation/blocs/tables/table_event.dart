@@ -67,3 +67,4 @@ class GetAvailableTablesEvent extends TableEvent {
   @override
   List<Object?> get props => [dayDate, startTime, endTime, reserves, shopId];
 }
+

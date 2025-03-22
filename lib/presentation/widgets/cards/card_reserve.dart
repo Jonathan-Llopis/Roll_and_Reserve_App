@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
+import 'package:roll_and_reserve/domain/entities/table_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
@@ -33,6 +34,8 @@ class _CardReserveState extends State<CardReserve> {
   Widget build(BuildContext context) {
     ReserveBloc reserveBloc = BlocProvider.of<ReserveBloc>(context);
     ShopBloc shopBloc = BlocProvider.of<ShopBloc>(context);
+    final theme = Theme.of(context);
+    final loc = AppLocalizations.of(context)!;
     return BlocBuilder<ShopBloc, ShopState>(builder: (context, state) {
       return buildContent<ShopState>(
         state: state,
@@ -47,93 +50,82 @@ class _CardReserveState extends State<CardReserve> {
                 state: state,
                 isLoading: (state) => state.isLoading,
                 errorMessage: (state) => state.errorMessage,
-                hasData: (state) => state.tablesFromShop != null,
+                hasData: (state) =>
+                    state.tables != null || state.tablesFromShop != null,
                 context: context,
                 contentBuilder: (state) {
+                  late TableEntity table;
                   final shop = shopBloc.state.shops!
                       .firstWhere((shop) => shop.id == widget.idShop);
-                  final table = state.tablesFromShop!.firstWhere(
-                      (table) => table.id == widget.reserve.tableId);
-                  return Card(
-                    color: widget.reserve.isEvent
-                        ? const Color.fromARGB(255, 211, 49, 197)
-                        : const Color.fromARGB(255, 28, 190, 136),
-                    elevation: 6,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    margin: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.reserve.isEvent
-                                ? AppLocalizations.of(context)!
-                                    .event_day_date(widget.reserve.dayDate)
-                                : AppLocalizations.of(context)!
-                                    .reserve_day(widget.reserve.dayDate),
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
-                                ?.copyWith(fontWeight: FontWeight.bold),
+                  if (state.tables != null) {
+                     table = state.tables!.firstWhere(
+                        (table) => table.id == widget.reserve.tableId);
+                  } else {
+                     table = state.tablesFromShop!.firstWhere(
+                        (table) => table.id == widget.reserve.tableId);
+                  }
+
+                  final game = reserveBloc.state.games!
+                      .firstWhere((game) => game.id == widget.reserve.gameId);
+                  return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Card(
+                          elevation: 4,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            side: BorderSide(
+                              color: theme.dividerColor.withOpacity(0.2),
+                            ),
                           ),
-                          const SizedBox(height: 6),
-                          Text(
-                            AppLocalizations.of(context)!.shop_name(shop.name),
-                            style: const TextStyle(
-                                fontSize: 14, color: Colors.black87),
-                          ),
-                          const SizedBox(height: 6),
-                          widget.reserve.isEvent
-                              ? Container()
-                              : Text(
-                                  AppLocalizations.of(context)!
-                                      .table_number(table.numberTable),
-                                  style: const TextStyle(
-                                      fontSize: 14, color: Colors.black87),
-                                ),
-                          const SizedBox(height: 6),
-                          Text(
-                            AppLocalizations.of(context)!.game_description(
-                                reserveBloc.state.games!
-                                    .firstWhere((game) =>
-                                        game.id == widget.reserve.gameId)
-                                    .description),
-                            style: const TextStyle(
-                                fontSize: 14, color: Colors.black87),
-                          ),
-                          const SizedBox(height: 6),
-                          const SizedBox(height: 6),
-                          widget.reserve.isEvent
-                              ? Container()
-                              : Text(
-                                  AppLocalizations.of(context)!
-                                      .total_players_at_table(
-                                          widget.reserve.usersInTables,
-                                          widget.reserve.freePlaces),
-                                  style: const TextStyle(
-                                      fontSize: 14, color: Colors.black87),
-                                ),
-                          const SizedBox(height: 6),
-                          Text(
-                            AppLocalizations.of(context)!
-                                .start_time(widget.reserve.horaInicio),
-                            style: const TextStyle(
-                                fontSize: 14, color: Colors.black),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            AppLocalizations.of(context)!
-                                .end_time(widget.reserve.horaFin),
-                            style: const TextStyle(
-                                fontSize: 14, color: Colors.black),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
+                          child: Container(
+                            color: widget.reserve.isEvent
+                                ? theme.colorScheme.tertiaryContainer
+                                : theme.colorScheme.secondaryContainer,
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Flexible(
+                                        child: Text(
+                                          widget.reserve.isEvent
+                                              ? loc.event_day_date(
+                                                  widget.reserve.dayDate)
+                                              : loc.reserve_day(
+                                                  widget.reserve.dayDate),
+                                          style: theme.textTheme.titleMedium
+                                              ?.copyWith(
+                                            fontWeight: FontWeight.w600,
+                                            color: theme.colorScheme.onSurface,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 12),
+                                  _buildInfoRow(
+                                      Icons.store, loc.shop_name(shop.name)),
+                                  if (!widget.reserve.isEvent)
+                                    _buildInfoRow(Icons.table_restaurant,
+                                        loc.table_number(table.numberTable)),
+                                  _buildInfoRow(Icons.sports_esports,
+                                      loc.game_description(game.description)),
+                                  if (!widget.reserve.isEvent)
+                                    _buildInfoRow(
+                                        Icons.people_alt,
+                                        loc.total_players_at_table(
+                                            widget.reserve.usersInTables,
+                                            widget.reserve.freePlaces)),
+                                  const SizedBox(height: 12),
+                                  _buildTimeSection(theme, loc),
+                                ],
+                              ),
+                            ),
+                          )));
                 },
               );
             },
@@ -141,5 +133,70 @@ class _CardReserveState extends State<CardReserve> {
         },
       );
     });
+  }
+
+  Widget _buildInfoRow(IconData icon, String text) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Icon(icon, size: 18, color: Colors.grey[600]),
+          const SizedBox(width: 8.0),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey[800],
+                height: 1.4,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTimeSection(ThemeData theme, AppLocalizations loc) {
+    return Row(
+      children: [
+        Expanded(
+          child: _buildTimeChip(
+            Icons.access_time_filled,
+            loc.start_time(widget.reserve.horaInicio),
+          ),
+        ),
+        const SizedBox(width: 5.0),
+        Expanded(
+          child: _buildTimeChip(
+              Icons.timer_off, loc.end_time(widget.reserve.horaFin)),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTimeChip(IconData icon, String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.9),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 16, color: Colors.grey[700]),
+          const SizedBox(width: 4),
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey[800],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

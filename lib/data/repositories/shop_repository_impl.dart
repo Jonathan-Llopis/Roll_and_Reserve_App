@@ -101,4 +101,52 @@ class ShopRepositoryImpl implements ShopsRepository {
       return Left(Exception('Error al crear la tienda: ${e.toString()}'));
     }
   }
+  
+  @override
+  Future<Either<Exception, List<dynamic>>> getMostPlayedGames(
+      int idShop, String startTime, String endTime) async {
+    try {
+      final token = sharedPreferences.getString('token');
+      final games = await remoteDataSource.getMostPlayedGames(idShop, startTime, endTime, token!);
+      return Right(games);
+    } catch (e) {
+      return Left(Exception('Error al obtener los juegos más jugados.'));
+    }
+  }
+
+  @override
+  Future<Either<Exception, int>> getTotalReservations(
+      int idShop, String startTime, String endTime) async {
+    try {
+      final token = sharedPreferences.getString('token');
+      final totalReservations = await remoteDataSource.getTotalReservations(idShop, startTime, endTime, token!);
+      return Right(totalReservations);
+    } catch (e) {
+      return Left(Exception('Error al obtener el total de reservas.'));
+    }
+  }
+
+  @override
+  Future<Either<Exception, int>> getPlayerCount(
+      int idShop, String startTime, String endTime) async {
+    try {
+      final token = sharedPreferences.getString('token');
+      final playerCount = await remoteDataSource.getPlayerCount(idShop, startTime, endTime, token!);
+      return Right(playerCount);
+    } catch (e) {
+      return Left(Exception('Error al obtener el conteo de jugadores.'));
+    }
+  }
+
+  @override
+  Future<Either<Exception, List<dynamic>>> getPeakReservationHours(
+      int idShop, String startTime, String endTime) async {
+    try {
+      final token = sharedPreferences.getString('token');
+      final peakHours = await remoteDataSource.getPeakReservationHours(idShop, startTime, endTime, token!);
+      return Right(peakHours);
+    } catch (e) {
+      return Left(Exception('Error al obtener las horas pico de reservas.'));
+    }
+  }
 }

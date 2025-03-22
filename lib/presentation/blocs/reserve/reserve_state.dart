@@ -17,6 +17,7 @@ class ReserveState {
   final List<GameEntity>? searchedGames;
   final List<GameCategoryEntity>? gameCategories;
   final List<UserEntity>? lastUsers;
+  final Map<String, String>? filterTables;
 
   const ReserveState(
       {this.isLoading = false,
@@ -30,7 +31,8 @@ class ReserveState {
       this.gameCategories,
       this.reservesOfUser,
       this.eventsShop,
-      this.lastUsers});
+      this.lastUsers,
+      this.filterTables});
 
   ReserveState copyWith({
     bool? isLoading,
@@ -45,6 +47,7 @@ class ReserveState {
     List<ReserveEntity>? reservesOfUser,
     List<ReserveEntity>? eventsShop,
     List<UserEntity>? lastUsers,
+    Map<String, String>? filterTables,
   }) {
     return ReserveState(
         isLoading: isLoading ?? this.isLoading,
@@ -58,7 +61,8 @@ class ReserveState {
         gameCategories: gameCategories ?? this.gameCategories,
         reservesOfUser: reservesOfUser ?? this.reservesOfUser,
         eventsShop: eventsShop ?? this.eventsShop,
-        lastUsers: lastUsers ?? this.lastUsers);
+        lastUsers: lastUsers ?? this.lastUsers,
+        filterTables: filterTables ?? this.filterTables);
   }
 
   factory ReserveState.initial() => const ReserveState();
@@ -69,9 +73,13 @@ class ReserveState {
   factory ReserveState.success(ReserveState state) =>
       state.copyWith(isLoading: false, errorMessage: null);
 
-  factory ReserveState.getReserves(
-          ReserveState state, List<ReserveEntity> reserves) =>
-      state.copyWith(reserves: reserves, isLoading: false, errorMessage: null);
+  factory ReserveState.getReserves(ReserveState state,
+          List<ReserveEntity> reserves, Map<String, String> filterTables) =>
+      state.copyWith(
+          reserves: reserves,
+          isLoading: false,
+          errorMessage: null,
+          filterTables: filterTables);
 
   factory ReserveState.getReserve(ReserveState state, ReserveEntity reserve) =>
       state.copyWith(reserve: reserve, isLoading: false, errorMessage: null);
@@ -137,4 +145,6 @@ class ReserveState {
           ReserveState state, List<UserEntity> lastUsers) =>
       state.copyWith(
           lastUsers: lastUsers, isLoading: false, errorMessage: null);
+  factory ReserveState.clearFilter(ReserveState state) =>
+      state.copyWith(filterTables: {});
 }

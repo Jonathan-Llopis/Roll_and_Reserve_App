@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/domain/entities/shop_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_event.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/filter_tables.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../blocs/reserve/reserve_event.dart';
 
 class BottomFilterTables extends StatefulWidget {
   const BottomFilterTables({
@@ -29,26 +31,8 @@ class _BottomFilterTablesState extends State<BottomFilterTables> {
   @override
   void initState() {
     super.initState();
-    _checkFilterStatus();
-  }
-
-  Future<void> _checkFilterStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _isFilterApplied = prefs.getString('date')?.isNotEmpty == true ||
-          prefs.getString('startTime')?.isNotEmpty == true;
-      prefs.getString('endTime')?.isNotEmpty == true;
-    });
-  }
-
-  void _clearFilters() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('date');
-    await prefs.remove('startTime');
-    await prefs.remove('endTime');
-    setState(() {
-      _isFilterApplied = false;
-    });
+    ReserveBloc reserveBloc = BlocProvider.of<ReserveBloc>(context);
+    _isFilterApplied = reserveBloc.state.filterTables != null;
   }
 
   @override
@@ -69,10 +53,11 @@ class _BottomFilterTablesState extends State<BottomFilterTables> {
       ],
       onTap: (index) {
         if (index == 0) {
-          _clearFilters();
+        context.read<ReserveBloc>().add(ClearFilterEvent());
          widget.tableBloc.add(GetTablesByShopEvent(
                 idShop: widget.currentShop.id,
               ));
+          _isFilterApplied = false;
         } else if (index == 1) {
           showModalBottomSheet(
             context: context,
@@ -82,6 +67,7 @@ class _BottomFilterTablesState extends State<BottomFilterTables> {
               );
             },
           );
+          _isFilterApplied = true;
         }
       },
       currentIndex: 0,

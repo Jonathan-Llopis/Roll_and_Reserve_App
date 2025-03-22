@@ -8,7 +8,6 @@ import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_event.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_utils.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FilterTables extends StatefulWidget {
@@ -33,24 +32,19 @@ class _FilterTablesState extends State<FilterTables> {
 
   @override
   void initState() {
-    _loadFilterValues();
+    ReserveBloc reserveBloc = BlocProvider.of<ReserveBloc>(context);
+    if (reserveBloc.state.filterTables != null) {
+      if (reserveBloc.state.filterTables!.containsKey('dateReserve')) {
+      _dateController.text = reserveBloc.state.filterTables!['dateReserve']!;
+      }
+      if (reserveBloc.state.filterTables!.containsKey('startTime')) {
+      _startTimeController.text = reserveBloc.state.filterTables!['startTime']!;
+      }
+      if (reserveBloc.state.filterTables!.containsKey('endTime')) {
+      _endTimeController.text = reserveBloc.state.filterTables!['endTime']!;
+      }
+    }
     super.initState();
-  }
-
-  Future<void> _loadFilterValues() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _dateController.text = prefs.getString('date') ?? '';
-      _startTimeController.text = prefs.getString('startTime') ?? '';
-      _endTimeController.text = prefs.getString('endTime') ?? '';
-    });
-  }
-
-  Future<void> _saveFilterValues() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('date', _dateController.text);
-    await prefs.setString('startTime', _startTimeController.text);
-    await prefs.setString('endTime', _endTimeController.text);
   }
 
   @override
@@ -82,7 +76,7 @@ class _FilterTablesState extends State<FilterTables> {
             children: [
               TextFormField(
                 controller: _dateController,
-                  readOnly: true,
+                readOnly: true,
                 decoration: InputDecoration(
                   labelText: AppLocalizations.of(context)!.date,
                   border: OutlineInputBorder(),
@@ -93,7 +87,7 @@ class _FilterTablesState extends State<FilterTables> {
                 validator: (value) => basicValidation(value, context),
               ),
               const SizedBox(height: 16),
-                TextFormField(
+              TextFormField(
                 controller: _startTimeController,
                 readOnly: true,
                 onTap: () => selectTime(context, _startTimeController),
@@ -104,21 +98,21 @@ class _FilterTablesState extends State<FilterTables> {
                 validator: (value) {
                   String? error = validateHour(value, context);
                   if (error != null) {
-                  return error;
+                    return error;
                   }
                   if (_startTimeController.text
-                      .compareTo(_endTimeController.text) >=
-                    0) {
-                  return AppLocalizations.of(context)!
-                    .start_time_must_be_less_than_end_time;
+                          .compareTo(_endTimeController.text) >=
+                      0) {
+                    return AppLocalizations.of(context)!
+                        .start_time_must_be_less_than_end_time;
                   }
                   return null;
                 },
-                ),
+              ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _endTimeController,
-                 readOnly: true,
+                readOnly: true,
                 onTap: () => selectTime(context, _endTimeController),
                 decoration: InputDecoration(
                   labelText: AppLocalizations.of(context)!.end_time_hh_mm,
@@ -149,7 +143,6 @@ class _FilterTablesState extends State<FilterTables> {
                       endTime: _endTimeController.text,
                     ));
                   }
-                  _saveFilterValues();
                 },
                 child: Text(AppLocalizations.of(context)!.filter),
               ),

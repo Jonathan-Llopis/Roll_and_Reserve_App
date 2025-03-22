@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:roll_and_reserve/domain/entities/table_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_event.dart';
@@ -33,13 +34,23 @@ class _ScreenReservesOfTableState extends State<ScreenReservesOfTable> {
 
   @override
   void initState() {
-    _selectedDate = DateTime.now();
-    context.read<ReserveBloc>().add(
-          GetReserveByDateEvent(
-              dateReserve: _selectedDate!, idTable: widget.idTable),
-        );
-    context.read<TableBloc>().add(GetTablesByShopEvent(idShop: widget.idShop));
+        context.read<TableBloc>().add(GetTablesByShopEvent(idShop: widget.idShop));
+    ReserveBloc reserveBloc = BlocProvider.of<ReserveBloc>(context);
+    _selectedDate = reserveBloc.state.filterTables == null
+        ? _selectedDate ?? DateTime.now()
+        : DateFormat('dd-MM-yyyy')
+            .parse(reserveBloc.state.filterTables!['dateReserve']!);
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ReserveBloc>().add(
+            GetReserveByDateEvent(
+                dateReserve: _selectedDate!, idTable: widget.idTable),
+          );
+      context
+          .read<TableBloc>()
+          .add(GetTablesByShopEvent(idShop: widget.idShop));
+    });
   }
 
   @override

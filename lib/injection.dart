@@ -28,6 +28,10 @@ import 'package:roll_and_reserve/domain/repositories/table_respository.dart';
 import 'package:roll_and_reserve/domain/usecases/chat_usecases/send_message_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/chat_usecases/start_chat_usecases.dart';
 import 'package:roll_and_reserve/domain/usecases/reserve_usecases/search_games_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/shop_usecases/get_most_played_games_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/shop_usecases/get_peak_reservation_houts_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/shop_usecases/get_player_count_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/shop_usecases/get_total_reservations_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/user_usecases/get_last_ten_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/user_usecases/get_user_info_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/user_usecases/get_users_info_usecase.dart';
@@ -94,15 +98,31 @@ void configureDependencies() async {
         sl(), sl(), sl()),
   );
   sl.registerFactory<ShopBloc>(
-      () => ShopBloc(sl(), sl(), sl(), sl(), sl(), sl()));
+      () => ShopBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(),));
   sl.registerFactory<TableBloc>(() => TableBloc(sl(), sl(), sl(), sl(), sl()));
   sl.registerFactory<ReviewBloc>(() => ReviewBloc(
         sl(),
         sl(),
         sl(),
       ));
-  sl.registerFactory<ReserveBloc>(() => ReserveBloc(sl(), sl(), sl(), sl(),
-      sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+  sl.registerFactory<ReserveBloc>(() => ReserveBloc(
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl()));
   sl.registerFactory<LanguageBloc>(() => LanguageBloc(sl()));
   sl.registerFactory<ChatBloc>(() => ChatBloc(sl(), sl()));
   // Instancia de Firebase Auth
@@ -197,7 +217,8 @@ void configureDependencies() async {
     ),
   );
   sl.registerLazySingleton<ChatRepository>(
-    () => ChatRepositoryImpl(sl(),
+    () => ChatRepositoryImpl(
+      sl(),
     ),
   );
 
@@ -335,13 +356,24 @@ void configureDependencies() async {
   sl.registerLazySingleton<SendMessageUseCase>(
     () => SendMessageUseCase(sl()),
   );
-   sl.registerLazySingleton<SearchGamesUseCase>(
+  sl.registerLazySingleton<SearchGamesUseCase>(
     () => SearchGamesUseCase(sl()),
   );
-sl.registerLazySingleton<GetLastTenPlayersUseCase>(
+  sl.registerLazySingleton<GetLastTenPlayersUseCase>(
     () => GetLastTenPlayersUseCase(sl()),
   );
-
+  sl.registerLazySingleton<GetMostPlayedGamesUseCase>(
+    () => GetMostPlayedGamesUseCase(sl()),
+  );
+  sl.registerLazySingleton<GetPeakReservationHoursUseCase>(
+    () => GetPeakReservationHoursUseCase(sl()),
+  );
+  sl.registerLazySingleton<GetPlayerCountUseCase>(
+    () => GetPlayerCountUseCase(sl()),
+  );
+  sl.registerLazySingleton<GetTotalReservationsUseCase>(
+    () => GetTotalReservationsUseCase(sl()),
+  );
 
   sl.registerLazySingleton(() => http.Client());
   final sharedPreferences = await SharedPreferences.getInstance();

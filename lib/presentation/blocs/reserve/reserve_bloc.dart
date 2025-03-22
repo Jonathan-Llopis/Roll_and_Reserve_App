@@ -21,6 +21,7 @@ import 'package:roll_and_reserve/domain/usecases/reserve_usecases/get_events_sho
 import 'package:roll_and_reserve/domain/usecases/reserve_usecases/get_reserve_withuser_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/reserve_usecases/get_reserves_from_user_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/reserve_usecases/search_games_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/reserve_usecases/update_reserve_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/user_usecases/get_last_ten_usecase.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_state.dart';
@@ -42,6 +43,7 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
   final CreateEventsUsecase createEventsUsecase;
   final SearchGamesUseCase searchGamesUseCase;
   final GetLastTenPlayersUseCase getLastTenPlayersUseCase;
+  final UpdateReserveUseCase updateReserveUseCase;
 
   ReserveBloc(
       this.createReserveUseCase,
@@ -59,7 +61,8 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
       this.getEventsShopUsecase,
       this.createEventsUsecase,
       this.searchGamesUseCase,
-      this.getLastTenPlayersUseCase)
+      this.getLastTenPlayersUseCase,
+      this.updateReserveUseCase)
       : super(const ReserveState()) {
     on<GetReservesEvent>((event, emit) async {
       try {
@@ -227,7 +230,7 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
         (_) {
           add(GetReservesByUserEvent(idUser: event.idUser));
           add(GetReserveByDateEvent(
-              dateReserve: event.dateReserve, idTable: event.idTable));
+              dateReserve: event.searchDateTime, idTable: event.idTable));
           add(GetReserveWithUsers(
             idReserve: event.idReserve,
           ));
@@ -438,8 +441,13 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
                       reserveStartTime.isAfter(eventEndTime));
               return isWithinTimeRange;
             }).toList();
+            Map<String, String> filterTables = {
+              'startTime': event.startTime,
+              'endTime': event.endTime,
+              'dateReserve': event.dateReserve,
+            };
 
-            emit(ReserveState.getReserves(state, filteredReserves));
+            emit(ReserveState.getReserves(state, filteredReserves, filterTables));
           },
         );
       } catch (e) {
@@ -576,6 +584,33 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
         emit(ReserveState.getLastUsers(state, players));
       },
     );
+  });
+  on<UpdateReserveEvent>((event, emit) async {
+    emit(ReserveState.loading(
+      state,
+    ));
+    final result = await updateReserveUseCase(event.reserve);
+    result.fold(
+      (failure) => emit(ReserveState.failure(state, "Fallo al actualizar reserva")),
+     (_) {
+          add(GetReservesByUserEvent(idUser: event.idUser));
+          add(GetReserveByDateEvent(
+              dateReserve: event.searchDateTime, idTable: event.reserve.tableId));
+          add(GetReserveWithUsers(
+            idReserve: event.reserve.id,
+          ));
+          emit(
+            ReserveState.success(
+              state,
+            ),
+          );
+        },
+    );
+  });
+  on<ClearFilterEvent>((event, emit) async {
+    emit(ReserveState.clearFilter(
+      state,
+    ));
   });
   }
 }

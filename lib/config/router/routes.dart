@@ -15,8 +15,8 @@ import 'package:roll_and_reserve/presentation/screens/screen_reserves_table.dart
 import 'package:roll_and_reserve/presentation/screens/screen_reserves_user.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_review_shop.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_edit_shop.dart';
-import 'package:roll_and_reserve/presentation/screens/screen_review_user.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_shop_events.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_stadistics.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_tables_shop.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_main.dart';
 import 'package:go_router/go_router.dart';
@@ -106,6 +106,18 @@ final GoRouter router = GoRouter(
           pageBuilder: (context, state) => CustomTransitionPage(
             key: state.pageKey,
             child: ScreenLastPlayers(appBar: appBar),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              return child;
+            },
+          ),
+        ),
+         GoRoute(
+          name: 'stadistics',
+          path: '/stadistics',
+          pageBuilder: (context, state) => CustomTransitionPage(
+            key: state.pageKey,
+            child: ScreenStadistics(appBar: appBar, idShop: 1),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
               return child;

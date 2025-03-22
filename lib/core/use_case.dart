@@ -12,6 +12,14 @@ class GetShopUseCaseParams {
   GetShopUseCaseParams( {required this.idShop});
 }
 
+class StadisticsParams {
+  final int idShop;
+  final String startTime;
+  final String endTime;
+
+  StadisticsParams({required this.idShop, required this.startTime, required this.endTime});
+}
+
 class GetShopsByOwnerUseCaseParams {
   final String idOwner;
 

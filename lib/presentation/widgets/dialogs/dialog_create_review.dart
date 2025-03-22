@@ -16,6 +16,7 @@ class DialogCreateReview extends StatefulWidget {
   final int? idShop;
   final String? idUser;
   final ReviewBloc reviewBloc;
+
   const DialogCreateReview({
     super.key,
     this.idShop,
@@ -29,126 +30,191 @@ class DialogCreateReview extends StatefulWidget {
 
 class _DialogCreateReviewState extends State<DialogCreateReview> {
   final _formKey = GlobalKey<FormState>();
-  String _description = '';
+  final _descriptionController = TextEditingController();
   int _rating = 1;
-  final TextEditingController _descriptionController = TextEditingController();
+  bool _isSubmitting = false;
+
+  @override
+  void dispose() {
+    _descriptionController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
+    final theme = Theme.of(context);
+    final loc = AppLocalizations.of(context)!;
+
+    return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      title: Text(
-        AppLocalizations.of(context)!.add_review,
-        style: TextStyle(fontWeight: FontWeight.bold),
-      ),
-      content: SingleChildScrollView(
+        borderRadius: BorderRadius.circular(16.0),
+    ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    loc.add_review,
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.close, color: theme.colorScheme.onSurface),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              
               TextFormField(
                 controller: _descriptionController,
-                maxLines: 3,
+                maxLines: 4,
+                minLines: 3,
                 decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context)!.description,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
+                  labelText: loc.description,
+                  alignLabelWithHint: true,
+                  border: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(12)),
                   ),
+                  prefixIcon: const Icon(Icons.description_outlined),
+                  filled: true,
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return AppLocalizations.of(context)!
-                        .please_write_a_description;
-                  }
-                  return null;
-                },
-                onChanged: (value) {
-                  _description = value;
-                },
+                validator: (value) => value?.isEmpty ?? true 
+                    ? loc.please_write_a_description 
+                    : null,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 28),
+      
               Text(
-                AppLocalizations.of(context)!.rating,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                loc.rating,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(5, (index) {
-                  int value = index + 1;
-                  return Row(
-                    children: [
-                      Radio<int>(
-                        value: value,
-                        groupValue: _rating,
-                        onChanged: (int? newValue) {
-                          setState(() {
-                            _rating = newValue!;
-                          });
-                        },
-                      ),
-                      Text('$value'),
-                    ],
-                  );
-                }),
+              const SizedBox(height: 12),
+              
+              StarRating(
+                rating: _rating,
+                onRatingChanged: (rating) => setState(() => _rating = rating),
+                starSize: 36,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 24),
+      
+              _buildSubmitButton(theme, loc),
             ],
           ),
         ),
       ),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: Text(
-            AppLocalizations.of(context)!.cancel,
-            style: TextStyle(color: Colors.red),
+    );
+  }
+
+  Widget _buildSubmitButton(ThemeData theme, AppLocalizations loc) {
+    final loc = AppLocalizations.of(context)!;
+    return ElevatedButton.icon(
+      icon: _isSubmitting 
+          ? SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+
+              ),
+            )
+          : const Icon(Icons.reviews_outlined, size: 20),
+      label: Text(_isSubmitting ? "Cargando" : loc.add_review),
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12)),
+      ),
+      onPressed: _isSubmitting ? null : _submitReview,
+    );
+  }
+
+  void _submitReview() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _isSubmitting = true);
+    
+    try {
+      final loginBloc = BlocProvider.of<LoginBloc>(context);
+      final user = loginBloc.state.user!;
+      
+      final review = ReviewEntity(
+        id: 0,
+        raiting: _rating,
+        review: _descriptionController.text.trim(),
+        writerId: user.id,
+        reviewedId: widget.idUser ?? '',
+        shopReview: widget.idShop ?? 0,
+        userNameWriter: user.name,
+        avatarIdWriter: '',
+        avatarWriter: user.avatar,
+      );
+
+      widget.reviewBloc.add(CreateReviewEvent(review: review));
+
+      if (widget.idShop != null) {
+        context.read<ShopBloc>()
+          ..add(GetShopsEvent())
+          ..add(GetShopEvent(idShop: widget.idShop!));
+      } else {
+        context.read<ReserveBloc>()
+          .add(GetLastTenPlayersEvent(idGoogle: user.id));
+      }
+
+      if (mounted) Navigator.pop(context);
+      
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')));
+        setState(() => _isSubmitting = false);
+      }
+    }
+  }
+}
+
+class StarRating extends StatelessWidget {
+  final int rating;
+  final ValueChanged<int> onRatingChanged;
+  final double starSize;
+  final Color color;
+
+  const StarRating({
+    super.key,
+    required this.rating,
+    required this.onRatingChanged,
+    this.starSize = 24,
+    this.color = Colors.amber,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(5, (index) {
+        return GestureDetector( 
+          onTap: () => onRatingChanged(index + 1),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+            child: Icon(
+              index < rating ? Icons.star : Icons.star_border,
+              size: starSize,
+              color: color,
+            ),
           ),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            if (_formKey.currentState!.validate()) {
-              LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
-              if (widget.idShop != null && widget.idShop != 0) {
-                widget.reviewBloc.add(CreateReviewEvent(
-                    review: ReviewEntity(
-                        id: 0,
-                        raiting: _rating,
-                        review: _descriptionController.text,
-                        writerId: loginBloc.state.user!.id,
-                        reviewedId: "",
-                        shopReview: widget.idShop!,
-                        userNameWriter: '',
-                        avatarIdWriter: '',
-                        avatarWriter: [])));
-                context.read<ShopBloc>().add(GetShopsEvent());
-                context
-                    .read<ShopBloc>()
-                    .add(GetShopEvent(idShop: widget.idShop!));
-              }else if(widget.idUser != null){
-                 widget.reviewBloc.add(CreateReviewEvent(
-                    review: ReviewEntity(
-                        id: 0,
-                        raiting: _rating,
-                        review: _descriptionController.text,
-                        writerId: loginBloc.state.user!.id,
-                        reviewedId: widget.idUser!,
-                        shopReview: 0,
-                        userNameWriter: '',
-                        avatarIdWriter: '',
-                        avatarWriter: [])));
-                context.read<ReserveBloc>().add(GetLastTenPlayersEvent(idGoogle: loginBloc.state.user!.id));
-              }
-              Navigator.pop(context);
-            }
-          },
-          child: Text(AppLocalizations.of(context)!.add_review),
-        ),
-      ],
+        );
+      }),
     );
   }
 }

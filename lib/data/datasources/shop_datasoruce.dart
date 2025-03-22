@@ -16,6 +16,14 @@ abstract class ShopRemoteDataSource {
   Future<dynamic> getShopLogo(String fileId, String token);
   Future<ShopModel> getShop(int id, String token);
   Future<List<ShopModel>> getShopsByOwner(String ownerId, String token);
+  Future<List<dynamic>> getMostPlayedGames(
+      int idShop, String startTime, String endTime, String token);
+  Future<int> getTotalReservations(
+      int idShop, String startTime, String endTime, String token);
+  Future<int> getPlayerCount(
+      int idShop, String startTime, String endTime, String token);
+  Future<List<dynamic>> getPeakReservationHours(
+      int idShop, String startTime, String endTime, String token);
 }
 
 class ShopsRemoteDataSourceImpl implements ShopRemoteDataSource {
@@ -69,10 +77,9 @@ class ShopsRemoteDataSourceImpl implements ShopRemoteDataSource {
     if (response.statusCode == 200) {
       final List<dynamic> shopsJson = json.decode(response.body);
       return shopsJson.map((json) => ShopModel.fromJson(json)).toList();
-    }else if (response.statusCode == 204) {
+    } else if (response.statusCode == 204) {
       return [];
-    } 
-    else {
+    } else {
       throw Exception('Error al cargar las tiendas del propietario.');
     }
   }
@@ -190,6 +197,112 @@ class ShopsRemoteDataSourceImpl implements ShopRemoteDataSource {
       }
     } else {
       throw Exception('Error al cargar la imagen');
+    }
+  }
+
+  @override
+  Future<List<dynamic>> getMostPlayedGames(
+      int idShop, String startTime, String endTime, String token) async {
+    final response = await client.post(
+      Uri.parse(
+          '${dotenv.env['BACKEND']}/shops/shop/$idShop/stats/most-played-games'),
+      headers: {
+        'authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'startTime': startTime,
+        'endTime': endTime,
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      final List<dynamic> gamesJson = json.decode(response.body);
+      return gamesJson
+          .map((json) => {
+                'id_game': json['id_game'],
+                'name': json['name'],
+                'play_count': int.parse(json['play_count'])
+              })
+          .toList();
+    } else {
+      throw Exception('Error al obtener los juegos más jugados.');
+    }
+  }
+
+  @override
+  Future<int> getTotalReservations(
+      int idShop, String startTime, String endTime, String token) async {
+    final response = await client.post(
+      Uri.parse(
+          '${dotenv.env['BACKEND']}/shops/shop/$idShop/stats/total-reservations'),
+      headers: {
+        'authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'startTime': startTime,
+        'endTime': endTime,
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      final jsonResponse = json.decode(response.body);
+      return int.parse(jsonResponse[0]['total_reservations']);
+    } else {
+      throw Exception('Error al obtener el total de reservas.');
+    }
+  }
+
+  @override
+  Future<int> getPlayerCount(
+      int idShop, String startTime, String endTime, String token) async {
+    final response = await client.post(
+      Uri.parse('${dotenv.env['BACKEND']}/shops/shop/$idShop/stats/player-count'),
+      headers: {
+        'authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'startTime': startTime,
+        'endTime': endTime,
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      final jsonResponse = json.decode(response.body);
+      return int.parse(jsonResponse[0]['player_count']);
+    } else {
+      throw Exception('Error al obtener el conteo de jugadores.');
+    }
+  }
+
+  @override
+  Future<List<dynamic>> getPeakReservationHours(
+      int idShop, String startTime, String endTime, String token) async {
+    final response = await client.post(
+      Uri.parse(
+          '${dotenv.env['BACKEND']}/shops/shop/$idShop/stats/peak-reservation-hours'),
+      headers: {
+        'authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'startTime': startTime,
+        'endTime': endTime,
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      final List<dynamic> hoursJson = json.decode(response.body);
+      return hoursJson
+          .map((json) => {
+                'hour': json['hour'],
+                'reservation_count': int.parse(json['reservation_count'])
+              })
+          .toList();
+    } else {
+      throw Exception('Error al obtener las horas pico de reservas.');
     }
   }
 }

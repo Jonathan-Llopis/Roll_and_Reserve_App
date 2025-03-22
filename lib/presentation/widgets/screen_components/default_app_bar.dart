@@ -43,7 +43,7 @@ class _DefaultAppBarState extends State<DefaultAppBar> {
             title: LayoutBuilder(
               builder: (context, constraints) {
               double width = constraints.maxWidth;
-              double logoSize = width * 0.15; // Adjust the size proportionally
+              double logoSize = width * 0.15;
               return Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [

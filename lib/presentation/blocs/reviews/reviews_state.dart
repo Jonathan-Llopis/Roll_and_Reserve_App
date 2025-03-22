@@ -23,7 +23,7 @@ class ReviewState {
     return ReviewState(
         isLoading: isLoading ?? this.isLoading,
         idReview: idReview ?? this.idReview,
-        errorMessage: errorMessage ?? this.errorMessage,
+        errorMessage: errorMessage,
         reviews: reviews ?? this.reviews,
         review: review ?? this.review);
   }
@@ -31,7 +31,7 @@ class ReviewState {
   factory ReviewState.initial(ReviewState state) => state.copyWith();
 
   factory ReviewState.loading(ReviewState state) =>
-      state.copyWith(isLoading: true);
+      state.copyWith(isLoading: true,errorMessage: null);
 
   factory ReviewState.success(ReviewState state) =>
       state.copyWith(isLoading: false, errorMessage: null);

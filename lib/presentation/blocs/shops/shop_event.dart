@@ -58,3 +58,41 @@ class GetShopByFilterEvent extends ShopEvent {
    @override
   List<Object?> get props => [name, direction];
 }
+
+class ClearFilterEvent extends ShopEvent {}
+
+class GetMostPlayedGamesEvent extends ShopEvent {
+  final int idShop;
+
+  GetMostPlayedGamesEvent({required this.idShop});
+
+  @override
+  List<Object?> get props => [idShop];
+}
+
+class GetTotalReservationsEvent extends ShopEvent {
+  final int idShop;
+
+  GetTotalReservationsEvent({required this.idShop});
+
+  @override
+  List<Object?> get props => [idShop];
+}
+
+class GetPlayerCountEvent extends ShopEvent {
+  final int idShop;
+
+  GetPlayerCountEvent({required this.idShop});
+
+  @override
+  List<Object?> get props => [idShop];
+}
+
+class GetPeakReservationHoursEvent extends ShopEvent {
+  final int idShop;
+
+  GetPeakReservationHoursEvent({required this.idShop});
+
+  @override
+  List<Object?> get props => [idShop];
+}

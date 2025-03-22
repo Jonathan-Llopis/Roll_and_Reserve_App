@@ -18,6 +18,7 @@ class ReserveModel {
   final List<UserModel>? users;
   final int? shopId;
   final bool isEvent;
+  final String userReserveId;
 
   ReserveModel({
     required this.id,
@@ -35,6 +36,7 @@ class ReserveModel {
     this.users,
     this.shopId,
     required this.isEvent,
+    required this.userReserveId,
   });
 
   factory ReserveModel.fromJson(Map<String, dynamic> json) {
@@ -61,6 +63,7 @@ class ReserveModel {
       usersInTables:
           json['users_in_reserve'] != null ? json['userReserves'].length : 0,
       isEvent: json['shop_event'] ?? false,
+      userReserveId: json['reserver_id'] ?? "",
     );
   }
 
@@ -93,6 +96,7 @@ class ReserveModel {
                   userReserve['user'], userReserve['reserva_confirmada'])))
           : null,
       isEvent: json['shop_event'] ?? false,
+      userReserveId: json['reserver_id'] ?? "",
     );
   }
 
@@ -123,6 +127,7 @@ class ReserveModel {
           ? null
           : json['reserve']['reserve_table']['tables_of_shop']['id_shop'],
       isEvent: json['shop_event'] ?? false,
+      userReserveId: json['reserve']['reserver_id'] ?? "",
     );
   }
   Map<String, dynamic> toJson() {
@@ -137,6 +142,7 @@ class ReserveModel {
       'reserve_of_game_id': gameId,
       'game_name': gameName,
       'reserve_table_id': tableId,
+      'reserver_id' : userReserveId,
     };
   }
 
@@ -154,6 +160,7 @@ class ReserveModel {
       'reserve_table_id': tableId,
       'shop_event': true,
       'event_id': "$dayDate-$gameId-$shopId",
+      'reserver_id' : userReserveId,
     };
   }
 
@@ -172,7 +179,8 @@ class ReserveModel {
         tableId: tableId,
         usersInTables: usersInTables,
         shopId: shopId,
-        isEvent: isEvent);
+        isEvent: isEvent,
+        userReserveId: userReserveId);
   }
 
   ReserveEntity toReserveEntityWithUsers(List<dynamic> avatarUser) {
@@ -193,6 +201,7 @@ class ReserveModel {
               avatarUser[entry.key], entry.value.reserveConfirmation);
         }).toList(),
         usersInTables: users!.length,
-        isEvent: isEvent);
+        isEvent: isEvent,
+        userReserveId: userReserveId);
   }
 }

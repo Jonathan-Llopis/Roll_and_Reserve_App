@@ -87,13 +87,22 @@ class DrawerMain extends StatelessWidget {
                     mostrarUserEdit(context);
                   },
                 ),
-                ListTile(
+                 userBloc.state.user!.role == 2
+                    ? ListTile(
                   leading:
                       Icon(Icons.person_pin_sharp, color: Colors.lightBlue),
                   title: Text("Ultimos jugadores"),
                   onTap: () {
                     Navigator.pop(context);
                     context.go('/user/lastUsers');
+                  },
+                ) : ListTile(
+                  leading:
+                    Icon(Icons.bar_chart, color: Colors.lightBlue),
+                  title: Text("Estadisticas Tiendas"),
+                  onTap: () {
+                  Navigator.pop(context);
+                  context.go('/user/stadistics');
                   },
                 ),
                 ListTile(

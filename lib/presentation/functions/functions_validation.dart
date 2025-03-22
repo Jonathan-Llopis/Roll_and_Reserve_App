@@ -155,18 +155,15 @@ int horaAMinutos(String hora) {
   return horas * 60 + minutos;
 }
 
-bool isHourTaken(List<ReserveEntity> reservas, DateTime fecha, String horaInicio, String horaFin) {
-  final horaInicioMinutos = horaAMinutos(horaInicio);
-  final horaFinMinutos = horaAMinutos(horaFin);
+bool isHourTaken(List<ReserveEntity> reservas, DateTime fecha, String horaReserva,) {
+  final horaReservaMinutos = horaAMinutos(horaReserva);
 
   for (var reserva in reservas) {
     if (DateFormat('dd - MM - yyyy').parse(reserva.dayDate) == fecha) {
       final reservaHoraInicioMinutos = horaAMinutos(reserva.horaInicio);
       final reservaHoraFinMinutos = horaAMinutos(reserva.horaFin);
 
-      if ((horaInicioMinutos >= reservaHoraInicioMinutos && horaInicioMinutos < reservaHoraFinMinutos) ||
-          (horaFinMinutos > reservaHoraInicioMinutos && horaFinMinutos <= reservaHoraFinMinutos) ||
-          (horaInicioMinutos <= reservaHoraInicioMinutos && horaFinMinutos >= reservaHoraFinMinutos)) {
+      if (horaReservaMinutos >= reservaHoraInicioMinutos && horaReservaMinutos < reservaHoraFinMinutos) {
         return true;
       }
     }

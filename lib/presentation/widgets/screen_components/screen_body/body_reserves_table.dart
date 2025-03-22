@@ -12,7 +12,6 @@ import 'package:roll_and_reserve/presentation/blocs/language/language_bloc.dart'
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_event.dart';
 
-DateTime? selectedDate;
 
 class BodyReservesTable extends StatefulWidget {
   final TableEntity table;
@@ -29,6 +28,7 @@ class BodyReservesTable extends StatefulWidget {
 }
 
 class _BodyReservesTableState extends State<BodyReservesTable> {
+  DateTime? selectedDate;
   @override
   Widget build(BuildContext context) {
     selectedDate ??= widget.selectedDate;

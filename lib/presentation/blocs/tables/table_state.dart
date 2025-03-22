@@ -7,6 +7,7 @@ class TableState {
   final List<TableEntity>? tables;
   final List<TableEntity>? tablesFromShop;
   final TableEntity? table;
+  final Map<String, String>? filterTables;
 
   const TableState(
       {this.isLoading = false,
@@ -14,7 +15,8 @@ class TableState {
       this.errorMessage,
       this.tables,
       this.table,
-      this.tablesFromShop});
+      this.tablesFromShop,
+      this.filterTables});
 
   TableState copyWith(
       {bool? isLoading,
@@ -22,21 +24,23 @@ class TableState {
       String? errorMessage,
       List<TableEntity>? tables,
       List<TableEntity>? tablesFromShop,
-      TableEntity? table}) {
+      TableEntity? table,
+      Map<String, String>? filterTables}) {
     return TableState(
         isLoading: isLoading ?? this.isLoading,
         idTable: idTable ?? this.idTable,
-        errorMessage: errorMessage ?? this.errorMessage,
+        errorMessage: errorMessage,
         tables: tables ?? this.tables,
         table: table ?? this.table,
-        tablesFromShop: tablesFromShop ?? this.tablesFromShop);
+        tablesFromShop: tablesFromShop ?? this.tablesFromShop,
+        filterTables: filterTables ?? this.filterTables);
   }
 
   factory TableState.initial(TableState state) => state.copyWith();
 
-  factory TableState.loading(TableState state) => state.copyWith(isLoading: true);
+  factory TableState.loading(TableState state) => state.copyWith(isLoading: true,errorMessage: null);
 
-  factory TableState.success(TableState state) => state.copyWith(isLoading: false);
+  factory TableState.success(TableState state) => state.copyWith(isLoading: false, errorMessage: null);
 
   factory TableState.getTables(TableState state, List<TableEntity> tables) =>
       state.copyWith(tables: tables,  isLoading: false, errorMessage: null);
@@ -49,4 +53,7 @@ class TableState {
 
   factory TableState.failure(TableState state, String errorMessage) =>
       state.copyWith(errorMessage: errorMessage, isLoading: false);
+  
+  factory TableState.filterTables(TableState state, Map<String, String> filterTables) =>
+      state.copyWith(filterTables: filterTables, isLoading: false, errorMessage: null);
 }

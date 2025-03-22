@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:roll_and_reserve/domain/entities/category_game_entity.dart';
 import 'package:roll_and_reserve/domain/entities/difficulty_entity.dart';
@@ -27,7 +26,9 @@ class ButtonCreateReserve extends StatelessWidget {
       required this.idTable,
       required DateTime selectedDate,
       required this.searchDateTime,
-      required this.reserveBloc})
+      required this.reserveBloc,
+      required this.update,
+      this.id})
       : _formKey = formKey,
         _freePlacesController = freePlacesController,
         _hourStartController = hourStartController,
@@ -51,6 +52,8 @@ class ButtonCreateReserve extends StatelessWidget {
   final int idShop;
   final ReserveBloc reserveBloc;
   final DateTime searchDateTime;
+  final bool update;
+  final int? id;
 
   @override
   Widget build(BuildContext context) {
@@ -58,30 +61,54 @@ class ButtonCreateReserve extends StatelessWidget {
       onPressed: () {
         if (_formKey.currentState!.validate()) {
           LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
+          update ? reserveBloc.add(UpdateReserveEvent(
+              reserve: ReserveEntity(
+                id: id!,
+                freePlaces: int.parse(_freePlacesController.text),
+                dayDate: DateFormat('dd - MM - yyyy').format(_selectedDate),
+                horaInicio: _hourStartController.text,
+                horaFin: _hourEndController.text,
+                description: _descriptionController.text,
+                requiredMaterial: _requiredMaterialController.text,
+                difficultyId: _selectedDifficulty!.id,
+                gameId: _selectedGame!.id,
+                gameName: _selectedGame.description,
+                shopId: idShop,
+                tableId: idTable,
+                usersInTables: 0,
+                isEvent: false,
+                userReserveId: loginBloc.state.user!.id,
+              ),
+              idUser: loginBloc.state.user!.id,
+              dateReserve: _selectedDate,
+              searchDateTime: searchDateTime
+             ))
+              :
           reserveBloc.add(CreateReserveEvent(
-            reserve: ReserveEntity(
-              id: 0,
-              freePlaces: int.parse(_freePlacesController.text),
-              dayDate: DateFormat('dd - MM - yyyy').format(_selectedDate),
-              horaInicio: _hourStartController.text,
-              horaFin: _hourEndController.text,
-              description: _descriptionController.text,
-              requiredMaterial: _requiredMaterialController.text,
-              difficultyId: _selectedDifficulty!.id,
-              gameId: _selectedGame!.id,
-              gameName: _selectedGame.description,
-              shopId: idShop,
-              tableId: idTable,
-              usersInTables: 0,
-              isEvent: false,
-            ),
-            idUser:
-                loginBloc.state.user!.role == 2 ? loginBloc.state.user!.id : '',
-            dateReserve: _selectedDate,
-            searchDateTime: searchDateTime
-          ));
+              reserve: ReserveEntity(
+                id: 0,
+                freePlaces: int.parse(_freePlacesController.text),
+                dayDate: DateFormat('dd - MM - yyyy').format(_selectedDate),
+                horaInicio: _hourStartController.text,
+                horaFin: _hourEndController.text,
+                description: _descriptionController.text,
+                requiredMaterial: _requiredMaterialController.text,
+                difficultyId: _selectedDifficulty!.id,
+                gameId: _selectedGame!.id,
+                gameName: _selectedGame.description,
+                shopId: idShop,
+                tableId: idTable,
+                usersInTables: 0,
+                isEvent: false,
+                userReserveId: loginBloc.state.user!.id,
+              ),
+              idUser: loginBloc.state.user!.role == 2
+                  ? loginBloc.state.user!.id
+                  : '',
+              dateReserve: _selectedDate,
+              searchDateTime: searchDateTime));
 
-          context.go('/user/shop/$idShop/table/$idTable/');
+          Navigator.pop(context);
         }
       },
       child: Text(AppLocalizations.of(context)!.save),

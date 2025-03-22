@@ -8,5 +8,12 @@ abstract class ShopsRepository {
   Future<Either<Exception, bool>> createShops(ShopEntity shops);
   Future<Either<Exception, ShopEntity>> getShop(int idShop);
   Future<Either<Exception, List<ShopEntity>>> getShopByOwner(String idOwner);
-  
+  Future<Either<Exception, List<dynamic>>>
+      getMostPlayedGames(int idShop, String startTime, String endTime);
+  Future<Either<Exception, int>> getTotalReservations(
+      int idShop, String startTime, String endTime);
+  Future<Either<Exception, int>> getPlayerCount(
+      int idShop, String startTime, String endTime);
+  Future<Either<Exception, List<dynamic>>>
+      getPeakReservationHours(int idShop, String startTime, String endTime);  
 }

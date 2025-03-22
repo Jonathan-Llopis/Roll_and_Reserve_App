@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:roll_and_reserve/domain/entities/difficulty_entity.dart';
 import 'package:roll_and_reserve/domain/entities/game_entity.dart';
 import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
+import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_event.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/body_create_event.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -42,6 +44,7 @@ class ButtonCreateEvent extends StatelessWidget {
     return ElevatedButton(
       onPressed: () {
         if (_formKey.currentState!.validate()) {
+          LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
           List<ReserveEntity> reserves = [];
           for (int table in _selectedTableIds) {
             reserves.add(ReserveEntity(
@@ -59,6 +62,7 @@ class ButtonCreateEvent extends StatelessWidget {
               usersInTables: 0,
               isEvent: true,
               shopId: widget.idShop,
+               userReserveId: loginBloc.state.user!.id,
             ));
           }
           widget.reserveBloc.add(CreateEventsEvent(reserves: reserves));

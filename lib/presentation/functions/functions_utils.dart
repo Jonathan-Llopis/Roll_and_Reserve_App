@@ -72,15 +72,18 @@ String? validateTime(
     String? value,
     ReserveBloc reserveBloc,
     DateTime dateReserve,
-    TextEditingController startHour,
-    TextEditingController endHour) {
+    TextEditingController reservaHora,
+    TextEditingController otraHora,
+    bool update,
+    bool endTime) {
   String? error = validateHour(value, context);
   if (error != null) return error;
-  if (isHourTaken(
-      reserveBloc.state.reserves!, dateReserve, startHour.text, endHour.text)) {
+  if (!update &&
+      isHourTaken(reserveBloc.state.reserves!, dateReserve, reservaHora.text,
+        )) {
     return AppLocalizations.of(context)!.time_already_taken_that_day;
   }
-  if (startHour.text.compareTo(endHour.text) >= 0) {
+  if (reservaHora.text.compareTo(otraHora.text) >= 0 && !endTime) {
     return AppLocalizations.of(context)!.start_time_must_be_less_than_end_time;
   }
   return null;
@@ -93,16 +96,16 @@ Future<void> checkUserLocation(BuildContext context, int idReserve) async {
   bool serviceEnabled;
   LocationPermission permission;
 
-
   serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
-    return Future.error( AppLocalizations.of(context)!.grant_camera_permission);
+    return Future.error(AppLocalizations.of(context)!.grant_camera_permission);
   }
   permission = await Geolocator.checkPermission();
   if (permission == LocationPermission.denied) {
     permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied) {
-      return Future.error( AppLocalizations.of(context)!.location_service_disabled);
+      return Future.error(
+          AppLocalizations.of(context)!.location_service_disabled);
     }
   }
 
@@ -122,12 +125,41 @@ Future<void> checkUserLocation(BuildContext context, int idReserve) async {
 
   if (distanceInMeters <= 100) {
     Navigator.of(context).pop();
-    confirmReserveDialog(context,  AppLocalizations.of(context)!.reservation_confirmed, false);
+    confirmReserveDialog(
+        context, AppLocalizations.of(context)!.reservation_confirmed, false);
     context.read<ReserveBloc>().add(ConfirmReserveEvent(
         idReserve: idReserve, idUser: loginBloc.state.user!.id));
   } else {
     Navigator.of(context).pop();
     confirmReserveDialog(
-        context,  AppLocalizations.of(context)!.not_in_shop_location, true);
+        context, AppLocalizations.of(context)!.not_in_shop_location, true);
   }
+}
+String monthStadistics(String date, List<String> monthNames) {
+
+  List<String> dateParts = date.split('/');
+  int day = int.parse(dateParts[0]);
+  int month = int.parse(dateParts[1]);
+
+  String monthName = monthNames[month - 1];
+  return '$day/$monthName';
+}
+
+String convertMonthRangeToText(String dateRange, List<String> monthNames) {
+  List<String> dates = dateRange.split(' al ');
+  String startDate = dates[0];
+  String endDate = dates[1];
+
+  List<String> startParts = startDate.split('/');
+  List<String> endParts = endDate.split('/');
+
+  int startDay = int.parse(startParts[0]);
+  int startMonth = int.parse(startParts[1]);
+  int endDay = int.parse(endParts[0]);
+  int endMonth = int.parse(endParts[1]);
+
+  String startMonthName = monthNames[startMonth - 1];
+  String endMonthName = monthNames[endMonth - 1];
+
+  return '$startDay/$startMonthName al $endDay/$endMonthName';
 }

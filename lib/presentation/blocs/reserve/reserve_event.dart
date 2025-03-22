@@ -169,3 +169,15 @@ class GetLastTenPlayersEvent extends ReserveEvent {
   @override
   List<Object?> get props => [idGoogle];
 }
+
+class UpdateReserveEvent extends ReserveEvent {
+  final ReserveEntity reserve;
+  final String idUser;
+  final DateTime dateReserve;
+  final DateTime searchDateTime;
+  UpdateReserveEvent({required this.reserve, required this.idUser, required this.dateReserve, required this.searchDateTime});
+
+  @override
+  List<Object?> get props => [reserve, idUser, dateReserve, searchDateTime];
+}
+class ClearFilterEvent extends ReserveEvent {}

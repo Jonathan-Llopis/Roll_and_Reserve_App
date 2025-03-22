@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:roll_and_reserve/domain/entities/category_game_entity.dart';
 import 'package:roll_and_reserve/domain/entities/difficulty_entity.dart';
 import 'package:roll_and_reserve/domain/entities/game_entity.dart';
+import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_utils.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
@@ -16,12 +17,14 @@ class BodyCreateReserve extends StatefulWidget {
   final int idShop;
   final ReserveBloc reserveBloc;
   final DateTime searchDateTime;
+  final ReserveEntity? reserve;
 
   const BodyCreateReserve({
     required this.idTable,
     required this.reserveBloc,
     required this.idShop,
     required this.searchDateTime,
+    this.reserve,
     super.key,
   });
 
@@ -46,6 +49,28 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
   GameEntity? _selectedGame;
 
   @override
+  void initState() {
+    if (widget.reserve != null) {
+      ReserveBloc reserveBloc = widget.reserveBloc;
+      DifficultyEntity difficultyEntity = reserveBloc.state.difficulties!
+          .firstWhere(
+              (difficulty) => difficulty.id == widget.reserve!.difficultyId);
+      GameEntity gameEntity = reserveBloc.state.games!
+          .firstWhere((game) => game.id == widget.reserve!.gameId);
+
+      _dayReservationController.text = widget.reserve!.dayDate;
+      _freePlacesController.text = widget.reserve!.freePlaces.toString();
+      _hourStartController.text = widget.reserve!.horaInicio;
+      _hourEndController.text = widget.reserve!.horaFin;
+      _descriptionController.text = widget.reserve!.description;
+      _requiredMaterialController.text = widget.reserve!.requiredMaterial;
+      _selectedDifficulty = difficultyEntity;
+      _selectedGame = gameEntity;
+    }
+    super.initState();
+  }
+
+  @override
   void dispose() {
     _dayReservationController.dispose();
     _freePlacesController.dispose();
@@ -67,11 +92,11 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
             children: [
               SearchableDropdownFormField<GameEntity>.paginated(
                 backgroundDecoration: (Widget child) => Container(
-                    decoration: BoxDecoration(
+                  decoration: BoxDecoration(
                     borderRadius: const BorderRadius.all(Radius.circular(4.0)),
                     border: Border.all(
                       color: const Color(0xFF000000),
-                      width: 1.0,
+                      width: 0.5,
                       style: BorderStyle.solid,
                       strokeAlign: BorderSide.strokeAlignInside,
                     ),
@@ -80,7 +105,11 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
                 ),
                 hintText: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Text(AppLocalizations.of(context)!.game, style: TextStyle(fontSize: 16.0)),
+                  child: Text(
+                      widget.reserve != null
+                          ? _selectedGame!.description
+                          : AppLocalizations.of(context)!.game,
+                      style: TextStyle(fontSize: 16.0)),
                 ),
                 margin: const EdgeInsets.all(0),
                 paginatedRequest: (int page, String? searchKey) async {
@@ -93,14 +122,15 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
                               value: game,
                               label: game.description,
                               child: Padding(
-                                 padding: const EdgeInsets.all(16.0),
+                                padding: const EdgeInsets.all(16.0),
                                 child: Text(game.description),
                               ),
                             ))
                         .toList(),
                   );
                 },
-                validator: (value) => validateSelectedValue(value, context),
+                validator: (value) =>
+                    validateSelectedValue(value ?? _selectedGame, context),
                 onChanged: (GameEntity? value) {
                   setState(() {
                     _selectedGame = value;
@@ -132,16 +162,24 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
                 onTap: () => selectTime(context, _hourStartController),
                 readOnly: true,
                 validator: (value) => validateTime(
-                  context,
-                  value,
-                  widget.reserveBloc,
-                  _dayReservationController.text == ""
-                      ? DateTime.now()
-                      : DateFormat('dd-MM-yyyy')
-                          .parse(_dayReservationController.text),
-                  _hourStartController,
-                  _hourEndController,
-                ),
+                    context,
+                    value,
+                    widget.reserveBloc,
+                    _dayReservationController.text == ""
+                        ? DateTime.now()
+                        : widget.reserve == null
+                            ? DateFormat("dd-MM-yyyy")
+                                .parse(_dayReservationController.text)
+                            : DateFormat("dd - MM - yyyy")
+                                .parse(_dayReservationController.text),
+                    _hourStartController,
+                    _hourEndController,
+                    widget.reserve == null
+                        ? false
+                        : _hourStartController.text
+                                .compareTo(widget.reserve!.horaInicio) >=
+                            0,
+                    false),
               ),
               InputReservationText(
                 controller: _hourEndController,
@@ -150,16 +188,24 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
                 onTap: () => selectTime(context, _hourEndController),
                 readOnly: true,
                 validator: (value) => validateTime(
-                  context,
-                  value,
-                  widget.reserveBloc,
-                  _dayReservationController.text == ""
-                      ? DateTime.now()
-                      : DateFormat('dd-MM-yyyy')
-                          .parse(_dayReservationController.text),
-                  _hourStartController,
-                  _hourEndController,
-                ),
+                    context,
+                    value,
+                    widget.reserveBloc,
+                    _dayReservationController.text == ""
+                        ? DateTime.now()
+                        : widget.reserve == null
+                            ? DateFormat("dd-MM-yyyy")
+                                .parse(_dayReservationController.text)
+                            : DateFormat("dd - MM - yyyy")
+                                .parse(_dayReservationController.text),
+                    _hourEndController,
+                    _hourStartController,
+                    widget.reserve == null
+                        ? false
+                        : _hourEndController.text
+                                .compareTo(widget.reserve!.horaFin) <=
+                            0,
+                    true),
               ),
               InputReservationText(
                 controller: _descriptionController,
@@ -197,7 +243,7 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
                 },
                 validator: (value) => validateSelectedValue(value, context),
               ),
-              const SizedBox(height: 16.0),         
+              const SizedBox(height: 16.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -210,6 +256,7 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
                   ),
                   const SizedBox(width: 10.0),
                   ButtonCreateReserve(
+                    id: widget.reserve != null ? widget.reserve!.id : 0,
                     formKey: _formKey,
                     freePlacesController: _freePlacesController,
                     hourStartController: _hourStartController,
@@ -223,10 +270,14 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
                     idShop: widget.idShop,
                     selectedDate: _dayReservationController.text == ""
                         ? DateTime.now()
-                        : DateFormat('dd-MM-yyyy')
-                            .parse(_dayReservationController.text),
+                        : widget.reserve == null
+                            ? DateFormat("dd-MM-yyyy")
+                                .parse(_dayReservationController.text)
+                            : DateFormat("dd - MM - yyyy")
+                                .parse(_dayReservationController.text),
                     reserveBloc: widget.reserveBloc,
                     searchDateTime: widget.searchDateTime,
+                    update: widget.reserve != null,
                   ),
                 ],
               ),
