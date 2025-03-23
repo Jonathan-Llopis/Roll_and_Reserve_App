@@ -574,8 +574,6 @@
     "description" : "Text for chaning language"
    }
   ,
-
-
   "update": "Update",
   "@update": {
     "description": "Label for update button"
@@ -729,6 +727,128 @@
   "catalan": "Catalan",
   "@catalan": {
     "description": "Label for Catalan language"
+  },
+  "month": "Month",
+  "@month": {
+    "description": "Label for month"
+  },
+  "quarter": "Quarter",
+  "@quarter": {
+    "description": "Label for quarter"
+  },
+  "annual": "Annual",
+  "@annual": {
+    "description": "Label for annual"
+  }
+  ,
+  "total_reservations": "Total Reserves",
+  "@total_reservations": {
+    "description": "Label for the total number of reservations"
+  },
+  "active_players": "Active Players",
+  "@active_players": {
+    "description": "Label for the number of active players"
+  },
+  "peak_hours": "Peak Hours",
+  "@peak_hours": {
+    "description": "Label for the busiest hours"
+  },
+  "popular_games": "Popular Games",
+  "@popular_games": {
+    "description": "Label for popular games"
+  }
+  ,
+  "total_reservations_by_period": "Total Reservations for {selectedPeriod}",
+  "@total_reservations_by_period": {
+    "description": "Label for total reservations by selected period",
+    "placeholders": {
+      "selectedPeriod": {
+        "type": "String",
+        "example": "Month"
+      }
+    }
+  }
+  ,
+  "active_players_by_period": "Active Players for {selectedPeriod}",
+  "@active_players_by_period": {
+    "description": "Label for active players by selected period",
+    "placeholders": {
+      "selectedPeriod": {
+        "type": "String",
+        "example": "Month"
+      }
+    }
+  }
+  ,
+  "peak_reservation_hours": "Peak Reservation Hours",
+  "@peak_reservation_hours": {
+    "description": "Label for peak reservation hours"
+  }
+  ,
+  "most_popular_games": "Most Popular Games",
+  "@most_popular_games": {
+    "description": "Label for most popular games"
+  }
+  ,
+  "games": "Games",
+  "@games": {
+    "description": "Label for games"
+  },
+  "ask_ai_about_rules": "Ask the AI about your rules questions",
+  "@ask_ai_about_rules": {
+    "description": "Prompt to ask the AI about rules questions"
+  },
+  "send_message": "Send a message",
+  "@send_message": {
+    "description": "Label for sending a message"
+  },
+  "loading_chat": "Loading chat...",
+  "@loading_chat": {
+    "description": "Message indicating that the chat is loading"
+  },
+  "user_or_password_incorrect": "User or password incorrect",
+  "@user_or_password_incorrect": {
+    "description": "Error message indicating that the user or password is incorrect"
+  },
+  "nearby_shops": "Nearby Shops",
+  "@nearby_shops": {
+    "description": "Label for nearby shops"
+  },
+  "go_to_shop": "Go to Shop",
+  "@go_to_shop": {
+    "description": "Label for go to shop"
+  },
+  "confirmed": "Confirmed",
+  "@confirmed": {
+    "description": "Label for confirmed status"
+  },
+  "pending": "Pending",
+  "@pending": {
+    "description": "Label for pending status"
+  },
+  "loading": "Loading...",
+  "@loading": {
+    "description": "Message indicating that the content is loading"
+  },
+  "unsubscribed": "Unsubscribed",
+  "@unsubscribed": {
+    "description": "Label for unsubscribed status"
+  },
+  "subscribed": "Subscribed",
+  "@subscribed": {
+    "description": "Label for subscribed status"
+  },
+  "latest_players": "Latest Players",
+  "@latest_players": {
+    "description": "Label for the latest players"
+  }, 
+  "store_statistics": "Store Statistics",
+  "@store_statistics": {
+    "description": "Label for store statistics"
+  },
+  "seats": "Seats",
+  "@seats": {
+    "description": "Label for seats"
   }
 }
 

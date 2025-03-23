@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:roll_and_reserve/config/theme/theme.dart';
 import 'package:roll_and_reserve/domain/entities/shop_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.dart';
@@ -147,7 +148,7 @@ class _BodyEditShopState extends State<BodyEditShop> {
                   },
                   icon: Icon(Icons.cancel),
                   label: Text(AppLocalizations.of(context)!.cancel),
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.grey),
+                  style: AppTheme.textButtonCancelStyle,  
                 ),
                 ButtonCreateUpdateShop(
                   titleController: _titleController,

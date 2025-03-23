@@ -4,6 +4,7 @@ import 'package:roll_and_reserve/presentation/blocs/chat/chat_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/chat/chat_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/chat/chat_state.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -34,7 +35,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("AI Chat"),
+            title: Text(AppLocalizations.of(context)!.ask_ai_about_rules),
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 8.0),
@@ -82,7 +83,7 @@ class InputText extends StatelessWidget {
                 Expanded(
                   child: ConstrainedBox(
                     constraints: BoxConstraints(
-                      maxHeight: 150, // Maximum height for the TextField
+                      maxHeight: 150,
                     ),
                     child: Scrollbar(
                       child: TextField(
@@ -93,7 +94,7 @@ class InputText extends StatelessWidget {
                         minLines: 1,
                         decoration: InputDecoration(
                           contentPadding: const EdgeInsets.all(15),
-                          hintText: 'Envia un mensaje',
+                          hintText: AppLocalizations.of(context)!.send_message,
                           border: OutlineInputBorder(
                             borderRadius: const BorderRadius.all(
                               Radius.circular(14),
@@ -182,7 +183,7 @@ class BodyMessages extends StatelessWidget {
             itemCount: state.messages.length,
           );
         } else {
-          return Center(child: Text('Cargando chat...'));
+          return Center(child: Text(AppLocalizations.of(context)!.loading_chat));
         }
       },
     );
@@ -213,9 +214,9 @@ class ChatMessage extends StatelessWidget {
               decoration: BoxDecoration(
                 color: isFromUser
                     ? const Color.fromARGB(
-                        255, 173, 216, 230) // Fondo más claro para el usuario
+                        255, 173, 216, 230)
                     : const Color.fromARGB(
-                        255, 207, 206, 206), // Fondo más claro para el bot
+                        255, 207, 206, 206), 
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(isFromUser ? 20 : 5),
                   topRight: Radius.circular(isFromUser ? 5 : 20),
@@ -224,8 +225,8 @@ class ChatMessage extends StatelessWidget {
                 ),
                 border: Border.all(
                   color: isFromUser
-                      ? Colors.blue.shade200 // Borde sutil para el usuario
-                      : Colors.grey.shade300, // Borde sutil para el bot
+                      ? Colors.blue.shade200 
+                      : Colors.grey.shade300,
                   width: 1,
                 ),
                 boxShadow: [
@@ -248,8 +249,8 @@ class ChatMessage extends StatelessWidget {
                       fontSize: 14,
                       color: isFromUser
                           ? Colors.blue
-                              .shade800 // Color más vibrante para el usuario
-                          : Colors.grey.shade800, // Color más suave para el bot
+                              .shade800 
+                          : Colors.grey.shade800,
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -261,12 +262,12 @@ class ChatMessage extends StatelessWidget {
                         height: 1.5,
                         color: isFromUser
                             ? Colors.blue
-                                .shade900 // Texto más oscuro para el usuario
+                                .shade900 
                             : Colors
-                                .grey.shade900, // Texto más oscuro para el bot
+                                .grey.shade900, 
                       ),
                       textAlign:
-                          WrapAlignment.spaceBetween, // Texto justificado
+                          WrapAlignment.spaceBetween,
                     ),
                   ),
                 ],

@@ -27,7 +27,7 @@ class _StoreMapState extends State<StoreMap> {
   @override
   void initState() {
     context.read<ShopBloc>().add(GetShopsEvent());
-    currentZoomLevel = 12;
+    currentZoomLevel = 10;
     super.initState();
   }
 
@@ -119,7 +119,7 @@ class _StoreMapState extends State<StoreMap> {
                   contentBuilder: (state) {
                     return Scaffold(
                       appBar: AppBar(
-                        title: const Text('Tiendas cercanas'),
+                        title:  Text(AppLocalizations.of(context)!.nearby_shops),
                         leading: IconButton(
                           icon: const Icon(Icons.arrow_back),
                           onPressed: () {

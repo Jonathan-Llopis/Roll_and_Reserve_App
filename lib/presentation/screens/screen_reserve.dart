@@ -41,9 +41,6 @@ class _ScreenReserveState extends State<ScreenReserve> {
     context
         .read<ReserveBloc>()
         .add(GetReserveWithUsers(idReserve: widget.idReserve));
-    TableBloc tableBloc = BlocProvider.of<TableBloc>(context);
-    table = tableBloc.state.tables!
-        .firstWhere((table) => table.id == widget.idTable);
 
     context.read<ReserveBloc>().add(GetAllDifficultyEvent());
     context.read<ReserveBloc>().add(GetAllGameEvent());
@@ -53,6 +50,9 @@ class _ScreenReserveState extends State<ScreenReserve> {
   @override
   Widget build(BuildContext context) {
     LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
+    TableBloc tableBloc = BlocProvider.of<TableBloc>(context);
+    table = tableBloc.state.tables!
+        .firstWhere((table) => table.id == widget.idTable);
     return DefaultScaffold(
         appBar: widget.appBar,
         body: BlocBuilder<ReserveBloc, ReserveState>(

@@ -93,7 +93,7 @@ class CardShopMap extends StatelessWidget {
               onPressed: () {
                 context.go('/user/shop/${store.id}');
               },
-              child: Text("Ir a la tienda"),
+              child: Text(AppLocalizations.of(context)!.go_to_shop),
             ),
           ),
         ],

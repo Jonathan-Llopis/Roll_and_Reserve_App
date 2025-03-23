@@ -84,7 +84,7 @@ class _ScreenLoginState extends State<ScreenLogin> {
                       itemOffset: const Offset(-5, -5),
                     ),
                     title:  Text(state.errorMessage!),
-                    description: const Text('Usuario o contraseña incorrectos'),
+                    description:  Text(AppLocalizations.of(context)!.user_or_password_incorrect),
                   ).show(context);
                 } else if (state.email != null && state.email != "NO_USER") {
                   context.go('/user', extra: state.email);
@@ -96,7 +96,6 @@ class _ScreenLoginState extends State<ScreenLogin> {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 40),
                     const Text('Roll and Reserve', style: AppTheme.titleStyle),
                     const SizedBox(height: 10),
                     Text(AppLocalizations.of(context)!.login,

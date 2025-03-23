@@ -7,6 +7,7 @@ import 'package:roll_and_reserve/domain/entities/user_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/reviews/reviews_bloc.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_utils.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CardUser extends StatelessWidget {
   final UserEntity user;
@@ -67,7 +68,7 @@ class CardUser extends StatelessWidget {
                             buildStars(user.averageRaiting),
                             const SizedBox(width: 8),
                             Text(
-                              'Rating: ${user.averageRaiting.toStringAsFixed(1)}',
+                               '${AppLocalizations.of(context)!.rating}: ${user.averageRaiting.toStringAsFixed(1)}',
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: theme.colorScheme.onSurface.withOpacity(0.7),
                               ),
@@ -148,7 +149,7 @@ class CardUser extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
-        user.reserveConfirmation! ? 'Confirmed' : 'Pending',
+        user.reserveConfirmation! ? AppLocalizations.of(context)!.confirmed : AppLocalizations.of(context)!.pending,
         style: Theme.of(context).textTheme.labelSmall?.copyWith(
               color: user.reserveConfirmation!
                   ? Theme.of(context).colorScheme.tertiary

@@ -34,11 +34,12 @@ class _ScreenReservesOfTableState extends State<ScreenReservesOfTable> {
 
   @override
   void initState() {
-        context.read<TableBloc>().add(GetTablesByShopEvent(idShop: widget.idShop));
+    context.read<TableBloc>().add(GetTablesByShopEvent(idShop: widget.idShop));
     ReserveBloc reserveBloc = BlocProvider.of<ReserveBloc>(context);
+    context.read<TableBloc>().add(GetTablesEvent());
     _selectedDate = reserveBloc.state.filterTables == null
         ? _selectedDate ?? DateTime.now()
-        : DateFormat('dd-MM-yyyy')
+        : DateFormat('yyyy-MM-dd')
             .parse(reserveBloc.state.filterTables!['dateReserve']!);
     super.initState();
 

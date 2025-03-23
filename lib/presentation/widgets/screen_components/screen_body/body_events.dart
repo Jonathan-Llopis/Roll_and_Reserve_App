@@ -5,10 +5,10 @@ import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
-
 import 'package:roll_and_reserve/presentation/functions/notification_service.dart';
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
 import 'package:roll_and_reserve/presentation/widgets/cards/card_reserve.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 DateTime? selectedDate;
 
@@ -74,14 +74,14 @@ class _BodyEventsState extends State<BodyEvents> {
                                 await NotificationService()
                                     .unsubscribeFromTopic(widget.idShop);
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('Unsubscribed')),
+                                  SnackBar(content: Text(AppLocalizations.of(context)!.unsubscribed)),
                                 );
                                 state.user!.notifications.remove(widget.idShop);
                               } else {
                                 await NotificationService()
                                     .subscribeToTopic(widget.idShop);
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('Subscribed')),
+                                  SnackBar(content: Text(AppLocalizations.of(context)!.subscribed)),
                                 );
                                 state.user!.notifications.add(widget.idShop);
                               }
@@ -94,7 +94,7 @@ class _BodyEventsState extends State<BodyEvents> {
                                 ? Icons.notifications_off
                                 : Icons.notifications),
                             label: Text(
-                                isSubscribed ? 'Unsubscribe' : 'Subscribe'),
+                                isSubscribed ? AppLocalizations.of(context)!.unsubscribed : AppLocalizations.of(context)!.subscribed),
                           );
                         },
                       );

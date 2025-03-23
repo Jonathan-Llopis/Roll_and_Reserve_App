@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:roll_and_reserve/config/theme/theme.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.dart';
@@ -61,20 +62,14 @@ class _DialogResetPasswordState extends State<DialogResetPassword> {
       ),
       actions: <Widget>[
         TextButton(
-          style: TextButton.styleFrom(
-            backgroundColor: Colors.red,
-            foregroundColor: Colors.black,
-          ),
+          style:AppTheme.textButtonCancelStyle,
           onPressed: () {
             Navigator.pop(context);
           },
           child:  Text(AppLocalizations.of(context)!.cancel),
         ),
         TextButton(
-          style: TextButton.styleFrom(
-            backgroundColor: Colors.green,
-            foregroundColor: Colors.black,
-          ),
+          style: AppTheme.textButtonCancelStyle,
           onPressed: () async {
             if (formKey.currentState!.validate()) {
               context

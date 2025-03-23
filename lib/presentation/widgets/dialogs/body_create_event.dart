@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:roll_and_reserve/config/theme/theme.dart';
 import 'package:roll_and_reserve/domain/entities/difficulty_entity.dart';
 import 'package:roll_and_reserve/domain/entities/game_entity.dart';
 import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
@@ -185,9 +186,11 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           TextButton(
+                            style: AppTheme.textButtonCancelStyle,
                             onPressed: () => Navigator.of(context).pop(),
-                            child: Text(AppLocalizations.of(context)!.cancel,
-                                style: TextStyle(color: Colors.red)),
+                            child: Text(
+                              AppLocalizations.of(context)!.cancel,
+                            ),
                           ),
                           const SizedBox(width: 10.0),
                           ButtonCreateEvent(

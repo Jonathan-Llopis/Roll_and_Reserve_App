@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:roll_and_reserve/config/theme/theme.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
@@ -31,20 +32,14 @@ class DialogoDeleteTable extends StatelessWidget {
         ),
         actions: <Widget>[
           TextButton(
-            style: TextButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-            ),
+            style: AppTheme.textButtonCancelStyle,
             onPressed: () {
               Navigator.pop(context);
             },
             child: Text(AppLocalizations.of(context)!.cancel),
           ),
           TextButton(
-            style: TextButton.styleFrom(
-              backgroundColor: Colors.green,
-              foregroundColor: Colors.white,
-            ),
+            style: AppTheme.textButtonAcceptStyle,
             onPressed: () {
               tableBloc.add(
                 DeleteTableEvent(

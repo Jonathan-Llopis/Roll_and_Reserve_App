@@ -298,7 +298,7 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
           (failure) => emit(ShopState.failure(state,
               "Fallo al obtener el conteo de jugadores para el periodo del ${startDate.day}/${startDate.month} al ${endDate.day}/${endDate.month}")),
           (playerCount) => quarterPlayerCounts[
-                  'Periodo del ${startDate.day}/${startDate.month} al ${endDate.day}/${endDate.month}'] =
+                  '${startDate.day}/${startDate.month} al ${endDate.day}/${endDate.month}'] =
               playerCount,
         );
       }

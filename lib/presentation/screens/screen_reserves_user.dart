@@ -28,7 +28,9 @@ class _ScreenReservesOfUserState extends State<ScreenReservesOfUser> {
     context.read<TableBloc>().add(
           GetTablesEvent(),
         );
-        
+    context.read<TableBloc>().add(
+          GetTablesEvent(),
+        );
     super.initState();
   }
 

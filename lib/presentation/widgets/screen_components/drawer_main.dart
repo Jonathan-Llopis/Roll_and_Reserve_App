@@ -91,7 +91,7 @@ class DrawerMain extends StatelessWidget {
                     ? ListTile(
                   leading:
                       Icon(Icons.person_pin_sharp, color: Colors.lightBlue),
-                  title: Text("Ultimos jugadores"),
+                  title: Text(AppLocalizations.of(context)!.latest_players),
                   onTap: () {
                     Navigator.pop(context);
                     context.go('/user/lastUsers');
@@ -99,7 +99,7 @@ class DrawerMain extends StatelessWidget {
                 ) : ListTile(
                   leading:
                     Icon(Icons.bar_chart, color: Colors.lightBlue),
-                  title: Text("Estadisticas Tiendas"),
+                  title: Text(AppLocalizations.of(context)!.store_statistics),
                   onTap: () {
                   Navigator.pop(context);
                   context.go('/user/stadistics');

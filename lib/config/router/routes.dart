@@ -7,8 +7,6 @@ import 'package:roll_and_reserve/presentation/screens/screen_create_reserve.dart
 import 'package:roll_and_reserve/presentation/screens/screen_event.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_last_players.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_map_shops.dart';
-import 'package:roll_and_reserve/presentation/screens/screen_qr.dart';
-import 'package:roll_and_reserve/presentation/screens/screen_reserve.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_login.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_register.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_reserves_table.dart';

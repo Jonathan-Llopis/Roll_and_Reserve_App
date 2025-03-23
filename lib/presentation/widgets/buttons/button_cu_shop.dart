@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:roll_and_reserve/config/theme/theme.dart';
 import 'package:roll_and_reserve/domain/entities/shop_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
@@ -29,6 +30,7 @@ class ButtonCreateUpdateShop extends StatelessWidget {
     final loginBloc = BlocProvider.of<LoginBloc>(context);
     final shopBloc = BlocProvider.of<ShopBloc>(context);
     return ElevatedButton(
+      style: AppTheme.textButtonAcceptStyle,
       onPressed: () {
         if (idShop == 0) {
           context.read<ShopBloc>().add(CreateShopEvent(

@@ -7,6 +7,7 @@ import 'package:roll_and_reserve/presentation/functions/constants.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_utils.dart';
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BodyStadistics extends StatefulWidget {
   final int idShop;
@@ -48,7 +49,7 @@ class _BodyStadisticsState extends State<BodyStadistics> {
   }
 
   String _selectedPeriod = 'Month';
-  String _selectedChart = 'Reservaciones Totales';
+  int _selectedChart = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +75,7 @@ class _BodyStadisticsState extends State<BodyStadistics> {
           BlocBuilder<ShopBloc, ShopState>(
             builder: (context, state) {
               switch (_selectedChart) {
-                case 'Reservaciones Totales':
+                case 1:
                   return buildContent<ShopState>(
                     state: state,
                     isLoading: (state) => state.isLoading,
@@ -85,7 +86,7 @@ class _BodyStadisticsState extends State<BodyStadistics> {
                       return _buildReservationsChart(state.totalReservations!);
                     },
                   );
-                case 'Jugadores Activos':
+                case 2:
                   return buildContent<ShopState>(
                     state: state,
                     isLoading: (state) => state.isLoading,
@@ -96,7 +97,7 @@ class _BodyStadisticsState extends State<BodyStadistics> {
                       return _buildPlayersChart(state.playerCount!);
                     },
                   );
-                case 'Horas Pico':
+                case 3:
                   return buildContent<ShopState>(
                     state: state,
                     isLoading: (state) => state.isLoading,
@@ -107,7 +108,7 @@ class _BodyStadisticsState extends State<BodyStadistics> {
                       return _buildPeakHoursChart(state.peakReservationHours!);
                     },
                   );
-                case 'Juegos Populares':
+                case 4:
                   return buildContent<ShopState>(
                     state: state,
                     isLoading: (state) => state.isLoading,
@@ -131,15 +132,22 @@ class _BodyStadisticsState extends State<BodyStadistics> {
   Widget _buildPeriodSelector() => SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
-          children: ['Month', 'Quarter', 'Year'].map((String period) {
+          children: [
+            {'label': AppLocalizations.of(context)!.month, 'value': 'Month'},
+            {
+              'label': AppLocalizations.of(context)!.quarter,
+              'value': 'Quarter'
+            },
+            {'label': AppLocalizations.of(context)!.annual, 'value': 'Year'}
+          ].map<Widget>((Map<String, String> period) {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4.0),
               child: ChoiceChip(
-                label: Text(period),
-                selected: _selectedPeriod == period,
+                label: Text(period['label']!),
+                selected: _selectedPeriod == period['value'],
                 onSelected: (bool selected) {
                   setState(() {
-                    _selectedPeriod = period;
+                    _selectedPeriod = period['value']!;
                   });
                 },
               ),
@@ -152,19 +160,19 @@ class _BodyStadisticsState extends State<BodyStadistics> {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: [
-            'Reservaciones Totales',
-            'Jugadores Activos',
-            'Horas Pico',
-            'Juegos Populares'
-          ].map((String chart) {
+            {'label': AppLocalizations.of(context)!.total_reservations, 'value': 1},
+            {'label': AppLocalizations.of(context)!.active_players, 'value': 2},
+            {'label': AppLocalizations.of(context)!.peak_hours, 'value': 3},
+            {'label': AppLocalizations.of(context)!.popular_games, 'value': 4}
+          ].map((Map<String, dynamic> chart) {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4.0),
               child: ChoiceChip(
-                label: Text(chart),
-                selected: _selectedChart == chart,
+                label: Text(chart['label']),
+                selected: _selectedChart == chart['value'],
                 onSelected: (bool selected) {
                   setState(() {
-                    _selectedChart = chart;
+                    _selectedChart = chart['value'];
                   });
                 },
               ),
@@ -182,13 +190,13 @@ class _BodyStadisticsState extends State<BodyStadistics> {
         padding: const EdgeInsets.all(16),
         child: SfCartesianChart(
           tooltipBehavior: _tooltipBehavior,
-            title: ChartTitle(text: 'Reservaciones Totales por $_selectedPeriod'),
-            primaryXAxis: CategoryAxis(
-            labelRotation: 90,
+          title: ChartTitle(text: AppLocalizations.of(context)!.total_reservations_by_period(_selectedPeriod)),
+          primaryXAxis: CategoryAxis(
+            labelRotation: 45,
             edgeLabelPlacement: EdgeLabelPlacement.shift,
             labelStyle: TextStyle(fontSize: 10),
             labelAlignment: LabelAlignment.start,
-            ),
+          ),
           series: <CartesianSeries>[
             LineSeries<MapEntry<String, int>, String>(
               dataSource: dataChosen.entries.toList(),
@@ -221,12 +229,22 @@ class _BodyStadisticsState extends State<BodyStadistics> {
         padding: const EdgeInsets.all(16),
         child: SfCartesianChart(
           tooltipBehavior: _tooltipBehavior,
-          title: ChartTitle(text: 'Jugadores Activos por $_selectedPeriod'),
-          primaryXAxis: CategoryAxis(),
+          title: ChartTitle(text: AppLocalizations.of(context)!.active_players_by_period(_selectedPeriod)),
+          primaryXAxis: CategoryAxis(
+            labelRotation: 45,
+            edgeLabelPlacement: EdgeLabelPlacement.shift,
+            labelStyle: TextStyle(fontSize: 10),
+            labelAlignment: LabelAlignment.start,
+          ),
           series: <CartesianSeries>[
             ColumnSeries<MapEntry<String, int>, String>(
               dataSource: dataChosen.entries.toList(),
-              xValueMapper: (MapEntry<String, int> entry, _) => entry.key,
+              xValueMapper: (MapEntry<String, int> entry, _) =>
+                  _selectedPeriod == 'Year'
+                      ? monthNames[int.parse(entry.key)]
+                      : _selectedPeriod == 'Quarter'
+                          ? convertMonthRangeToText(entry.key, monthNames)
+                          : monthStadistics(entry.key, monthNames),
               yValueMapper: (MapEntry<String, int> entry, _) => entry.value,
               color: Colors.green,
             )
@@ -246,8 +264,13 @@ class _BodyStadisticsState extends State<BodyStadistics> {
         padding: const EdgeInsets.all(16),
         child: SfCartesianChart(
           tooltipBehavior: _tooltipBehavior,
-          title: const ChartTitle(text: 'Horas Pico de Reservación'),
-          primaryXAxis: CategoryAxis(),
+          title:  ChartTitle(text: AppLocalizations.of(context)!.peak_reservation_hours),
+          primaryXAxis: CategoryAxis(
+            labelRotation: 45,
+            edgeLabelPlacement: EdgeLabelPlacement.shift,
+            labelStyle: TextStyle(fontSize: 10),
+            labelAlignment: LabelAlignment.center,
+          ),
           series: <CartesianSeries>[
             LineSeries<Map<String, dynamic>, String>(
               dataSource: List.generate(16, (index) {
@@ -280,7 +303,7 @@ class _BodyStadisticsState extends State<BodyStadistics> {
         padding: const EdgeInsets.all(0),
         child: SfCircularChart(
           tooltipBehavior: _tooltipBehavior,
-          title: ChartTitle(text: 'Juegos más Populares'),
+          title: ChartTitle(text: AppLocalizations.of(context)!.most_popular_games),
           series: <CircularSeries>[
             PieSeries<Map<String, dynamic>, String>(
               dataSource: choseData,
@@ -291,7 +314,7 @@ class _BodyStadisticsState extends State<BodyStadistics> {
           ],
           legend: Legend(
             isVisible: true,
-            title: LegendTitle(text: 'Juegos'),
+            title: LegendTitle(text: AppLocalizations.of(context)!.games),
             overflowMode: LegendItemOverflowMode.wrap,
             position: LegendPosition.bottom,
           ),

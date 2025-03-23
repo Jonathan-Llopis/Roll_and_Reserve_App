@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/config/theme/theme.dart';
 
 class DialogEmailSent extends StatelessWidget {
   const DialogEmailSent({super.key});
@@ -16,10 +17,7 @@ class DialogEmailSent extends StatelessWidget {
       ),
       actions: <Widget>[
         TextButton(
-          style: TextButton.styleFrom(
-            backgroundColor: Colors.green,
-            foregroundColor: Colors.black,
-          ),
+          style: AppTheme.textButtonAcceptStyle,
           onPressed: () {
             Navigator.pop(context);
           },

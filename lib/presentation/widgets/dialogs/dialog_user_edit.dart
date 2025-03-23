@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:roll_and_reserve/config/theme/theme.dart';
 import 'package:roll_and_reserve/domain/entities/user_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
@@ -114,25 +115,15 @@ class _DialogoUserSettingsState extends State<DialogoUserSettings> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.redAccent,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
+                      TextButton(
+                        style: AppTheme.textButtonCancelStyle,
                         onPressed: () {
                           Navigator.pop(context);
                         },
                         child:  Text(AppLocalizations.of(context)!.cancel),
                       ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
+                      TextButton(
+                        style: AppTheme.textButtonAcceptStyle,
                         onPressed: () {
                           context.read<LoginBloc>().add(
                                 UpdateUserInfoEvent(
@@ -150,7 +141,7 @@ class _DialogoUserSettingsState extends State<DialogoUserSettings> {
                               );
                           Navigator.pop(context);
                         },
-                        child:  Text( AppLocalizations.of(context)!.save),
+                        child:  Text(AppLocalizations.of(context)!.save),
                       ),
                     ],
                   ),

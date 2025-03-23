@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:roll_and_reserve/config/theme/theme.dart';
 import 'package:roll_and_reserve/domain/entities/category_game_entity.dart';
 import 'package:roll_and_reserve/domain/entities/difficulty_entity.dart';
 import 'package:roll_and_reserve/domain/entities/game_entity.dart';
@@ -248,10 +249,11 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
+                    style: AppTheme.textButtonCancelStyle,
                     onPressed: () => Navigator.of(context).pop(),
                     child: Text(
                       AppLocalizations.of(context)!.cancel,
-                      style: TextStyle(color: Colors.red),
+                     
                     ),
                   ),
                   const SizedBox(width: 10.0),
