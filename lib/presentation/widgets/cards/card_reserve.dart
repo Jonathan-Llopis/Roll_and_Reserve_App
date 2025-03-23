@@ -9,6 +9,7 @@ import 'package:roll_and_reserve/presentation/blocs/shops/shop_state.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_state.dart';
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
+import 'package:roll_and_reserve/presentation/widgets/screen_components/chip_time.dart';
 
 class CardReserve extends StatefulWidget {
   const CardReserve({
@@ -58,10 +59,10 @@ class _CardReserveState extends State<CardReserve> {
                   final shop = shopBloc.state.shops!
                       .firstWhere((shop) => shop.id == widget.idShop);
                   if (state.tables != null) {
-                     table = state.tables!.firstWhere(
+                    table = state.tables!.firstWhere(
                         (table) => table.id == widget.reserve.tableId);
                   } else {
-                     table = state.tablesFromShop!.firstWhere(
+                    table = state.tablesFromShop!.firstWhere(
                         (table) => table.id == widget.reserve.tableId);
                   }
 
@@ -77,52 +78,55 @@ class _CardReserveState extends State<CardReserve> {
                               color: theme.dividerColor.withOpacity(0.2),
                             ),
                           ),
-                          child: Container(
-                            color: widget.reserve.isEvent
+                            child: Container(
+                            decoration: BoxDecoration(
+                              color: widget.reserve.isEvent
                                 ? theme.colorScheme.tertiaryContainer
                                 : theme.colorScheme.secondaryContainer,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Row(
+                                mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Flexible(
-                                        child: Text(
-                                          widget.reserve.isEvent
-                                              ? loc.event_day_date(
-                                                  widget.reserve.dayDate)
-                                              : loc.reserve_day(
-                                                  widget.reserve.dayDate),
-                                          style: theme.textTheme.titleMedium
-                                              ?.copyWith(
-                                            fontWeight: FontWeight.w600,
-                                            color: theme.colorScheme.onSurface,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                  Flexible(
+                                  child: Text(
+                                    widget.reserve.isEvent
+                                      ? loc.event_day_date(
+                                        widget.reserve.dayDate)
+                                      : loc.reserve_day(
+                                        widget.reserve.dayDate),
+                                    style: theme.textTheme.titleMedium
+                                      ?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: theme.colorScheme.onSurface,
+                                    ),
                                   ),
-                                  const SizedBox(height: 12),
-                                  _buildInfoRow(
-                                      Icons.store, loc.shop_name(shop.name)),
-                                  if (!widget.reserve.isEvent)
-                                    _buildInfoRow(Icons.table_restaurant,
-                                        loc.table_number(table.numberTable)),
-                                  _buildInfoRow(Icons.sports_esports,
-                                      loc.game_description(game.description)),
-                                  if (!widget.reserve.isEvent)
-                                    _buildInfoRow(
-                                        Icons.people_alt,
-                                        loc.total_players_at_table(
-                                            widget.reserve.usersInTables,
-                                            widget.reserve.freePlaces)),
-                                  const SizedBox(height: 12),
-                                  _buildTimeSection(theme, loc),
+                                  ),
                                 ],
+                                ),
+                                const SizedBox(height: 12),
+                                _buildInfoRow(
+                                  Icons.store, loc.shop_name(shop.name)),
+                                if (!widget.reserve.isEvent)
+                                _buildInfoRow(Icons.table_restaurant,
+                                  loc.table_number(table.numberTable)),
+                                _buildInfoRow(Icons.sports_esports,
+                                  loc.game_description(game.description)),
+                                if (!widget.reserve.isEvent)
+                                _buildInfoRow(
+                                  Icons.people_alt,
+                                  loc.total_players_at_table(
+                                    widget.reserve.usersInTables,
+                                    widget.reserve.freePlaces)),
+                                const SizedBox(height: 12),
+                                _buildTimeSection(theme, loc),
+                              ],
                               ),
                             ),
                           )));
@@ -161,42 +165,18 @@ class _CardReserveState extends State<CardReserve> {
     return Row(
       children: [
         Expanded(
-          child: _buildTimeChip(
+          child: buildTimeChip(
             Icons.access_time_filled,
-            loc.start_time(widget.reserve.horaInicio),
+            loc.start_time,
+            widget.reserve.horaInicio,
           ),
         ),
         const SizedBox(width: 5.0),
         Expanded(
-          child: _buildTimeChip(
-              Icons.timer_off, loc.end_time(widget.reserve.horaFin)),
+          child: buildTimeChip(
+              Icons.timer_off, loc.end_time, widget.reserve.horaFin),
         ),
       ],
-    );
-  }
-
-  Widget _buildTimeChip(IconData icon, String text) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.9),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, size: 16, color: Colors.grey[700]),
-          const SizedBox(width: 4),
-          Text(
-            text,
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-              color: Colors.grey[800],
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

@@ -9,8 +9,8 @@ import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_utils.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
 import 'package:roll_and_reserve/presentation/widgets/buttons/button_create_reserve.dart';
-import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_components/input_reservation_text.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/presentation/widgets/screen_components/input_fuild.dart';
 import 'package:searchable_paginated_dropdown/searchable_paginated_dropdown.dart';
 
 class BodyCreateReserve extends StatefulWidget {
@@ -84,84 +84,109 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
 
   @override
   Widget build(BuildContext context) {
+
     return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              SearchableDropdownFormField<GameEntity>.paginated(
-                backgroundDecoration: (Widget child) => Container(
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-                    border: Border.all(
-                      color: const Color(0xFF000000),
-                      width: 0.5,
-                      style: BorderStyle.solid,
-                      strokeAlign: BorderSide.strokeAlignInside,
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            SizedBox(
+              width: double.infinity * 0.8,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(13, 20, 13, 2),
+                child: SearchableDropdownFormField<GameEntity>.paginated(
+                  backgroundDecoration: (Widget child) => InputDecorator(
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Theme.of(context)
+                          .colorScheme
+                          .surfaceVariant
+                          .withOpacity(0.3),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide.none,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.primary,
+                            width: 1.5),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 16, horizontal: 20),
+                      prefixIcon: Icon(Icons.gamepad,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withOpacity(0.8)),
+                      labelText: AppLocalizations.of(context)!.game,
+                      labelStyle: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withOpacity(0.6)),
                     ),
+                    child: child,
                   ),
-                  child: child,
+                  paginatedRequest: (int page, String? searchKey) async {
+                    final result = await widget.reserveBloc
+                        .searchGamesUseCase(searchKey ?? 'all');
+                    return result.fold(
+                      (failure) => [],
+                      (games) => games
+                          .map((game) => SearchableDropdownMenuItem(
+                                value: game,
+                                label: game.description,
+                                child: ListTile(
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 20),
+                                  leading: Icon(Icons.sports_esports,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary),
+                                  title: Text(game.description,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium),
+                                ),
+                              ))
+                          .toList(),
+                    );
+                  },
+                  validator: (value) =>
+                      validateSelectedValue(value ?? _selectedGame, context),
+                  onChanged: (GameEntity? value) {
+                    setState(() {
+                      _selectedGame = value;
+                    });
+                  },
                 ),
-                hintText: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                      widget.reserve != null
-                          ? _selectedGame!.description
-                          : AppLocalizations.of(context)!.game,
-                      style: TextStyle(fontSize: 16.0)),
-                ),
-                margin: const EdgeInsets.all(0),
-                paginatedRequest: (int page, String? searchKey) async {
-                  final result = await widget.reserveBloc
-                      .searchGamesUseCase(searchKey ?? 'all');
-                  return result.fold(
-                    (failure) => [],
-                    (games) => games
-                        .map((game) => SearchableDropdownMenuItem(
-                              value: game,
-                              label: game.description,
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Text(game.description),
-                              ),
-                            ))
-                        .toList(),
-                  );
-                },
-                validator: (value) =>
-                    validateSelectedValue(value ?? _selectedGame, context),
-                onChanged: (GameEntity? value) {
-                  setState(() {
-                    _selectedGame = value;
-                  });
-                },
               ),
-              SizedBox(height: 16.0),
-              InputReservationText(
+            ),
+            buildInputField(
                 controller: _dayReservationController,
                 label: AppLocalizations.of(context)!.reserve_day(''),
                 icon: Icons.calendar_today,
                 onTap: () async {
                   selectDate(context, _dayReservationController);
                 },
-                readOnly: true,
                 validator: (value) => basicValidation(value, context),
-              ),
-              InputReservationText(
+                context: context),
+            buildInputField(
                 controller: _freePlacesController,
                 label: AppLocalizations.of(context)!.total_seats_at_table,
                 icon: Icons.people,
                 keyboardType: TextInputType.number,
                 validator: (value) => basicValidationWithNumber(value, context),
-              ),
-              InputReservationText(
+                context: context),
+            buildInputField(
                 controller: _hourStartController,
                 label: AppLocalizations.of(context)!.start_time_hh_mm,
                 icon: Icons.access_time,
                 onTap: () => selectTime(context, _hourStartController),
-                readOnly: true,
                 validator: (value) => validateTime(
                     context,
                     value,
@@ -181,13 +206,12 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
                                 .compareTo(widget.reserve!.horaInicio) >=
                             0,
                     false),
-              ),
-              InputReservationText(
+                context: context),
+            buildInputField(
                 controller: _hourEndController,
                 label: AppLocalizations.of(context)!.end_time_hh_mm,
                 icon: Icons.access_time_filled,
                 onTap: () => selectTime(context, _hourEndController),
-                readOnly: true,
                 validator: (value) => validateTime(
                     context,
                     value,
@@ -207,84 +231,125 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
                                 .compareTo(widget.reserve!.horaFin) <=
                             0,
                     true),
-              ),
-              InputReservationText(
+                context: context),
+            buildInputField(
                 controller: _descriptionController,
                 label: AppLocalizations.of(context)!.description,
                 icon: Icons.description,
                 keyboardType: TextInputType.text,
                 validator: (value) => basicValidation(value, context),
+                context: context),
+            buildInputField(
+              controller: _requiredMaterialController,
+              label: AppLocalizations.of(context)!.required_material,
+              icon: Icons.build,
+              keyboardType: TextInputType.text,
+              validator: (value) => null,
+              context: context,
+            ),
+            const SizedBox(height: 16.0),
+            SizedBox(
+              width: double.infinity * 0.8,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 2, horizontal: 20),
+                child: DropdownButtonFormField<DifficultyEntity>(
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Theme.of(context)
+                        .colorScheme
+                        .surfaceVariant
+                        .withOpacity(0.3),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.primary,
+                        width: 1.5,
+                      ),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 16, horizontal: 20),
+                    labelText: AppLocalizations.of(context)!.difficulty,
+                    labelStyle:
+                        Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withOpacity(0.6),
+                            ),
+                  ),
+                  dropdownColor: Theme.of(context).colorScheme.surfaceVariant,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                  icon: Icon(
+                    Icons.arrow_drop_down_rounded,
+                    color:
+                        Theme.of(context).colorScheme.primary.withOpacity(0.8),
+                  ),
+                  borderRadius: BorderRadius.circular(8.0),
+                  value: _selectedDifficulty,
+                  items: widget.reserveBloc.state.difficulties!
+                      .map((difficulty) => DropdownMenuItem(
+                            value: difficulty,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Text(
+                                difficulty.description,
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                            ),
+                          ))
+                      .toList(),
+                  onChanged: (newValue) {
+                    setState(() => _selectedDifficulty = newValue);
+                  },
+                  validator: (value) => validateSelectedValue(value, context),
+                ),
               ),
-              InputReservationText(
-                controller: _requiredMaterialController,
-                label: AppLocalizations.of(context)!.required_material,
-                icon: Icons.build,
-                keyboardType: TextInputType.text,
-                validator: (value) => null,
-              ),
-              const SizedBox(height: 16.0),
-              DropdownButtonFormField<DifficultyEntity>(
-                decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context)!.difficulty,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
+            ),
+            const SizedBox(height: 16.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  style: AppTheme.textButtonCancelStyle,
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text(
+                    AppLocalizations.of(context)!.cancel,
                   ),
                 ),
-                value: _selectedDifficulty,
-                items: widget.reserveBloc.state.difficulties!
-                    .map((difficulty) => DropdownMenuItem(
-                          value: difficulty,
-                          child: Text(difficulty.description),
-                        ))
-                    .toList(),
-                onChanged: (newValue) {
-                  setState(() {
-                    _selectedDifficulty = newValue;
-                  });
-                },
-                validator: (value) => validateSelectedValue(value, context),
-              ),
-              const SizedBox(height: 16.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    style: AppTheme.textButtonCancelStyle,
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Text(
-                      AppLocalizations.of(context)!.cancel,
-                     
-                    ),
-                  ),
-                  const SizedBox(width: 10.0),
-                  ButtonCreateReserve(
-                    id: widget.reserve != null ? widget.reserve!.id : 0,
-                    formKey: _formKey,
-                    freePlacesController: _freePlacesController,
-                    hourStartController: _hourStartController,
-                    hourEndController: _hourEndController,
-                    descriptionController: _descriptionController,
-                    requiredMaterialController: _requiredMaterialController,
-                    selectedDifficulty: _selectedDifficulty,
-                    selectedGameCategory: _selectedGameCategory,
-                    selectedGame: _selectedGame,
-                    idTable: widget.idTable,
-                    idShop: widget.idShop,
-                    selectedDate: _dayReservationController.text == ""
-                        ? DateTime.now()
-                        : widget.reserve == null
-                            ? DateFormat("dd-MM-yyyy")
-                                .parse(_dayReservationController.text)
-                            : DateFormat("dd - MM - yyyy")
-                                .parse(_dayReservationController.text),
-                    reserveBloc: widget.reserveBloc,
-                    searchDateTime: widget.searchDateTime,
-                    update: widget.reserve != null,
-                  ),
-                ],
-              ),
-            ],
-          ),
+                const SizedBox(width: 10.0),
+                ButtonCreateReserve(
+                  id: widget.reserve != null ? widget.reserve!.id : 0,
+                  formKey: _formKey,
+                  freePlacesController: _freePlacesController,
+                  hourStartController: _hourStartController,
+                  hourEndController: _hourEndController,
+                  descriptionController: _descriptionController,
+                  requiredMaterialController: _requiredMaterialController,
+                  selectedDifficulty: _selectedDifficulty,
+                  selectedGameCategory: _selectedGameCategory,
+                  selectedGame: _selectedGame,
+                  idTable: widget.idTable,
+                  idShop: widget.idShop,
+                  selectedDate: _dayReservationController.text == ""
+                      ? DateTime.now()
+                      : widget.reserve == null
+                          ? DateFormat("dd-MM-yyyy")
+                              .parse(_dayReservationController.text)
+                          : DateFormat("dd - MM - yyyy")
+                              .parse(_dayReservationController.text),
+                  reserveBloc: widget.reserveBloc,
+                  searchDateTime: widget.searchDateTime,
+                  update: widget.reserve != null,
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

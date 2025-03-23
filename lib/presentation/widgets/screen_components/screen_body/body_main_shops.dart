@@ -19,7 +19,6 @@ class BodyMain extends StatefulWidget {
 }
 
 class _BodyMainState extends State<BodyMain> {
-  
   @override
   Widget build(BuildContext context) {
     final loginBloc = BlocProvider.of<LoginBloc>(context);
@@ -53,10 +52,10 @@ class _BodyMainState extends State<BodyMain> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                    AppLocalizations.of(context)!.welcome_user(
-                                      loginBloc.state.user!.username.length > 15 
-                                      ? '${loginBloc.state.user!.username.substring(0, 15)}...' 
-                                      : loginBloc.state.user!.username),
+                                  AppLocalizations.of(context)!.welcome_user(
+                                      loginBloc.state.user!.username.length > 15
+                                          ? '${loginBloc.state.user!.username.substring(0, 15)}...'
+                                          : loginBloc.state.user!.username),
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleLarge
@@ -80,10 +79,6 @@ class _BodyMainState extends State<BodyMain> {
                               style:
                                   TextStyle(fontSize: 18, color: Colors.blue),
                             ),
-                      GestureDetector(onTap:(){
-                        context.go('/user/map');
-                      },
-                      child:  const Icon(Icons.map_sharp, size: 48, color: Colors.blue)),
                     ],
                   ),
                 ),

@@ -8,6 +8,7 @@ class DrawerLogin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+      final theme = Theme.of(context);
     return Drawer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -34,21 +35,21 @@ class DrawerLogin extends StatelessWidget {
             child: ListView(
               children: [
                 ListTile(
-                  leading: Icon(Icons.person, color: Colors.lightBlue),
+                  leading: Icon(Icons.person, color: theme.colorScheme.primary),
                   title: Text(AppLocalizations.of(context)!.login),
                   onTap: () {
                     context.go('/login');
                   },
                 ),
                 ListTile(
-                  leading: Icon(Icons.person_add, color: Colors.lightBlue),
+                  leading: Icon(Icons.person_add, color: theme.colorScheme.primary),
                   title: Text(AppLocalizations.of(context)!.register),
                   onTap: () {
                     context.go('/login/signIn');
                   },
                 ),
                 ListTile(
-                  leading: Icon(Icons.translate, color: Colors.lightBlue),
+                  leading: Icon(Icons.translate, color: theme.colorScheme.primary),
                   title: Text(AppLocalizations.of(context)!.changeLanguage),
                   onTap: () {
                     changeLanguage(context);

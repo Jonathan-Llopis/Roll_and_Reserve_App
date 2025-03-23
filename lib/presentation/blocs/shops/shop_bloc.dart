@@ -12,7 +12,6 @@ import 'package:roll_and_reserve/domain/usecases/shop_usecases/get_total_reserva
 import 'package:roll_and_reserve/domain/usecases/shop_usecases/update_shop_usecase.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_state.dart';
-import 'package:roll_and_reserve/presentation/functions/constants.dart';
 
 class ShopBloc extends Bloc<ShopEvent, ShopState> {
   final CreateShopsUseCase createShopsUseCase;

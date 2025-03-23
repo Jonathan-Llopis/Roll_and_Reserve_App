@@ -16,61 +16,76 @@ class DrawerMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userBloc = BlocProvider.of<LoginBloc>(context);
+    final theme = Theme.of(context);
 
     return Drawer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (context, animation1, animation2) =>
-                      ScreenReviewUser(
-                    appBar: appBar,
-                  ),
-                  transitionDuration: Duration.zero,
-                  reverseTransitionDuration: Duration.zero,
-                ),
-              );
-            },
-            child: UserAccountsDrawerHeader(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/images/appbar_back.jpg'),
-                  fit: BoxFit.cover,
-                ),
+          UserAccountsDrawerHeader(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/appbar_back.jpg'),
+                fit: BoxFit.cover,
               ),
-              accountName: Text(
-                userBloc.state.user?.username ??
-                    AppLocalizations.of(context)!.username,
-                style: TextStyle(fontSize: 20),
-              ),
-              accountEmail: Text(
-                userBloc.state.user?.email ?? 'email@example.com',
-              ),
-              currentAccountPicture: CircleAvatar(
-                backgroundImage: kIsWeb
-                    ? MemoryImage(userBloc.state.user!.avatar!)
-                    : FileImage(File(userBloc.state.user!.avatar.path)),
-              ),
+            ),
+            accountName: Text(
+              userBloc.state.user?.username ??
+                  AppLocalizations.of(context)!.username,
+              style: TextStyle(fontSize: 20),
+            ),
+            accountEmail: Text(
+              userBloc.state.user?.email ?? 'email@example.com',
+            ),
+            currentAccountPicture: CircleAvatar(
+              backgroundImage: kIsWeb
+                  ? MemoryImage(userBloc.state.user!.avatar!)
+                  : FileImage(File(userBloc.state.user!.avatar.path)),
             ),
           ),
           Expanded(
             child: ListView(
               children: [
                 ListTile(
-                  leading: Icon(Icons.home, color: Colors.lightBlue),
+                  leading: Icon(Icons.home, color: theme.colorScheme.primary),
                   title: Text(AppLocalizations.of(context)!.home),
                   onTap: () {
                     Navigator.pop(context);
                     context.go('/user');
                   },
                 ),
+                ListTile(
+                  leading: Icon(Icons.help, color: theme.colorScheme.primary),
+                  title: Text(AppLocalizations.of(context)!.chat_with_ai),
+                  onTap: () {
+                    Navigator.pop(context);
+                    context.go('/user/chat');
+                  },
+                ),
                 userBloc.state.user!.role == 2
                     ? ListTile(
-                        leading: Icon(Icons.qr_code, color: Colors.lightBlue),
+                        leading: Icon(Icons.reviews,
+                            color: theme.colorScheme.primary),
+                        title: Text(AppLocalizations.of(context)!.your_reviews),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder: (context, animation1, animation2) =>
+                                  ScreenReviewUser(
+                                appBar: appBar,
+                              ),
+                              transitionDuration: Duration.zero,
+                              reverseTransitionDuration: Duration.zero,
+                            ),
+                          );
+                        },
+                      )
+                    : Container(),
+                userBloc.state.user!.role == 2
+                    ? ListTile(
+                        leading: Icon(Icons.qr_code,
+                            color: theme.colorScheme.primary),
                         title: Text(
                             AppLocalizations.of(context)!.your_reservations),
                         onTap: () {
@@ -80,33 +95,37 @@ class DrawerMain extends StatelessWidget {
                       )
                     : Container(),
                 ListTile(
-                  leading: Icon(Icons.settings, color: Colors.lightBlue),
+                  leading:
+                      Icon(Icons.settings, color: theme.colorScheme.primary),
                   title: Text(AppLocalizations.of(context)!.settings),
                   onTap: () {
                     Navigator.pop(context);
                     mostrarUserEdit(context);
                   },
                 ),
-                 userBloc.state.user!.role == 2
+                userBloc.state.user!.role == 2
                     ? ListTile(
-                  leading:
-                      Icon(Icons.person_pin_sharp, color: Colors.lightBlue),
-                  title: Text(AppLocalizations.of(context)!.latest_players),
-                  onTap: () {
-                    Navigator.pop(context);
-                    context.go('/user/lastUsers');
-                  },
-                ) : ListTile(
-                  leading:
-                    Icon(Icons.bar_chart, color: Colors.lightBlue),
-                  title: Text(AppLocalizations.of(context)!.store_statistics),
-                  onTap: () {
-                  Navigator.pop(context);
-                  context.go('/user/stadistics');
-                  },
-                ),
+                        leading: Icon(Icons.person_pin_sharp,
+                            color: theme.colorScheme.primary),
+                        title:
+                            Text(AppLocalizations.of(context)!.latest_players),
+                        onTap: () {
+                          Navigator.pop(context);
+                          context.go('/user/lastUsers');
+                        },
+                      )
+                    : ListTile(
+                        leading: Icon(Icons.bar_chart,
+                            color: theme.colorScheme.primary),
+                        title: Text(
+                            AppLocalizations.of(context)!.store_statistics),
+                        onTap: () {
+                          Navigator.pop(context);
+                          context.go('/user/stadistics');
+                        },
+                      ),
                 ListTile(
-                  leading: Icon(Icons.lock, color: Colors.lightBlue),
+                  leading: Icon(Icons.lock, color: theme.colorScheme.primary),
                   title: Text(AppLocalizations.of(context)!.change_password),
                   onTap: () {
                     Navigator.pop(context);
@@ -114,19 +133,12 @@ class DrawerMain extends StatelessWidget {
                   },
                 ),
                 ListTile(
-                  leading: Icon(Icons.translate, color: Colors.lightBlue),
+                  leading:
+                      Icon(Icons.translate, color: theme.colorScheme.primary),
                   title: Text(AppLocalizations.of(context)!.changeLanguage),
                   onTap: () {
                     Navigator.pop(context);
                     changeLanguage(context);
-                  },
-                ),
-                ListTile(
-                  leading: Icon(Icons.help, color: Colors.lightBlue),
-                  title: Text(AppLocalizations.of(context)!.help),
-                  onTap: () {
-                    Navigator.pop(context);
-                    context.go('/user/chat');
                   },
                 ),
               ],

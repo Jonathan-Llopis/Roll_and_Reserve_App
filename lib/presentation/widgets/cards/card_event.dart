@@ -10,6 +10,7 @@ import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_state.dart';
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
+import 'package:roll_and_reserve/presentation/widgets/screen_components/chip_time.dart';
 
 class CardEvent extends StatefulWidget {
   const CardEvent({
@@ -94,19 +95,24 @@ class _CardEventState extends State<CardEvent> {
                                 fontSize: 14, color: Colors.black87),
                           ),
                           const SizedBox(height: 6),
-                          Text(
-                            AppLocalizations.of(context)!
-                                .start_time(widget.reserve.horaInicio),
-                            style: const TextStyle(
-                                fontSize: 14, color: Colors.grey),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            AppLocalizations.of(context)!
-                                .end_time(widget.reserve.horaFin),
-                            style: const TextStyle(
-                                fontSize: 14, color: Colors.grey),
-                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: buildTimeChip(
+                                  Icons.access_time_filled,
+                                  AppLocalizations.of(context)!.start_time,
+                                  widget.reserve.horaInicio,
+                                ),
+                              ),
+                              const SizedBox(width: 5.0),
+                              Expanded(
+                                child: buildTimeChip(
+                                    Icons.timer_off,
+                                    AppLocalizations.of(context)!.end_time,
+                                    widget.reserve.horaFin),
+                              ),
+                            ],
+                          )
                         ],
                       ),
                     ),

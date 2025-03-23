@@ -12,9 +12,8 @@ import 'package:roll_and_reserve/presentation/blocs/tables/table_state.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
 import 'package:roll_and_reserve/presentation/widgets/buttons/button_create_event.dart';
-import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_components/input_reservation_text.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:roll_and_reserve/presentation/widgets/screen_components/table_selection_checkbox.dart';
+import 'package:roll_and_reserve/presentation/widgets/screen_components/input_fuild.dart';
 import 'package:searchable_paginated_dropdown/searchable_paginated_dropdown.dart';
 
 class BodyCreateEvent extends StatefulWidget {
@@ -71,6 +70,7 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
 
   @override
   Widget build(BuildContext context) {
+
     return BlocBuilder<TableBloc, TableState>(
       builder: (context, state) {
         return buildContent<TableState>(
@@ -81,132 +81,209 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
           context: context,
           contentBuilder: (state) {
             return SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      SearchableDropdownFormField<GameEntity>.paginated(
-                        backgroundDecoration: (Widget child) => Container(
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(4.0)),
-                            border: Border.all(
-                              color: const Color(0xFF000000),
-                              width: 1.0,
-                              style: BorderStyle.solid,
-                              strokeAlign: BorderSide.strokeAlignInside,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      width: double.infinity * 0.8,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(13, 20, 13, 2),
+                        child:
+                            SearchableDropdownFormField<GameEntity>.paginated(
+                          backgroundDecoration: (Widget child) =>
+                              InputDecorator(
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Theme.of(context)
+                                  .colorScheme
+                                  .surfaceVariant
+                                  .withOpacity(0.3),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: BorderSide.none,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: BorderSide(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    width: 1.5),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 16, horizontal: 20),
+                              prefixIcon: Icon(Icons.gamepad,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .primary
+                                      .withOpacity(0.8)),
+                              labelText: AppLocalizations.of(context)!.game,
+                              labelStyle: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface
+                                          .withOpacity(0.6)),
                             ),
+                            child: child,
                           ),
-                          child: child,
+                          paginatedRequest:
+                              (int page, String? searchKey) async {
+                            final result = await widget.reserveBloc
+                                .searchGamesUseCase(searchKey ?? 'all');
+                            return result.fold(
+                              (failure) => [],
+                              (games) => games
+                                  .map((game) => SearchableDropdownMenuItem(
+                                        value: game,
+                                        label: game.description,
+                                        child: ListTile(
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                  horizontal: 20),
+                                          leading: Icon(Icons.sports_esports,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary),
+                                          title: Text(game.description,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium),
+                                        ),
+                                      ))
+                                  .toList(),
+                            );
+                          },
+                          validator: (value) => validateSelectedValue(
+                              value ?? _selectedGame, context),
+                          onChanged: (GameEntity? value) {
+                            setState(() {
+                              _selectedGame = value;
+                            });
+                          },
                         ),
-                        hintText: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(AppLocalizations.of(context)!.game,
-                              style: TextStyle(fontSize: 16.0)),
-                        ),
-                        margin: const EdgeInsets.all(0),
-                        paginatedRequest: (int page, String? searchKey) async {
-                          final result = await widget.reserveBloc
-                              .searchGamesUseCase(searchKey ?? 'all');
-                          return result.fold(
-                            (failure) => [],
-                            (games) => games
-                                .map((game) => SearchableDropdownMenuItem(
-                                      value: game,
-                                      label: game.description,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(16.0),
-                                        child: Text(game.description),
-                                      ),
-                                    ))
-                                .toList(),
-                          );
-                        },
-                        validator: (value) =>
-                            validateSelectedValue(value, context),
-                        onChanged: (GameEntity? value) {
-                          setState(() {
-                            _selectedGame = value;
-                          });
-                        },
                       ),
-                      InputReservationText(
-                          controller: _freePlacesController,
-                          label: AppLocalizations.of(context)!
-                              .total_seats_at_table,
-                          icon: Icons.people,
-                          keyboardType: TextInputType.number,
-                          validator: (value) =>
-                              basicValidationWithNumber(value, context)),
-                      InputReservationText(
-                          controller: _descriptionController,
-                          label: AppLocalizations.of(context)!.description,
-                          icon: Icons.description,
-                          keyboardType: TextInputType.text,
-                          validator: (value) =>
-                              basicValidation(value, context)),
-                      InputReservationText(
-                          controller: _requiredMaterialController,
-                          label:
-                              AppLocalizations.of(context)!.required_material,
-                          icon: Icons.build,
-                          keyboardType: TextInputType.text,
-                          validator: (value) =>
-                              basicValidation(value, context)),
-                      DropdownButtonFormField<DifficultyEntity>(
+                    ),
+                    buildInputField(
+                        controller: _freePlacesController,
+                        label:
+                            AppLocalizations.of(context)!.total_seats_at_table,
+                        icon: Icons.people,
+                        keyboardType: TextInputType.number,
+                        context: context,
+                        validator: (value) =>
+                            basicValidationWithNumber(value, context)),
+                    buildInputField(
+                        controller: _descriptionController,
+                        label: AppLocalizations.of(context)!.description,
+                        icon: Icons.description,
+                        keyboardType: TextInputType.text,
+                        validator: (value) => basicValidation(value, context),
+                        context: context),
+                    buildInputField(
+                        controller: _requiredMaterialController,
+                        label: AppLocalizations.of(context)!.required_material,
+                        icon: Icons.build,
+                        keyboardType: TextInputType.text,
+                        validator: (value) => basicValidation(value, context),
+                        context: context),
+                    SizedBox(
+                      width: double.infinity * 0.8,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 2, horizontal: 20),
+                        child: DropdownButtonFormField<DifficultyEntity>(
                           decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Theme.of(context)
+                                .colorScheme
+                                .surfaceVariant
+                                .withOpacity(0.3),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                              borderSide: BorderSide.none,
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                              borderSide: BorderSide(
+                                color: Theme.of(context).colorScheme.primary,
+                                width: 1.5,
+                              ),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 16, horizontal: 20),
                             labelText: AppLocalizations.of(context)!.difficulty,
+                            labelStyle: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurface
+                                      .withOpacity(0.6),
+                                ),
                           ),
+                          dropdownColor:
+                              Theme.of(context).colorScheme.surfaceVariant,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          icon: Icon(
+                            Icons.arrow_drop_down_rounded,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .primary
+                                .withOpacity(0.8),
+                          ),
+                          borderRadius: BorderRadius.circular(8.0),
                           value: _selectedDifficulty,
                           items: widget.reserveBloc.state.difficulties!
                               .map((difficulty) => DropdownMenuItem(
                                     value: difficulty,
-                                    child: Text(difficulty.description),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16.0),
+                                      child: Text(
+                                        difficulty.description,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium,
+                                      ),
+                                    ),
                                   ))
                               .toList(),
                           onChanged: (newValue) {
-                            setState(() {
-                              _selectedDifficulty = newValue;
-                            });
+                            setState(() => _selectedDifficulty = newValue);
                           },
                           validator: (value) =>
-                              validateSelectedValue(value, context)),
-                      const SizedBox(height: 20.0),
-                      TableSelectionCheckbox(
-                        tables: state.tablesFromShop!,
-                        onSelectionChanged: (selectedTableIds) {
-                          setState(() {
-                            _selectedTableIds = selectedTableIds;
-                          });
-                        },
+                              validateSelectedValue(value, context),
+                        ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          TextButton(
-                            style: AppTheme.textButtonCancelStyle,
-                            onPressed: () => Navigator.of(context).pop(),
-                            child: Text(
-                              AppLocalizations.of(context)!.cancel,
-                            ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          style: AppTheme.textButtonCancelStyle,
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: Text(
+                            AppLocalizations.of(context)!.cancel,
                           ),
-                          const SizedBox(width: 10.0),
-                          ButtonCreateEvent(
-                              formKey: _formKey,
-                              selectedTableIds: _selectedTableIds,
-                              freePlacesController: _freePlacesController,
-                              widget: widget,
-                              descriptionController: _descriptionController,
-                              requiredMaterialController:
-                                  _requiredMaterialController,
-                              selectedDifficulty: _selectedDifficulty,
-                              selectedGame: _selectedGame)
-                        ],
-                      ),
-                    ],
-                  ),
+                        ),
+                        const SizedBox(width: 10.0),
+                        ButtonCreateEvent(
+                            formKey: _formKey,
+                            selectedTableIds: _selectedTableIds,
+                            freePlacesController: _freePlacesController,
+                            widget: widget,
+                            descriptionController: _descriptionController,
+                            requiredMaterialController:
+                                _requiredMaterialController,
+                            selectedDifficulty: _selectedDifficulty,
+                            selectedGame: _selectedGame)
+                      ],
+                    ),
+                  ],
                 ),
               ),
             );

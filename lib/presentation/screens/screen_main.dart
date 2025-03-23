@@ -10,6 +10,7 @@ import 'package:roll_and_reserve/presentation/functions/state_check.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/bottom_filter_shops.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/screen_body/body_main_shops.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/default_scaffold.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ScreenMain extends StatefulWidget {
   final PreferredSizeWidget appBar;
@@ -48,12 +49,25 @@ class _ScreenMainState extends State<ScreenMain> {
                         },
                         child: const Icon(Icons.add),
                       )
-                    : null,
+                    : FloatingActionButton(
+                        onPressed: () {
+                          context.go('/user/map');
+                        },
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.map_sharp),
+                              Text(AppLocalizations.of(context)!.store_map,
+                                  style: TextStyle(fontSize: 10), textAlign: TextAlign.center,),
+                            ],
+                          ),
+                      ),
                 bottomNavigationBar: state.user!.role == 2
                     ? BottomFilterShops(
                         shopBloc: context.read<ShopBloc>(),
                       )
                     : null);
+                    
           });
     });
   }

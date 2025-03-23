@@ -37,8 +37,8 @@
   "reserve_day": "Reserva dia: {dayDate}",
   "game_description": "Joc: {gameDescription}",
   "total_players_at_table": "Total de jugadors a la taula: {currentPlayers} de {totalPlaces}",
-  "start_time": "Hora d'inici: {startTime}",
-  "end_time": "Hora de finalització: {endTime}",
+  "start_time": "Hora d'inici",
+  "end_time": "Hora de finalització:",
   "anonymous": "Anònim",
   "total_seats_at_table": "Places Totals a la Taula",
   "start_time_hh_mm": "Hora d'inici (HH:MM)",
@@ -173,5 +173,8 @@
   "subscribed": "Subscrit",
   "latest_players": "Últims Jugadors",
   "store_statistics": "Estadístiques de la Botiga",
-  "seats": "Seients"
+  "seats": "Seients",
+  "store_map": "Mapa de les Botiges",
+  "your_reviews": "Les Teves Resenyes",
+  "chat_with_ai": "Xateja amb la IA"
 }

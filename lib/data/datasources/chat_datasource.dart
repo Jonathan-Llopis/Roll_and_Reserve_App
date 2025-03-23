@@ -10,7 +10,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   ChatRemoteDataSourceImpl();
 
   final model = GenerativeModel(
-    model: 'gemini-1.5-flash',
+    model: 'gemini-2.0-flash',
     apiKey: dotenv.env['OPENAI_API_KEY']!,
   );
 

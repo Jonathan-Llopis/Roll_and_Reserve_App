@@ -191,25 +191,13 @@
       }
     }
   },
-   "start_time": "Start time: {startTime}",
+   "start_time": "Start time:",
   "@start_time": {
-    "description": "Label for start time",
-    "placeholders": {
-      "startTime": {
-        "type": "String",
-        "example": "18:00"
-      }
-    }
+    "description": "Label for start time"
   },
-  "end_time": "End time: {endTime}",
+  "end_time": "End time: ",
   "@end_time": {
-    "description": "Label for end time",
-    "placeholders": {
-      "endTime": {
-        "type": "String",
-        "example": "20:00"
-      }
-    }
+    "description": "Label for end time"
   },
   "anonymous": "Anonymous",
   "@anonymous": {
@@ -849,6 +837,18 @@
   "seats": "Seats",
   "@seats": {
     "description": "Label for seats"
+  }, 
+  "store_map": "Stores Map",
+  "@store_maps": {
+    "description": "Label for store maps"
+  },
+  "your_reviews": "Your Reviews",
+  "@your_reviews": {
+    "description": "Label for your reviews"
+  },
+  "chat_with_ai": "Chat with AI",
+  "@chat_with_ai": {
+    "description": "Label for chat with AI"
   }
 }
 

@@ -37,8 +37,8 @@
   "reserve_day": "Jour de réservation: {dayDate}",
   "game_description": "Jeu: {gameDescription}",
   "total_players_at_table": "Total des joueurs à la table: {currentPlayers} sur {totalPlaces}",
-  "start_time": "Heure de début: {startTime}",
-  "end_time": "Heure de fin: {endTime}",
+  "start_time": "Heure de début: ",
+  "end_time": "Heure de fin:",
   "anonymous": "Anonyme",
   "total_seats_at_table": "Places Totales à la Table",
   "start_time_hh_mm": "Heure de début (HH:MM)",
@@ -173,5 +173,8 @@
       "subscribed": "Abonné",
       "latest_players": "Derniers Joueurs",
       "store_statistics": "Statistiques du Magasin",
-      "seats": "Places"
+      "seats": "Places",
+      "store_map": "Carte des Magasins",
+      "your_reviews": "Vos Avis",
+      "chat_with_ai": "Discuter avec l'IA"
 }

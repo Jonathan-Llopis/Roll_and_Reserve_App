@@ -31,10 +31,10 @@ class _ShopListInventoryState extends State<InformationShop> {
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context)!;
     final isSmallScreen = MediaQuery.of(context).size.width < 600;
-
+    final loginBloc = context.read<LoginBloc>();
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-      padding: const EdgeInsets.all(20),
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(24),
@@ -73,14 +73,14 @@ class _ShopListInventoryState extends State<InformationShop> {
               ),
             ],
           ),
-          Padding(
+          loginBloc.state.user!.role == 1
+              ? Padding(
             padding: const EdgeInsets.symmetric(vertical: 16),
             child: Divider(
               height: 1,
               thickness: 1,
               color: theme.dividerColor.withOpacity(0.2),
-            ),
-          ),
+            ))  : const SizedBox(),
           Center(
             child: Wrap(
               spacing: 12,
@@ -90,7 +90,7 @@ class _ShopListInventoryState extends State<InformationShop> {
                 _buildActionButtons(context, theme, loc),
               ],
             ),
-          )
+          ) 
         ],
       ),
     );
@@ -194,25 +194,6 @@ class _ShopListInventoryState extends State<InformationShop> {
 
     return Column(
       children: [
-        Wrap(
-          spacing: 12,
-          runSpacing: 12,
-          alignment: WrapAlignment.center,
-          children: [
-            _buildActionButton(
-              icon: Icons.event_available_rounded,
-              label: loc.events,
-              color: Colors.green,
-              route: '/user/events/${widget.shop.id}',
-            ),
-            _buildActionButton(
-              icon: Icons.reviews_rounded,
-              label: loc.all_reviews,
-              color: theme.colorScheme.primary,
-              route: '/user/reviews/${widget.shop.id}',
-            ),
-          ],
-        ),
         if (isAdmin) ...[
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 8),
@@ -242,32 +223,6 @@ class _ShopListInventoryState extends State<InformationShop> {
     );
   }
 
-  Widget _buildActionButton({
-    required IconData icon,
-    required String label,
-    required Color color,
-    required String route,
-  }) {
-    return FilledButton.icon(
-      icon: Icon(
-        icon,
-        size: 18,
-        color: color,
-      ),
-      label: Text(label),
-      onPressed: () => context.go(route),
-      style: FilledButton.styleFrom(
-        backgroundColor: color.withOpacity(0.1),
-        foregroundColor: color,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-          side: BorderSide(color: color.withOpacity(0.3)),
-        ),
-        elevation: 0,
-      ),
-    );
-  }
 
   Widget _buildAdminButton({
     required IconData icon,

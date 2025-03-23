@@ -7,6 +7,7 @@ import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.d
 import 'package:roll_and_reserve/presentation/functions/functions_utils.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_tables_shop.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/presentation/widgets/buttons/buttion_action.dart';
 
 class BodyTablesShop extends StatefulWidget {
   const BodyTablesShop({
@@ -71,6 +72,12 @@ class _BodyTablesShopState extends State<BodyTablesShop> {
           ),
         ),
         Divider(),
+         buildActionButton(
+            icon: Icons.event_available_rounded,
+            label: AppLocalizations.of(context)!.events,
+            color: Theme.of(context).colorScheme.tertiary,
+            onTap: () => context.go('/user/events/${widget.widget.idShop}'),
+          ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Text(
