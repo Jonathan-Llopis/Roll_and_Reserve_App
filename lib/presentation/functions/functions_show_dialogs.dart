@@ -118,7 +118,7 @@ Future<void> changeLanguage(BuildContext context) {
 }
 
 Future<void> confirmReserveDialog(
-    BuildContext context, String mensaje, bool error) {
+    BuildContext context, String mensaje, bool error,) {
   return showDialog(
       context: context,
       builder: (context) {

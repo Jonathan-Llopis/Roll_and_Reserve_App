@@ -13,7 +13,8 @@ import 'package:roll_and_reserve/presentation/functions/functions_validation.dar
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
 import 'package:roll_and_reserve/presentation/widgets/buttons/button_create_event.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:roll_and_reserve/presentation/widgets/screen_components/input_fuild.dart';
+import 'package:roll_and_reserve/presentation/widgets/screen_components/input_field.dart';
+import 'package:roll_and_reserve/presentation/widgets/screen_components/table_selection_checkbox.dart';
 import 'package:searchable_paginated_dropdown/searchable_paginated_dropdown.dart';
 
 class BodyCreateEvent extends StatefulWidget {
@@ -260,6 +261,15 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
                         ),
                       ),
                     ),
+                     const SizedBox(height: 20.0),
+                      TableSelectionCheckbox(
+                        tables: state.tablesFromShop!,
+                        onSelectionChanged: (selectedTableIds) {
+                          setState(() {
+                            _selectedTableIds = selectedTableIds;
+                          });
+                        },
+                      ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [

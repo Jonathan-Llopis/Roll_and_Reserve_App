@@ -16,7 +16,6 @@ class ButtonLogin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final loginBloc = BlocProvider.of<LoginBloc>(context);
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color(0xFF6A11CB),
@@ -32,11 +31,6 @@ class ButtonLogin extends StatelessWidget {
         context.read<LoginBloc>().add(
               ButtonLoginPressed(email: email, password: password),
             );
-        if (loginBloc.state.errorMessage != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(loginBloc.state.errorMessage!)),
-          );
-        }
       },
       child:  Text(
         AppLocalizations.of(context)!.login,

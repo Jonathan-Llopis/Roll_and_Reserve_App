@@ -29,7 +29,7 @@ class ButtonCreateUpdateShop extends StatelessWidget {
   Widget build(BuildContext context) {
     final loginBloc = BlocProvider.of<LoginBloc>(context);
     final shopBloc = BlocProvider.of<ShopBloc>(context);
-    return ElevatedButton(
+    return TextButton(
       style: AppTheme.textButtonAcceptStyle,
       onPressed: () {
         if (idShop == 0) {

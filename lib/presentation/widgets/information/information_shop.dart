@@ -31,7 +31,6 @@ class _ShopListInventoryState extends State<InformationShop> {
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context)!;
     final isSmallScreen = MediaQuery.of(context).size.width < 600;
-    final loginBloc = context.read<LoginBloc>();
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       padding: const EdgeInsets.all(10),
@@ -73,14 +72,6 @@ class _ShopListInventoryState extends State<InformationShop> {
               ),
             ],
           ),
-          loginBloc.state.user!.role == 1
-              ? Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            child: Divider(
-              height: 1,
-              thickness: 1,
-              color: theme.dividerColor.withOpacity(0.2),
-            ))  : const SizedBox(),
           Center(
             child: Wrap(
               spacing: 12,

@@ -10,7 +10,7 @@ import 'package:roll_and_reserve/presentation/functions/functions_utils.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
 import 'package:roll_and_reserve/presentation/widgets/buttons/button_create_reserve.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:roll_and_reserve/presentation/widgets/screen_components/input_fuild.dart';
+import 'package:roll_and_reserve/presentation/widgets/screen_components/input_field.dart';
 import 'package:searchable_paginated_dropdown/searchable_paginated_dropdown.dart';
 
 class BodyCreateReserve extends StatefulWidget {

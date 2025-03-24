@@ -101,7 +101,6 @@ class _ScreenRegisterState extends State<ScreenRegister> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 40),
                 const Text(
                   'Roll and Reserve',
                   style: AppTheme.titleStyle,

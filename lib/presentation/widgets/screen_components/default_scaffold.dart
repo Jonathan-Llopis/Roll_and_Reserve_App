@@ -23,7 +23,6 @@ class DefaultScaffold extends StatelessWidget {
           floatingActionButton,
       bottomNavigationBar: bottomNavigationBar,
       endDrawer:  DrawerMain(appBar: appBar),
-      persistentFooterButtons: [],
     );
   }
 }

@@ -37,6 +37,7 @@ class _ScreenLoginState extends State<ScreenLogin> {
   void initState() {
     emailFocusNode.addListener(emailFocus);
     passwordFocusNode.addListener(passwordFocused);
+
     super.initState();
   }
 
@@ -60,9 +61,9 @@ class _ScreenLoginState extends State<ScreenLogin> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xFF6A11CB),
-            iconTheme: IconThemeData(
-              color: Colors.white,
-            ),
+          iconTheme: IconThemeData(
+            color: Colors.white,
+          ),
         ),
         endDrawer: const DrawerLogin(),
         body: Container(
@@ -75,7 +76,7 @@ class _ScreenLoginState extends State<ScreenLogin> {
               child: BlocConsumer<LoginBloc, LoginState>(
                   listener: (context, state) {
                 if (state.errorMessage != null) {
-                 ElegantNotification.error(
+                  ElegantNotification.error(
                     width: 360,
                     isDismissable: false,
                     stackedOptions: StackedOptions(
@@ -83,131 +84,137 @@ class _ScreenLoginState extends State<ScreenLogin> {
                       type: StackedType.above,
                       itemOffset: const Offset(-5, -5),
                     ),
-                    title:  Text(state.errorMessage!),
-                    description:  Text(AppLocalizations.of(context)!.user_or_password_incorrect),
+                    title: Text(state.errorMessage!),
+                    description: Text(AppLocalizations.of(context)!
+                        .user_or_password_incorrect),
                   ).show(context);
-                } else if (state.email != null && state.email != "NO_USER") {
-                  context.go('/user', extra: state.email);
                 }
               }, builder: (context, state) {
                 if (state.isLoading) {
                   return const Center(child: CircularProgressIndicator());
-                }
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Text('Roll and Reserve', style: AppTheme.titleStyle),
-                    const SizedBox(height: 10),
-                    Text(AppLocalizations.of(context)!.login,
-                        style: AppTheme.subtitleStyle),
-                    const SizedBox(height: 30),
-                    SizedBox(
-                      height: 230,
-                      width: 400,
-                      child: rive.RiveAnimation.asset(
-                        "assets/animation/dragon_animations.riv",
-                        fit: BoxFit.cover,
-                        stateMachines: const ["State Machine 1"],
-                        onInit: (artboard) {
-                          riveController = RiveAnimationController(artboard);
-                          emailFocus();
-                          passwordFocused();
-                        },
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: AppTheme.containerDecoration,
-                      child: Column(children: [
-                        CustomFormField(
-                            controller: emailController,
-                            labelText: AppLocalizations.of(context)!.email,
-                            icon: Icons.email,
-                            validator: validateEmail,
-                            onChanged: (value) {
-                              emailFocus();
-                              riveController?.updateLookNumber(value.length);
-                            },
-                            focusNode: emailFocusNode,
-                            riveController: riveController),
-                        const SizedBox(height: 15),
-                        CustomFormField(
-                          controller: passwordController,
-                          labelText: AppLocalizations.of(context)!.password,
-                          icon: Icons.lock,
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return AppLocalizations.of(context)!
-                                  .please_enter_your_password;
-                            }
-                            return null;
-                          },
-                          obscureText: !_passwordVisible,
-                          onChanged: (value) {
+                } else if (state.email != null && state.email != "NO_USER") {
+                  context.go('/user', extra: state.email);
+                  return const SizedBox.shrink(); 
+                } else {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text('Roll and Reserve',
+                          style: AppTheme.titleStyle),
+                      const SizedBox(height: 10),
+                      Text(AppLocalizations.of(context)!.login,
+                          style: AppTheme.subtitleStyle),
+                      const SizedBox(height: 30),
+                      SizedBox(
+                        height: 230,
+                        width: 400,
+                        child: rive.RiveAnimation.asset(
+                          "assets/animation/dragon_animations.riv",
+                          fit: BoxFit.cover,
+                          stateMachines: const ["State Machine 1"],
+                          onInit: (artboard) {
+                            riveController = RiveAnimationController(artboard);
+                            emailFocus();
                             passwordFocused();
                           },
-                          focusNode: passwordFocusNode,
-                          riveController: riveController,
-                          sufixIconButton: IconButton(
-                            icon: Icon(
-                              _passwordVisible
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _passwordVisible = !_passwordVisible;
-                                riveController!.toggleUnHide(_passwordVisible);
-                              });
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: AppTheme.containerDecoration,
+                        child: Column(children: [
+                          CustomFormField(
+                              controller: emailController,
+                              labelText: AppLocalizations.of(context)!.email,
+                              icon: Icons.email,
+                              validator: validateEmail,
+                              onChanged: (value) {
+                                emailFocus();
+                                riveController?.updateLookNumber(value.length);
+                              },
+                              focusNode: emailFocusNode,
+                              riveController: riveController),
+                          const SizedBox(height: 15),
+                          CustomFormField(
+                            controller: passwordController,
+                            labelText: AppLocalizations.of(context)!.password,
+                            icon: Icons.lock,
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return AppLocalizations.of(context)!
+                                    .please_enter_your_password;
+                              }
+                              return null;
                             },
+                            obscureText: !_passwordVisible,
+                            onChanged: (value) {
+                              passwordFocused();
+                            },
+                            focusNode: passwordFocusNode,
+                            riveController: riveController,
+                            sufixIconButton: IconButton(
+                              icon: Icon(
+                                _passwordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _passwordVisible = !_passwordVisible;
+                                  riveController!
+                                      .toggleUnHide(_passwordVisible);
+                                });
+                              },
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: ButtonLogin(
-                                  emailController: emailController,
-                                  passwordController: passwordController),
-                            ),
-                            const SizedBox(width: 15),
-                            Expanded(
-                              child: ButtonLoginGoogle(),
-                            ),
-                          ],
-                        ),
-                      ]),
-                    ),
-                    const SizedBox(height: 20),
-                    TextButton(
-                      onPressed: () {
-                        mostrarResetPassword(context);
-                        if (state.errorMessage != null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(state.errorMessage!)),
-                          );
-                        }
-                      },
-                      child: Text(
-                        AppLocalizations.of(context)!.you_forgot_your_password,
-                        style: TextStyle(color: Colors.white),
+                          const SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: ButtonLogin(
+                                    emailController: emailController,
+                                    passwordController: passwordController),
+                              ),
+                              const SizedBox(width: 15),
+                              Expanded(
+                                child: ButtonLoginGoogle(),
+                              ),
+                            ],
+                          ),
+                        ]),
                       ),
-                    ),
-                    const SizedBox(height: 5),
-                    TextButton(
-                      onPressed: () {
-                        context.push('/login/signIn');
-                      },
-                      child: Text(
-                        AppLocalizations.of(context)!
-                            .dont_have_an_account_register_here,
-                        style: TextStyle(color: Colors.white),
+                      const SizedBox(height: 20),
+                      TextButton(
+                        onPressed: () {
+                          mostrarResetPassword(context);
+                          if (state.errorMessage != null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(state.errorMessage!)),
+                            );
+                          }
+                        },
+                        child: Text(
+                          AppLocalizations.of(context)!
+                              .you_forgot_your_password,
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
-                    ),
-                  ],
-                );
-              }),
+                      const SizedBox(height: 5),
+                      TextButton(
+                        onPressed: () {
+                          context.push('/login/signIn');
+                        },
+                        child: Text(
+                          AppLocalizations.of(context)!
+                              .dont_have_an_account_register_here,
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  );
+                }
+              },),
             ),
           ),
         ));

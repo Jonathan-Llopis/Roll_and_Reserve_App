@@ -176,5 +176,8 @@
       "seats": "Places",
       "store_map": "Carte des Magasins",
       "your_reviews": "Vos Avis",
-      "chat_with_ai": "Discuter avec l'IA"
+      "chat_with_ai": "Discuter avec l'IA",
+      "processing_code": "Traitement du code",
+      "align_qr_code": "Aligner le code QR",
+      "error_processing_code": "Erreur lors du traitement du code"
 }

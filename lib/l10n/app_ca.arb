@@ -176,5 +176,8 @@
   "seats": "Seients",
   "store_map": "Mapa de les Botiges",
   "your_reviews": "Les Teves Resenyes",
-  "chat_with_ai": "Xateja amb la IA"
+  "chat_with_ai": "Xateja amb la IA",
+  "processing_code": "Processant codi",
+  "align_qr_code": "Alinea el codi QR",
+  "error_processing_code": "Error en processar el codi"
 }

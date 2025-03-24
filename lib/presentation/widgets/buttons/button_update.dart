@@ -26,7 +26,7 @@ class ButtonUpdate extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        ElevatedButton(
+        TextButton(
           style:AppTheme.textButtonCancelStyle,
           onPressed: () {
             Navigator.pop(context);
@@ -43,7 +43,7 @@ class ButtonUpdate extends StatelessWidget {
               }
             }
           },
-          child: ElevatedButton(
+          child: TextButton(
             style:AppTheme.textButtonAcceptStyle,
             onPressed: () {
               context.read<LoginBloc>().add(

@@ -849,6 +849,18 @@
   "chat_with_ai": "Chat with AI",
   "@chat_with_ai": {
     "description": "Label for chat with AI"
+  },
+  "processing_code": "Processing Code",
+  "@processing_code": {
+    "description": "Label for processing code"
+  },
+  "align_qr_code": "Align QR Code",
+  "@align_qr_code": {
+    "description": "Label for aligning QR code"
+  },
+  "error_processing_code": "Error Processing Code",
+  "@error_processing_code": {
+    "description": "Error message for processing code"
   }
 }
 

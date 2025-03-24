@@ -142,13 +142,12 @@ class _BodyEditShopState extends State<BodyEditShop> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ElevatedButton.icon(
+                TextButton(
                   onPressed: () {
                     context.go('/user');
                   },
-                  icon: Icon(Icons.cancel),
-                  label: Text(AppLocalizations.of(context)!.cancel),
-                  style: AppTheme.textButtonCancelStyle,  
+                  style: AppTheme.textButtonCancelStyle,
+                  child: Text(AppLocalizations.of(context)!.cancel),  
                 ),
                 ButtonCreateUpdateShop(
                   titleController: _titleController,
@@ -164,11 +163,13 @@ class _BodyEditShopState extends State<BodyEditShop> {
             widget.idShop == 0
                 ? Container()
                 : Center(
-                    child: TextButton(
+                    child: TextButton.icon(
+                      style: AppTheme.textButtonCancelStyle,
                       onPressed: () {
                         deleteShop(context, widget.idShop!, shopBloc);
                       },
-                      child: Text(AppLocalizations.of(context)!.shop_delete,
+                      icon: Icon(Icons.delete, color: Colors.red),
+                      label: Text(AppLocalizations.of(context)!.shop_delete,
                           style: TextStyle(color: Colors.red)),
                     ),
                   ),

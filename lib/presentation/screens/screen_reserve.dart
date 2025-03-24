@@ -69,6 +69,11 @@ class _ScreenReserveState extends State<ScreenReserve> {
               hasData: (state) => state.reserve != null,
               context: context,
               contentBuilder: (state) {
+                if (state.reserve!.id != widget.idReserve) {
+                            return Center(
+                            child: CircularProgressIndicator(),
+                            );
+                }
                 return InformationReserve(
                   reserve: state.reserve!,
                   loginBloc: loginBloc,

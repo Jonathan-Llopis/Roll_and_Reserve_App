@@ -177,5 +177,8 @@
   "seats": "Asientos",
   "store_map": "Mapa de las Tiendas",
   "your_reviews": "Tus Reseñas",
-  "chat_with_ai": "Chat con IA"
+  "chat_with_ai": "Chat con IA",
+  "processing_code": "Procesando código",
+  "align_qr_code": "Alinear código QR",
+  "error_processing_code": "Error al procesar el código"
 }

@@ -9,6 +9,7 @@ import 'package:roll_and_reserve/presentation/screens/screen_last_players.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_map_shops.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_login.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_register.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_reserve.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_reserves_table.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_reserves_user.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_review_shop.dart';
@@ -18,6 +19,7 @@ import 'package:roll_and_reserve/presentation/screens/screen_stadistics.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_tables_shop.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_main.dart';
 import 'package:go_router/go_router.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_transition.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/default_app_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:roll_and_reserve/injection.dart' as di;
@@ -110,7 +112,7 @@ final GoRouter router = GoRouter(
             },
           ),
         ),
-         GoRoute(
+        GoRoute(
           name: 'stadistics',
           path: '/stadistics',
           pageBuilder: (context, state) => CustomTransitionPage(
@@ -196,7 +198,6 @@ final GoRouter router = GoRouter(
               },
             );
           },
-          
         ),
         GoRoute(
           name: 'tablesShop',

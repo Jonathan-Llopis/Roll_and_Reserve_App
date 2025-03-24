@@ -58,6 +58,10 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+
     return DefaultScaffold(
       appBar: widget.appBar,
       body: cameraPermissionGranted
@@ -83,75 +87,96 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
                               children: [
                                 Expanded(
                                   flex: 4,
-                                  child: MobileScanner(
-                                    onDetect: (capture) {
-                                      final List<Barcode> barcodes =
-                                          capture.barcodes;
-                                      for (final barcode in barcodes) {
-                                        setState(() {
-                                          scannedCode = barcode.rawValue;
-                                        });
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      MobileScanner(
+                                        onDetect: (capture) {
+                                          final List<Barcode> barcodes =
+                                              capture.barcodes;
+                                          for (final barcode in barcodes) {
+                                            setState(() =>
+                                                scannedCode = barcode.rawValue);
 
-                                        showDialog(
-                                          context: context,
-                                          barrierDismissible: false,
-                                          builder: (BuildContext context) {
-                                            return Center(
-                                              child:
-                                                  CircularProgressIndicator(),
-                                            );
-                                          },
-                                        );
+                                            showDialog(
+                                                context: context,
+                                                barrierDismissible: false,
+                                                builder: (context) =>
+                                                    AlertDialog(
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(24),
+                                                      ),
+                                                      content: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(24),
+                                                        child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: [
+                                                            CircularProgressIndicator
+                                                                .adaptive(
+                                                              strokeWidth: 2,
+                                                              valueColor:
+                                                                  AlwaysStoppedAnimation(
+                                                                      colorScheme
+                                                                          .primary),
+                                                            ),
+                                                            const SizedBox(
+                                                                height: 24),
+                                                            Text(
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .processing_code,
+                                                              style: textTheme
+                                                                  .bodyMedium
+                                                                  ?.copyWith(
+                                                                color: colorScheme
+                                                                    .onSurface,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ));
 
-                                        if (scannedCode ==
-                                            'rollandreserve://app/user/userReserves') {
-                                          final startDate = DateFormat(
-                                                  'dd - MM - yyyy HH:mm')
-                                              .parse(
-                                                  '${state.reserve!.dayDate} ${state.reserve!.horaInicio}');
-                                          if (startDate
-                                              .subtract(Duration(minutes: 5))
-                                              .isBefore(DateTime.now())) {
-                                            checkUserLocation(
-                                                context, widget.idReserve);
-                                          } else {
-                                            Navigator.of(context).pop();
-                                            confirmReserveDialog(
-                                                context,
-                                                AppLocalizations.of(context)!
-                                                    .game_session_not_started,
-                                                true);
+                                            _handleScannedCode(context, state);
                                           }
-                                        } else {
-                                          Navigator.of(context).pop();
-                                          confirmReserveDialog(
-                                              context,
-                                              AppLocalizations.of(context)!
-                                                  .wrong_reservation_table,
-                                              true);
-                                        }
-                                      }
-                                    },
+                                        },
+                                      ),
+                                      _buildScannerOverlay(colorScheme),
+                                    ],
                                   ),
                                 ),
                                 Expanded(
                                   flex: 1,
                                   child: Center(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              scannedCode = null;
-                                            });
-                                          },
-                                          child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .scan_again),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16),
+                                      child: FilledButton.icon(
+                                        icon: Icon(Icons.camera_alt_rounded,
+                                            size: 20,
+                                            color: colorScheme.onPrimary),
+                                        label: Text(
+                                          AppLocalizations.of(context)!
+                                              .scan_again,
+                                          style: textTheme.labelLarge?.copyWith(
+                                              color: colorScheme.onPrimary),
                                         ),
-                                      ],
+                                        style: FilledButton.styleFrom(
+                                          backgroundColor: colorScheme.primary,
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 32, vertical: 16),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12)),
+                                        ),
+                                        onPressed: () =>
+                                            setState(() => scannedCode = null),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -166,12 +191,119 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
               },
             )
           : Center(
-              child: ElevatedButton(
-                onPressed: _requestCameraPermission,
-                child:
-                    Text(AppLocalizations.of(context)!.grant_camera_permission),
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.camera_enhance_rounded,
+                        size: 64,
+                        color: colorScheme.onSurface.withOpacity(0.5)),
+                    const SizedBox(height: 24),
+                    FilledButton.icon(
+                      icon: Icon(Icons.camera_alt_rounded,
+                          color: colorScheme.onPrimary),
+                      label: Text(
+                        AppLocalizations.of(context)!.grant_camera_permission,
+                        style: textTheme.labelLarge
+                            ?.copyWith(color: colorScheme.onPrimary),
+                      ),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: colorScheme.primary,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 32, vertical: 16),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                      ),
+                      onPressed: _requestCameraPermission,
+                    ),
+                  ],
+                ),
               ),
             ),
     );
+  }
+
+  Widget _buildScannerOverlay(ColorScheme colorScheme) {
+    return Container(
+      decoration: ShapeDecoration(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+          side: BorderSide(
+            color: colorScheme.primary.withOpacity(0.8),
+            width: 4,
+            style: BorderStyle.solid,
+          ),
+        ),
+      ),
+      width: 250,
+      height: 250,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            AppLocalizations.of(context)!.align_qr_code,
+            style: TextStyle(
+              color: colorScheme.onSurface,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _handleScannedCode(BuildContext context, ReserveState state) async {
+    final loc = AppLocalizations.of(context)!;
+
+    try {
+      if (scannedCode ==
+          'rollandreserve://app/user/userReserves/${widget.idTable}') {
+        final startDate = DateFormat('dd - MM - yyyy HH:mm')
+            .parse('${state.reserve!.dayDate} ${state.reserve!.horaInicio}');
+
+        final fiveMinutesBefore =
+            startDate.subtract(const Duration(minutes: 5));
+
+        if (fiveMinutesBefore.isBefore(DateTime.now())) {
+          // Cerrar diálogo de carga antes de nueva navegación
+          if (!mounted) return;
+          Navigator.of(context, rootNavigator: true).pop();
+          await checkUserLocation(context, widget.idReserve);
+        } else {
+          Navigator.of(context, rootNavigator: true).pop();
+          confirmReserveDialog(
+            context,
+            loc.game_session_not_started,
+            true,
+            
+          );
+        }
+      } else {
+        Navigator.of(context, rootNavigator: true).pop();
+        confirmReserveDialog(
+          context,
+          loc.wrong_reservation_table,
+          true,
+      
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      Navigator.of(context, rootNavigator: true).pop();
+      if (!mounted) return;
+      confirmReserveDialog(
+        context,
+        '${loc.error_processing_code}: ${e.toString()}',
+        true,
+      );
+    } finally {
+      if (scannedCode == null ||
+          scannedCode !=
+              'rollandreserve://app/user/userReserves/${widget.idTable}') {
+        setState(() => scannedCode = null);
+      }
+    }
   }
 }

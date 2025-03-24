@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:roll_and_reserve/config/theme/theme.dart';
 import 'package:roll_and_reserve/domain/entities/difficulty_entity.dart';
 import 'package:roll_and_reserve/domain/entities/game_entity.dart';
 import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
@@ -41,7 +42,8 @@ class ButtonCreateEvent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
+    return TextButton(
+      style: AppTheme.textButtonAcceptStyle,
       onPressed: () {
         if (_formKey.currentState!.validate()) {
           LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
