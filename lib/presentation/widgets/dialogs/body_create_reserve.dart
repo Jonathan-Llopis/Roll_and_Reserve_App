@@ -312,42 +312,45 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
               ),
             ),
             const SizedBox(height: 16.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  style: AppTheme.textButtonCancelStyle,
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text(
-                    AppLocalizations.of(context)!.cancel,
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    style: AppTheme.textButtonCancelStyle,
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text(
+                      AppLocalizations.of(context)!.cancel,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 10.0),
-                ButtonCreateReserve(
-                  id: widget.reserve != null ? widget.reserve!.id : 0,
-                  formKey: _formKey,
-                  freePlacesController: _freePlacesController,
-                  hourStartController: _hourStartController,
-                  hourEndController: _hourEndController,
-                  descriptionController: _descriptionController,
-                  requiredMaterialController: _requiredMaterialController,
-                  selectedDifficulty: _selectedDifficulty,
-                  selectedGameCategory: _selectedGameCategory,
-                  selectedGame: _selectedGame,
-                  idTable: widget.idTable,
-                  idShop: widget.idShop,
-                  selectedDate: _dayReservationController.text == ""
-                      ? DateTime.now()
-                      : widget.reserve == null
-                          ? DateFormat("dd-MM-yyyy")
-                              .parse(_dayReservationController.text)
-                          : DateFormat("dd - MM - yyyy")
-                              .parse(_dayReservationController.text),
-                  reserveBloc: widget.reserveBloc,
-                  searchDateTime: widget.searchDateTime,
-                  update: widget.reserve != null,
-                ),
-              ],
+                  const SizedBox(width: 10.0),
+                  ButtonCreateReserve(
+                    id: widget.reserve != null ? widget.reserve!.id : 0,
+                    formKey: _formKey,
+                    freePlacesController: _freePlacesController,
+                    hourStartController: _hourStartController,
+                    hourEndController: _hourEndController,
+                    descriptionController: _descriptionController,
+                    requiredMaterialController: _requiredMaterialController,
+                    selectedDifficulty: _selectedDifficulty,
+                    selectedGameCategory: _selectedGameCategory,
+                    selectedGame: _selectedGame,
+                    idTable: widget.idTable,
+                    idShop: widget.idShop,
+                    selectedDate: _dayReservationController.text == ""
+                        ? DateTime.now()
+                        : widget.reserve == null
+                            ? DateFormat("dd-MM-yyyy")
+                                .parse(_dayReservationController.text)
+                            : DateFormat("dd - MM - yyyy")
+                                .parse(_dayReservationController.text),
+                    reserveBloc: widget.reserveBloc,
+                    searchDateTime: widget.searchDateTime,
+                    update: widget.reserve != null,
+                  ),
+                ],
+              ),
             ),
           ],
         ),

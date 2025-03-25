@@ -27,6 +27,9 @@ class _BodyStadisticsState extends State<BodyStadistics> {
 
   @override
   void initState() {
+    context
+        .read<ShopBloc>()
+        .add(GetMostPlayedGamesEvent(idShop: widget.idShop));
     context.read<ShopBloc>().add(GetPlayerCountEvent(idShop: widget.idShop));
     context
         .read<ShopBloc>()
@@ -34,9 +37,6 @@ class _BodyStadisticsState extends State<BodyStadistics> {
     context
         .read<ShopBloc>()
         .add(GetPeakReservationHoursEvent(idShop: widget.idShop));
-    context
-        .read<ShopBloc>()
-        .add(GetMostPlayedGamesEvent(idShop: widget.idShop));
     _tooltipBehavior = _tooltipBehavior = TooltipBehavior(
       enable: true,
       format: 'point.x :  point.y',
@@ -56,21 +56,27 @@ class _BodyStadisticsState extends State<BodyStadistics> {
     monthNames =
         getMonthNames(Localizations.localeOf(context).languageCode) ?? [];
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(vertical: 16),
       child: Column(
         children: [
           _buildChartSelector(),
           const SizedBox(height: 10),
-          Divider(
-            color: Colors.grey,
-            thickness: 1,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Divider(
+              color: Colors.grey,
+              thickness: 1,
+            ),
           ),
           const SizedBox(height: 10),
           _buildPeriodSelector(),
           const SizedBox(height: 10),
-          Divider(
-            color: Colors.grey,
-            thickness: 1,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Divider(
+              color: Colors.grey,
+              thickness: 1,
+            ),
           ),
           BlocBuilder<ShopBloc, ShopState>(
             builder: (context, state) {
@@ -80,10 +86,10 @@ class _BodyStadisticsState extends State<BodyStadistics> {
                     state: state,
                     isLoading: (state) => state.isLoading,
                     errorMessage: (state) => state.errorMessage,
-                    hasData: (state) => state.totalReservations != null,
+                    hasData: (state) => state.mostPlayedGames != null,
                     context: context,
                     contentBuilder: (state) {
-                      return _buildReservationsChart(state.totalReservations!);
+                      return _buildPopularGamesChart(state.mostPlayedGames!);
                     },
                   );
                 case 2:
@@ -113,12 +119,13 @@ class _BodyStadisticsState extends State<BodyStadistics> {
                     state: state,
                     isLoading: (state) => state.isLoading,
                     errorMessage: (state) => state.errorMessage,
-                    hasData: (state) => state.mostPlayedGames != null,
+                    hasData: (state) => state.totalReservations != null,
                     context: context,
                     contentBuilder: (state) {
-                      return _buildPopularGamesChart(state.mostPlayedGames!);
+                      return _buildReservationsChart(state.totalReservations!);
                     },
                   );
+
                 default:
                   return const SizedBox.shrink();
               }
@@ -160,10 +167,13 @@ class _BodyStadisticsState extends State<BodyStadistics> {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: [
-            {'label': AppLocalizations.of(context)!.total_reservations, 'value': 1},
+            {'label': AppLocalizations.of(context)!.popular_games, 'value': 1},
             {'label': AppLocalizations.of(context)!.active_players, 'value': 2},
             {'label': AppLocalizations.of(context)!.peak_hours, 'value': 3},
-            {'label': AppLocalizations.of(context)!.popular_games, 'value': 4}
+            {
+              'label': AppLocalizations.of(context)!.total_reservations,
+              'value': 4
+            }
           ].map((Map<String, dynamic> chart) {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4.0),
@@ -190,7 +200,9 @@ class _BodyStadisticsState extends State<BodyStadistics> {
         padding: const EdgeInsets.all(16),
         child: SfCartesianChart(
           tooltipBehavior: _tooltipBehavior,
-          title: ChartTitle(text: AppLocalizations.of(context)!.total_reservations_by_period(_selectedPeriod)),
+          title: ChartTitle(
+              text: AppLocalizations.of(context)!
+                  .total_reservations_by_period(_selectedPeriod)),
           primaryXAxis: CategoryAxis(
             labelRotation: 45,
             edgeLabelPlacement: EdgeLabelPlacement.shift,
@@ -229,7 +241,9 @@ class _BodyStadisticsState extends State<BodyStadistics> {
         padding: const EdgeInsets.all(16),
         child: SfCartesianChart(
           tooltipBehavior: _tooltipBehavior,
-          title: ChartTitle(text: AppLocalizations.of(context)!.active_players_by_period(_selectedPeriod)),
+          title: ChartTitle(
+              text: AppLocalizations.of(context)!
+                  .active_players_by_period(_selectedPeriod)),
           primaryXAxis: CategoryAxis(
             labelRotation: 45,
             edgeLabelPlacement: EdgeLabelPlacement.shift,
@@ -264,7 +278,8 @@ class _BodyStadisticsState extends State<BodyStadistics> {
         padding: const EdgeInsets.all(16),
         child: SfCartesianChart(
           tooltipBehavior: _tooltipBehavior,
-          title:  ChartTitle(text: AppLocalizations.of(context)!.peak_reservation_hours),
+          title: ChartTitle(
+              text: AppLocalizations.of(context)!.peak_reservation_hours),
           primaryXAxis: CategoryAxis(
             labelRotation: 45,
             edgeLabelPlacement: EdgeLabelPlacement.shift,
@@ -303,7 +318,8 @@ class _BodyStadisticsState extends State<BodyStadistics> {
         padding: const EdgeInsets.all(0),
         child: SfCircularChart(
           tooltipBehavior: _tooltipBehavior,
-          title: ChartTitle(text: AppLocalizations.of(context)!.most_popular_games),
+          title: ChartTitle(
+              text: AppLocalizations.of(context)!.most_popular_games),
           series: <CircularSeries>[
             PieSeries<Map<String, dynamic>, String>(
               dataSource: choseData,

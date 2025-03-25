@@ -861,6 +861,115 @@
   "error_processing_code": "Error Processing Code",
   "@error_processing_code": {
     "description": "Error message for processing code"
+  },
+  "edit_info": "Edit Info.",
+  "@edit_info": {
+    "description": "Label for editing info"
+  },
+  "received_reviews": "Received Reviews",
+  "@received_reviews": {
+    "description": "Label for received reviews"
+  },
+  "played_with": "Played with",
+  "@played_with": {
+    "description": "Label for players the user has played with"
+  },
+
+  "welcome_to_roll_and_reserve": "Welcome to Roll & Reserve, {name}!",
+  "@welcome_to_roll_and_reserve": {
+    "description": "Welcome message for Roll & Reserve",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "John"
+      }
+    }
+  },
+  "find_your_ideal_game_table": "Find your ideal game table and reserve in seconds.",
+  "@find_your_ideal_game_table": {
+    "description": "Message encouraging users to find and reserve their game table"
+  },
+  "discover_nearby_shops": "Discover shops near you",
+  "@discover_nearby_shops": {
+    "description": "Message encouraging users to discover nearby shops"
+  },
+  "explore_shops_with_tables": "Explore shops with available tables and community ratings",
+  "@explore_shops_with_tables": {
+    "description": "Message encouraging users to explore shops with tables and ratings"
+  },
+  "reserve_in_few_steps": "Reserve in a few steps",
+  "@reserve_in_few_steps": {
+    "description": "Message indicating the simplicity of reserving a table"
+  },
+  "select_date_time_materials": "Select date, time, and necessary materials for your game",
+  "@select_date_time_materials": {
+    "description": "Message explaining the reservation process"
+  },
+  "manage_your_experience": "Manage your experience",
+  "@manage_your_experience": {
+    "description": "Message encouraging users to manage their reservations and settings"
+  },
+  "control_reservations_reviews_settings": "Control your reservations, reviews, and settings from one place. Now you can even ask the AI your questions.",
+  "@control_reservations_reviews_settings": {
+    "description": "Message explaining the features for managing reservations, reviews, and settings"
+  },
+  "skip": "Skip",
+  "@skip": {
+    "description": "Label for skip button"
+  },
+  "get_started": "Get Started",
+  "@get_started": {
+    "description": "Label for get started button"
+  },
+  "welcome_store_owner": "Welcome {name}, Store Owner!",
+  "@welcome_store_owner": {
+    "description": "Welcome message for store owners",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Alice"
+      }
+    }
+  },
+  "manage_your_game_space": "Manage your game space professionally and efficiently",
+  "@manage_your_game_space": {
+    "description": "Message encouraging store owners to manage their game space"
+  },
+  "setup_your_store": "Set Up Your Store",
+  "@setup_your_store": {
+    "description": "Label for setting up the store"
+  },
+  "add_location_and_details": "Add location and details of your establishment",
+  "@add_location_and_details": {
+    "description": "Message prompting store owners to add location and details"
+  },
+  "manage_tables": "Manage Tables",
+  "@manage_tables": {
+    "description": "Label for managing tables"
+  },
+  "create_and_edit_tables": "Create and edit available tables\nManage capacities and special features",
+  "@create_and_edit_tables": {
+    "description": "Message explaining table management features"
+  },
+  "schedule_events": "Schedule Events",
+  "@schedule_events": {
+    "description": "Label for scheduling events"
+  },
+  "organize_tournaments_and_activities": "Organize tournaments and special activities\nControl capacities and reservations",
+  "@organize_tournaments_and_activities": {
+    "description": "Message encouraging store owners to organize events"
+  },
+  "analyze_and_improve": "Analyze and Improve",
+  "@analyze_and_improve": {
+    "description": "Label for analyzing and improving"
+  },
+  "monitor_reservations_reviews_statistics": "Monitor reservations, reviews, and statistics\nMake data-driven decisions",
+  "@monitor_reservations_reviews_statistics": {
+    "description": "Message encouraging store owners to monitor and improve based on data"
+  },
+  "go_to_home": "Go to Home",
+  "@go_to_home": {
+    "description": "Label for go to home button"
   }
 }
 

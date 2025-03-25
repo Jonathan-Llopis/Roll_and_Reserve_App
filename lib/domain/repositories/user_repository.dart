@@ -19,4 +19,5 @@ abstract class UserRespository {
   Future<Either<Failure, List<UserEntity>>> getUsersInfo();
   Future<Either<Failure, bool>> updateTokenNotification(
       String id, String tokenNotificacion);
+  Future<Either<Failure, bool>> saveUserField(String id, String fieldName, dynamic value);
 }

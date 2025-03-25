@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:roll_and_reserve/core/use_case.dart';
@@ -140,6 +141,7 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
       );
     });
     on<CreateReserveEvent>((event, emit) async {
+      debugPrint('CreateReserveEvent, event: $event');
       emit(ReserveState.loading(
         state,
       ));
@@ -154,7 +156,7 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
                 idUser: event.idUser,
                 idTable: event.reserve.tableId,
                 dateReserve: event.dateReserve,
-                searchDateTime: event.searchDateTime));
+                searchDateTime: event.dateReserve));
           }
           emit(
             ReserveState.success(
@@ -226,14 +228,16 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
       final result = await addUserToReserveUseCase(params);
       result.fold(
         (failure) => emit(
+          
             ReserveState.failure(state, "Fallo al agregar usuario a la mesa")),
         (_) {
-          add(GetReservesByUserEvent(idUser: event.idUser));
-          add(GetReserveByDateEvent(
+           add(GetReserveByDateEvent(
               dateReserve: event.searchDateTime, idTable: event.idTable));
+          add(GetReservesByUserEvent(idUser: event.idUser)); 
           add(GetReserveWithUsers(
             idReserve: event.idReserve,
           ));
+         
           emit(
             ReserveState.success(
               state,
@@ -334,6 +338,7 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
     });
     on<GetReserveByDateEvent>((event, emit) async {
       try {
+        debugPrint('GetReserveByDateEvent, date: ${event.dateReserve},');
         emit(ReserveState.loading(
           state,
         ));

@@ -34,7 +34,10 @@ class InformationReserve extends StatelessWidget {
         children: [
           Text(
             reserve.isEvent
-                ?  AppLocalizations.of(context)!.game_event(reserveBloc.state.games!.firstWhere((element) => element.id == reserve.gameId).description)
+                ? AppLocalizations.of(context)!.game_event(reserveBloc
+                    .state.games!
+                    .firstWhere((element) => element.id == reserve.gameId)
+                    .description)
                 : AppLocalizations.of(context)!.active_game(reserveBloc
                     .state.games!
                     .firstWhere((element) => element.id == reserve.gameId)
@@ -59,32 +62,42 @@ class InformationReserve extends StatelessWidget {
                   ),
                 ],
               ),
-             reserve.isEvent ? Container() : Chip(
-                label: Text(
-                  AppLocalizations.of(context)!
-                      .free_places(reserve.freePlaces - reserve.usersInTables),
-                ),
-                backgroundColor: Colors.blue.shade50,
-              ),
+              reserve.isEvent &&
+                      DateFormat('dd - MM - yyyy HH:mm')
+                          .parse('${reserve.dayDate} ${reserve.horaFin}')
+                          .subtract(Duration(minutes: 0))
+                          .isAfter(DateTime.now())
+                  ? Container()
+                  : Chip(
+                      label: Text(
+                        AppLocalizations.of(context)!.free_places(
+                            reserve.freePlaces - reserve.usersInTables),
+                      ),
+                      backgroundColor: Colors.blue.shade50,
+                    ),
             ],
           ),
           const SizedBox(height: 16),
-          reserve.isEvent ? Container() : Text(
-            AppLocalizations.of(context)!.players,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
+          reserve.isEvent
+              ? Container()
+              : Text(
+                  AppLocalizations.of(context)!.players,
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
           const SizedBox(height: 8),
-          reserve.isEvent ? Container() : Expanded(
-            child: ListView.builder(
-              itemCount: reserve.usersInTables,
-              itemBuilder: (context, index) {
-                final user = reserve.users![index];
-                return CardUser(
-                  user: user,
-                );
-              },
-            ),
-          ),
+          reserve.isEvent
+              ? Container()
+              : Expanded(
+                  child: ListView.builder(
+                    itemCount: reserve.usersInTables,
+                    itemBuilder: (context, index) {
+                      final user = reserve.users![index];
+                      return CardUser(
+                        user: user,
+                      );
+                    },
+                  ),
+                ),
           const SizedBox(height: 16),
           Text(
             AppLocalizations.of(context)!.additional_information,
@@ -106,9 +119,11 @@ class InformationReserve extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              loginBloc.state.user!.role == 2 && !reserve.isEvent &&  DateFormat('dd - MM - yyyy HH:mm')
+              loginBloc.state.user!.role == 2 &&
+                      !reserve.isEvent &&
+                      DateFormat('dd - MM - yyyy HH:mm')
                           .parse('${reserve.dayDate} ${reserve.horaInicio}')
-                            .isAfter(DateTime.now())
+                          .isAfter(DateTime.now())
                   ? ElevatedButton.icon(
                       onPressed: () {
                         if (reserve.users!
@@ -124,15 +139,13 @@ class InformationReserve extends StatelessWidget {
                               ));
                         } else {
                           if (reserve.users!.length < reserve.freePlaces) {
-                            context
-                                .read<ReserveBloc>()
-                                .add(AddUserToReserveEvent(
-                                  idReserve: reserve.id,
-                                  idUser: loginBloc.state.user!.id,
-                                  idTable: reserve.tableId,
-                                  dateReserve: dateReserve,
-                                  searchDateTime: dateReserve
-                                ));
+                            context.read<ReserveBloc>().add(
+                                AddUserToReserveEvent(
+                                    idReserve: reserve.id,
+                                    idUser: loginBloc.state.user!.id,
+                                    idTable: reserve.tableId,
+                                    dateReserve: dateReserve,
+                                    searchDateTime: dateReserve));
                           }
                         }
                       },
@@ -152,13 +165,14 @@ class InformationReserve extends StatelessWidget {
                       ),
                     )
                   : reserve.isEvent
-                        ? ElevatedButton.icon(
+                      ? ElevatedButton.icon(
                           onPressed: () {
                             context.go(
-                        '/user/events/$idShop/eventReserve/${reserve.id}');
+                                '/user/events/$idShop/eventReserve/${reserve.id}');
                           },
                           icon: Icon(Icons.event),
-                          label: Text(AppLocalizations.of(context)!.go_to_events),
+                          label:
+                              Text(AppLocalizations.of(context)!.go_to_events),
                         )
                       : Container(),
             ],

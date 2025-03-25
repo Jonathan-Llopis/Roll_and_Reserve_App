@@ -195,7 +195,11 @@ class ShopsRemoteDataSourceImpl implements ShopRemoteDataSource {
         await file.writeAsBytes(bytes);
         return file;
       }
-    } else {
+    } else if (response.statusCode == 404) {
+      return null;
+
+    } 
+    else {
       throw Exception('Error al cargar la imagen');
     }
   }

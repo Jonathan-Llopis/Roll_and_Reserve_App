@@ -41,7 +41,6 @@ class _ScreenReserveState extends State<ScreenReserve> {
     context
         .read<ReserveBloc>()
         .add(GetReserveWithUsers(idReserve: widget.idReserve));
-
     context.read<ReserveBloc>().add(GetAllDifficultyEvent());
     context.read<ReserveBloc>().add(GetAllGameEvent());
     super.initState();
@@ -111,7 +110,11 @@ class _ScreenReserveState extends State<ScreenReserve> {
                               .parse(
                                   '${state.reserve!.dayDate} ${state.reserve!.horaInicio}')
                               .subtract(Duration(minutes: 5))
-                              .isBefore(DateTime.now()) &&
+                              .isBefore(DateTime.now()) && DateFormat('dd - MM - yyyy HH:mm')
+                              .parse(
+                                  '${state.reserve!.dayDate} ${state.reserve!.horaFin}')
+                              .subtract(Duration(minutes: 0))
+                              .isAfter(DateTime.now()) &&
                           (userReserve?.reserveConfirmation ?? true) == false
                       ? FloatingActionButton(
                           onPressed: () {

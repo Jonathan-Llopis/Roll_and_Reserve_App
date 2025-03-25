@@ -43,10 +43,12 @@ class ShopRepositoryImpl implements ShopsRepository {
   }
 
   @override
-  Future<Either<Exception, List<ShopEntity>>> getShopByOwner(String ownerId) async {
+  Future<Either<Exception, List<ShopEntity>>> getShopByOwner(
+      String ownerId) async {
     try {
       final token = sharedPreferences.getString('token');
-      final shopsModels = await remoteDataSource.getShopsByOwner(ownerId, token!);
+      final shopsModels =
+          await remoteDataSource.getShopsByOwner(ownerId, token!);
       final shopsWithLogo = await Future.wait(
         shopsModels.map((model) async {
           final logo = await remoteDataSource.getShopLogo(model.logoId, token);
@@ -87,13 +89,18 @@ class ShopRepositoryImpl implements ShopsRepository {
   @override
   Future<Either<Exception, bool>> createShops(ShopEntity shops) async {
     try {
+      String logoId;
       final token = sharedPreferences.getString('token');
       ShopModel shopModel = shops.toShopModel(null);
       final shopModelCreated =
           await remoteDataSource.createShops(shopModel, token!);
       ShopModel avatarShop =
-          shopModel.addInfo("677e565be78534b20cb542b0  ", shopModelCreated.id);
-      String logoId = await remoteDataSource.updateLogo(avatarShop, token);
+          shopModel.addInfo("67c4bf45ae01906bd75ace8f  ", shopModelCreated.id);
+      if (avatarShop.logo == null) {
+        logoId = "67c4bf45ae01906bd75ace8f";
+      } else {
+        logoId = await remoteDataSource.updateLogo(avatarShop, token);
+      }
       ShopModel updateShop = shopModel.addInfo(logoId, shopModelCreated.id);
       await remoteDataSource.updateShops(updateShop, token);
       return Right(true);
@@ -101,13 +108,14 @@ class ShopRepositoryImpl implements ShopsRepository {
       return Left(Exception('Error al crear la tienda: ${e.toString()}'));
     }
   }
-  
+
   @override
   Future<Either<Exception, List<dynamic>>> getMostPlayedGames(
       int idShop, String startTime, String endTime) async {
     try {
       final token = sharedPreferences.getString('token');
-      final games = await remoteDataSource.getMostPlayedGames(idShop, startTime, endTime, token!);
+      final games = await remoteDataSource.getMostPlayedGames(
+          idShop, startTime, endTime, token!);
       return Right(games);
     } catch (e) {
       return Left(Exception('Error al obtener los juegos más jugados.'));
@@ -119,7 +127,8 @@ class ShopRepositoryImpl implements ShopsRepository {
       int idShop, String startTime, String endTime) async {
     try {
       final token = sharedPreferences.getString('token');
-      final totalReservations = await remoteDataSource.getTotalReservations(idShop, startTime, endTime, token!);
+      final totalReservations = await remoteDataSource.getTotalReservations(
+          idShop, startTime, endTime, token!);
       return Right(totalReservations);
     } catch (e) {
       return Left(Exception('Error al obtener el total de reservas.'));
@@ -131,7 +140,8 @@ class ShopRepositoryImpl implements ShopsRepository {
       int idShop, String startTime, String endTime) async {
     try {
       final token = sharedPreferences.getString('token');
-      final playerCount = await remoteDataSource.getPlayerCount(idShop, startTime, endTime, token!);
+      final playerCount = await remoteDataSource.getPlayerCount(
+          idShop, startTime, endTime, token!);
       return Right(playerCount);
     } catch (e) {
       return Left(Exception('Error al obtener el conteo de jugadores.'));
@@ -143,7 +153,8 @@ class ShopRepositoryImpl implements ShopsRepository {
       int idShop, String startTime, String endTime) async {
     try {
       final token = sharedPreferences.getString('token');
-      final peakHours = await remoteDataSource.getPeakReservationHours(idShop, startTime, endTime, token!);
+      final peakHours = await remoteDataSource.getPeakReservationHours(
+          idShop, startTime, endTime, token!);
       return Right(peakHours);
     } catch (e) {
       return Left(Exception('Error al obtener las horas pico de reservas.'));

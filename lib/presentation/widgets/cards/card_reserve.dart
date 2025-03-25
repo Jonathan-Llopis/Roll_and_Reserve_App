@@ -26,10 +26,6 @@ class CardReserve extends StatefulWidget {
 }
 
 class _CardReserveState extends State<CardReserve> {
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

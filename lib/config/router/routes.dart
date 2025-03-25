@@ -8,6 +8,7 @@ import 'package:roll_and_reserve/presentation/screens/screen_event.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_last_players.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_map_shops.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_login.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_owner_onboard.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_register.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_reserve.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_reserves_table.dart';
@@ -20,6 +21,7 @@ import 'package:roll_and_reserve/presentation/screens/screen_tables_shop.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_main.dart';
 import 'package:go_router/go_router.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_transition.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_user_onboarding.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/default_app_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:roll_and_reserve/injection.dart' as di;
@@ -59,6 +61,28 @@ final GoRouter router = GoRouter(
           ),
         ),
       ],
+    ),
+    GoRoute(
+      name: 'userOnBoard',
+      path: '/userOnBoard',
+      pageBuilder: (context, state) => CustomTransitionPage(
+        key: state.pageKey,
+        child: const OnboardingScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return child;
+        },
+      ),
+    ),
+    GoRoute(
+      name: 'ownerOnBoard',
+      path: '/ownerOnBoard',
+      pageBuilder: (context, state) => CustomTransitionPage(
+        key: state.pageKey,
+        child: const OnboardingDuenioScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return child;
+        },
+      ),
     ),
     GoRoute(
       name: 'user',
@@ -288,7 +312,24 @@ final GoRouter router = GoRouter(
       } else {
         return isLoggedIn.fold(
           (_) => '/login',
-          (loggedIn) => state.matchedLocation,
+          (loggedIn) async {
+            final sharedPreferences = await SharedPreferences.getInstance();
+            final isFirstTime =
+                sharedPreferences.getBool('isFirstTime') ?? true;
+            if (isFirstTime && loggedIn.role == 1) {
+              await di
+                  .sl<UserRespository>()
+                  .saveUserField(loggedIn.id, 'isFirstTime', false);
+              return '/ownerOnBoard';
+            } else if (isFirstTime && loggedIn.role == 2) {
+              await di
+                  .sl<UserRespository>()
+                  .saveUserField(loggedIn.id, 'isFirstTime', false);
+              return '/userOnBoard';
+            } else {
+              return state.matchedLocation;
+            }
+          },
         );
       }
     }

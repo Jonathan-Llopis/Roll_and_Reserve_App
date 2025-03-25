@@ -66,7 +66,7 @@ class DrawerMain extends StatelessWidget {
                     ? ListTile(
                         leading: Icon(Icons.reviews,
                             color: theme.colorScheme.primary),
-                        title: Text(AppLocalizations.of(context)!.your_reviews),
+                        title: Text(AppLocalizations.of(context)!.received_reviews),
                         onTap: () {
                           Navigator.push(
                             context,

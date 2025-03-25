@@ -31,13 +31,13 @@ class BodyLastPlayers extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    AppLocalizations.of(context)!.latest_players,
+                    AppLocalizations.of(context)!.played_with,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold, color: Colors.black87),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    AppLocalizations.of(context)!.shop_reviews,
+                 '',
                     style: TextStyle(fontSize: 14, color: Colors.grey),
                   ),
                 ],

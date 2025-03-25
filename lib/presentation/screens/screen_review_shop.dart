@@ -69,7 +69,6 @@ class _ScreenReviewShopState extends State<ScreenReviewShop> {
                     (review) => review.writerId == loginBloc.state.user!.id)
                 ? Container()
                 : FloatingActionButton(
-                    backgroundColor: Colors.deepPurple,
                     child: const Icon(Icons.add),
                     onPressed: () {
                       createReview(

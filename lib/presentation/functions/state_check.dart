@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Widget buildContent<T>({
   required T state,
@@ -23,7 +24,7 @@ Widget buildContent<T>({
             onPressed: () {
               context.go('/user');
             },
-          child: const Text('Recargar página'),
+          child:  Text(AppLocalizations.of(context)!.go_to_home),
         ),
       ],
     ));

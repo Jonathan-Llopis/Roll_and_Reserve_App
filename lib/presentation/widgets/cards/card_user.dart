@@ -12,7 +12,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class CardUser extends StatelessWidget {
   final UserEntity user;
   final bool? isLastPlayers;
-  
+
   const CardUser({
     super.key,
     required this.user,
@@ -23,11 +23,13 @@ class CardUser extends StatelessWidget {
   Widget build(BuildContext context) {
     final ReviewBloc reviewBloc = BlocProvider.of<ReviewBloc>(context);
     final ThemeData theme = Theme.of(context);
-  
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
       child: MouseRegion(
-        cursor: isLastPlayers == true ? SystemMouseCursors.click : MouseCursor.defer,
+        cursor: isLastPlayers == true
+            ? SystemMouseCursors.click
+            : MouseCursor.defer,
         child: GestureDetector(
           onTap: () {
             if (isLastPlayers == true) {
@@ -68,14 +70,16 @@ class CardUser extends StatelessWidget {
                             buildStars(user.averageRaiting),
                             const SizedBox(width: 8),
                             Text(
-                               '${AppLocalizations.of(context)!.rating}: ${user.averageRaiting.toStringAsFixed(1)}',
+                              '${AppLocalizations.of(context)!.rating}: ${user.averageRaiting.toStringAsFixed(1)}',
                               style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurface.withOpacity(0.7),
+                                color: theme.colorScheme.onSurface
+                                    .withOpacity(0.7),
                               ),
                             ),
                           ],
                         ),
-                        if (user.reserveConfirmation != null && isLastPlayers == null) ...[
+                        if (user.reserveConfirmation != null &&
+                            isLastPlayers == null) ...[
                           const SizedBox(height: 4),
                           _buildStatusIndicator(context),
                         ]
@@ -102,7 +106,7 @@ class CardUser extends StatelessWidget {
       return Theme.of(context).colorScheme.surfaceVariant;
     }
     return user.reserveConfirmation ?? false
-        ? Theme.of(context).colorScheme.tertiaryContainer
+        ? Color.fromARGB(255, 89, 240, 29).withOpacity(0.1)
         : Theme.of(context).colorScheme.errorContainer;
   }
 
@@ -144,15 +148,17 @@ class CardUser extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: user.reserveConfirmation!
-            ? Theme.of(context).colorScheme.tertiary.withOpacity(0.1)
+            ? Color(0xFF00695C).withOpacity(0.1)
             : Theme.of(context).colorScheme.error.withOpacity(0.1),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
-        user.reserveConfirmation! ? AppLocalizations.of(context)!.confirmed : AppLocalizations.of(context)!.pending,
+        user.reserveConfirmation!
+            ? AppLocalizations.of(context)!.confirmed
+            : AppLocalizations.of(context)!.pending,
         style: Theme.of(context).textTheme.labelSmall?.copyWith(
               color: user.reserveConfirmation!
-                  ? Theme.of(context).colorScheme.tertiary
+                  ? Color(0xFF00695C)
                   : Theme.of(context).colorScheme.error,
               fontWeight: FontWeight.w500,
             ),

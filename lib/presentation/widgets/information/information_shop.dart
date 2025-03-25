@@ -197,13 +197,13 @@ class _ShopListInventoryState extends State<InformationShop> {
             children: [
               _buildAdminButton(
                 icon: Icons.table_restaurant,
-                label: loc.edit_table,
+                label: loc.edit_shop,
                 color: theme.colorScheme.primary,
                 route: '/user/shop/${widget.shop.id}',
               ),
               _buildAdminButton(
                 icon: Icons.edit_rounded,
-                label: loc.edit_shop,
+                label: loc.edit_info,
                 color: theme.colorScheme.error,
                 route: '/user/shop_edit/${widget.shop.id}',
               ),

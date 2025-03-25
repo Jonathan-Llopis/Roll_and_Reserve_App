@@ -42,7 +42,7 @@ class _BodyEventsState extends State<BodyEvents> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Store Events',
+                    AppLocalizations.of(context)!.store_events,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold, color: Colors.black87),
                   ),

@@ -27,7 +27,7 @@ class GetReserveByDateEvent extends ReserveEvent {
   final DateTime dateReserve;
   final int idTable;
   GetReserveByDateEvent({required this.dateReserve, required this.idTable});
-
+  
   @override
   List<Object?> get props => [dateReserve, idTable];
 }

@@ -58,6 +58,9 @@ class UserRespositoryImpl implements UserRespository {
       dynamic avatarFile = await userDatasource.getUserAvatar(
           usuerDataBase.avatarId, tokenGenerado);
 
+      bool isFirstTime = await firebaseUserDataSource.isFirstTime(user.id);
+      await sharedPreferences.setBool('isFirstTime', isFirstTime);
+
       return Right(usuerDataBase.toUserEntity(avatarFile, null));
     } catch (e) {
       print('Error during Google Sign-In: $e');
@@ -80,6 +83,9 @@ class UserRespositoryImpl implements UserRespository {
           await userDatasource.getValidUser(user.id, token!);
       dynamic avatarFile =
           await userDatasource.getUserAvatar(usuerDataBase.avatarId, token);
+
+      bool isFirstTime = await firebaseUserDataSource.isFirstTime(user.id);
+      await sharedPreferences.setBool('isFirstTime', isFirstTime);
       return Right(usuerDataBase.toUserEntity(avatarFile, null));
     } catch (e) {
       return Left(AuthFailure());
@@ -114,6 +120,10 @@ class UserRespositoryImpl implements UserRespository {
       String tokenGenerado =
           await userDatasource.getValidToken(email, password);
       await sharedPreferences.setString('token', tokenGenerado);
+
+      bool isFirstTime = await firebaseUserDataSource.isFirstTime(user.id);
+      await sharedPreferences.setBool('isFirstTime', isFirstTime);
+
       return Right(usuarioRegistro.toUserEntity(File(''), null));
     } catch (e) {
       return Left(AuthFailure());
@@ -166,6 +176,7 @@ class UserRespositoryImpl implements UserRespository {
       await sharedPreferences.remove('id');
       await sharedPreferences.remove('email');
       await sharedPreferences.remove('token');
+      await sharedPreferences.remove('isFirstTime');
       return const Right(null);
     } catch (e) {
       return Left(AuthFailure());
@@ -277,6 +288,19 @@ class UserRespositoryImpl implements UserRespository {
       }
       await userDatasource.updateTokenNotification(
           id, tokenNotification, token!);
+      return Right(true);
+    } catch (e) {
+      return Left(AuthFailure());
+    }
+  }
+  @override
+  Future<Either<Failure, bool>> saveUserField(String id, String field, dynamic value) async {
+    try {
+      final token = sharedPreferences.getString('token');
+      if (token == null) {
+        return Left(AuthFailure());
+      }
+      await firebaseUserDataSource.saveUserField(id, field, value);
       return Right(true);
     } catch (e) {
       return Left(AuthFailure());

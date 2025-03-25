@@ -53,18 +53,18 @@ class ShopModel {
         logoId: json['logo'] ?? "67c4bf45ae01906bd75ace8f",
         logo: <int>[],
         averageRaiting: calcularMediaRatings(json['reviews_shop'] ?? []),
-        ownerId: json['owner'] ?? "0",
+        ownerId: json['owner']['id_google'] ?? "0",
         tablesShop: calcularMesasTienda(json['tables_shop'] ?? []),
         gamesShop: crearListaJuegos(json['games'] ?? []),
-        latitude: json['latitud'] ?? 0.0,
-        longitude: json['longitud'] ?? 0.0);
+        latitude: json['latitud'] != null ? double.parse(json['latitud'].toString()) : 0.0,
+        longitude:json['longitud'] != null ? double.parse(json['longitud'].toString()) : 0.0);
   }
   Map<String, dynamic> toJson() {
     return {
       'name': name,
       'address': address,
       'logo': logoId,
-      'owner': ownerId,
+      'owner_id': ownerId,
       'latitud': latitude.toString(),
       'longitud': longitude.toString()
     };

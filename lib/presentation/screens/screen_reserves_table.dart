@@ -41,17 +41,14 @@ class _ScreenReservesOfTableState extends State<ScreenReservesOfTable> {
         ? _selectedDate ?? DateTime.now()
         : DateFormat('yyyy-MM-dd')
             .parse(reserveBloc.state.filterTables!['dateReserve']!);
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ReserveBloc>().add(
-            GetReserveByDateEvent(
-                dateReserve: _selectedDate!, idTable: widget.idTable),
-          );
-      context
+    context.read<ReserveBloc>().add(
+          GetReserveByDateEvent(
+              dateReserve: _selectedDate!, idTable: widget.idTable),
+        );
+           context
           .read<TableBloc>()
           .add(GetTablesByShopEvent(idShop: widget.idShop));
-    });
+    super.initState();
   }
 
   @override

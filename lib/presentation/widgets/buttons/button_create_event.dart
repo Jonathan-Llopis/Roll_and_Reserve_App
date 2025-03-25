@@ -68,8 +68,8 @@ class ButtonCreateEvent extends StatelessWidget {
             ));
           }
           widget.reserveBloc.add(CreateEventsEvent(reserves: reserves));
-        }
-        context.go('/user/events/${widget.idShop}');
+           context.go('/user/events/${widget.idShop}');
+        }    
       },
       child: Text(AppLocalizations.of(context)!.save),
     );

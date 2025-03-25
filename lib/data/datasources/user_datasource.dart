@@ -18,6 +18,9 @@ abstract class UserDatasource {
   Future<bool> updateTokenNotification(
       String id, String tokenNotificacion, String token);
   Future <bool> updatePassword(String id, String oldPassword, String newPassword, String token);
+  
+
+  
 }
 
 class UserDatasourceImpl implements UserDatasource {

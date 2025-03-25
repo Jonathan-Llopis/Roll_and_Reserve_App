@@ -4,7 +4,7 @@ class FirestoreUsersDatasource {
   Future<void> registerUser(String email, String nombre, String id) async {
     DocumentReference users =
         FirebaseFirestore.instance.collection('Users').doc(id);
-    await users.set({'email': email, 'name': nombre, 'rol': 2, 'id': id,  'notifications': []});
+    await users.set({'email': email, 'name': nombre, 'rol': 2, 'id': id,  'notifications': [], 'isFirstTime': true});
   }
 
   Future<void> updateUserInfo(String nombre, String id, int role, List<int> notifications) async {
@@ -22,6 +22,23 @@ class FirestoreUsersDatasource {
     } else {
       return [];
     }
+  }
+
+  Future<bool> isFirstTime(String id) async {
+    DocumentReference users =
+        FirebaseFirestore.instance.collection('Users').doc(id);
+    DocumentSnapshot snapshot = await users.get();
+    if (snapshot.exists) {
+      return snapshot['isFirstTime'] ?? true;
+    } else {
+      return true;
+    }
+  }
+
+  Future<void> saveUserField(String id, String fieldName, dynamic value) async {
+    DocumentReference users =
+        FirebaseFirestore.instance.collection('Users').doc(id);
+    await users.update({fieldName: value});
   }
 
 

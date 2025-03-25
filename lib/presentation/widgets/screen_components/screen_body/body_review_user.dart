@@ -37,7 +37,7 @@ class BodyReviewUser extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    AppLocalizations.of(context)!.shop_reviews,
+                    AppLocalizations.of(context)!.received_reviews,
                     style: TextStyle(fontSize: 14, color: Colors.grey),
                   ),
                 ],
