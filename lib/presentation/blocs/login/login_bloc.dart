@@ -31,6 +31,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final ValidatePasswordUsecase validatePasswordUsecase;
   final GetUserInfoUseCase getUserInfoUseCase;
   final GetAllUsersUseCase getAllUsersUseCase;
+  
 
   LoginBloc(
       this.signInUserUseCase,
@@ -47,6 +48,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       this.getUserInfoUseCase,
       this.getAllUsersUseCase)
       : super(LoginState.initial()) {
+
     on<ButtonLoginPressed>((event, emit) async {
       emit(LoginState.loading());
       final result = await signInUserUseCase(LoginParams(
@@ -144,20 +146,33 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     });
 
     on<ValidatePasswordEvent>((event, emit) async {
-      emit(LoginState(isLoading: true));
+      emit(LoginState.loading());
       final result = await validatePasswordUsecase(event.password);
-      emit(LoginState(
-        isLoading: false,
-        validatePassword: result.fold((_) => null, (isValid) => isValid),
-      ));
+      result.fold(
+      (failure) =>
+        emit(LoginState.failure("Fallo al validar la contraseña")),
+      (isValid) => emit(LoginState.success(isValid.toString())),
+      );
     });
+
     on<GetUserInfoEvent>((event, emit) async {
-      emit(LoginState(isLoading: true));
+      emit(LoginState.loading());
       final result = await getUserInfoUseCase(event.idGoogle);
-      emit(LoginState(
-        isLoading: false,
-        user: result.fold((_) => null, (user) => user),
-      ));
+      result.fold(
+      (failure) =>
+        emit(LoginState.failure("Fallo al obtener la información del usuario")),
+      (user) => emit(LoginState.success(user.toString())),
+      );
+    });
+
+    on<GetAllUsersEvent>((event, emit) async {
+      emit(LoginState.loading());
+      final result = await getAllUsersUseCase(NoParams());
+      result.fold(
+      (failure) =>
+        emit(LoginState.failure("Fallo al obtener la lista de usuarios")),
+      (users) => emit(LoginState.users(users)),
+      );
     });
   }
 }

@@ -18,7 +18,7 @@ abstract class UserDatasource {
   Future<bool> updateTokenNotification(
       String id, String tokenNotificacion, String token);
   Future <bool> updatePassword(String id, String oldPassword, String newPassword, String token);
-  
+  Future<List<UserModel>> getAllUsers(String token);
 
   
 }
@@ -217,6 +217,23 @@ class UserDatasourceImpl implements UserDatasource {
       return true;
     } else {
       throw Exception('Error al actualizar la contraseña: ${response.body}');
+    }
+  }
+
+  Future<List<UserModel>> getAllUsers(String token) async {
+    final response = await client.get(
+      Uri.parse('${dotenv.env['BACKEND']}/users'),
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List jsonList = json.decode(response.body);
+      return jsonList.map((json) => UserModel.fromJson(json)).toList();
+    } else {
+      throw Exception('Error al obtener todos los usuarios: ${response.body}');
     }
   }
 }

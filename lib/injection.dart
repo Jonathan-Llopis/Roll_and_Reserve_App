@@ -375,6 +375,8 @@ void configureDependencies() async {
     () => GetTotalReservationsUseCase(sl()),
   );
 
+  
+
   sl.registerLazySingleton(() => http.Client());
   final sharedPreferences = await SharedPreferences.getInstance();
   sl.registerLazySingleton(() => sharedPreferences);

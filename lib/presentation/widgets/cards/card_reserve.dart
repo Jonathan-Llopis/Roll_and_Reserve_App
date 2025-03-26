@@ -9,7 +9,7 @@ import 'package:roll_and_reserve/presentation/blocs/shops/shop_state.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_state.dart';
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
-import 'package:roll_and_reserve/presentation/widgets/screen_components/chip_time.dart';
+import 'package:roll_and_reserve/presentation/widgets/screen_components/screen_body/chip_time.dart';
 
 class CardReserve extends StatefulWidget {
   const CardReserve({

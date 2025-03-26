@@ -181,7 +181,8 @@ class _ShopListInventoryState extends State<InformationShop> {
 
   Widget _buildActionButtons(
       BuildContext context, ThemeData theme, AppLocalizations loc) {
-    final isAdmin = context.read<LoginBloc>().state.user!.role == 1;
+    final isAdmin = context.read<LoginBloc>().state.user!.role == 1 ||
+        context.read<LoginBloc>().state.user!.role == 0;
 
     return Column(
       children: [

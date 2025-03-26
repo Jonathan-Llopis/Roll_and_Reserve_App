@@ -95,3 +95,5 @@ class LogoutButtonPressed extends LoginEvent {}
 class CheckAuthentication extends LoginEvent {}
 
 class LoginGoogle extends LoginEvent {}
+
+class GetAllUsersEvent extends LoginEvent {}
