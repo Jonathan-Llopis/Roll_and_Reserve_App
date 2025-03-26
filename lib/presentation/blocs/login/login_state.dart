@@ -50,14 +50,18 @@ class LoginState {
 
   factory LoginState.initial() => const LoginState();
 
-  factory LoginState.loading() => const LoginState(isLoading: true, errorMessage: null);
+  factory LoginState.loading(LoginState state) =>
+      state.copyWith(isLoading: true, errorMessage: null);
 
-  factory LoginState.success(String email) => LoginState(email: email, errorMessage: null);
+  factory LoginState.success(LoginState state, String email) =>
+      state.copyWith(email: email, errorMessage: null, isLoading: false);
 
-  factory LoginState.isLogedIn(UserEntity user) => LoginState(user: user, errorMessage: null);
+  factory LoginState.isLogedIn(LoginState state, UserEntity user) =>
+      state.copyWith(user: user, errorMessage: null, isLoading: false);
 
-  factory LoginState.failure(String errorMessage) =>
-      LoginState(errorMessage: errorMessage);
-  
-  factory LoginState.users(List<UserEntity> users) => LoginState(isLoading: false,  users: users);
+  factory LoginState.failure(LoginState state, String errorMessage) =>
+      state.copyWith(errorMessage: errorMessage, isLoading: false);
+
+  factory LoginState.users(LoginState state, List<UserEntity> users) =>
+      state.copyWith(users: users, isLoading: false, errorMessage: null);
 }

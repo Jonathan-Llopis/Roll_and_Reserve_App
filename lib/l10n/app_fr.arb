@@ -203,6 +203,13 @@
       "organize_tournaments_and_activities": "Organisez des tournois et des activités spéciales\nContrôlez les capacités et les réservations",
       "analyze_and_improve": "Analyser et Améliorer",
       "monitor_reservations_reviews_statistics": "Surveillez les réservations, avis et statistiques\nPrenez des décisions basées sur les données",
-      "go_to_home": "Aller à l'Accueil"
-
+      "go_to_home": "Aller à l'Accueil",
+      "role_admin": "Admin",
+      "role_user": "Utilisateur",
+      "role_owner": "Propriétaire",
+      "role": "Rôle",
+      "error_select_user": "Erreur lors de la sélection de l'utilisateur",
+      "select_user": "Sélectionner un utilisateur",
+      "all_users": "Voici tous les utilisateurs",
+      "all_shops": "Voici tous les magasins"
 }

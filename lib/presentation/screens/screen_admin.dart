@@ -1,12 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
-import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
-import 'package:roll_and_reserve/presentation/blocs/shops/shop_event.dart';
-import 'package:roll_and_reserve/presentation/blocs/shops/shop_state.dart';
 import 'package:roll_and_reserve/presentation/functions/notification_service.dart';
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/screen_body/body_main_shops.dart';
@@ -14,24 +10,21 @@ import 'package:roll_and_reserve/presentation/widgets/screen_components/default_
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/screen_body/body_users_admin.dart';
 
-class ScreenMain extends StatefulWidget {
+class ScreenAdmin extends StatefulWidget {
   final PreferredSizeWidget appBar;
-  const ScreenMain({super.key, required this.appBar});
+  const ScreenAdmin({super.key, required this.appBar});
 
   @override
-  State<ScreenMain> createState() => _ScreenMainState();
+  State<ScreenAdmin> createState() => _ScreenMainState();
 }
 
-class _ScreenMainState extends State<ScreenMain> {
+class _ScreenMainState extends State<ScreenAdmin> {
   int currentIndex = 0;
 
-  @override
   @override
   void initState() {
     super.initState();
     NotificationService().getToken();
-    BlocProvider.of<LoginBloc>(context).add(CheckAuthentication());
-    context.read<ShopBloc>().add(GetShopsEvent());
     context.read<LoginBloc>().add(GetAllUsersEvent());
   }
 
@@ -46,51 +39,42 @@ class _ScreenMainState extends State<ScreenMain> {
           context: context,
           contentBuilder: (state) {
             return DefaultScaffold(
-                appBar: widget.appBar,
-                body: currentIndex == 0
-                    ? BlocBuilder<LoginBloc, LoginState>(
-                        builder: (context, state) {
-                        return buildContent<LoginState>(
-                          state: state,
-                          isLoading: (state) => state.isLoading,
-                          errorMessage: (state) => state.errorMessage,
-                          hasData: (state) => state.users != null,
-                          context: context,
-                          contentBuilder: (state) {
-                            return BodyUsersAdmin();
-                          },
-                        );
-                      })
-                    : BlocBuilder<ShopBloc, ShopState>(
-                        builder: (context, state) {
-                        return buildContent<ShopState>(
-                          state: state,
-                          isLoading: (state) => state.isLoading,
-                          errorMessage: (state) => state.errorMessage,
-                          hasData: (state) => state.shops != null,
-                          context: context,
-                          contentBuilder: (state) {
-                            return BodyMain();
-                          },
-                        );
-                      }),
-                floatingActionButton: Container(),
-                bottomNavigationBar: BottomNavigationBar(
-                  items: [
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.people),
-                      label: AppLocalizations.of(context)!.username,
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.store),
-                      label: AppLocalizations.of(context)!.edit_shop,
-                    ),
-                  ],
-                  onTap: (index) {
+              appBar: widget.appBar,
+              body: currentIndex == 0
+                  ? BlocBuilder<LoginBloc, LoginState>(
+                      builder: (context, state) {
+                      return buildContent<LoginState>(
+                        state: state,
+                        isLoading: (state) => state.isLoading,
+                        errorMessage: (state) => state.errorMessage,
+                        hasData: (state) => state.users != null,
+                        context: context,
+                        contentBuilder: (state) {
+                          return BodyUsersAdmin();
+                        },
+                      );
+                    })
+                  : BodyMain(),
+              floatingActionButton: Container(),
+              bottomNavigationBar: BottomNavigationBar(
+                items: [
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.people),
+                    label: AppLocalizations.of(context)!.username,
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.store),
+                    label: AppLocalizations.of(context)!.edit_shop,
+                  ),
+                ],
+                onTap: (index) {
+                  setState(() {
                     currentIndex = index;
-                  },
-                  currentIndex: currentIndex,
-                ));
+                  });
+                },
+                currentIndex: currentIndex,
+              ),
+            );
           });
     });
   }

@@ -17,12 +17,14 @@ class ButtonCreateUpdateShop extends StatelessWidget {
     required this.latitudController,
     required imageFile,
     required this.idShop,
+    required this.idUserController,
   }) : _imageFile = imageFile;
 
   final TextEditingController titleController;
   final TextEditingController adressController;
   final TextEditingController longitudController;
   final TextEditingController latitudController;
+  final TextEditingController idUserController;
   final dynamic _imageFile;
   final int idShop;
   @override
@@ -38,7 +40,7 @@ class ButtonCreateUpdateShop extends StatelessWidget {
                 name: titleController.text,
                 address: adressController.text,
                 logo: _imageFile,
-                ownerId: loginBloc.state.user!.id,
+                ownerId: loginBloc.state.user!.role == 0 ? idUserController.text : loginBloc.state.user!.id,
                 id: 0,
                 averageRaiting: 0,
                 logoId: '0',
@@ -56,7 +58,7 @@ class ButtonCreateUpdateShop extends StatelessWidget {
                 logo: _imageFile,
                 averageRaiting: shopBloc.state.shop?.averageRaiting ?? 0,
                 logoId: "",
-                ownerId: loginBloc.state.user!.id,
+                ownerId: loginBloc.state.user!.role == 0 ? idUserController.text : loginBloc.state.user!.id,
                 tablesShop: shopBloc.state.shop?.tablesShop ?? [],
                 gamesShop: shopBloc.state.shop?.gamesShop ?? [],
                 latitude: double.parse(latitudController.text),

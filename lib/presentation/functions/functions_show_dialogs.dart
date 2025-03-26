@@ -15,6 +15,7 @@ import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_error_dateP
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_logout.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_reset_password.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_update_password.dart';
+import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_user_admin_edit.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_user_edit.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_delete_table.dart';
 
@@ -47,6 +48,15 @@ Future<void> mostrarUserEdit(BuildContext context) {
       context: context,
       builder: (context) {
         return const DialogoUserSettings();
+      });
+}
+
+
+Future<void> mostrarUserAdminEdit(BuildContext context, String idUser) {
+  return showDialog(
+      context: context,
+      builder: (context) {
+        return  DialogoUserAdminSettings(idUser: idUser);
       });
 }
 

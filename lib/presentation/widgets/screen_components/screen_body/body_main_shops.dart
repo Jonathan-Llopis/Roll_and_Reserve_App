@@ -22,7 +22,7 @@ class _BodyMainState extends State<BodyMain> {
   @override
   Widget build(BuildContext context) {
     final loginBloc = BlocProvider.of<LoginBloc>(context);
-    if (loginBloc.state.user!.role == 2) {
+    if (loginBloc.state.user!.role == 2 || loginBloc.state.user!.role == 0) {
       context.read<ShopBloc>().add(GetShopsEvent());
     } else {
       context
@@ -72,13 +72,18 @@ class _BodyMainState extends State<BodyMain> {
                                 ),
                               ],
                             )
-                          : Text(
+                          : loginBloc.state.user!.role == 1 ? Text(
                               AppLocalizations.of(context)!
                                   .shops_registered_in_your_name,
                               textAlign: TextAlign.center,
                               style:
                                   TextStyle(fontSize: 18, color: Colors.blue),
-                            ),
+                            ):  Text(
+                              AppLocalizations.of(context)!
+                                  .all_shops,
+                              textAlign: TextAlign.center,
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.blue),)
                     ],
                   ),
                 ),

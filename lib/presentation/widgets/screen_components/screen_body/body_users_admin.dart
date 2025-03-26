@@ -18,7 +18,7 @@ class BodyUsersAdmin extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
           child: Text(
-            AppLocalizations.of(context)!.user_logout,
+            AppLocalizations.of(context)!.all_users,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold, color: Colors.black87),
           ),

@@ -970,6 +970,38 @@
   "go_to_home": "Go to Home",
   "@go_to_home": {
     "description": "Label for go to home button"
+  },
+  "role_admin": "Admin",
+  "@role_admin": {
+    "description": "Label for admin role"
+  },
+  "role_user": "User",
+  "@role_user": {
+    "description": "Label for user role"
+  },
+  "role_owner": "Owner",
+  "@role_owner": {
+    "description": "Label for owner role"
+  },
+  "role": "Role",
+  "@role": {
+    "description": "Label for role selection"
+  },
+  "error_select_user": "Error selecting user",
+  "@error_select_user": {
+    "description": "Error message indicating an issue with selecting a user"
+  },
+  "select_user": "Select User",
+  "@select_user": {
+    "description": "Label for selecting a user"
+  },
+  "all_users": "These are all the users",
+  "@all_users": {
+    "description": "Message indicating all the users"
+  },
+  "all_shops": "These are all the shops",
+  "@all_shops": {
+    "description": "Message indicating all the shops"
   }
 }
 

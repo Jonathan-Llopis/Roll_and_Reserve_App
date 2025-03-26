@@ -204,5 +204,13 @@
   "organize_tournaments_and_activities": "Organiza torneos y actividades especiales\nControla capacidades y reservas",
   "analyze_and_improve": "Analizar y Mejorar",
   "monitor_reservations_reviews_statistics": "Monitorea reservas, reseñas y estadísticas\nToma decisiones basadas en datos",
-  "go_to_home": "Ir a Inicio"
+  "go_to_home": "Ir a Inicio",
+  "role_admin": "Administrador",
+  "role_user": "Usuario",
+  "role_owner": "Propietario",
+  "role": "Rol",
+  "error_select_user": "Error al seleccionar usuario",
+  "select_user": "Seleccionar Usuario",
+  "all_users": "Estos son todos los usuarios",
+  "all_shops": "Estas son todas las tiendas"
 }

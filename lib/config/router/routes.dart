@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/domain/repositories/user_repository.dart';
 import 'package:roll_and_reserve/main.dart';
+import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_admin.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_chat.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_create_event.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_create_reserve.dart';
@@ -95,6 +99,18 @@ final GoRouter router = GoRouter(
         },
       ),
       routes: [
+        GoRoute(
+          name: 'admin',
+          path: 'admin',
+          pageBuilder: (context, state) => CustomTransitionPage(
+            key: state.pageKey,
+            child: ScreenAdmin(appBar: appBar),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              return child;
+            },
+          ),
+        ),
         GoRoute(
           name: 'editShop',
           path: 'shop_edit/:idEditShop',
@@ -303,6 +319,8 @@ final GoRouter router = GoRouter(
     final isLoggedIn = await di.sl<UserRespository>().isLoggedIn();
     final sharedPreferences = await SharedPreferences.getInstance();
     final email = sharedPreferences.getString('email');
+    LoginBloc loginBloc = context.read<LoginBloc>();
+    BlocProvider.of<LoginBloc>(context).add(CheckAuthentication());
 
     if (!state.matchedLocation.contains("/login") && email == null) {
       return '/login';
@@ -316,6 +334,13 @@ final GoRouter router = GoRouter(
             final sharedPreferences = await SharedPreferences.getInstance();
             final isFirstTime =
                 sharedPreferences.getBool('isFirstTime') ?? true;
+            if (state.matchedLocation == '/login' ||
+                state.matchedLocation == '/' ||
+                state.matchedLocation == '/user') {
+              if (loggedIn.role == 0) {
+                return '/user/admin';
+              }
+            }
             if (isFirstTime && loggedIn.role == 1) {
               await di
                   .sl<UserRespository>()

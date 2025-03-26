@@ -46,6 +46,15 @@ class DrawerMain extends StatelessWidget {
           Expanded(
             child: ListView(
               children: [
+                userBloc.state.user!.role == 0 ?
+                  ListTile(
+                  leading: Icon(Icons.admin_panel_settings, color: theme.colorScheme.primary),
+                  title: Text(AppLocalizations.of(context)!.role_admin),
+                  onTap: () {
+                    Navigator.pop(context);
+                    context.go('/user/admin');
+                  },
+                  ):
                 ListTile(
                   leading: Icon(Icons.home, color: theme.colorScheme.primary),
                   title: Text(AppLocalizations.of(context)!.home),

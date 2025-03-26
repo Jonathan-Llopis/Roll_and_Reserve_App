@@ -1,13 +1,12 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/domain/entities/user_entity.dart';
+import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reviews/reviews_bloc.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/presentation/widgets/screen_components/user_avatar.dart';
 
 class CardUser extends StatelessWidget {
   final UserEntity user;
@@ -23,6 +22,7 @@ class CardUser extends StatelessWidget {
   Widget build(BuildContext context) {
     final ReviewBloc reviewBloc = BlocProvider.of<ReviewBloc>(context);
     final ThemeData theme = Theme.of(context);
+    final LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
@@ -45,12 +45,14 @@ class CardUser extends StatelessWidget {
                 width: 1,
               ),
             ),
-            color: _getCardColor(context),
+            color: loginBloc.state.user!.role == 0
+                ? _getRoleColor(context)
+                : _getCardColor(context),
             child: Padding(
               padding: const EdgeInsets.all(12.0),
               child: Row(
                 children: [
-                  _buildUserAvatar(),
+                  UserAvatar(user: user),
                   const SizedBox(width: 16),
                   Expanded(
                     child: Column(
@@ -69,19 +71,14 @@ class CardUser extends StatelessWidget {
                           children: [
                             buildStars(user.averageRaiting),
                             const SizedBox(width: 8),
-                            Text(
-                              '${AppLocalizations.of(context)!.rating}: ${user.averageRaiting.toStringAsFixed(1)}',
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurface
-                                    .withOpacity(0.7),
-                              ),
-                            ),
                           ],
                         ),
                         if (user.reserveConfirmation != null &&
                             isLastPlayers == null) ...[
                           const SizedBox(height: 4),
-                          _buildStatusIndicator(context),
+                          loginBloc.state.user!.role == 0
+                              ? _buildRoleIndicator(context)
+                              : _buildStatusIndicator(context),
                         ]
                       ],
                     ),
@@ -91,7 +88,17 @@ class CardUser extends StatelessWidget {
                       Icons.rate_review_outlined,
                       color: theme.colorScheme.primary,
                       size: 20,
-                    )
+                    ),
+                  if (loginBloc.state.user!.role == 0)
+                    IconButton(
+                      icon: Icon(
+                        Icons.edit,
+                        color: theme.colorScheme.primary,
+                      ),
+                      onPressed: () {
+                        mostrarUserAdminEdit(context, user.id);
+                      },
+                    ),
                 ],
               ),
             ),
@@ -103,44 +110,22 @@ class CardUser extends StatelessWidget {
 
   Color _getCardColor(BuildContext context) {
     if (isLastPlayers == true) {
-      return Theme.of(context).colorScheme.surfaceVariant;
+      return Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.8);
     }
     return user.reserveConfirmation ?? false
-        ? Color.fromARGB(255, 89, 240, 29).withOpacity(0.1)
-        : Theme.of(context).colorScheme.errorContainer;
+        ? const Color.fromARGB(255, 173, 255, 173).withOpacity(0.5)
+        : Theme.of(context).colorScheme.errorContainer.withOpacity(0.5);
   }
 
-  Widget _buildUserAvatar() {
-    return CircleAvatar(
-      radius: 28,
-      backgroundColor: Colors.grey.shade200,
-      child: ClipOval(
-        child: Image(
-          width: 56,
-          height: 56,
-          fit: BoxFit.cover,
-          image: kIsWeb
-              ? MemoryImage(user.avatar)
-              : FileImage(File(user.avatar.path)) as ImageProvider,
-          errorBuilder: (context, error, stackTrace) {
-            return Icon(
-              Icons.person_outline,
-              size: 28,
-              color: Colors.grey.shade600,
-            );
-          },
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) return child;
-            return CircularProgressIndicator(
-              value: loadingProgress.expectedTotalBytes != null
-                  ? loadingProgress.cumulativeBytesLoaded /
-                      loadingProgress.expectedTotalBytes!
-                  : null,
-            );
-          },
-        ),
-      ),
-    );
+  Color _getRoleColor(BuildContext context) {
+    switch (user.role) {
+      case 0:
+        return const Color(0xFFFFC1C1).withOpacity(0.5); // Pastel red
+      case 1:
+        return const Color(0xFFADD8E6).withOpacity(0.5); // Pastel blue
+      default:
+        return const Color(0xFFB2F2BB).withOpacity(0.5); // Pastel green
+    }
   }
 
   Widget _buildStatusIndicator(BuildContext context) {
@@ -160,6 +145,39 @@ class CardUser extends StatelessWidget {
               color: user.reserveConfirmation!
                   ? Color(0xFF00695C)
                   : Theme.of(context).colorScheme.error,
+              fontWeight: FontWeight.w500,
+            ),
+      ),
+    );
+  }
+
+  Widget _buildRoleIndicator(BuildContext context) {
+    Color roleColor;
+    switch (user.role) {
+      case 0: // Admin
+        roleColor = Colors.red.withOpacity(0.1);
+        break;
+      case 1: // Owner
+        roleColor = Colors.blue.withOpacity(0.1);
+        break;
+      default: // User
+        roleColor = Colors.green.withOpacity(0.1);
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: roleColor,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        user.role == 0
+            ? AppLocalizations.of(context)!.role_admin
+            : user.role == 1
+                ? AppLocalizations.of(context)!.role_owner
+                : AppLocalizations.of(context)!.role_user,
+        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              color: roleColor.withAlpha((10 * 255).toInt()),
               fontWeight: FontWeight.w500,
             ),
       ),

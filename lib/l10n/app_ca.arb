@@ -203,5 +203,13 @@
   "organize_tournaments_and_activities": "Organitza tornejos i activitats especials\nControla capacitats i reserves",
   "analyze_and_improve": "Analitza i Millora",
   "monitor_reservations_reviews_statistics": "Supervisa reserves, resenyes i estadístiques\nPren decisions basades en dades",
-  "go_to_home": "Anar a Inici"
+  "go_to_home": "Anar a Inici",
+  "role_admin": "Administrador",
+  "role_user": "Usuari",
+  "role_owner": "Propietari",
+  "role": "Rol",
+  "error_select_user": "Error seleccionant usuari",
+  "select_user": "Selecciona Usuari",
+  "all_users": "Aquests són tots els usuaris",
+  "all_shops": "Aquestes són totes les botigues"
 }

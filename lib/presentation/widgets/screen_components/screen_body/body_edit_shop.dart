@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:roll_and_reserve/config/theme/theme.dart';
 import 'package:roll_and_reserve/domain/entities/shop_entity.dart';
+import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
@@ -13,16 +14,17 @@ import 'package:roll_and_reserve/presentation/screens/screen_edit_shop.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/map_picker.dart';
 import 'package:roll_and_reserve/presentation/widgets/buttons/button_cu_shop.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/presentation/widgets/screen_components/user_avatar.dart';
 
 class BodyEditShop extends StatefulWidget {
-  const BodyEditShop(
-      {super.key,
-      required this.idShop,
-      required this.widget,
-    });
+  const BodyEditShop({
+    super.key,
+    required this.idShop,
+    required this.widget,
+  });
   final int? idShop;
   final ScreenEditShop widget;
- 
+
   @override
   State<BodyEditShop> createState() => _BodyEditShopState();
 }
@@ -35,6 +37,7 @@ class _BodyEditShopState extends State<BodyEditShop> {
   final TextEditingController _adressController = TextEditingController();
   final TextEditingController _longitudController = TextEditingController();
   final TextEditingController _latitudController = TextEditingController();
+  final TextEditingController _idUserController = TextEditingController();
 
   @override
   void initState() {
@@ -49,6 +52,7 @@ class _BodyEditShopState extends State<BodyEditShop> {
       _longitudController.text =
           shopEdit.longitude == 0 ? "0" : shopEdit.longitude.toString();
       _imageFile = shopEdit.logo;
+      _idUserController.text = shopEdit.ownerId;
     } else {
       _titleController.text = '';
       _adressController.text = '';
@@ -62,6 +66,7 @@ class _BodyEditShopState extends State<BodyEditShop> {
   @override
   Widget build(BuildContext context) {
     final shopBloc = BlocProvider.of<ShopBloc>(context);
+    final loginBloc = BlocProvider.of<LoginBloc>(context);
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20.0),
       child: Form(
@@ -122,6 +127,60 @@ class _BodyEditShopState extends State<BodyEditShop> {
                 ),
                 validator: (value) => basicValidation(value, context)),
             const SizedBox(height: 16),
+            DropdownButtonFormField<String>(
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.select_user,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(99),
+                ),
+                prefixIcon: Icon(Icons.person),
+              ),
+              items: loginBloc.state.users!
+                  .where((user) => user.role == 1)
+                  .map((user) {
+                return DropdownMenuItem<String>(
+                  value: user.id,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 12.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                         UserAvatar(user: user),
+                        const SizedBox(width: 12),
+                        Flexible(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                user.name,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }).toList(),
+              onChanged: (value) {
+                _idUserController.text = value!;
+              },
+              validator: (value) {
+                if (value == null) {
+                  return AppLocalizations.of(context)!.error_select_user;
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 16),
             TextFormField(
                 controller: _adressController,
                 maxLines: 2,
@@ -147,7 +206,7 @@ class _BodyEditShopState extends State<BodyEditShop> {
                     context.go('/user');
                   },
                   style: AppTheme.textButtonCancelStyle,
-                  child: Text(AppLocalizations.of(context)!.cancel),  
+                  child: Text(AppLocalizations.of(context)!.cancel),
                 ),
                 ButtonCreateUpdateShop(
                   titleController: _titleController,
@@ -156,6 +215,7 @@ class _BodyEditShopState extends State<BodyEditShop> {
                   idShop: widget.idShop!,
                   longitudController: _longitudController,
                   latitudController: _latitudController,
+                  idUserController: _idUserController,
                 ),
               ],
             ),

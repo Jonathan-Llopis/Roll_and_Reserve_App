@@ -82,6 +82,7 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
           emit(
             ShopState.success(state),
           );
+          add(GetShopsEvent());
           add(GetShopsByOwnerEvent(owner: event.shop.ownerId));
         },
       );
@@ -197,7 +198,8 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
         result.fold(
           (failure) => emit(ShopState.failure(state,
               "Fallo al obtener el total de reservas para el día ${date.day}")),
-          (reservations) => monthReservations['${date.day}/${date.month}'] = reservations,
+          (reservations) =>
+              monthReservations['${date.day}/${date.month}'] = reservations,
         );
       }
       final reversedMonthReservations = Map.fromEntries(

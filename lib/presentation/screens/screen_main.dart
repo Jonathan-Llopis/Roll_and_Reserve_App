@@ -27,6 +27,7 @@ class _ScreenMainState extends State<ScreenMain> {
     super.initState();
     NotificationService().getToken();
     BlocProvider.of<LoginBloc>(context).add(CheckAuthentication());
+
   }
 
   @override
