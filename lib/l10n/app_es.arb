@@ -161,7 +161,7 @@
   "peak_reservation_hours": "Horas Pico de Reservas",
   "most_popular_games": "Juegos Más Populares",
   "games": "Juegos",
-  "ask_ai_about_rules": "Pregunta a la IA sobre tus dudas de reglas",
+  "ask_ai_about_rules": "Pregunta a la IA sobre las reglas",
   "send_message": "Enviar un mensaje",
   "loading_chat": "Cargando chat...",
   "user_or_password_incorrect": "Usuario o contraseña incorrectos",
@@ -212,5 +212,11 @@
   "error_select_user": "Error al seleccionar usuario",
   "select_user": "Seleccionar Usuario",
   "all_users": "Estos son todos los usuarios",
-  "all_shops": "Estas son todas las tiendas"
+  "all_shops": "Estas son todas las tiendas",
+  "ai_assistant": "Asistente de IA",
+  "you": "Tú",
+  "restart_conversation": "Reiniciar Conversación",
+  "locating_you": "Localizándote...",
+  "retry": "Reintentar",
+  "tap_marker_info": "Toca un marcador para más información"
 }

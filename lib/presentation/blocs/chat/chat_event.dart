@@ -8,12 +8,14 @@ sealed class ChatEvent extends Equatable {
 final class OnChatStart extends ChatEvent {
   const OnChatStart({
     required this.context,
+    required this.message,
   });
 
   final BuildContext context;
+  final String message;
 
   @override
-  List<Object?> get props => [context];
+  List<Object?> get props => [context, ];
 }
 
 final class OnChatSendMessage extends ChatEvent {
@@ -24,4 +26,9 @@ final class OnChatSendMessage extends ChatEvent {
 
   @override
   List<Object?> get props => [message];
+}
+
+final class CleanChat extends ChatEvent {
+  @override
+  List<Object?> get props => [];
 }

@@ -35,4 +35,6 @@ class ChatState extends Equatable {
 
   factory ChatState.userMessage(ChatState state, messages) => state.copyWith(messages: messages, isLoading: false);
 
+  factory ChatState.clean(ChatState state) => state.copyWith(messages: [], isLoading: false);
+
 }

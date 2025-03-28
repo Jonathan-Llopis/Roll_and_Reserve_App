@@ -10,10 +10,10 @@ class ChatRepositoryImpl implements ChatRepository {
   ChatRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<String> startChat(BuildContext context) async {
+  Future<String> startChat(BuildContext context, String message) async {
     try {
       String prompt = getLocalizedPrompt(context);
-      return await remoteDataSource.startChat(prompt);
+      return await remoteDataSource.startChat(prompt, message);
     } catch (e) {
       throw Exception('Error starting chat: $e');
     }

@@ -160,7 +160,7 @@
   "peak_reservation_hours": "Hores Punta de Reserves",
   "most_popular_games": "Jocs Més Populars",
   "games": "Jocs",
-  "ask_ai_about_rules": "Pregunta a la IA sobre les teves preguntes de regles",
+  "ask_ai_about_rules": "Pregunta a la IA sobre les regles",
   "send_message": "Enviar un missatge",
   "loading_chat": "Carregant el xat...",
   "user_or_password_incorrect": "Usuari o contrasenya incorrecta",
@@ -211,5 +211,11 @@
   "error_select_user": "Error seleccionant usuari",
   "select_user": "Selecciona Usuari",
   "all_users": "Aquests són tots els usuaris",
-  "all_shops": "Aquestes són totes les botigues"
+  "all_shops": "Aquestes són totes les botigues",
+  "ai_assistant": "Assistent IA",
+  "you": "Tu",
+  "restart_conversation": "Reiniciar Conversa",
+  "locating_you": "Localitzant-te...",
+  "retry": "Reintentar",
+  "tap_marker_info": "Toca un marcador per a més informació"
 }

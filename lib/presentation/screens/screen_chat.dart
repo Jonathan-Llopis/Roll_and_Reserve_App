@@ -5,6 +5,9 @@ import 'package:roll_and_reserve/presentation/blocs/chat/chat_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/chat/chat_state.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/presentation/widgets/screen_components/input_text.dart';
+
+late bool isRestarting;
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -15,13 +18,10 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final FocusNode _focusNode = FocusNode();
+
   @override
   void initState() {
-    ChatBloc chatBloc = context.read<ChatBloc>();
-    if (chatBloc.state.messages.isEmpty) {
-      context.read<ChatBloc>().add(OnChatStart(context: context));
-    }
-
+    isRestarting = false;
     super.initState();
   }
 
@@ -33,122 +33,54 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
-        appBar: AppBar(
-            title: Text(AppLocalizations.of(context)!.ask_ai_about_rules),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: IconButton(
-                icon: Icon(Icons.refresh),
-                onPressed: () {
-                  context.read<ChatBloc>().add(OnChatStart(context: context));
-                },
-              ),
+      appBar: AppBar(
+        title: Row(
+          children: [
+            Icon(Icons.auto_awesome, color: theme.colorScheme.primary),
+            const SizedBox(width: 12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  AppLocalizations.of(context)!.ask_ai_about_rules,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ),
+                ),
+                Text(
+                  AppLocalizations.of(context)!.ai_assistant,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
-        body: Column(
-          children: [
-            Expanded(
-              child: BodyMessages(),
-            ),
-            InputText(
-              focusNode: _focusNode,
-            ),
-          ],
-        )
-        );
-  }
-}
-class InputText extends StatelessWidget {
-  const InputText({super.key, required this.focusNode});
-
-  final FocusNode focusNode;
-
-  @override
-  Widget build(BuildContext context) {
-    TextEditingController textController = TextEditingController();
-    return BlocBuilder<ChatBloc, ChatState>(
-      builder: (context, state) {
-        return Card(
-          margin: EdgeInsets.zero,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 10,
-              horizontal: 15,
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxHeight: 150,
-                    ),
-                    child: Scrollbar(
-                      child: TextField(
-                        autofocus: true,
-                        focusNode: focusNode,
-                        controller: textController,
-                        maxLines: 6,
-                        minLines: 1,
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.all(15),
-                          hintText: AppLocalizations.of(context)!.send_message,
-                          border: OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(14),
-                            ),
-                            borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.secondary,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(14),
-                            ),
-                            borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.secondary,
-                            ),
-                          ),
-                        ),
-                        onSubmitted: (_) {
-                          context.read<ChatBloc>().add(
-                                OnChatSendMessage(
-                                  message: textController.text,
-                                ),
-                              );
-                          textController.clear();
-                          focusNode.requestFocus();
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox.square(
-                  dimension: 15,
-                ),
-                state.isLoading
-                    ? CircularProgressIndicator()
-                    : IconButton(
-                        onPressed: () {
-                          context.read<ChatBloc>().add(
-                                OnChatSendMessage(
-                                  message: textController.text,
-                                ),
-                              );
-                          textController.clear();
-                        },
-                        icon: Icon(
-                          Icons.send,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                      )
-              ],
-            ),
+        actions: [
+          Tooltip(
+            message: AppLocalizations.of(context)!.restart_conversation,
+            child: IconButton(
+                icon: Icon(Icons.restart_alt, size: 28),
+                onPressed: () {
+                  context.read<ChatBloc>().add(CleanChat());
+                  setState(() => isRestarting = true);
+                }),
+          )
+        ],
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: BodyMessages(),
           ),
-        );
-      },
+          InputText(focusNode: _focusNode),
+        ],
+      ),
     );
   }
 }
@@ -158,33 +90,52 @@ class BodyMessages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ScrollController scrollController = ScrollController();
+    final scrollController = ScrollController();
 
     return BlocBuilder<ChatBloc, ChatState>(
       builder: (context, state) {
-        if (state.messages.isNotEmpty) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (scrollController.hasClients) {
-              scrollController
-                  .jumpTo(scrollController.position.maxScrollExtent);
-            }
-          });
-
-          return ListView.builder(
-            controller: scrollController,
-            itemBuilder: (context, index) {
-              final text = state.messages[index]['text'] ?? '';
-
-              return ChatMessage(
-                text: text,
-                isFromUser: state.messages[index]['role'] == 'user',
-              );
-            },
-            itemCount: state.messages.length,
+        if (state.isLoading && isRestarting) {
+          isRestarting = false;
+          return Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(
+                    color: Theme.of(context).colorScheme.primary),
+                const SizedBox(height: 16),
+                Text(
+                  AppLocalizations.of(context)!.loading_chat,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.6),
+                      ),
+                )
+              ],
+            ),
           );
-        } else {
-          return Center(child: Text(AppLocalizations.of(context)!.loading_chat));
         }
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (scrollController.hasClients) {
+            scrollController.animateTo(
+              scrollController.position.maxScrollExtent,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOut,
+            );
+          }
+        });
+
+        return ListView.builder(
+          controller: scrollController,
+          padding: const EdgeInsets.only(top: 16, bottom: 8),
+          itemCount: state.messages.length,
+          itemBuilder: (context, index) => ChatMessage(
+            text: state.messages[index]['text'] ?? '',
+            isFromUser: state.messages[index]['role'] == 'user',
+          ),
+        );
       },
     );
   }
@@ -202,8 +153,11 @@ class ChatMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         mainAxisAlignment:
             isFromUser ? MainAxisAlignment.end : MainAxisAlignment.start,
@@ -213,61 +167,54 @@ class ChatMessage extends StatelessWidget {
               constraints: const BoxConstraints(maxWidth: 600),
               decoration: BoxDecoration(
                 color: isFromUser
-                    ? const Color.fromARGB(
-                        255, 173, 216, 230)
-                    : const Color.fromARGB(
-                        255, 207, 206, 206), 
+                    ? colors.primaryContainer
+                    : colors.surfaceVariant,
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(isFromUser ? 20 : 5),
-                  topRight: Radius.circular(isFromUser ? 5 : 20),
-                  bottomLeft: Radius.circular(20),
-                  bottomRight: Radius.circular(20),
-                ),
-                border: Border.all(
-                  color: isFromUser
-                      ? Colors.blue.shade200 
-                      : Colors.grey.shade300,
-                  width: 1,
+                  topLeft: const Radius.circular(20),
+                  topRight: const Radius.circular(20),
+                  bottomLeft: Radius.circular(isFromUser ? 20 : 4),
+                  bottomRight: Radius.circular(isFromUser ? 4 : 20),
                 ),
                 boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 8,
-                    offset: const Offset(2, 4),
-                  ),
+                  if (!isFromUser)
+                    BoxShadow(
+                      color: colors.shadow.withOpacity(0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
                 ],
               ),
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-              margin: const EdgeInsets.only(bottom: 8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    isFromUser ? 'You' : 'Bot',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 14,
+                    isFromUser
+                        ? AppLocalizations.of(context)!.you
+                        : AppLocalizations.of(context)!.ai_assistant,
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
                       color: isFromUser
-                          ? Colors.blue
-                              .shade800 
-                          : Colors.grey.shade800,
+                          ? colors.onPrimaryContainer
+                          : colors.onSurfaceVariant,
                     ),
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 8),
                   MarkdownBody(
                     data: text,
                     styleSheet: MarkdownStyleSheet(
-                      p: TextStyle(
-                        fontSize: 16,
-                        height: 1.5,
+                      p: theme.textTheme.bodyLarge?.copyWith(
                         color: isFromUser
-                            ? Colors.blue
-                                .shade900 
-                            : Colors
-                                .grey.shade900, 
+                            ? colors.onPrimaryContainer
+                            : colors.onSurface,
+                        height: 1.5,
                       ),
-                      textAlign:
-                          WrapAlignment.spaceBetween,
+                      a: TextStyle(color: colors.primary),
+                      code: TextStyle(
+                        backgroundColor: colors.surfaceVariant,
+                        color: colors.onSurface,
+                        fontFamily: 'FiraCode',
+                      ),
                     ),
                   ),
                 ],

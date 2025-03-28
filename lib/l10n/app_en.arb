@@ -782,7 +782,7 @@
   "@games": {
     "description": "Label for games"
   },
-  "ask_ai_about_rules": "Ask the AI about your rules questions",
+  "ask_ai_about_rules": "Ask AI about rules",
   "@ask_ai_about_rules": {
     "description": "Prompt to ask the AI about rules questions"
   },
@@ -1002,6 +1002,30 @@
   "all_shops": "These are all the shops",
   "@all_shops": {
     "description": "Message indicating all the shops"
+  }, 
+  "ai_assistant": "AI Assistant",
+  "@ai_assistant": {
+    "description": "Label for AI Assistant"
+  },
+  "you": "You",
+  "@you": {
+    "description": "Label for the user"
+  },
+  "restart_conversation": "Restart Conversation",
+  "@restart_conversation": {
+    "description": "Label for restarting the conversation"
+  },
+  "locating_you": "Locating you...",
+  "@locating_you": {
+    "description": "Message indicating that the app is locating the user"
+  },
+  "retry": "Retry",
+  "@retry": {
+    "description": "Label for retry button"
+  },
+  "tap_marker_info": "Tap on a marker for more information",
+  "@tap_marker_info": {
+    "description": "Message prompting the user to tap on a marker for more information"
   }
 }
 

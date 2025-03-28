@@ -160,7 +160,7 @@
       "peak_reservation_hours": "Heures de Réservation de Pointe",
       "most_popular_games": "Jeux les Plus Populaires",
       "games": "Jeux",
-      "ask_ai_about_rules": "Demandez à l'IA vos questions sur les règles",
+      "ask_ai_about_rules": "Demandez à l'IA vos \nquestions sur les règles",
       "send_message": "Envoyer un message",
       "loading_chat": "Chargement du chat...",
       "user_or_password_incorrect": "Utilisateur ou mot de passe incorrect",
@@ -211,5 +211,11 @@
       "error_select_user": "Erreur lors de la sélection de l'utilisateur",
       "select_user": "Sélectionner un utilisateur",
       "all_users": "Voici tous les utilisateurs",
-      "all_shops": "Voici tous les magasins"
+      "all_shops": "Voici tous les magasins",
+      "ai_assistant": "Assistant IA",
+      "you": "Vous",
+      "restart_conversation": "Redémarrer la Conversation",
+      "locating_you": "Localisation en cours...",
+      "retry": "Réessayer",
+      "tap_marker_info": "Appuyez sur un marqueur pour plus d'informations"
 }

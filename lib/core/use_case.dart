@@ -76,7 +76,8 @@ class SendMessageParams {
 }
 class Context{
   final BuildContext context;
-  Context(this.context);
+  final String message;
+  Context(this.context, {required this.message});
 
   static void go(String s) {}
 }
