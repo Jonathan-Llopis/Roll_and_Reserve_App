@@ -218,5 +218,11 @@
   "restart_conversation": "Reiniciar Conversación",
   "locating_you": "Localizándote...",
   "retry": "Reintentar",
-  "tap_marker_info": "Toca un marcador para más información"
+  "tap_marker_info": "Toca un marcador para más información",
+  "play_role_with_ai": "Jugar Rol con IA",
+  "choose_world_adventure": "Elige el mundo donde quieres vivir tu aventura",
+  "describe_your_character": "Describe tu personaje",
+  "enter_character_description": "Introduce la descripción del personaje",
+  "character_description": "Descripción del personaje",
+  "start_game": "Comenzar Juego"
 }

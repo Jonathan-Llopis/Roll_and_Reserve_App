@@ -1,23 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/chat/chat_bloc.dart';
-import 'package:roll_and_reserve/presentation/blocs/chat/chat_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/chat/chat_state.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_character_description.dart';
+import 'package:roll_and_reserve/presentation/widgets/screen_components/drawer_character_rol.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/input_text.dart';
 
 late bool isRestarting;
 
-class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+class RolScreen extends StatefulWidget {
+  const RolScreen({super.key});
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
+  State<RolScreen> createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ChatScreenState extends State<RolScreen> {
   final FocusNode _focusNode = FocusNode();
+  final TextEditingController _controllerDescription = TextEditingController();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return DialogCharacterDescription(
+              controllerDescription: _controllerDescription);
+        },
+      );
+    });
+  }
 
   @override
   void initState() {
@@ -34,54 +51,44 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    ChatBloc chatBloc = BlocProvider.of<ChatBloc>(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
+        appBar: AppBar(
+          title: Row(
+            children: [
+              Icon(Icons.auto_awesome, color: theme.colorScheme.primary),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!.play_role_with_ai,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        body: Column(
           children: [
-            Icon(Icons.auto_awesome, color: theme.colorScheme.primary),
-            const SizedBox(width: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  AppLocalizations.of(context)!.ask_ai_about_rules,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14,
-                  ),
-                ),
-                Text(
-                  AppLocalizations.of(context)!.ai_assistant,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurface.withOpacity(0.6),
-                  ),
-                ),
-              ],
+            Expanded(
+              child: BodyMessages(),
             ),
+            InputText(focusNode: _focusNode, isRolPlay: true),
           ],
         ),
-        actions: [
-          Tooltip(
-            message: AppLocalizations.of(context)!.restart_conversation,
-            child: IconButton(
-                icon: Icon(Icons.restart_alt, size: 28),
-                onPressed: () {
-                  context.read<ChatBloc>().add(CleanChat());
-                  setState(() => isRestarting = true);
-                }),
-          )
-        ],
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: BodyMessages(),
-          ),
-          InputText(focusNode: _focusNode, isRolPlay: false),
-        ],
-      ),
-    );
+        endDrawer: BlocBuilder<ChatBloc, ChatState>(
+          builder: (context, state) {
+            return DrawerCharacterRol(
+              characterData:  chatBloc.state.character,
+            );
+          },
+        ));
   }
 }
 
@@ -94,7 +101,7 @@ class BodyMessages extends StatelessWidget {
 
     return BlocBuilder<ChatBloc, ChatState>(
       builder: (context, state) {
-        if (state.isLoading && isRestarting) {
+        if (state.isLoading && isRestarting || state.messagesRol.isEmpty) {
           isRestarting = false;
           return Center(
             child: Column(
@@ -130,10 +137,10 @@ class BodyMessages extends StatelessWidget {
         return ListView.builder(
           controller: scrollController,
           padding: const EdgeInsets.only(top: 16, bottom: 8),
-          itemCount: state.messages.length,
+          itemCount: state.messagesRol.length,
           itemBuilder: (context, index) => ChatMessage(
-            text: state.messages[index]['text'] ?? '',
-            isFromUser: state.messages[index]['role'] == 'user',
+            text: state.messagesRol[index]['text'] ?? '',
+            isFromUser: state.messagesRol[index]['role'] == 'user',
           ),
         );
       },

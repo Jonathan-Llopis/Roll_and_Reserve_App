@@ -217,5 +217,11 @@
   "restart_conversation": "Reiniciar Conversa",
   "locating_you": "Localitzant-te...",
   "retry": "Reintentar",
-  "tap_marker_info": "Toca un marcador per a més informació"
+  "tap_marker_info": "Toca un marcador per a més informació",
+  "play_role_with_ai": "Jugar Rol amb IA",
+  "choose_world_adventure": "Tria el món on vols viure la teva aventura",
+  "describe_your_character": "Descriu el teu personatge",
+  "enter_character_description": "Introdueix la descripció del personatge",
+  "character_description": "Descripció del personatge",
+  "start_game": "Començar Joc"
 }

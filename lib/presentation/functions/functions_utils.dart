@@ -163,3 +163,4 @@ String convertMonthRangeToText(String dateRange, List<String> monthNames) {
 
   return '$startDay/$startMonthName al $endDay/$endMonthName';
 }
+

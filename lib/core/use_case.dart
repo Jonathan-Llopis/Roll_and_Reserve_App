@@ -74,10 +74,18 @@ class SendMessageParams {
   final String message;
   SendMessageParams(this.message);
 }
-class Context{
+class StartChatParams {
   final BuildContext context;
   final String message;
-  Context(this.context, {required this.message});
+  StartChatParams(this.context, {required this.message});
+
+  static void go(String s) {}
+}
+
+class StartRolPlayParams {
+  final BuildContext context;
+  final String character;
+  StartRolPlayParams(this.context, {required this.character});
 
   static void go(String s) {}
 }

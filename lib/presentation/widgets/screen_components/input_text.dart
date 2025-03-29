@@ -9,8 +9,9 @@ import 'package:speech_to_text/speech_to_text.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class InputText extends StatefulWidget {
-  const InputText({super.key, required this.focusNode});
-
+  const InputText(
+      {super.key, required this.focusNode, required this.isRolPlay});
+  final bool isRolPlay;
   final FocusNode focusNode;
 
   @override
@@ -87,10 +88,9 @@ class _InputTextState extends State<InputText> {
       textController.text = result.recognizedWords;
       if (result.finalResult) {
         textController.text = result.recognizedWords;
-        _sendMessage(context, textController);
+        _sendMessage(context, textController, widget.isRolPlay);
       }
     });
-    
   }
 
   @override
@@ -130,7 +130,7 @@ class _InputTextState extends State<InputText> {
                       fillColor: Colors.grey[200],
                       filled: true,
                     ),
-                    onSubmitted: (_) => _sendMessage(context, textController),
+                    onSubmitted: (_) => _sendMessage(context, textController, widget.isRolPlay),
                   ),
                 ),
               ),
@@ -173,7 +173,7 @@ class _InputTextState extends State<InputText> {
                             strokeWidth: 2, color: theme.colorScheme.primary),
                       )
                     : IconButton.filled(
-                        onPressed: () => _sendMessage(context, textController),
+                        onPressed: () => _sendMessage(context, textController, widget.isRolPlay),
                         icon: Icon(Icons.send_rounded,
                             color: theme.colorScheme.onPrimary),
                         style: IconButton.styleFrom(
@@ -190,17 +190,28 @@ class _InputTextState extends State<InputText> {
     );
   }
 
-  void _sendMessage(BuildContext context, TextEditingController controller) {
-    if (context.read<ChatBloc>().state.messages.isEmpty) {
+  void _sendMessage(
+      BuildContext context, TextEditingController controller, bool isRolPlay) {
+    if (isRolPlay) {
       context
           .read<ChatBloc>()
-          .add(OnChatStart(context: context, message: controller.text));
+          .add(OnRolPlaySendMessage(message: controller.text));
       controller.clear();
       widget.focusNode.requestFocus();
     } else {
-      context.read<ChatBloc>().add(OnChatSendMessage(message: controller.text));
-      controller.clear();
-      widget.focusNode.requestFocus();
+      if (context.read<ChatBloc>().state.messages.isEmpty) {
+        context
+            .read<ChatBloc>()
+            .add(OnChatStart(context: context, message: controller.text));
+        controller.clear();
+        widget.focusNode.requestFocus();
+      } else {
+        context
+            .read<ChatBloc>()
+            .add(OnChatSendMessage(message: controller.text));
+        controller.clear();
+        widget.focusNode.requestFocus();
+      }
     }
   }
 }

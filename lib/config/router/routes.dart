@@ -19,6 +19,7 @@ import 'package:roll_and_reserve/presentation/screens/screen_reserves_table.dart
 import 'package:roll_and_reserve/presentation/screens/screen_reserves_user.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_review_shop.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_edit_shop.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_rol.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_shop_events.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_stadistics.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_tables_shop.dart';
@@ -101,7 +102,7 @@ final GoRouter router = GoRouter(
       routes: [
         GoRoute(
           name: 'admin',
-          path: 'admin',
+          path: '/admin',
           pageBuilder: (context, state) => CustomTransitionPage(
             key: state.pageKey,
             child: ScreenAdmin(appBar: appBar),
@@ -113,7 +114,7 @@ final GoRouter router = GoRouter(
         ),
         GoRoute(
           name: 'editShop',
-          path: 'shop_edit/:idEditShop',
+          path: '/shop_edit/:idEditShop',
           pageBuilder: (context, state) {
             final shopId = int.parse(state.pathParameters['idEditShop']!);
             return CustomTransitionPage(
@@ -128,11 +129,25 @@ final GoRouter router = GoRouter(
         ),
         GoRoute(
           name: 'chat',
-          path: 'chat',
+          path: '/chat',
           pageBuilder: (context, state) {
             return CustomTransitionPage(
               key: state.pageKey,
               child: ChatScreen(),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                return child;
+              },
+            );
+          },
+        ),
+         GoRoute(
+          name: 'rolChat',
+          path: '/rolChat',
+          pageBuilder: (context, state) {
+            return CustomTransitionPage(
+              key: state.pageKey,
+              child: RolScreen(),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {
                 return child;
@@ -334,6 +349,7 @@ final GoRouter router = GoRouter(
             final sharedPreferences = await SharedPreferences.getInstance();
             final isFirstTime =
                 sharedPreferences.getBool('isFirstTime') ?? true;
+                
             if (state.matchedLocation == '/login' ||
                 state.matchedLocation == '/' ||
                 state.matchedLocation == '/user') {

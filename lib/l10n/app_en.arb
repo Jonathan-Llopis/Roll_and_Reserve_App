@@ -1026,6 +1026,30 @@
   "tap_marker_info": "Tap on a marker for more information",
   "@tap_marker_info": {
     "description": "Message prompting the user to tap on a marker for more information"
+  },
+  "play_role_with_ai": "Play Role with AI",
+  "@play_role_with_ai": {
+    "description": "Label for playing a role-playing game with AI"
+  },
+  "choose_world_adventure": "Choose the world where you want to live your adventure",
+  "@choose_world_adventure": {
+    "description": "Prompt to choose the world for the user's adventure"
+  },
+  "describe_your_character": "Describe Your Character",
+  "@describe_your_character": {
+    "description": "Label for describing your character"
+  },
+  "enter_character_description": "Enter Character Description",
+  "@enter_character_description": {
+    "description": "Prompt to enter the character description"
+  },
+  "character_description": "Character Description",
+  "@character_description": {
+    "description": "Label for character description"
+  },
+  "start_game": "Start Game",
+  "@start_game": {
+    "description": "Label for starting the game"
   }
 }
 
