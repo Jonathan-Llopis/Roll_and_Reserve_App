@@ -24,6 +24,8 @@ class _ChatScreenState extends State<RolScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    ChatBloc chatBloc = BlocProvider.of<ChatBloc>(context);
+    if(chatBloc.state.messagesRol.isEmpty){
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showDialog(
         context: context,
@@ -34,6 +36,8 @@ class _ChatScreenState extends State<RolScreen> {
         },
       );
     });
+    }
+    
   }
 
   @override

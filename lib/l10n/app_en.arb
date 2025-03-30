@@ -1050,6 +1050,14 @@
   "start_game": "Start Game",
   "@start_game": {
     "description": "Label for starting the game"
+  },
+  "confirm_delete_adventure": "Are you sure you want to delete this adventure? This action cannot be undone.",
+  "@confirm_delete_adventure": {
+    "description": "Confirmation message for deleting an adventure"
+  },
+  "delete_adventure": "Delete Adventure",
+  "@delete_adventure": {
+    "description": "Label for deleting an adventure"
   }
 }
 

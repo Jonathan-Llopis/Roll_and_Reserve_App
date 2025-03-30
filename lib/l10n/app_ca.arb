@@ -223,5 +223,7 @@
   "describe_your_character": "Descriu el teu personatge",
   "enter_character_description": "Introdueix la descripció del personatge",
   "character_description": "Descripció del personatge",
-  "start_game": "Començar Joc"
+  "start_game": "Començar Joc",
+  "confirm_delete_adventure": "Estàs segur que vols eliminar aquesta aventura? Aquesta acció no es pot desfer.",
+  "delete_adventure": "Eliminar Aventura"
 }

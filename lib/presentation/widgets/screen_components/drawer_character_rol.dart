@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:roll_and_reserve/presentation/blocs/chat/chat_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/chat/chat_event.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DrawerCharacterRol extends StatelessWidget {
   final Map<String, dynamic> characterData;
@@ -37,6 +41,51 @@ class DrawerCharacterRol extends StatelessWidget {
           _buildEquipmentList(character),
           if (companion != null) _buildSectionTitle('Compañero'),
           if (companion != null) _buildCompanionInfo(companion),
+            const Divider(
+            thickness: 2,
+            color: Colors.brown,
+            ),
+            Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: ElevatedButton.icon(
+              onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                return AlertDialog(
+                  content:  Text(
+                   AppLocalizations.of(context)!.confirm_delete_adventure),
+                  actions: [
+                  TextButton(
+                    onPressed: () {
+                    Navigator.of(context).pop();
+                    },
+                    child: Text(AppLocalizations.of(context)!.cancel),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                    context.read<ChatBloc>().add(CleanRolPlay());
+                    Navigator.of(context).pop();
+                    },
+                    child:  Text(
+                   AppLocalizations.of(context)!.accept,
+                    style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+                  ],
+                );
+                },
+              );
+              },
+              icon: const Icon(Icons.delete, color: Colors.white),
+              label:  Text(AppLocalizations.of(context)!.delete_adventure),
+              style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              ),
+            ),
+            ),
         ],
       ),
     );

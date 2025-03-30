@@ -224,5 +224,7 @@
   "describe_your_character": "Describe tu personaje",
   "enter_character_description": "Introduce la descripción del personaje",
   "character_description": "Descripción del personaje",
-  "start_game": "Comenzar Juego"
+  "start_game": "Comenzar Juego",
+  "confirm_delete_adventure": "¿Estás seguro de que deseas eliminar esta aventura? Esta acción no se puede deshacer.",
+  "delete_adventure": "Eliminar Aventura"
 }
