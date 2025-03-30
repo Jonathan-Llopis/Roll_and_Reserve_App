@@ -63,7 +63,6 @@ class UserRespositoryImpl implements UserRespository {
 
       return Right(usuerDataBase.toUserEntity(avatarFile, null));
     } catch (e) {
-      print('Error during Google Sign-In: $e');
       return Left(AuthFailure());
     }
   }

@@ -37,6 +37,7 @@ class DialogLogOut extends StatelessWidget {
           TextButton(
             style: AppTheme.textButtonAcceptStyle,
             onPressed: () {
+              
               context.read<LoginBloc>().add(LogoutButtonPressed());
               context.go('/login');
             },

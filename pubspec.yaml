@@ -104,6 +104,7 @@ flutter:
     - assets/animation/dragon_animations.riv
     - assets/images/google.png
     - assets/icon/logo.png
+    - assets/icon/logo_splash.png
     - assets/images/appbar_back.jpg
     - assets/images/error-image.png
     - .env
@@ -155,22 +156,25 @@ flutter_launcher_icons:
 
 flutter_native_splash:
   color: "#1d18ad"
-  image: assets/icon/logo.png
-  branding: assets/icon/logo.png
+  image: assets/icon/logo_splash.png
   color_dark: "#1d18ad"
-  image_dark: assets/icon/logo.png
-  branding_dark: assets/icon/logo.png
-
+  image_dark: assets/icon/logo_splash.png
   android_12:
-    image: assets/icon/logo.png
-    icon_background_color: "#1d18ad"
-    image_dark: assets/icon/logo.png
+    color: "#1d18ad"
+    image: assets/icon/logo_splash.png
+    image_dark: assets/icon/logo_splash.png
     icon_background_color_dark: "#1d18ad"
+    fullscreen: true
+
+    
 
   web: false
   android: true
   ios: true
+  android_gravity: fill
+  fullscreen: true
+
 
 android_notification_icons:
   image_path: 'assets/icon/icon_notification.png'
-  icon_name: 'ic_notification' # optional
+  icon_name: 'ic_notification'

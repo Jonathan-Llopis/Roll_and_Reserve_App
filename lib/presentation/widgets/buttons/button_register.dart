@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:roll_and_reserve/config/theme/theme.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
-import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ButtonRegister extends StatelessWidget {
@@ -24,36 +23,30 @@ class ButtonRegister extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<LoginBloc, LoginState>(
-      listener: (context, state) {
-        if (state.isEmailUsed != null && state.isNameUsed != null) {
-          if (state.isEmailUsed! || state.isNameUsed!) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content:
-                    Text(AppLocalizations.of(context)!.email_or_username_exists),
-              ),
-            );
-          }
-          if (formKey.currentState!.validate()) {
-            context.read<LoginBloc>().add(ButtonRegisterPressed(
-                email: emailController.text,
-                password: passwordController.text,
-                name: nameController.text,
-                username: userNameController.text));
-            context.go('/login');
-          }
-        }
+    return ElevatedButton(
+      onPressed: () async {
+        final loginBloc = context.read<LoginBloc>();
+        loginBloc.add(IsEmailUserUsed(
+            email: emailController.text, name: nameController.text));
+            do {
+              await Future.delayed(const Duration(milliseconds: 100));
+            } while (loginBloc.state.isLoading);
+
+            if (loginBloc.state.isEmailUsed != null &&
+                formKey.currentState!.validate()) {
+              loginBloc.add(ButtonRegisterPressed(
+                  email: emailController.text,
+                  password: passwordController.text,
+                  name: nameController.text,
+                  username: userNameController.text));
+              if (context.mounted) {
+                context.go('/user');
+              }
+            }
       },
-      child: ElevatedButton(
-        onPressed: () {
-          final loginBloc = context.read<LoginBloc>();
-          loginBloc.add(IsEmailUserUsed(
-              email: emailController.text, name: nameController.text));
-        },
-        style: AppTheme.elevatedButtonAcceptStyle,
-        child:  Text(AppLocalizations.of(context)!.register, style: AppTheme.buttonStyle),
-      ),
+      style: AppTheme.elevatedButtonAcceptStyle,
+      child: Text(AppLocalizations.of(context)!.register,
+          style: AppTheme.buttonStyle),
     );
   }
 }

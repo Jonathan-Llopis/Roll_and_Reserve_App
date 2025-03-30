@@ -3,9 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:roll_and_reserve/config/router/routes.dart';
 import 'package:roll_and_reserve/domain/entities/user_entity.dart';
+import 'package:roll_and_reserve/domain/repositories/user_repository.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/injection.dart' as di;
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -17,8 +20,10 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final introKey = GlobalKey<IntroductionScreenState>();
   late UserEntity user;
+
   @override
   void initState() {
+    BlocProvider.of<LoginBloc>(context).add(CheckAuthentication());
     LoginBloc loginBloc = context.read<LoginBloc>();
     user = loginBloc.state.user!;
     super.initState();
@@ -27,6 +32,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   void _onIntroEnd(context) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isFirstTime', false);
+    await di.sl<UserRespository>().saveUserField(user.id, 'isFirstTime', false);
     router.go('/user');
   }
 
@@ -57,8 +63,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-   
-
     const pageDecoration = PageDecoration(
       titleTextStyle: TextStyle(
         fontSize: 28.0,
@@ -78,7 +82,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       globalBackgroundColor: const Color(0xFF2D2D2D),
       pages: [
         PageViewModel(
-          title: AppLocalizations.of(context)!.welcome_to_roll_and_reserve(user.name),
+          title: AppLocalizations.of(context)!
+              .welcome_to_roll_and_reserve(user.name),
           body: AppLocalizations.of(context)!.find_your_ideal_game_table,
           image: _buildImage('assets/icon/logo.png'),
           decoration: pageDecoration,
@@ -97,7 +102,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         ),
         PageViewModel(
           title: AppLocalizations.of(context)!.manage_your_experience,
-          body: AppLocalizations.of(context)!.control_reservations_reviews_settings,
+          body: AppLocalizations.of(context)!
+              .control_reservations_reviews_settings,
           image: _buildImage('assets/onBoarding/onboarding4.jpeg'),
           decoration: pageDecoration,
         ),
@@ -105,7 +111,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       onDone: () => _onIntroEnd(context),
       onSkip: () => _onIntroEnd(context),
       showSkipButton: true,
-      skip: Text(AppLocalizations.of(context)!.skip, style: const TextStyle(color: Colors.grey)),
+      skip: Text(AppLocalizations.of(context)!.skip,
+          style: const TextStyle(color: Colors.grey)),
       next: const Icon(Icons.arrow_forward, color: Color(0xFF00FF88)),
       done: Text(AppLocalizations.of(context)!.get_started,
           style: const TextStyle(

@@ -4,6 +4,7 @@ import 'package:roll_and_reserve/domain/repositories/user_repository.dart';
 import 'package:roll_and_reserve/main.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
+import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_admin.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_chat.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_create_event.dart';
@@ -14,7 +15,6 @@ import 'package:roll_and_reserve/presentation/screens/screen_map_shops.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_login.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_owner_onboard.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_register.dart';
-import 'package:roll_and_reserve/presentation/screens/screen_reserve.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_reserves_table.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_reserves_user.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_review_shop.dart';
@@ -25,7 +25,6 @@ import 'package:roll_and_reserve/presentation/screens/screen_stadistics.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_tables_shop.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_main.dart';
 import 'package:go_router/go_router.dart';
-import 'package:roll_and_reserve/presentation/screens/screen_transition.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_user_onboarding.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/default_app_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -93,25 +92,21 @@ final GoRouter router = GoRouter(
       name: 'user',
       path: '/user',
       pageBuilder: (context, state) => CustomTransitionPage(
-        key: state.pageKey,
-        child: ScreenMain(appBar: appBar),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return child;
+      key: state.pageKey,
+      child: BlocBuilder<LoginBloc, LoginState>(
+        builder: (context, loginState) {
+        if (loginState.user != null && loginState.user!.role == 0) {
+          return ScreenAdmin(appBar: appBar);
+        } else {
+          return ScreenMain(appBar: appBar);
+        }
         },
       ),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        return child;
+      },
+      ),
       routes: [
-        GoRoute(
-          name: 'admin',
-          path: '/admin',
-          pageBuilder: (context, state) => CustomTransitionPage(
-            key: state.pageKey,
-            child: ScreenAdmin(appBar: appBar),
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-              return child;
-            },
-          ),
-        ),
         GoRoute(
           name: 'editShop',
           path: '/shop_edit/:idEditShop',
@@ -334,7 +329,6 @@ final GoRouter router = GoRouter(
     final isLoggedIn = await di.sl<UserRespository>().isLoggedIn();
     final sharedPreferences = await SharedPreferences.getInstance();
     final email = sharedPreferences.getString('email');
-    LoginBloc loginBloc = context.read<LoginBloc>();
     BlocProvider.of<LoginBloc>(context).add(CheckAuthentication());
 
     if (!state.matchedLocation.contains("/login") && email == null) {
@@ -349,23 +343,11 @@ final GoRouter router = GoRouter(
             final sharedPreferences = await SharedPreferences.getInstance();
             final isFirstTime =
                 sharedPreferences.getBool('isFirstTime') ?? true;
-                
-            if (state.matchedLocation == '/login' ||
-                state.matchedLocation == '/' ||
-                state.matchedLocation == '/user') {
-              if (loggedIn.role == 0) {
-                return '/user/admin';
-              }
-            }
             if (isFirstTime && loggedIn.role == 1) {
-              await di
-                  .sl<UserRespository>()
-                  .saveUserField(loggedIn.id, 'isFirstTime', false);
+
               return '/ownerOnBoard';
             } else if (isFirstTime && loggedIn.role == 2) {
-              await di
-                  .sl<UserRespository>()
-                  .saveUserField(loggedIn.id, 'isFirstTime', false);
+
               return '/userOnBoard';
             } else {
               return state.matchedLocation;

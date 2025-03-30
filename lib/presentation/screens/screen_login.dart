@@ -75,7 +75,7 @@ class _ScreenLoginState extends State<ScreenLogin> {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
               child: BlocConsumer<LoginBloc, LoginState>(
                 listener: (context, state) {
-                  if (state.errorMessage != null) {
+                  if (state.errorMessage != null && state.email != null) {
                     ElegantNotification.error(
                       width: 360,
                       isDismissable: false,

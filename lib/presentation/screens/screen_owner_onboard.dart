@@ -3,9 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:roll_and_reserve/config/router/routes.dart';
 import 'package:roll_and_reserve/domain/entities/user_entity.dart';
+import 'package:roll_and_reserve/domain/repositories/user_repository.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/injection.dart' as di;
 
 class OnboardingDuenioScreen extends StatefulWidget {
   const OnboardingDuenioScreen({super.key});
@@ -19,15 +22,21 @@ class _OnboardingDuenioScreenState extends State<OnboardingDuenioScreen> {
   late UserEntity user;
   @override
   void initState() {
-    LoginBloc loginBloc = context.read<LoginBloc>();
-    user = loginBloc.state.user!;
+    BlocProvider.of<LoginBloc>(context).add(CheckAuthentication());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      LoginBloc loginBloc = context.read<LoginBloc>();
+      setState(() {
+        user = loginBloc.state.user!;
+      });
+    });
     super.initState();
   }
 
   void _onIntroEnd(context) async {
     final prefs = await SharedPreferences.getInstance();
-     await prefs.setBool('isFirstTime', false);
-     router.go('/user');
+    await prefs.setBool('isFirstTime', false);
+    await di.sl<UserRespository>().saveUserField(user.id, 'isFirstTime', false);
+    router.go('/user');
   }
 
   Widget _buildImage(String assetPath) {
@@ -95,13 +104,15 @@ class _OnboardingDuenioScreenState extends State<OnboardingDuenioScreen> {
         ),
         PageViewModel(
           title: AppLocalizations.of(context)!.schedule_events,
-          body: AppLocalizations.of(context)!.organize_tournaments_and_activities,
+          body:
+              AppLocalizations.of(context)!.organize_tournaments_and_activities,
           image: _buildImage('assets/onBoarding/duenio4.jpeg'),
           decoration: pageDecoration,
         ),
         PageViewModel(
           title: AppLocalizations.of(context)!.analyze_and_improve,
-          body: AppLocalizations.of(context)!.monitor_reservations_reviews_statistics,
+          body: AppLocalizations.of(context)!
+              .monitor_reservations_reviews_statistics,
           image: _buildImage('assets/onBoarding/duenio5.jpeg'),
           decoration: pageDecoration,
         ),
@@ -109,12 +120,12 @@ class _OnboardingDuenioScreenState extends State<OnboardingDuenioScreen> {
       onDone: () => _onIntroEnd(context),
       onSkip: () => _onIntroEnd(context),
       showSkipButton: true,
-      skip: Text(AppLocalizations.of(context)!.skip, style: const TextStyle(color: Colors.grey)),
+      skip: Text(AppLocalizations.of(context)!.skip,
+          style: const TextStyle(color: Colors.grey)),
       next: const Icon(Icons.arrow_forward, color: Color(0xFF00FF88)),
       done: Text(AppLocalizations.of(context)!.get_started,
-          style: TextStyle(
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF00FF88))),
+          style:
+              TextStyle(fontWeight: FontWeight.w600, color: Color(0xFF00FF88))),
       dotsDecorator: DotsDecorator(
         size: const Size.square(10.0),
         activeSize: const Size(20.0, 10.0),
