@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 abstract class UseCase<Type, Params> {
@@ -9,7 +11,7 @@ class NoParams {}
 class GetShopUseCaseParams {
   final int idShop;
 
-  GetShopUseCaseParams( {required this.idShop});
+  GetShopUseCaseParams({required this.idShop});
 }
 
 class StadisticsParams {
@@ -17,19 +19,20 @@ class StadisticsParams {
   final String startTime;
   final String endTime;
 
-  StadisticsParams({required this.idShop, required this.startTime, required this.endTime});
+  StadisticsParams(
+      {required this.idShop, required this.startTime, required this.endTime});
 }
 
 class GetShopsByOwnerUseCaseParams {
   final String idOwner;
 
-  GetShopsByOwnerUseCaseParams( {required this.idOwner});
+  GetShopsByOwnerUseCaseParams({required this.idOwner});
 }
 
 class GetTablesByShopUseCaseParams {
   final int idShop;
 
-  GetTablesByShopUseCaseParams( {required this.idShop});
+  GetTablesByShopUseCaseParams({required this.idShop});
 }
 
 class UserToReserveUseCaseParams {
@@ -49,19 +52,19 @@ class GetReservesByDateUseCaseParams {
 class IdReserveParams {
   final int idReserve;
 
-  IdReserveParams({ required this.idReserve});
+  IdReserveParams({required this.idReserve});
 }
 
 class GetReserveFromUsersUseCaseParams {
   final String idUser;
 
-  GetReserveFromUsersUseCaseParams({ required this.idUser});
+  GetReserveFromUsersUseCaseParams({required this.idUser});
 }
 
 class GetEventsParams {
   final int idShop;
 
-  GetEventsParams({ required this.idShop});
+  GetEventsParams({required this.idShop});
 }
 
 class UpdateTokenNotificationParams {
@@ -70,10 +73,18 @@ class UpdateTokenNotificationParams {
 
   UpdateTokenNotificationParams({required this.userId, required this.token});
 }
+
 class SendMessageParams {
   final String message;
   SendMessageParams(this.message);
 }
+
+class SendMessageGeminiParams {
+  final String message;
+  final List<ByteData>? imageBytes;
+  SendMessageGeminiParams(this.message, this.imageBytes);
+}
+
 class StartChatParams {
   final BuildContext context;
   final String message;
@@ -85,7 +96,15 @@ class StartChatParams {
 class StartRolPlayParams {
   final BuildContext context;
   final String character;
-  StartRolPlayParams(this.context, {required this.character});
+  final String theme;
+  StartRolPlayParams(this.context,
+      {required this.character, required this.theme});
 
+  static void go(String s) {}
+}
+
+class Context {
+  final BuildContext context;
+  Context(this.context);
   static void go(String s) {}
 }

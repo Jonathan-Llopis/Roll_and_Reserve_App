@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/core/use_case.dart';
+import 'package:roll_and_reserve/domain/usecases/chat_usecases/send_message_gemini_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/chat_usecases/send_message_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/chat_usecases/send_rol_message_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/chat_usecases/start_chat_gemini_usecases.dart';
 import 'package:roll_and_reserve/domain/usecases/chat_usecases/start_chat_rol_usecases.dart';
 import 'package:roll_and_reserve/domain/usecases/chat_usecases/start_chat_usecases.dart';
 import 'package:roll_and_reserve/presentation/blocs/chat/chat_event.dart';
@@ -14,13 +16,17 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final SendMessageUseCase sendMessageUseCase;
   final StartChatRolUseCase startChatRolUseCase;
   final SendRolMessageUseCase sendRolMessageUseCase;
+  final StartChatGeminiUsecases startChatGeminiUseCase;
+  final SendMessageGeminiUsecase sendMessageGeminiUseCase;
 
   ChatBloc(
     this.startChatUseCase,
     this.sendMessageUseCase,
     this.startChatRolUseCase,
     this.sendRolMessageUseCase,
-  ) : super(ChatState.initial()) {
+    this.startChatGeminiUseCase,
+    this.sendMessageGeminiUseCase,
+  ) : super(const ChatState()) {
     on<OnChatStart>((event, emit) async {
       emit(ChatState.loading(state));
       try {
@@ -61,7 +67,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       emit(ChatState.loading(state));
       try {
         final responseIA = await startChatRolUseCase(
-            StartRolPlayParams(event.context, character: event.character));
+            StartRolPlayParams(event.context, character: event.character, theme: event.theme));
         final List<Map<String, String>> messagesUpdate = [];
         final jsonStart = responseIA.indexOf('```json');
         final jsonEnd = responseIA.lastIndexOf('```');
@@ -78,7 +84,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         emit(state.copyWith(isLoading: false));
       }
     });
-
+    on<CleanRolPlay>((event, emit) {
+      emit(ChatState.cleanRol(state));
+    });
     on<OnRolPlaySendMessage>((event, emit) async {
       emit(ChatState.loading(state));
       final List<Map<String, String>> messagesUpdate =
@@ -90,7 +98,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         final responseIA =
             await sendRolMessageUseCase(SendMessageParams(event.message));
 
-             final jsonStart = responseIA.indexOf('```json');
+        final jsonStart = responseIA.indexOf('```json');
         final jsonEnd = responseIA.lastIndexOf('```');
 
         final message = responseIA.substring(0, jsonStart).trim();
@@ -100,15 +108,37 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
             ? Map<String, dynamic>.from(jsonDecode(jsonString))
             : {};
         final List<Map<String, String>> messagesUpdateIA =
-            List.from(state.messagesRol)
-              ..add({'role': 'IA', 'text': message});
+            List.from(state.messagesRol)..add({'role': 'IA', 'text': message});
         emit(ChatState.rolMessage(state, messagesUpdateIA, characterData));
       } catch (e) {
         emit(state.copyWith(isLoading: false));
       }
     });
-    on<CleanRolPlay>((event, emit) {
-      emit(ChatState.clean(state));
+    on<OnChatGeminiStart>((event, emit) async {
+        emit(ChatState.loading(state));
+      try {
+        final responseIA = await startChatGeminiUseCase(Context(event.context));
+        final List<Map<String, String>> messagesUpdate = [{'role': 'IA', 'text': responseIA}];
+        emit(ChatState.geminiMessage(state, messagesUpdate));
+      } catch (e) {
+        emit(state.copyWith(isLoading: false));
+      }
+    });
+    on<OnChatGeminiSendMessage>((event, emit) async {
+      emit(ChatState.loading(state));
+      final List<Map<String, String>> messagesUpdate = List.from(state.messages)
+        ..add({'role': 'user', 'text': event.message});
+      emit(ChatState.geminiUserMessage(state, messagesUpdate));
+      emit(ChatState.loading(state));
+      try {
+        final responseIA = await sendMessageGeminiUseCase(
+            SendMessageGeminiParams(event.message, event.imageBytes));
+        final List<Map<String, String>> messagesUpdateIA =
+            List.from(state.messages)..add({'role': 'IA', 'text': responseIA});
+        emit(ChatState.geminiMessage(state, messagesUpdateIA));
+      } catch (e) {
+        emit(state.copyWith(isLoading: false));
+      }
     });
   }
 }

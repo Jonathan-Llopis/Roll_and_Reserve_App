@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +17,9 @@ final class OnChatStart extends ChatEvent {
   final String message;
 
   @override
-  List<Object?> get props => [context, ];
+  List<Object?> get props => [
+        context,
+      ];
 }
 
 final class OnChatSendMessage extends ChatEvent {
@@ -34,17 +38,18 @@ final class CleanChat extends ChatEvent {
 }
 
 final class OnRolPlayStart extends ChatEvent {
-
+  final String theme;
   final String character;
   const OnRolPlayStart({
     required this.context,
     required this.character,
+    required this.theme,
   });
 
   final BuildContext context;
 
   @override
-  List<Object?> get props => [context];
+  List<Object?> get props => [context, character, theme];
 }
 
 final class OnRolPlaySendMessage extends ChatEvent {
@@ -58,6 +63,31 @@ final class OnRolPlaySendMessage extends ChatEvent {
 }
 
 final class CleanRolPlay extends ChatEvent {
+  const CleanRolPlay();
+
   @override
   List<Object?> get props => [];
+}
+
+final class OnChatGeminiStart extends ChatEvent {
+  const OnChatGeminiStart({
+    required this.context,
+  });
+
+  final BuildContext context;
+
+  @override
+  List<Object?> get props => [context];
+}
+
+final class OnChatGeminiSendMessage extends ChatEvent {
+  const OnChatGeminiSendMessage({
+    required this.message,
+    this.imageBytes,
+  });
+  final String message;
+  final List<ByteData>? imageBytes;
+
+  @override
+  List<Object?> get props => [message, imageBytes];
 }

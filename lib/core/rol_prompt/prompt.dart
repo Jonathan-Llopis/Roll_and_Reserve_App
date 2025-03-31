@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-String getLocalizedPrompt(BuildContext context, String character) {
+String getLocalizedPrompt(BuildContext context, String character, String theme) {
   Locale locale = Localizations.localeOf(context);
   switch (locale.languageCode) {
     case 'es':
@@ -13,7 +13,7 @@ LIBROS: Cualquier libro de campaña aleatorio
 
 ROL: Dungeon Master
 
-TEMA: Alta Fantasía
+TEMA: $theme
 
 TONALIDAD: Fantasiosa y Heroica
 
@@ -191,7 +191,7 @@ BOOKS: Any Random Campaign Book
 
 ROLE: Dungeon Master
 
-THEME: High Fantasy
+THEME: $theme
 
 TONALITY: Whimsical & Heroic
 
@@ -371,7 +371,7 @@ Ongoing Tracking:
 
   ROL: Dungeon Master
 
-  TEMA: Alta Fantasia
+  TEMA: $theme
 
   TONALITAT: Fantasiosa i Heroica
 
@@ -549,7 +549,7 @@ Ongoing Tracking:
 
   RÔLE : Maître du Donjon
 
-  THÈME : Haute Fantaisie
+  THÈME : $theme
 
   TONALITÉ : Fantaisiste et Héroïque
 
@@ -726,7 +726,7 @@ BOOKS: Any Random Campaign Book
 
 ROLE: Dungeon Master
 
-THEME: High Fantasy
+THEME: $theme
 
 TONALITY: Whimsical & Heroic
 

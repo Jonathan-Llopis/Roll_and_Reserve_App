@@ -20,24 +20,24 @@ class RolScreen extends StatefulWidget {
 class _ChatScreenState extends State<RolScreen> {
   final FocusNode _focusNode = FocusNode();
   final TextEditingController _controllerDescription = TextEditingController();
+  final TextEditingController _controllerTheme = TextEditingController();
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     ChatBloc chatBloc = BlocProvider.of<ChatBloc>(context);
-    if(chatBloc.state.messagesRol.isEmpty){
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) {
-          return DialogCharacterDescription(
-              controllerDescription: _controllerDescription);
-        },
-      );
-    });
+    if (chatBloc.state.messagesRol.isEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) {
+            return DialogCharacterDescription(
+                controllerDescription: _controllerDescription, controllerTheme: _controllerTheme,);
+          },
+        );
+      });
     }
-    
   }
 
   @override
@@ -55,46 +55,45 @@ class _ChatScreenState extends State<RolScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    ChatBloc chatBloc = BlocProvider.of<ChatBloc>(context);
-
-    return Scaffold(
-        appBar: AppBar(
-          title: Row(
-            children: [
-              Icon(Icons.auto_awesome, color: theme.colorScheme.primary),
-              const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    AppLocalizations.of(context)!.play_role_with_ai,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                    ),
+            return Scaffold(
+                appBar: AppBar(
+                  title: Row(
+                    children: [
+                      Icon(Icons.auto_awesome, color: theme.colorScheme.primary),
+                      const SizedBox(width: 12),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            AppLocalizations.of(context)!.play_role_with_ai,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        body: Column(
-          children: [
-            Expanded(
-              child: BodyMessages(),
-            ),
-            InputText(focusNode: _focusNode, isRolPlay: true),
-          ],
-        ),
-        endDrawer: BlocBuilder<ChatBloc, ChatState>(
-          builder: (context, state) {
-            return DrawerCharacterRol(
-              characterData:  chatBloc.state.character,
-            );
-          },
-        ));
+                ),
+                body: Column(
+                  children: [
+                    Expanded(
+                      child: BodyMessages(),
+                    ),
+                    InputText(focusNode: _focusNode, isRolPlay: true),
+                  ],
+                ),
+                endDrawer: BlocBuilder<ChatBloc, ChatState>(
+                  builder: (context, state) {
+                    return DrawerCharacterRol(
+                      characterData: state.character,
+                    );
+                  },
+                ));
+          }
   }
-}
+
 
 class BodyMessages extends StatelessWidget {
   const BodyMessages({super.key});

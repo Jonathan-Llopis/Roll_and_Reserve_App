@@ -7,6 +7,6 @@ class StartChatRolUseCase implements UseCase<String, StartRolPlayParams> {
 
   @override
   Future<String> call(StartRolPlayParams params) async {
-    return await repository.startRolPlay(params.context, params.character);
+    return await repository.startRolPlay(params.context, params.character, params.theme);
   }
 }

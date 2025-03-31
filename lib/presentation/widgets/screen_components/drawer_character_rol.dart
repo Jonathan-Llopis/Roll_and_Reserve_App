@@ -4,11 +4,15 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:roll_and_reserve/presentation/blocs/chat/chat_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/chat/chat_event.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_character_description.dart';
 
 class DrawerCharacterRol extends StatelessWidget {
   final Map<String, dynamic> characterData;
 
-  const DrawerCharacterRol({super.key, required this.characterData});
+  DrawerCharacterRol({super.key, required this.characterData});
+
+  final TextEditingController _controllerDescription = TextEditingController();
+  final TextEditingController _controllerTheme = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -17,9 +21,9 @@ class DrawerCharacterRol extends StatelessWidget {
     final spells = character?['spells'] as Map<String, dynamic>?;
 
     if (character == null || attributes == null) {
-      return const Center(
+      return Center(
         child: Text(
-          'Error: Datos del personaje incompletos o nulos.',
+          AppLocalizations.of(context)!.error_character_data_incomplete_or_null,
           style: TextStyle(color: Colors.red, fontSize: 16),
         ),
       );
@@ -31,61 +35,76 @@ class DrawerCharacterRol extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           _buildHeader(character),
-          _buildSectionTitle('Atributos Principales'),
-          _buildAttributesGrid(attributes),
-          _buildSectionTitle('Salud y Defensa'),
-          _buildCombatStats(character),
-          if (spells != null) _buildSectionTitle('Habilidades Mágicas'),
-          if (spells != null) _buildSpellSection(spells),
-          _buildSectionTitle('Equipo y Tesoro'),
+          _buildSectionTitle(AppLocalizations.of(context)!.primary_attributes),
+          _buildAttributesGrid(attributes, context),
+          _buildSectionTitle(AppLocalizations.of(context)!.health_and_defense),
+          _buildCombatStats(character, context),
+          if (spells != null && spells.isNotEmpty)
+            _buildSectionTitle(AppLocalizations.of(context)!.magical_skills),
+          if (spells != null && spells.isNotEmpty)
+            _buildSpellSection(spells, context),
+          _buildSectionTitle(
+              AppLocalizations.of(context)!.equipment_and_treasure),
           _buildEquipmentList(character),
-          if (companion != null) _buildSectionTitle('Compañero'),
-          if (companion != null) _buildCompanionInfo(companion),
-            const Divider(
+          if (companion != null && companion.isNotEmpty)
+            _buildSectionTitle(AppLocalizations.of(context)!.companion),
+          if (companion != null && companion.isNotEmpty)
+            _buildCompanionInfo(companion),
+          const Divider(
             thickness: 2,
             color: Colors.brown,
-            ),
-            Padding(
+          ),
+          Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: ElevatedButton.icon(
               onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                return AlertDialog(
-                  content:  Text(
-                   AppLocalizations.of(context)!.confirm_delete_adventure),
-                  actions: [
-                  TextButton(
-                    onPressed: () {
-                    Navigator.of(context).pop();
-                    },
-                    child: Text(AppLocalizations.of(context)!.cancel),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                    context.read<ChatBloc>().add(CleanRolPlay());
-                    Navigator.of(context).pop();
-                    },
-                    child:  Text(
-                   AppLocalizations.of(context)!.accept,
-                    style: TextStyle(color: Colors.red),
-                    ),
-                  ),
-                  ],
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      content: Text(AppLocalizations.of(context)!
+                          .confirm_delete_adventure),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(AppLocalizations.of(context)!.cancel),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            context.read<ChatBloc>().add(CleanRolPlay());
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop();
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (context) {
+                                return DialogCharacterDescription(
+                                  controllerDescription: _controllerDescription, controllerTheme: _controllerTheme,
+                                );
+                              },
+                            );
+                          },
+                          child: Text(
+                            AppLocalizations.of(context)!.accept,
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 );
-                },
-              );
               },
               icon: const Icon(Icons.delete, color: Colors.white),
-              label:  Text(AppLocalizations.of(context)!.delete_adventure),
+              label: Text(AppLocalizations.of(context)!.delete_adventure),
               style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 12),
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 12),
               ),
             ),
-            ),
+          ),
         ],
       ),
     );
@@ -165,14 +184,15 @@ class DrawerCharacterRol extends StatelessWidget {
     );
   }
 
-  Widget _buildAttributesGrid(Map<String, dynamic> attributes) {
-    const attributeNames = {
-      'STR': 'Fuerza',
-      'DEX': 'Destreza',
-      'CON': 'Constitución',
-      'INT': 'Inteligencia',
-      'WIS': 'Sabiduría',
-      'CHA': 'Carisma'
+  Widget _buildAttributesGrid(
+      Map<String, dynamic> attributes, BuildContext context) {
+    final attributeNames = {
+      'STR': AppLocalizations.of(context)!.strength,
+      'DEX': AppLocalizations.of(context)!.dexterity,
+      'CON': AppLocalizations.of(context)!.constitution,
+      'INT': AppLocalizations.of(context)!.intelligence,
+      'WIS': AppLocalizations.of(context)!.wisdom,
+      'CHA': AppLocalizations.of(context)!.charisma,
     };
 
     return GridView.count(
@@ -214,7 +234,8 @@ class DrawerCharacterRol extends StatelessWidget {
     );
   }
 
-  Widget _buildCombatStats(Map<String, dynamic> character) {
+  Widget _buildCombatStats(
+      Map<String, dynamic> character, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
@@ -223,8 +244,8 @@ class DrawerCharacterRol extends StatelessWidget {
           _buildStatCircle('HP', character['hp'], Colors.red),
           _buildStatCircle(
               'CA', character['armor_class'].toString(), Colors.blue),
-          _buildStatCircle(
-              'Nivel', character['level'].toString(), Colors.green),
+          _buildStatCircle(AppLocalizations.of(context)!.level,
+              character['level'].toString(), Colors.green),
         ],
       ),
     );
@@ -265,26 +286,29 @@ class DrawerCharacterRol extends StatelessWidget {
     );
   }
 
-  Widget _buildSpellSection(Map<String, dynamic> spells) {
+  Widget _buildSpellSection(Map<String, dynamic> spells, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSpellSlotIndicator(spells['spell_slots']['level_1']),
+          _buildSpellSlotIndicator(spells['spell_slots']['level_1'], context),
           const SizedBox(height: 10),
-          _buildSpellList('Hechizos Conocidos', spells['known_spells']),
-          _buildSpellList('Trucos', spells['cantrips']),
+          _buildSpellList(AppLocalizations.of(context)!.known_spells,
+              spells['known_spells']),
+          _buildSpellList(
+              AppLocalizations.of(context)!.cantrips, spells['cantrips']),
         ],
       ),
     );
   }
 
-  Widget _buildSpellSlotIndicator(Map<String, dynamic> spellSlots) {
+  Widget _buildSpellSlotIndicator(
+      Map<String, dynamic> spellSlots, BuildContext context) {
     return Row(
       children: [
         Text(
-          'Ranuras de Nivel 1: ',
+          AppLocalizations.of(context)!.level_1_spell_slots,
           style: GoogleFonts.medievalSharp(
             textStyle: TextStyle(
               color: Colors.brown[800],

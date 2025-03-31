@@ -79,6 +79,14 @@ class DrawerMain extends StatelessWidget {
                   context.go('/user/rolChat');
                   },
                 ),
+                ListTile(
+                  leading: Icon(Icons.smart_button_outlined, color: theme.colorScheme.primary),
+                  title: Text(AppLocalizations.of(context)!.play_role_with_ai),
+                  onTap: () {
+                  Navigator.pop(context);
+                  context.go('/user/chatGemini');
+                  },
+                ),
                 userBloc.state.user!.role == 2
                     ? ListTile(
                         leading: Icon(Icons.reviews,

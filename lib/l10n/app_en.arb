@@ -1035,17 +1035,17 @@
   "@choose_world_adventure": {
     "description": "Prompt to choose the world for the user's adventure"
   },
-  "describe_your_character": "Describe Your Character",
-  "@describe_your_character": {
-    "description": "Label for describing your character"
+  "describe_your_adventure": "Describe Your Adventure",
+  "@describe_your_adventure": {
+    "description": "Label for describing your adventure"
   },
-  "enter_character_description": "Enter Character Description",
-  "@enter_character_description": {
-    "description": "Prompt to enter the character description"
+  "enter_adventurers_description": "Enter Adventurers Description",
+  "@enter_adventurers_description": {
+    "description": "Prompt to enter the adventurers description"
   },
-  "character_description": "Character Description",
-  "@character_description": {
-    "description": "Label for character description"
+  "adventurers_description": "Adventurers Description",
+  "@adventurers_description": {
+    "description": "Label for adventurers description"
   },
   "start_game": "Start Game",
   "@start_game": {
@@ -1058,6 +1058,74 @@
   "delete_adventure": "Delete Adventure",
   "@delete_adventure": {
     "description": "Label for deleting an adventure"
+  },
+  "error_character_data_incomplete_or_null": "Error: Character data incomplete or null.",
+  "@error_character_data_incomplete_or_null": {
+    "description": "Error message indicating that the character data is incomplete or null"
+  },
+  "primary_attributes": "Primary Attributes",
+  "@primary_attributes": {
+    "description": "Label for primary attributes section"
+  },
+  "health_and_defense": "Health and Defense",
+  "@health_and_defense": {
+    "description": "Label for health and defense section"
+  },
+  "magical_skills": "Magical Skills",
+  "@magical_skills": {
+    "description": "Label for magical skills section"
+  },
+  "equipment_and_treasure": "Equipment and Treasure",
+  "@equipment_and_treasure": {
+    "description": "Label for equipment and treasure section"
+  },
+  "companion": "Companion",
+  "@companion": {
+    "description": "Label for companion section"
+  },
+  "strength": "Strength",
+  "@strength": {
+    "description": "Label for strength attribute"
+  },
+  "dexterity": "Dexterity",
+  "@dexterity": {
+    "description": "Label for dexterity attribute"
+  },
+  "constitution": "Constitution",
+  "@constitution": {
+    "description": "Label for constitution attribute"
+  },
+  "intelligence": "Intelligence",
+  "@intelligence": {
+    "description": "Label for intelligence attribute"
+  },
+  "wisdom": "Wisdom",
+  "@wisdom": {
+    "description": "Label for wisdom attribute"
+  },
+  "charisma": "Charisma",
+  "@charisma": {
+    "description": "Label for charisma attribute"
+  },
+  "level": "Level",
+  "@level": {
+    "description": "Label for character level"
+  },
+  "known_spells": "Known Spells",
+  "@known_spells": {
+    "description": "Label for known spells section"
+  },
+  "cantrips": "Cantrips",
+  "@cantrips": {
+    "description": "Label for cantrips section"
+  },
+  "level_1_spell_slots": "Level 1 Spell Slots:",
+  "@level_1_spell_slots": {
+    "description": "Label for level 1 spell slots"
+  },
+  "setting_description": "Describe the setting of your adventure",
+  "@setting_description": {
+    "description": "Prompt asking the user to describe the setting of their adventure"
   }
 }
 
