@@ -22,13 +22,18 @@ class _BodyMainState extends State<BodyMain> {
   @override
   Widget build(BuildContext context) {
     final loginBloc = BlocProvider.of<LoginBloc>(context);
-    if (loginBloc.state.user!.role == 2 || loginBloc.state.user!.role == 0) {
+    ShopBloc shopBloc = BlocProvider.of<ShopBloc>(context);
+
+    if(shopBloc.state.shops == null) {
+      if (loginBloc.state.user!.role == 2 || loginBloc.state.user!.role == 0 ) {
       context.read<ShopBloc>().add(GetShopsEvent());
     } else {
       context
           .read<ShopBloc>()
           .add(GetShopsByOwnerEvent(owner: loginBloc.state.user!.id));
     }
+    }
+    
     return BlocBuilder<ShopBloc, ShopState>(builder: (context, state) {
       final loginBloc = BlocProvider.of<LoginBloc>(context);
       return buildContent<ShopState>(

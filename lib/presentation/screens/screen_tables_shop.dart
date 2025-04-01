@@ -31,9 +31,8 @@ class _ScreenTablesOfShopState extends State<ScreenTablesOfShop> {
 
   @override
   void initState() {
-    context.read<TableBloc>().add(GetTablesByShopEvent(idShop: widget.idShop));
     context.read<ShopBloc>().add(GetShopEvent(idShop: widget.idShop));
-    context.read<ShopBloc>().add(GetShopsEvent());
+    context.read<TableBloc>().add(GetTablesByShopEvent(idShop: widget.idShop));
     super.initState();
   }
 
