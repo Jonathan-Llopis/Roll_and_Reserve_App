@@ -220,6 +220,7 @@ class UserDatasourceImpl implements UserDatasource {
     }
   }
 
+  @override
   Future<List<UserModel>> getAllUsers(String token) async {
     final response = await client.get(
       Uri.parse('${dotenv.env['BACKEND']}/users'),
