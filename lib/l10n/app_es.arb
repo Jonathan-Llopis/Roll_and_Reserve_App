@@ -245,5 +245,11 @@
   "level_1_spell_slots": "Ranuras de Hechizos de Nivel 1:",
   "setting_description": "Describe el escenario de tu aventura",
   "ask_about_rules": "Pregunta tus dudas sobre las reglas",
-  "identify_board_games": "Identificar juegos de mesa"
+  "identify_board_games": "Identificar juegos de mesa",
+  "profile_settings": "Configuración del Perfil",
+  "user_management": "Gestión de Usuarios",
+  "chat_features": "Funciones de Chat",
+  "narrator": "Narrador",
+  "game_vision_ai": "Visión de Juego IA",
+  "describe_your_move": "Describe tu jugada"
 }

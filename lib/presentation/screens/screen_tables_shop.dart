@@ -30,11 +30,15 @@ class _ScreenTablesOfShopState extends State<ScreenTablesOfShop> {
   late ShopEntity currentShop;
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
     context.read<TableBloc>().add(GetTablesByShopEvent(idShop: widget.idShop));
     context.read<ShopBloc>().add(GetShopEvent(idShop: widget.idShop));
     context.read<ShopBloc>().add(GetShopsEvent());
+    super.initState();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     ShopBloc shopBloc = BlocProvider.of<ShopBloc>(context);
     LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
     return DefaultScaffold(

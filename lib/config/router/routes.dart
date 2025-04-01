@@ -7,6 +7,7 @@ import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_admin.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_chat.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_chat_assistant.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_chat_gemini.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_create_event.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_create_reserve.dart';
@@ -144,6 +145,20 @@ final GoRouter router = GoRouter(
             return CustomTransitionPage(
               key: state.pageKey,
               child: ChatGeminiScreen(),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                return child;
+              },
+            );
+          },
+        ),
+         GoRoute(
+          name: 'chatAssistant',
+          path: '/chatAssistant',
+          pageBuilder: (context, state) {
+            return CustomTransitionPage(
+              key: state.pageKey,
+              child: ChatAssistantScreen(),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {
                 return child;

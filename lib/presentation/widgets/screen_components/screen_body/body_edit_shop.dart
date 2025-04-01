@@ -131,7 +131,7 @@ class _BodyEditShopState extends State<BodyEditShop> {
               decoration: InputDecoration(
                 labelText: AppLocalizations.of(context)!.select_user,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(99),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 prefixIcon: Icon(Icons.person),
               ),

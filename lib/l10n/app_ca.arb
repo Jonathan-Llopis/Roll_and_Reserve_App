@@ -244,5 +244,11 @@
   "level_1_spell_slots": "Ranures d'Encantaments de Nivell 1:",
   "setting_description": "Descriu l'escenari de la teva aventura",
   "ask_about_rules": "Pregunta sobre les regles",
-  "identify_board_games": "Identifica jocs de taula"
+  "identify_board_games": "Identifica jocs de taula",
+  "profile_settings": "Configuració del Perfil",
+  "user_management": "Gestió d'Usuaris",
+  "chat_features": "Funcions de Xat",
+  "narrator": "Narrador",
+  "game_vision_ai": "Visió de Joc IA",
+  "describe_your_move": "Descriu la teua jugada"
 }

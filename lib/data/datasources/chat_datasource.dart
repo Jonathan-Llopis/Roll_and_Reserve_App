@@ -12,6 +12,8 @@ abstract class ChatRemoteDataSource {
   Future<String> sendRolPlay(String message);
   Future<String> startChatGemini(String prompt);
   Future<String> sendMessageGemini(String message, List<ByteData>? imageBytes);
+  Future<String> startChatAssistant(String prompt);
+  Future<String> sendMessageAssitant(String message, List<ByteData>? imageBytes);
 }
 
 class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
@@ -182,6 +184,38 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   }
   @override
   Future<String> sendMessageGemini(String message, List<ByteData>? imageBytes) async {
+    List<Content> content = [Content.text(message)];
+
+    if (imageBytes != null && imageBytes.isNotEmpty) {
+      List<DataPart> dataParts = imageBytes.map((byteData) {
+        return DataPart('image/jpeg', byteData.buffer.asUint8List());
+      }).toList();
+      content = [Content.multi([TextPart(message), ...dataParts])];
+    }
+
+    final response = await chat.sendMessage(content.first);
+
+    if (response.text.isNotEmpty) {
+      return response.text.toString();
+    } else {
+      throw Exception('Error al enviar el mensaje.');
+    }
+  }
+
+  @override
+  Future<String> startChatAssistant(String prompt) async {
+    chat = model.startChat();
+    final content = [Content.text(prompt)];
+    final response = await chat.sendMessage(content.first);
+
+    if (response.text != '') {
+      return response.text.toString();
+    } else {
+      throw Exception('Error al iniciar el Chat.');
+    }
+  }
+  @override
+  Future<String> sendMessageAssitant(String message, List<ByteData>? imageBytes) async {
     List<Content> content = [Content.text(message)];
 
     if (imageBytes != null && imageBytes.isNotEmpty) {

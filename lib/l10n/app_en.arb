@@ -1134,6 +1134,30 @@
   "identify_board_games": "Identify board games",
   "@identify_board_games": {
     "description": "Label for identifying board games"
+  }, 
+  "profile_settings": "Profile Settings",
+  "@profile_settings": {
+    "description": "Label for profile settings"
+  },
+  "user_management": "User Management",
+  "@user_management": {
+    "description": "Label for user management"
+  },
+  "chat_features": "Chat Features",
+  "@chat_features": {
+    "description": "Label for chat features"
+  },
+  "narrator": "Narrator",
+  "@narrator": {
+    "description": "Label for narrator"
+  },
+  "game_vision_ai": "Game Vision AI",
+  "@game_vision_ai": {
+    "description": "Label for Game Vision AI"
+  },
+  "describe_your_move": "Describe your move",
+  "@describe_your_move": {
+    "description": "Prompt asking the user to describe their move"
   }
 }
 

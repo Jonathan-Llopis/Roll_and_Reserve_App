@@ -7,6 +7,7 @@ class ChatState extends Equatable {
   final List<Map<String, String>> messagesRol;
   final Map<String, dynamic> character;
   final List<Map<String, String>> messagesGemini;
+    final List<Map<String, String>> messagesAssistant;
 
   const ChatState({
     this.newMessage = '',
@@ -15,6 +16,7 @@ class ChatState extends Equatable {
     this.messagesRol = const [],
     this.character = const {},
     this.messagesGemini = const [],
+    this.messagesAssistant = const [],
   });
 
   ChatState copyWith({
@@ -25,6 +27,7 @@ class ChatState extends Equatable {
     List<Map<String, String>>? messagesRol,
     Map<String, dynamic>? character,
     List<Map<String, String>>? messagesGemini,
+    List<Map<String, String>>? messagesAssistant,
   }) {
     return ChatState(
       newMessage: newMessage ?? this.newMessage,
@@ -33,6 +36,7 @@ class ChatState extends Equatable {
       messagesRol: messagesRol ?? this.messagesRol,
       character: character ?? this.character,
       messagesGemini: messagesGemini ?? this.messagesGemini,
+      messagesAssistant: messagesAssistant ?? this.messagesAssistant,
     );
   }
 
@@ -44,6 +48,7 @@ class ChatState extends Equatable {
         messagesRol,
         character,
         messagesGemini,
+        messagesAssistant,
       ];
 
   factory ChatState.initial() => const ChatState();
@@ -86,6 +91,16 @@ class ChatState extends Equatable {
       state.copyWith(isLoading: true, messagesGemini: state.messagesGemini);
   factory ChatState.geminiClean(ChatState state) => state.copyWith(
         messagesGemini: [],
+        isLoading: false,
+      );
+  factory ChatState.assistantMessage(ChatState state, messages) =>
+      state.copyWith(messagesAssistant: messages, isLoading: false);
+  factory ChatState.assistantUserMessage(ChatState state, messages) =>
+      state.copyWith(messagesAssistant: messages, isLoading: false);
+  factory ChatState.assistantLoading(ChatState state) =>
+      state.copyWith(isLoading: true, messagesAssistant: state.messagesAssistant);
+  factory ChatState.assistantClean(ChatState state) => state.copyWith(
+        messagesAssistant: [],
         isLoading: false,
       );
 }

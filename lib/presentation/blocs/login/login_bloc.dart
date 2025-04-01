@@ -31,7 +31,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final ValidatePasswordUsecase validatePasswordUsecase;
   final GetUserInfoUseCase getUserInfoUseCase;
   final GetAllUsersUseCase getAllUsersUseCase;
-  
 
   LoginBloc(
       this.signInUserUseCase,
@@ -48,67 +47,78 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       this.getUserInfoUseCase,
       this.getAllUsersUseCase)
       : super(LoginState.initial()) {
-
     on<ButtonLoginPressed>((event, emit) async {
-      emit(LoginState.loading(state,));
+      emit(LoginState.loading(
+        state,
+      ));
       final result = await signInUserUseCase(LoginParams(
         email: event.email,
         password: event.password,
       ));
       result.fold(
-        (failure) => emit(LoginState.failure(state,"Fallo al realizar el login")),
-        (_) => emit(LoginState.success(state,event.email)),
+        (failure) =>
+            emit(LoginState.failure(state, "Fallo al realizar el login")),
+        (_) => emit(LoginState.success(state, event.email)),
       );
     });
 
     on<ButtonRegisterPressed>((event, emit) async {
-      emit(LoginState.loading(state,));
+      emit(LoginState.loading(
+        state,
+      ));
       final result = await signUpUserUseCase(RegisterParams(
           email: event.email,
           password: event.password,
           name: event.name,
           username: event.username));
       result.fold(
-        (failure) => emit(LoginState.failure(state,"Fallo al realizar el registro")),
-        (_) => emit(LoginState.success(state,event.email)),
+        (failure) =>
+            emit(LoginState.failure(state, "Fallo al realizar el registro")),
+        (_) => emit(LoginState.success(state, event.email)),
       );
     });
 
     on<CheckAuthentication>((event, emit) async {
       final result = await getCurrentUserUseCase(NoParams());
       result.fold(
-        (failure) =>
-            emit(LoginState.failure(state,"Fallo al verificar la autenticación")),
-        (user) => emit(LoginState.isLogedIn(state,user)),
+        (failure) => emit(
+            LoginState.failure(state, "Fallo al verificar la autenticación")),
+        (user) => emit(LoginState.isLogedIn(state, user)),
       );
     });
 
     on<LogoutButtonPressed>((event, emit) async {
       final result = await signOutUserUseCase(NoParams());
       result.fold(
-          (failure) => emit(LoginState.failure(state,"Fallo al realizar el logout")),
+          (failure) =>
+              emit(LoginState.failure(state, "Fallo al realizar el logout")),
           (_) => emit(LoginState.initial()));
     });
 
     on<LoginGoogle>((event, emit) async {
-      emit(LoginState.loading(state,));
+      emit(LoginState.loading(
+        state,
+      ));
       final result = await signInUserGoogleUseCase(LoginParamsGoogle());
       await result.fold(
-      (failure) async => emit(LoginState.failure(state,"Fallo al realizar el login")),
-      (_) async {
-        final prefs = await SharedPreferences.getInstance();
-        final email = prefs.getString('email') ?? '';
-        emit(LoginState.success(state,email));
-      },
+        (failure) async =>
+            emit(LoginState.failure(state, "Fallo al realizar el login")),
+        (_) async {
+          final prefs = await SharedPreferences.getInstance();
+          final email = prefs.getString('email') ?? '';
+          emit(LoginState.success(state, email));
+        },
       );
     });
     on<ResetPassword>((event, emit) async {
-      emit(LoginState.loading(state,));
+      emit(LoginState.loading(
+        state,
+      ));
       final result = await restorPasswordUseCase(event.email);
       result.fold(
-        (failure) =>
-            emit(LoginState.failure(state,"Fallo al realizar la recuperacion")),
-        (_) => emit(LoginState.success(state,'')),
+        (failure) => emit(
+            LoginState.failure(state, "Fallo al realizar la recuperacion")),
+        (_) => emit(LoginState.success(state, '')),
       );
     });
     on<IsEmailUserUsed>((event, emit) async {
@@ -123,58 +133,70 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     });
 
     on<UpdateUserInfoEvent>((event, emit) async {
-      emit(LoginState.loading(state,));
+      emit(LoginState.loading(
+        state,
+      ));
       final result = await updateUserInfoUseCase(event.user);
       result.fold(
-        (failure) =>
-            emit(LoginState.failure(state,"Fallo al realizar la actualización")),
-        (_) {
-          emit(LoginState.success(state,''));
-          if(state.user?.role==0){
-            add(GetAllUsersEvent());
+        (failure) => emit(
+            LoginState.failure(state, "Fallo al realizar la actualización")),
+        (_) async {
+          if (state.user?.role == 0) {
+            await Future.delayed(Duration.zero, () => add(GetAllUsersEvent()));
+          } else {
+            await Future.delayed(
+                Duration.zero, () => add(CheckAuthentication()));
           }
-          add(CheckAuthentication());
         },
       );
     });
 
     on<UpdatePasswordEvent>((event, emit) async {
-      emit(LoginState.loading(state,));
-      final result = await updatePasswordUsecase(event.password, event.oldPassword);
+      emit(LoginState.loading(
+        state,
+      ));
+      final result =
+          await updatePasswordUsecase(event.password, event.oldPassword);
       result.fold(
-        (failure) =>
-            emit(LoginState.failure(state,"Fallo al realizar la recuperacion")),
-        (_) => emit(LoginState.success(state,'')),
+        (failure) => emit(
+            LoginState.failure(state, "Fallo al realizar la recuperacion")),
+        (_) => emit(LoginState.success(state, '')),
       );
     });
 
     on<ValidatePasswordEvent>((event, emit) async {
-      emit(LoginState.loading(state,));
+      emit(LoginState.loading(
+        state,
+      ));
       final result = await validatePasswordUsecase(event.password);
       result.fold(
-      (failure) =>
-        emit(LoginState.failure(state,"Fallo al validar la contraseña")),
-      (isValid) => emit(LoginState.success(state,isValid.toString())),
+        (failure) =>
+            emit(LoginState.failure(state, "Fallo al validar la contraseña")),
+        (isValid) => emit(LoginState.success(state, isValid.toString())),
       );
     });
 
     on<GetUserInfoEvent>((event, emit) async {
-      emit(LoginState.loading(state,));
+      emit(LoginState.loading(
+        state,
+      ));
       final result = await getUserInfoUseCase(event.idGoogle);
       result.fold(
-      (failure) =>
-        emit(LoginState.failure(state,"Fallo al obtener la información del usuario")),
-      (user) => emit(LoginState.success(state,user.toString())),
+        (failure) => emit(LoginState.failure(
+            state, "Fallo al obtener la información del usuario")),
+        (user) => emit(LoginState.success(state, user.toString())),
       );
     });
 
     on<GetAllUsersEvent>((event, emit) async {
-      emit(LoginState.loading(state,));
+      emit(LoginState.loading(
+        state,
+      ));
       final result = await getAllUsersUseCase(NoParams());
       result.fold(
-      (failure) =>
-        emit(LoginState.failure(state,"Fallo al obtener la lista de usuarios")),
-      (users) => emit(LoginState.users(state,users)),
+        (failure) => emit(
+            LoginState.failure(state, "Fallo al obtener la lista de usuarios")),
+        (users) => emit(LoginState.users(state, users)),
       );
     });
   }

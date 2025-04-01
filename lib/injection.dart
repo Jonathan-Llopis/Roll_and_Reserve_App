@@ -25,9 +25,11 @@ import 'package:roll_and_reserve/domain/repositories/reserve_repository.dart';
 import 'package:roll_and_reserve/domain/repositories/review_repository.dart';
 import 'package:roll_and_reserve/domain/repositories/shop_repository.dart';
 import 'package:roll_and_reserve/domain/repositories/table_respository.dart';
+import 'package:roll_and_reserve/domain/usecases/chat_usecases/send_message_assistant_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/chat_usecases/send_message_gemini_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/chat_usecases/send_message_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/chat_usecases/send_rol_message_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/chat_usecases/start_chat_assistant_usecases.dart';
 import 'package:roll_and_reserve/domain/usecases/chat_usecases/start_chat_gemini_usecases.dart';
 import 'package:roll_and_reserve/domain/usecases/chat_usecases/start_chat_rol_usecases.dart';
 import 'package:roll_and_reserve/domain/usecases/chat_usecases/start_chat_usecases.dart';
@@ -138,7 +140,8 @@ void configureDependencies() async {
       sl(),
       sl()));
   sl.registerFactory<LanguageBloc>(() => LanguageBloc(sl()));
-  sl.registerFactory<ChatBloc>(() => ChatBloc(sl(), sl(), sl(), sl(), sl(), sl()));
+  sl.registerFactory<ChatBloc>(
+      () => ChatBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
   // Instancia de Firebase Auth
   sl.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
 
@@ -400,6 +403,12 @@ void configureDependencies() async {
 
   sl.registerLazySingleton<SendMessageGeminiUsecase>(
     () => SendMessageGeminiUsecase(sl()),
+  );
+  sl.registerLazySingleton<SendMessageAssistantUsecase>(
+    () => SendMessageAssistantUsecase(sl()),
+  );
+  sl.registerLazySingleton<StartChatAssistantUsecases>(
+    () => StartChatAssistantUsecases(sl()),
   );
 
   sl.registerLazySingleton(() => http.Client());

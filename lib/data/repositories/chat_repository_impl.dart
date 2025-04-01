@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:roll_and_reserve/core/prompt.dart';
+import 'package:roll_and_reserve/core/prompt_asistente.dart';
 import 'package:roll_and_reserve/core/rol_prompt/prompt.dart';
 import 'package:roll_and_reserve/data/datasources/chat_datasource.dart';
 import 'package:roll_and_reserve/domain/repositories/chat_repository.dart';
@@ -64,6 +65,23 @@ class ChatRepositoryImpl implements ChatRepository {
       return await remoteDataSource.sendMessageGemini(message, imageBytes);
     } catch (e) {
       throw Exception('Error sending message gemini: $e');
+    }
+  }
+  @override
+  Future<String> startChatAssistant(BuildContext context) async {
+    try {
+      String prompt = getAssistantPrompt(context);
+      return await remoteDataSource.startChatAssistant(prompt);
+    } catch (e) {
+      throw Exception('Error starting chat assistant: $e');
+    }
+  }
+  @override
+  Future<String> sendMessageAssitant(String message, {List<ByteData>? imageBytes}) async {
+    try {
+      return await remoteDataSource.sendMessageAssitant(message, imageBytes);
+    } catch (e) {
+      throw Exception('Error sending message assistant: $e');
     }
   }
 }

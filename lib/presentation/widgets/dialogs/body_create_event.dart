@@ -270,28 +270,31 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
                           });
                         },
                       ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        TextButton(
-                          style: AppTheme.textButtonCancelStyle,
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: Text(
-                            AppLocalizations.of(context)!.cancel,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            style: AppTheme.textButtonCancelStyle,
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: Text(
+                              AppLocalizations.of(context)!.cancel,
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 10.0),
-                        ButtonCreateEvent(
-                            formKey: _formKey,
-                            selectedTableIds: _selectedTableIds,
-                            freePlacesController: _freePlacesController,
-                            widget: widget,
-                            descriptionController: _descriptionController,
-                            requiredMaterialController:
-                                _requiredMaterialController,
-                            selectedDifficulty: _selectedDifficulty,
-                            selectedGame: _selectedGame)
-                      ],
+                          const SizedBox(width: 10.0),
+                          ButtonCreateEvent(
+                              formKey: _formKey,
+                              selectedTableIds: _selectedTableIds,
+                              freePlacesController: _freePlacesController,
+                              widget: widget,
+                              descriptionController: _descriptionController,
+                              requiredMaterialController:
+                                  _requiredMaterialController,
+                              selectedDifficulty: _selectedDifficulty,
+                              selectedGame: _selectedGame)
+                        ],
+                      ),
                     ),
                   ],
                 ),

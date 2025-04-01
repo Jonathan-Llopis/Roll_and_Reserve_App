@@ -41,7 +41,7 @@ class _BodyMainState extends State<BodyAdminShops> {
               });
             },
             decoration: InputDecoration(
-              labelText: AppLocalizations.of(context)!.username,
+              labelText: AppLocalizations.of(context)!.shop_name_text,
               prefixIcon: const Icon(Icons.search),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8.0),

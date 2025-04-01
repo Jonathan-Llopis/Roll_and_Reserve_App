@@ -7,20 +7,20 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_rol.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/input_text_image.dart';
 
-class ChatGeminiScreen extends StatefulWidget {
-  const ChatGeminiScreen({super.key});
+class ChatAssistantScreen extends StatefulWidget {
+  const ChatAssistantScreen({super.key});
 
   @override
-  State<ChatGeminiScreen> createState() => _ChatScreenState();
+  State<ChatAssistantScreen> createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatGeminiScreen> {
+class _ChatScreenState extends State<ChatAssistantScreen> {
   final FocusNode _focusNode = FocusNode();
   @override
   void initState() {
     ChatBloc chatBloc = context.read<ChatBloc>();
-    if (chatBloc.state.messagesGemini.isEmpty) {
-      context.read<ChatBloc>().add(OnChatGeminiStart(context: context));
+    if (chatBloc.state.messagesAssistant.isEmpty) {
+      context.read<ChatBloc>().add(OnChatAssistantStart(context: context));
     }
 
     super.initState();
@@ -45,7 +45,7 @@ class _ChatScreenState extends State<ChatGeminiScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    AppLocalizations.of(context)!.identify_board_games,
+                    AppLocalizations.of(context)!.describe_your_move,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.w600,
                           fontSize: 14,
@@ -72,7 +72,7 @@ class _ChatScreenState extends State<ChatGeminiScreen> {
                 onPressed: () {
                   context
                       .read<ChatBloc>()
-                      .add(OnChatGeminiStart(context: context));
+                      .add(OnChatAssistantStart(context: context));
                   setState(() {});
                 },
               ),
@@ -85,7 +85,7 @@ class _ChatScreenState extends State<ChatGeminiScreen> {
               child: BodyMessages(),
             ),
             InputTextImage(
-              focusNode: _focusNode, isAssitant:  false,
+              focusNode: _focusNode, isAssitant:  true,
             ),
           ],
         ));
@@ -101,7 +101,7 @@ class BodyMessages extends StatelessWidget {
 
     return BlocBuilder<ChatBloc, ChatState>(
       builder: (context, state) {
-        if (state.messagesGemini.isNotEmpty) {
+        if (state.messagesAssistant.isNotEmpty) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (scrollController.hasClients) {
               scrollController
@@ -112,14 +112,14 @@ class BodyMessages extends StatelessWidget {
           return ListView.builder(
             controller: scrollController,
             itemBuilder: (context, index) {
-              final text = state.messagesGemini[index]['text'] ?? '';
+              final text = state.messagesAssistant[index]['text'] ?? '';
 
               return ChatMessage(
                 text: text,
-                isFromUser: state.messagesGemini[index]['role'] == 'user',
+                isFromUser: state.messagesAssistant[index]['role'] == 'user',
               );
             },
-            itemCount: state.messagesGemini.length,
+            itemCount: state.messagesAssistant.length,
           );
         } else {
           return Center(child: Text('Cargando chat...'));

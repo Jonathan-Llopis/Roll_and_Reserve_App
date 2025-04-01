@@ -201,7 +201,7 @@ class ChatMessage extends StatelessWidget {
                   Text(
                     isFromUser
                         ? AppLocalizations.of(context)!.you
-                        : AppLocalizations.of(context)!.ai_assistant,
+                        : AppLocalizations.of(context)!.narrator,
                     style: theme.textTheme.labelMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                       color: isFromUser

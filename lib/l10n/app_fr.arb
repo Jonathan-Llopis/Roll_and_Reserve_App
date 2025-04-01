@@ -244,5 +244,11 @@
       "level_1_spell_slots": "Emplacements de Sorts de Niveau 1:",
       "setting_description": "Décrivez le cadre de votre aventure",
       "ask_about_rules": "Posez vos questions sur les règles",
-      "identify_board_games": "Identifier les jeux de société"
+      "identify_board_games": "Identifier les jeux de société",
+      "profile_settings": "Paramètres du Profil",
+      "user_management": "Gestion des Utilisateurs",
+      "chat_features": "Fonctionnalités de Chat",
+      "narrator": "Narrateur",
+      "game_vision_ai": "Vision de Jeu IA",
+      "describe_your_move": "Décrivez votre mouvement"
 }

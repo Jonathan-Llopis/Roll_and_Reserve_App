@@ -97,3 +97,12 @@ class CheckAuthentication extends LoginEvent {}
 class LoginGoogle extends LoginEvent {}
 
 class GetAllUsersEvent extends LoginEvent {}
+
+class UpdateUserAdminInfoEvent extends LoginEvent {
+  final UserEntity user;
+
+  UpdateUserAdminInfoEvent({required this.user});
+
+  @override
+  List<Object?> get props => [user];
+}
