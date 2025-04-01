@@ -1126,6 +1126,14 @@
   "setting_description": "Describe the setting of your adventure",
   "@setting_description": {
     "description": "Prompt asking the user to describe the setting of their adventure"
+  },
+  "ask_about_rules": "Ask your questions about the rules",
+  "@ask_about_rules": {
+    "description": "Label for asking questions about the rules"
+  },
+  "identify_board_games": "Identify board games",
+  "@identify_board_games": {
+    "description": "Label for identifying board games"
   }
 }
 

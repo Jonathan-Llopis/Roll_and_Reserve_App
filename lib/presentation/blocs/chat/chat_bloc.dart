@@ -126,7 +126,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     });
     on<OnChatGeminiSendMessage>((event, emit) async {
       emit(ChatState.loading(state));
-      final List<Map<String, String>> messagesUpdate = List.from(state.messages)
+      final List<Map<String, String>> messagesUpdate = List.from(state.messagesGemini)
         ..add({'role': 'user', 'text': event.message});
       emit(ChatState.geminiUserMessage(state, messagesUpdate));
       emit(ChatState.loading(state));
@@ -134,11 +134,14 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         final responseIA = await sendMessageGeminiUseCase(
             SendMessageGeminiParams(event.message, event.imageBytes));
         final List<Map<String, String>> messagesUpdateIA =
-            List.from(state.messages)..add({'role': 'IA', 'text': responseIA});
+            List.from(state.messagesGemini)..add({'role': 'IA', 'text': responseIA});
         emit(ChatState.geminiMessage(state, messagesUpdateIA));
       } catch (e) {
         emit(state.copyWith(isLoading: false));
       }
+    });
+    on<CleanChatGemini>((event, emit) {
+      emit(ChatState.clean(state));
     });
   }
 }

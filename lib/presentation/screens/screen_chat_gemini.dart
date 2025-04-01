@@ -4,11 +4,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:roll_and_reserve/domain/usecases/chat_usecases/start_chat_gemini_usecases.dart';
 import 'package:roll_and_reserve/presentation/blocs/chat/chat_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/chat/chat_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/chat/chat_state.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
 class ChatGeminiScreen extends StatefulWidget {
   const ChatGeminiScreen({super.key});
@@ -39,16 +43,44 @@ class _ChatScreenState extends State<ChatGeminiScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("AI Chat"),
+          title: Row(
+            children: [
+              Icon(Icons.auto_awesome,
+                  color: Theme.of(context).colorScheme.primary),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!.identify_board_games,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                        ),
+                  ),
+                  Text(
+                    AppLocalizations.of(context)!.ai_assistant,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withOpacity(0.6),
+                        ),
+                  ),
+                ],
+              ),
+            ],
+          ),
           actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 8.0),
+            Tooltip(
+              message: AppLocalizations.of(context)!.restart_conversation,
               child: IconButton(
-                icon: Icon(Icons.refresh),
+                icon: Icon(Icons.restart_alt, size: 28),
                 onPressed: () {
                   context
                       .read<ChatBloc>()
                       .add(OnChatGeminiStart(context: context));
+                  setState(() {});
                 },
               ),
             ),
@@ -77,11 +109,82 @@ class InputText extends StatefulWidget {
 }
 
 class _InputTextState extends State<InputText> {
+  final SpeechToText _speechToText = SpeechToText();
+  bool _speechEnabled = false;
+  bool _isAvailable = false;
+  final TextEditingController textController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _checkPermissions();
+    _initSpeech();
+    _checkAvailability();
+  }
+
+  void _checkPermissions() async {
+    final status = await Permission.microphone.status;
+    if (!status.isGranted) {
+      final result = await Permission.microphone.request();
+      if (result.isDenied) {
+        if (result.isPermanentlyDenied) {
+          await openAppSettings();
+        }
+      }
+    }
+
+    setState(() {});
+  }
+
+  void _initSpeech() async {
+    try {
+      _speechEnabled = await _speechToText.initialize(
+        onStatus: (status) => setState(() {}),
+      );
+    } catch (e) {
+      _speechEnabled = false;
+    }
+    setState(() {});
+  }
+
+  void _checkAvailability() async {
+    _isAvailable = await _speechToText.isAvailable;
+
+    setState(() {});
+  }
+
+  void _startListening() async {
+    if (!_speechEnabled) return;
+
+    await _speechToText.listen(
+      onResult: _onSpeechResult,
+      localeId: 'es_ES',
+      listenFor: const Duration(seconds: 30),
+      partialResults: true,
+    );
+    setState(() {});
+  }
+
+  void _stopListening() async {
+    await _speechToText.stop();
+    setState(() {});
+  }
+
+  void _onSpeechResult(SpeechRecognitionResult result) {
+    setState(() {
+      textController.text = result.recognizedWords;
+      if (result.finalResult) {
+        textController.text = result.recognizedWords;
+      }
+    });
+  }
+
   ImagePicker _picker = ImagePicker();
   XFile? _image;
   @override
   Widget build(BuildContext context) {
     TextEditingController textController = TextEditingController();
+    final theme = Theme.of(context);
     return BlocBuilder<ChatBloc, ChatState>(
       builder: (context, state) {
         return Card(
@@ -98,102 +201,149 @@ class _InputTextState extends State<InputText> {
                     constraints: BoxConstraints(
                       maxHeight: 150,
                     ),
-                    child: Scrollbar(
-                      child: TextField(
-                        autofocus: true,
-                        focusNode: widget.focusNode,
-                        controller: textController,
-                        maxLines: 6,
-                        minLines: 1,
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.all(15),
-                          hintText: 'Envia un mensaje',
-                          border: OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(14),
-                            ),
-                            borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.secondary,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(14),
-                            ),
-                            borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.secondary,
-                            ),
-                          ),
+                    child: TextField(
+                      controller: textController,
+                      focusNode: widget.focusNode,
+                      maxLines: null,
+                      style: theme.textTheme.bodyLarge,
+                      decoration: InputDecoration(
+                        hintText: AppLocalizations.of(context)!.send_message,
+                        hintStyle: theme.textTheme.bodyLarge?.copyWith(
+                          color: theme.colorScheme.onSurface.withOpacity(0.4),
                         ),
-                        onSubmitted: (_) async {
-                          context.read<ChatBloc>().add(
-                                OnChatGeminiSendMessage(
-                                  message: textController.text,
-                                ),
-                              );
-                          textController.clear();
-                          widget.focusNode.requestFocus();
-                        },
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 14),
+                        fillColor: Colors.grey[200],
+                        filled: true,
                       ),
+                      onSubmitted: (_) {
+                        context.read<ChatBloc>().add(
+                              OnChatGeminiSendMessage(
+                                message: textController.text,
+                              ),
+                            );
+                        textController.clear();
+                        widget.focusNode.requestFocus();
+                      },
                     ),
                   ),
                 ),
-                Stack(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (context) => bottomSheet(),
-                        );
-                      },
-                      icon: Icon(
-                        Icons.image,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                    if (_image != null)
-                      Positioned(
-                        right: 8,
-                        top: 8,
-                        child: Container(
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            shape: BoxShape.circle,
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  child: state.isLoading
+                      ? null
+                      : Stack(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) => bottomSheet(),
+                                );
+                              },
+                              icon: Icon(
+                                Icons.image,
+                                color: _image == null
+                                    ? Colors.white
+                                    : theme.colorScheme.primary,
+                              ),
+                              style: IconButton.styleFrom(
+                                backgroundColor: _image == null
+                                    ? theme.colorScheme.primary
+                                    : Colors.white,
+                                shape: const CircleBorder(),
+                                padding: const EdgeInsets.all(16),
+                              ),
+                            ),
+                            if (_image != null)
+                              Positioned(
+                                right: 8,
+                                top: 8,
+                                child: Container(
+                                  width: 8,
+                                  height: 8,
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                ),
+                const SizedBox(width: 8),
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  child: state.isLoading
+                      ? null
+                      : IconButton(
+                          onPressed: _speechEnabled
+                              ? (_speechToText.isListening
+                                  ? _stopListening
+                                  : _startListening)
+                              : null,
+                          tooltip: 'Dictado',
+                          icon: Icon(
+                            _speechToText.isListening
+                                ? Icons.mic
+                                : Icons.mic_none,
+                            color: _speechEnabled
+                                ? theme.colorScheme.onPrimary
+                                : theme.disabledColor,
+                          ),
+                          style: IconButton.styleFrom(
+                            backgroundColor: _speechEnabled
+                                ? theme.colorScheme.primary
+                                : theme.colorScheme.surface.withOpacity(0.5),
+                            shape: const CircleBorder(),
+                            padding: const EdgeInsets.all(16),
                           ),
                         ),
-                      ),
-                  ],
                 ),
-                const SizedBox.square(
-                  dimension: 15,
-                ),
+                SizedBox(width: 8),
                 state.isLoading
                     ? CircularProgressIndicator()
-                    : IconButton(
-                        onPressed: () async {
-                          List<ByteData>? imageBytes;
-                          if (_image != null) {
-                            imageBytes = [
-                              (await _image!.readAsBytes()).buffer.asByteData()
-                            ];
-                          }
-                          context.read<ChatBloc>().add(
-                                OnChatGeminiSendMessage(
-                                  message: textController.text,
-                                  imageBytes: imageBytes,
+                    : AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 200),
+                        child: state.isLoading
+                            ? null
+                            : IconButton(
+                                onPressed: () async {
+                                  List<ByteData>? imageBytes;
+                                  if (_image != null) {
+                                    imageBytes = [
+                                      (await _image!.readAsBytes())
+                                          .buffer
+                                          .asByteData()
+                                    ];
+                                  }
+                                  context.read<ChatBloc>().add(
+                                        OnChatGeminiSendMessage(
+                                          message: textController.text,
+                                          imageBytes: imageBytes,
+                                        ),
+                                      );
+                                  textController.clear();
+                                  _image = null;
+                                },
+                                icon: Icon(
+                                  Icons.send,
+                                  color: Colors.white,
                                 ),
-                              );
-                          textController.clear();
-                          _image = null;
-                        },
-                        icon: Icon(
-                          Icons.send,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                      )
+                                style: IconButton.styleFrom(
+                                  backgroundColor: Theme.of(context)
+                                      .colorScheme
+                                      .primary
+                                      .withOpacity(0.8),
+                                  shape: const CircleBorder(),
+                                  padding: const EdgeInsets.all(16),
+                                ),
+                              ),
+                      ),
               ],
             ),
           ),

@@ -46,52 +46,58 @@ class DrawerMain extends StatelessWidget {
           Expanded(
             child: ListView(
               children: [
-                userBloc.state.user!.role == 0 ?
-                  ListTile(
-                  leading: Icon(Icons.admin_panel_settings, color: theme.colorScheme.primary),
-                  title: Text(AppLocalizations.of(context)!.role_admin),
-                  onTap: () {
-                    Navigator.pop(context);
-                    context.go('/user/admin');
-                  },
-                  ):
+                userBloc.state.user!.role == 0
+                    ? ListTile(
+                        leading: Icon(Icons.admin_panel_settings,
+                            color: theme.colorScheme.primary),
+                        title: Text(AppLocalizations.of(context)!.role_admin),
+                        onTap: () {
+                          Navigator.pop(context);
+                          context.go('/user/admin');
+                        },
+                      )
+                    : ListTile(
+                        leading:
+                            Icon(Icons.home, color: theme.colorScheme.primary),
+                        title: Text(AppLocalizations.of(context)!.home),
+                        onTap: () {
+                          Navigator.pop(context);
+                          context.go('/user');
+                        },
+                      ),
                 ListTile(
-                  leading: Icon(Icons.home, color: theme.colorScheme.primary),
-                  title: Text(AppLocalizations.of(context)!.home),
-                  onTap: () {
-                    Navigator.pop(context);
-                    context.go('/user');
-                  },
-                ),
-                ListTile(
-                  leading: Icon(Icons.help, color: theme.colorScheme.primary),
-                  title: Text(AppLocalizations.of(context)!.chat_with_ai),
+                  leading:
+                      Icon(Icons.menu_book, color: theme.colorScheme.primary),
+                  title: Text(AppLocalizations.of(context)!.ask_about_rules),
                   onTap: () {
                     Navigator.pop(context);
                     context.go('/user/chat');
                   },
                 ),
-                 ListTile(
-                  leading: Icon(Icons.smart_toy, color: theme.colorScheme.primary),
+                ListTile(
+                  leading:
+                      Icon(Icons.theaters, color: theme.colorScheme.primary),
                   title: Text(AppLocalizations.of(context)!.play_role_with_ai),
                   onTap: () {
-                  Navigator.pop(context);
-                  context.go('/user/rolChat');
+                    Navigator.pop(context);
+                    context.go('/user/rolChat');
                   },
                 ),
                 ListTile(
-                  leading: Icon(Icons.smart_button_outlined, color: theme.colorScheme.primary),
-                  title: Text(AppLocalizations.of(context)!.play_role_with_ai),
+                  leading: Icon(Icons.casino, color: theme.colorScheme.primary),
+                  title:
+                      Text(AppLocalizations.of(context)!.identify_board_games),
                   onTap: () {
-                  Navigator.pop(context);
-                  context.go('/user/chatGemini');
+                    Navigator.pop(context);
+                    context.go('/user/chatGemini');
                   },
                 ),
                 userBloc.state.user!.role == 2
                     ? ListTile(
                         leading: Icon(Icons.reviews,
                             color: theme.colorScheme.primary),
-                        title: Text(AppLocalizations.of(context)!.received_reviews),
+                        title: Text(
+                            AppLocalizations.of(context)!.received_reviews),
                         onTap: () {
                           Navigator.push(
                             context,

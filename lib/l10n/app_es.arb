@@ -243,5 +243,7 @@
   "known_spells": "Hechizos Conocidos",
   "cantrips": "Trucos",
   "level_1_spell_slots": "Ranuras de Hechizos de Nivel 1:",
-  "setting_description": "Describe el escenario de tu aventura"
+  "setting_description": "Describe el escenario de tu aventura",
+  "ask_about_rules": "Pregunta tus dudas sobre las reglas",
+  "identify_board_games": "Identificar juegos de mesa"
 }

@@ -242,5 +242,7 @@
   "known_spells": "Encantaments Coneguts",
   "cantrips": "Trucs",
   "level_1_spell_slots": "Ranures d'Encantaments de Nivell 1:",
-  "setting_description": "Descriu l'escenari de la teva aventura"
+  "setting_description": "Descriu l'escenari de la teva aventura",
+  "ask_about_rules": "Pregunta sobre les regles",
+  "identify_board_games": "Identifica jocs de taula"
 }

@@ -91,3 +91,10 @@ final class OnChatGeminiSendMessage extends ChatEvent {
   @override
   List<Object?> get props => [message, imageBytes];
 }
+
+final class CleanChatGemini extends ChatEvent {
+  const CleanChatGemini();
+
+  @override
+  List<Object?> get props => [];
+}

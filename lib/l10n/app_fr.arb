@@ -242,5 +242,7 @@
       "known_spells": "Sorts Connus",
       "cantrips": "Tours de Magie",
       "level_1_spell_slots": "Emplacements de Sorts de Niveau 1:",
-      "setting_description": "Décrivez le cadre de votre aventure"
+      "setting_description": "Décrivez le cadre de votre aventure",
+      "ask_about_rules": "Posez vos questions sur les règles",
+      "identify_board_games": "Identifier les jeux de société"
 }
