@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/domain/entities/shop_entity.dart';
+import 'package:roll_and_reserve/domain/usecases/shop_usecases/get_all_shops_usecase.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
@@ -32,6 +33,7 @@ class _ScreenTablesOfShopState extends State<ScreenTablesOfShop> {
   @override
   void initState() {
     context.read<ShopBloc>().add(GetShopEvent(idShop: widget.idShop));
+    context.read<ShopBloc>().add(GetShopsEvent());
     context.read<TableBloc>().add(GetTablesByShopEvent(idShop: widget.idShop));
     super.initState();
   }

@@ -20,20 +20,25 @@ class BodyMain extends StatefulWidget {
 
 class _BodyMainState extends State<BodyMain> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final loginBloc = BlocProvider.of<LoginBloc>(context);
     ShopBloc shopBloc = BlocProvider.of<ShopBloc>(context);
 
-    if(shopBloc.state.shops == null) {
-      if (loginBloc.state.user!.role == 2 || loginBloc.state.user!.role == 0 ) {
-      context.read<ShopBloc>().add(GetShopsEvent());
-    } else {
-      context
-          .read<ShopBloc>()
-          .add(GetShopsByOwnerEvent(owner: loginBloc.state.user!.id));
+    if (shopBloc.state.shops == null) {
+      if (loginBloc.state.user!.role == 2 || loginBloc.state.user!.role == 0) {
+        context.read<ShopBloc>().add(GetShopsEvent());
+      } else {
+        context
+            .read<ShopBloc>()
+            .add(GetShopsByOwnerEvent(owner: loginBloc.state.user!.id));
+      }
     }
-    }
-    
+
     return BlocBuilder<ShopBloc, ShopState>(builder: (context, state) {
       final loginBloc = BlocProvider.of<LoginBloc>(context);
       return buildContent<ShopState>(
@@ -77,18 +82,20 @@ class _BodyMainState extends State<BodyMain> {
                                 ),
                               ],
                             )
-                          : loginBloc.state.user!.role == 1 ? Text(
-                              AppLocalizations.of(context)!
-                                  .shops_registered_in_your_name,
-                              textAlign: TextAlign.center,
-                              style:
-                                  TextStyle(fontSize: 18, color: Colors.blue),
-                            ):  Text(
-                              AppLocalizations.of(context)!
-                                  .all_shops,
-                              textAlign: TextAlign.center,
-                              style:
-                                  TextStyle(fontSize: 18, color: Colors.blue),)
+                          : loginBloc.state.user!.role == 1
+                              ? Text(
+                                  AppLocalizations.of(context)!
+                                      .shops_registered_in_your_name,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 18, color: Colors.blue),
+                                )
+                              : Text(
+                                  AppLocalizations.of(context)!.all_shops,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 18, color: Colors.blue),
+                                )
                     ],
                   ),
                 ),

@@ -36,22 +36,25 @@ class _ScreenReservesOfUserState extends State<ScreenReservesOfUser> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ReserveBloc, ReserveState>(builder: (context, state) {
-      return buildContent<ReserveState>(
-          state: state,
-          isLoading: (state) => state.isLoading,
-          errorMessage: (state) => state.errorMessage,
-          hasData: (state) => state.reservesOfUser != null,
-          context: context,
-          contentBuilder: (state) {
-            return DefaultScaffold(
-              appBar: widget.appBar,
-              body: BodyReservesUser(
+    return DefaultScaffold(
+      appBar: widget.appBar,
+      body: BlocBuilder<ReserveBloc, ReserveState>(
+        builder: (context, state) {
+          return buildContent<ReserveState>(
+            state: state,
+            isLoading: (state) => state.isLoading,
+            errorMessage: (state) => state.errorMessage,
+            hasData: (state) => state.reservesOfUser != null,
+            context: context,
+            contentBuilder: (state) {
+              return BodyReservesUser(
                 reserves: state.reservesOfUser!,
                 appBar: widget.appBar,
-              ),
-            );
-          });
-    });
+              );
+            },
+          );
+        },
+      ),
+    );
   }
 }
