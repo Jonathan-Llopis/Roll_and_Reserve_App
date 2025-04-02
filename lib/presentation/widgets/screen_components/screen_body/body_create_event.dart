@@ -50,6 +50,10 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
   List<int> _selectedTableIds = [];
 
   @override
+  /// Disposes of the [TextEditingController]s used in the form.
+  //
+  /// This is necessary to prevent memory leaks when the widget is removed from
+  /// the tree.
   void dispose() {
     _freePlacesController.dispose();
     _descriptionController.dispose();
@@ -58,6 +62,13 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
   }
 
   @override
+/// Initializes the state of the widget.
+///
+/// This method sends a [GetAvailableTablesEvent] to the [TableBloc] to fetch
+/// the tables available for reservation. It uses the start and end time of the
+/// event, the date, and the list of existing reserves to filter the available
+/// tables for the given shop.
+
   void initState() {
     context.read<TableBloc>().add(GetAvailableTablesEvent(
         dayDate: DateFormat('dd-MM-yyyy').format(widget.starteTime),
@@ -70,6 +81,28 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
   }
 
   @override
+  /// Builds the form to create a new event.
+  ///
+  /// The form is inside a [SingleChildScrollView] and contains a [Form] with
+  /// the following fields:
+  ///
+  /// - a [SearchableDropdownFormField] to select the game,
+  /// - a [TextField] to enter the number of seats available at the table,
+  /// - a [TextField] to enter the description of the event,
+  /// - a [TextField] to enter the required material,
+  /// - a [DropdownButtonFormField] to select the difficulty of the event,
+  /// - a [TableSelectionCheckbox] to select the tables where the event will be
+  ///   held,
+  /// - two buttons, one to cancel and one to create the event.
+  ///
+  /// The [Form] is validated when the create button is pressed.
+  ///
+  /// If the form is valid, the [ButtonCreateEvent] is enabled and the user can
+  /// create the event. The [ButtonCreateEvent] sends a [CreateEventsEvent] to
+  /// the [ReserveBloc] with the selected tables, the start and end time of the
+  /// event, the description of the event, the required material, the
+  /// difficulty of the event, and the game.
+  ///
   Widget build(BuildContext context) {
 
     return BlocBuilder<TableBloc, TableState>(

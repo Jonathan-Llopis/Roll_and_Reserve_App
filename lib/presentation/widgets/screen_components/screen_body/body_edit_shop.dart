@@ -40,6 +40,15 @@ class _BodyEditShopState extends State<BodyEditShop> {
   final TextEditingController _idUserController = TextEditingController();
 
   @override
+/// Initializes the state of the `_BodyEditShopState` widget.
+///
+/// This method is responsible for setting initial values for the form fields
+/// based on the shop data. If the `idShop` is not zero, it retrieves the 
+/// shop details from the `ShopBloc` state and populates the form fields with 
+/// the shop's name, address, latitude, longitude, logo, and owner ID. If the 
+/// `idShop` is zero, it sets default values for a new shop entry. Calls 
+/// `super.initState()` at the end.
+
   void initState() {
     final shopBloc = BlocProvider.of<ShopBloc>(context);
     if (widget.idShop != 0) {
@@ -64,6 +73,19 @@ class _BodyEditShopState extends State<BodyEditShop> {
   }
 
   @override
+  /// Builds the body of the shop edition screen.
+  ///
+  /// This widget is a [SingleChildScrollView] with a [Form] as child.
+  /// The [Form] is composed of a [CircleAvatar] with the shop's logo,
+  /// a [TextFormField] for the shop's name, a [DropdownButtonFormField]
+  /// for selecting the owner of the shop, a [TextFormField] for the
+  /// shop's direction, a [LocationPicker] for selecting the shop's
+  /// location, and two [TextButton] for cancelling and creating the shop.
+  /// The [TextButton] with the cancel label is used to pop the screen,
+  /// and the [ButtonCreateUpdateShop] is used to create or update the shop.
+  /// If the [idShop] is not zero, a [TextButton] with the delete label is
+  /// shown at the bottom of the screen. This button is used to delete the
+  /// shop.
   Widget build(BuildContext context) {
     final shopBloc = BlocProvider.of<ShopBloc>(context);
     final loginBloc = BlocProvider.of<LoginBloc>(context);
@@ -127,59 +149,60 @@ class _BodyEditShopState extends State<BodyEditShop> {
                 ),
                 validator: (value) => basicValidation(value, context)),
             const SizedBox(height: 16),
-            DropdownButtonFormField<String>(
-              decoration: InputDecoration(
-                labelText: AppLocalizations.of(context)!.select_user,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                prefixIcon: Icon(Icons.person),
-              ),
-              items: loginBloc.state.users!
-                  .where((user) => user.role == 1)
-                  .map((user) {
-                return DropdownMenuItem<String>(
-                  value: user.id,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 8.0, horizontal: 12.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                         UserAvatar(user: user),
-                        const SizedBox(width: 12),
-                        Flexible(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                user.name,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium
-                                    ?.copyWith(
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+            if (loginBloc.state.user!.role == 0)
+              DropdownButtonFormField<String>(
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.select_user,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                );
-              }).toList(),
-              onChanged: (value) {
-                _idUserController.text = value!;
-              },
-              validator: (value) {
-                if (value == null) {
-                  return AppLocalizations.of(context)!.error_select_user;
-                }
-                return null;
-              },
-            ),
+                  prefixIcon: Icon(Icons.person),
+                ),
+                items: loginBloc.state.users!
+                    .where((user) => user.role == 1)
+                    .map((user) {
+                  return DropdownMenuItem<String>(
+                    value: user.id,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 12.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          UserAvatar(user: user),
+                          const SizedBox(width: 12),
+                          Flexible(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  user.name,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  _idUserController.text = value!;
+                },
+                validator: (value) {
+                  if (value == null) {
+                    return AppLocalizations.of(context)!.error_select_user;
+                  }
+                  return null;
+                },
+              ),
             const SizedBox(height: 16),
             TextFormField(
                 controller: _adressController,
@@ -239,6 +262,10 @@ class _BodyEditShopState extends State<BodyEditShop> {
     );
   }
 
+  /// A bottom sheet that is shown when the user wants to add a new avatar.
+  /// It shows a message that indicates the user can select a new avatar from the gallery or take a photo with the camera.
+  /// There are two actions: one to select a new avatar from the gallery and one to take a photo with the camera.
+  /// When the user selects an avatar, the [_imageFile] is updated with the new image and the dialog is closed.
   Widget bottomSheet() {
     return Container(
       height: 100.0,

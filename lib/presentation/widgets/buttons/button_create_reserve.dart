@@ -57,6 +57,18 @@ class ButtonCreateReserve extends StatelessWidget {
   final int? id;
 
   @override
+  /// Builds a [TextButton] with the given parameters.
+  ///
+  /// The button is used to save a reserve in the database.
+  ///
+  /// If the user is a shop owner, the reserve is created with the
+  /// [CreateReserveEvent].
+  ///
+  /// If the user is an administrator, the reserve is created with the
+  /// [CreateReserveEvent] and the user's id is not added to the reserve.
+  ///
+  /// The button is only enabled if the form is valid.
+  ///
   Widget build(BuildContext context) {
     return TextButton(
       style: AppTheme.textButtonAcceptStyle,

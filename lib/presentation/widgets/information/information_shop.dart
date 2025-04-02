@@ -22,11 +22,37 @@ class InformationShop extends StatefulWidget {
 
 class _ShopListInventoryState extends State<InformationShop> {
   @override
+  /// Called when the widget is inserted into the tree.
+  ///
+  /// This function is called when the widget is inserted into the tree.
   void initState() {
     super.initState();
   }
 
   @override
+  /// Builds the UI for the information of the shop.
+  ///
+  /// This widget is a [Container] with a [BoxDecoration] that has a white
+  /// background, a circular border radius, a shadow, and a border.
+  ///
+  /// The child of the [Container] is a [Column] with two children. The first
+  /// child is a [Row] with a [CircleAvatar] with the logo of the shop, and a
+  /// [Column] with the name, address, and rating of the shop. The second child
+  /// is a [Wrap] with the action buttons of the shop.
+  ///
+  /// The [CircleAvatar] has a size of 50x50 and a border radius of 50.
+  /// The [Column] has a crossAxisAlignment of [CrossAxisAlignment.start].
+  /// The [Text] with the name of the shop has a font size of 24 and is bold.
+  /// The [Text] with the address of the shop has a font size of 16 and is
+  /// grey.
+  /// The [Text] with the rating of the shop has a font size of 16 and is
+  /// orange.
+  /// The [Wrap] has a spacing of 12 and a runSpacing of 12. The children of the
+  /// [Wrap] are the action buttons of the shop.
+  ///
+  /// The action buttons are [ElevatedButton]s with a text and an onPressed
+  /// function. The onPressed function navigates to the shop page with the id
+  /// of the shop.
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context)!;
@@ -87,6 +113,15 @@ class _ShopListInventoryState extends State<InformationShop> {
     );
   }
 
+  /// Builds a widget that displays the logo of the shop.
+  ///
+  /// The widget is a container with a rounded rectangle shape and a
+  /// shadow. The logo is displayed as a [ClipRRect] with a circular
+  /// border radius of 20. The logo is either an [Image] or a placeholder
+  /// image. If the logo is an image, it is displayed with a BoxFit of cover.
+  /// If the logo is a placeholder, it is displayed with a height and width
+  /// of 100. The placeholder image is a blue square with a white text
+  /// "Error" in the center.
   Widget _buildShopLogo(ThemeData theme, bool isSmallScreen) {
     return Container(
       width: isSmallScreen ? 100 : 120,
@@ -115,6 +150,14 @@ class _ShopListInventoryState extends State<InformationShop> {
     );
   }
 
+  /// Builds a header widget to display the shop's name.
+  ///
+  /// The header is a [Column] with a [Text] widget showing the shop's name.
+  /// The text style is determined by the [theme]'s `titleLarge` text style,
+  /// with a bold font weight and the color from the theme's `onSurface` color.
+  /// The text is limited to a maximum of two lines and will show an ellipsis
+  /// if it overflows.
+
   Widget _buildShopHeader(ThemeData theme, bool isSmallScreen) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -132,6 +175,14 @@ class _ShopListInventoryState extends State<InformationShop> {
     );
   }
 
+  /// Builds a row widget to display the shop's address.
+  ///
+  /// The row contains an [Icon] of a location and a [Text] widget
+  /// showing the shop's address. The icon is displayed with a size of
+  /// 18 and a color of 60% of the theme's `onSurface` color. The text
+  /// is displayed with the theme's `bodyMedium` text style and a color
+  /// of 70% of the theme's `onSurface` color. The row is aligned to the
+  /// start of the cross axis.
   Widget _buildShopAddress(ThemeData theme) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -154,6 +205,14 @@ class _ShopListInventoryState extends State<InformationShop> {
     );
   }
 
+  /// Builds a row widget to display the shop's statistics.
+  ///
+  /// The row contains a [Wrap] widget with two children. The first child is
+  /// a [Row] that displays the shop's average rating as a row of stars.
+  /// The second child is a [Row] that displays the total number of tables
+  /// that the shop has. The text is displayed with the theme's `bodyMedium`
+  /// text style and a color of 70% of the theme's `onSurface` color. The
+  /// row is aligned to the start of the cross axis.
   Widget _buildShopStats(ThemeData theme, AppLocalizations loc) {
     return Wrap(
       spacing: 16,
@@ -178,6 +237,21 @@ class _ShopListInventoryState extends State<InformationShop> {
       ],
     );
   }
+
+  /// Builds action buttons for the shop interface.
+  ///
+  /// This widget creates a column of action buttons available to admins.
+  /// If the current user is an admin or owner, it shows buttons for editing
+  /// the shop and its information. Each button is represented as a wrapped
+  /// icon and label, styled according to the theme and role.
+  ///
+  /// The buttons are:
+  /// - "Edit Shop": Navigates to the shop's table management page.
+  /// - "Edit Info": Navigates to the shop's information editing page.
+  ///
+  /// [context] is used to read the [LoginBloc] to determine the user's role.
+  /// [theme] provides the styling for the buttons.
+  /// [loc] is used for localized labels on the buttons.
 
   Widget _buildActionButtons(
       BuildContext context, ThemeData theme, AppLocalizations loc) {
@@ -216,6 +290,18 @@ class _ShopListInventoryState extends State<InformationShop> {
   }
 
 
+  /// Builds an admin action button with an icon and label.
+  ///
+  /// The button is styled with a background color and adjusts its
+  /// foreground color based on the luminance of the background color
+  /// to ensure text visibility. It is represented as a [FilledButton]
+  /// and navigates to the provided [route] when pressed.
+  ///
+  /// - [icon]: The icon to display on the button.
+  /// - [label]: The text label for the button.
+  /// - [color]: The background color of the button.
+  /// - [route]: The navigation route to execute on button press.
+
   Widget _buildAdminButton({
     required IconData icon,
     required String label,
@@ -236,6 +322,11 @@ class _ShopListInventoryState extends State<InformationShop> {
     );
   }
 
+  /// A placeholder widget to display if an image fails to load.
+  ///
+  /// This widget is used as the error builder for the [Image] widget in
+  /// [_buildWebImage] to provide a fallback when the image fails to load.
+  /// It displays a light grey background with a grey icon in the center.
   Widget _buildImageErrorPlaceholder() {
     return Container(
       color: Colors.grey.shade100,
@@ -249,6 +340,13 @@ class _ShopListInventoryState extends State<InformationShop> {
     );
   }
 
+  /// Builds the shop's logo image for the web.
+  ///
+  /// If the shop's logo is a [Uint8List], it is displayed as an [Image] widget
+  /// with a [MemoryImage] provider. The image is fit to cover the available
+  /// space and a [CircularProgressIndicator] is used to display the loading
+  /// progress. If the image fails to load, a placeholder widget is displayed
+  /// instead.
   Widget _buildWebImage() {
     if (widget.shop.logo is Uint8List) {
       return Image(

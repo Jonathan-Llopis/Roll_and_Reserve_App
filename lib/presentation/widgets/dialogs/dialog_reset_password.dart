@@ -18,6 +18,14 @@ class _DialogResetPasswordState extends State<DialogResetPassword> {
   final TextEditingController emailController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   @override
+  /// A dialog that shows a message when the reset password button is pressed.
+  ///
+  /// It shows a message that indicates the user needs to enter their email
+  /// to reset their password. There are two actions, which are to accept and
+  /// to cancel. If the email is valid, it adds a `ResetPassword` event to the
+  /// [LoginBloc] with the email entered and shows a dialog with a message
+  /// indicating the email has been sent. If the email is invalid, it does not
+  /// pop the dialog.
   Widget build(BuildContext context) {
     return AlertDialog(
       shape: RoundedRectangleBorder(

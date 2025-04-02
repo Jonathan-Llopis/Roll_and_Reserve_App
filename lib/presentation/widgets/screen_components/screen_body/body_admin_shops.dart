@@ -18,6 +18,10 @@ class BodyAdminShops extends StatefulWidget {
 
 class _BodyMainState extends State<BodyAdminShops> {
   @override
+  /// Initialize the shops list with the ones from the ShopBloc state.
+  /// This is done to have a reference to the list of shops that doesn't change
+  /// when the state of the bloc changes, which is important because the list
+  /// is used in the build method of this class.
   void initState() {
     ShopBloc shopBloc = BlocProvider.of<ShopBloc>(context);
     shops ??= shopBloc.state.shops!;
@@ -25,6 +29,9 @@ class _BodyMainState extends State<BodyAdminShops> {
   }
 
   @override
+  /// Builds a Column with a TextField that filters the shops by their name
+  /// and a ListView of InformationShop widgets that show the shops that
+  /// match the filter.
   Widget build(BuildContext context) {
     ShopBloc shopBloc = BlocProvider.of<ShopBloc>(context);
     return Column(

@@ -11,6 +11,12 @@ class DialogLogOut extends StatelessWidget {
   const DialogLogOut({super.key});
 
   @override
+  /// Returns a dialog to logout the user.
+  ///
+  /// The dialog shows a message asking to confirm the logout of the user.
+  /// The user can cancel or accept.
+  /// If the user accepts, the user is logged out and the dialog is closed.
+  /// The user is returned to the login screen.
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
       return AlertDialog(

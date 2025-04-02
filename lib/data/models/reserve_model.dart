@@ -126,7 +126,7 @@ class ReserveModel {
       shopId: json['reserve']['reserve_table'] == null
           ? null
           : json['reserve']['reserve_table']['tables_of_shop']['id_shop'],
-      isEvent: json['shop_event'] ?? false,
+      isEvent: json['reserve']['shop_event'] ?? false,
       userReserveId: json['reserve']['reserver_id'] ?? "",
     );
   }

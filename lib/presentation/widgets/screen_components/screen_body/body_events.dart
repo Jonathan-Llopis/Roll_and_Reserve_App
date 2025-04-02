@@ -28,6 +28,19 @@ class BodyEvents extends StatefulWidget {
 class _BodyEventsState extends State<BodyEvents> {
   
   @override
+  /// Builds the body of the screen that shows all events of a shop.
+  ///
+  /// This body is a column with a row at the top that has the title of the
+  /// screen, and a elevated button that unsubscribes or subscribes the user
+  /// to the topic of the shop. The button is only shown if the user is not
+  /// null.
+  ///
+  /// Below the row, there is a divider, and then an expanded widget that
+  /// contains a list of the events of the shop. Each event is represented
+  /// by a [CardReserve] widget. The list is scrollable, and the cards are
+  /// clickable. When a card is clicked, the user is taken to the event
+  /// reserve screen.
+  ///
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

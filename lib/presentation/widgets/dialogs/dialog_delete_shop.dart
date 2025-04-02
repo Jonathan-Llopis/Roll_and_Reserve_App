@@ -15,6 +15,17 @@ class DialogDeleteShop extends StatelessWidget {
   const DialogDeleteShop({super.key, required this.idShop, required this.shopBloc});
 
   @override
+  /// Builds a widget that displays a dialog for deleting a shop.
+  ///
+  /// The dialog shows a confirmation message for deleting the shop
+  /// with the specified [idShop]. It provides two actions: cancel and accept.
+  /// The cancel button dismisses the dialog without performing any actions.
+  /// The accept button dispatches a [DeleteShopEvent] to the [shopBloc]
+  /// to delete the shop and navigates the user to the main page.
+  ///
+  /// The dialog uses the [LoginBloc] to access the current user's state.
+  /// The title and content text are localized using [AppLocalizations].
+
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
       return AlertDialog(

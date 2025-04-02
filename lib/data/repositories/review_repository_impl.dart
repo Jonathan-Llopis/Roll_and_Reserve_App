@@ -15,6 +15,10 @@ class ReviewRepositoryImpl implements ReviewRepository {
   ReviewRepositoryImpl(this.remoteDataSource, this.sharedPreferences, this.userDatasource);
 
   @override
+  /// Gets all reviews from the remote server.
+  ///
+  /// Returns a [Future] that resolves to a [Right] containing a [List] of [ReviewEntity] if the request is successful.
+  /// If the request fails, returns a [Left] containing an [Exception].
   Future<Either<Exception, List<ReviewEntity>>> getAllReviews() async {
     try {
       final token = sharedPreferences.getString('token');
@@ -33,6 +37,13 @@ class ReviewRepositoryImpl implements ReviewRepository {
   }
 
   @override
+  /// Deletes a review from the remote server.
+  ///
+  /// The [idReview] is the id of the review to delete.
+  ///
+  /// Returns a [Future] that resolves to a [Right] containing a boolean if the request is successful.
+  /// If the status code is 200, returns true indicating the review was deleted.
+  /// Throws an [Exception] if there is an error during the deletion process.
   Future<Either<Exception, bool>> deleteReview(int idReview) async {
     try {
       final token = sharedPreferences.getString('token');
@@ -44,6 +55,13 @@ class ReviewRepositoryImpl implements ReviewRepository {
   }
 
   @override
+  /// Creates a new review in the remote server.
+  ///
+  /// The [review] is the [ReviewEntity] to create.
+  ///
+  /// Returns a [Future] that resolves to a [Right] containing a boolean if the request is successful.
+  /// If the status code is 201, returns true indicating the review was created.
+  /// Throws an [Exception] if there is an error during the creation process.
   Future<Either<Exception, bool>> createReview(ReviewEntity review) async {
     try {
       final token = sharedPreferences.getString('token');

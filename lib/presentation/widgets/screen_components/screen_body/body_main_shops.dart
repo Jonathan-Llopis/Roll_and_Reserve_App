@@ -25,6 +25,19 @@ class _BodyMainState extends State<BodyMain> {
   }
 
   @override
+/// Builds the main body of the shops screen.
+///
+/// This widget uses a [BlocBuilder] to listen to the state of the [ShopBloc].
+/// If the list of shops is not available, an event is dispatched to fetch
+/// the shops based on the user's role. If the user is an admin or a regular user,
+/// all shops are fetched. If the user is an owner, only the shops registered
+/// under their name are fetched.
+///
+/// The UI consists of a [Column] with a welcome message for admins, a message
+/// about registered shops for owners, or all shops for regular users. A [ListView]
+/// is used to display the list of shops, each represented by an [InformationShop]
+/// widget. Tapping on a shop navigates to the shop's detail page, except for owners.
+
   Widget build(BuildContext context) {
     final loginBloc = BlocProvider.of<LoginBloc>(context);
     ShopBloc shopBloc = BlocProvider.of<ShopBloc>(context);

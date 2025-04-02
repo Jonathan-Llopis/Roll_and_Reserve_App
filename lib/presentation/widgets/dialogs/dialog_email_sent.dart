@@ -6,6 +6,11 @@ class DialogEmailSent extends StatelessWidget {
   const DialogEmailSent({super.key});
 
   @override
+  /// A dialog that shows a message when the reset password email is sent.
+  ///
+  /// It shows a message that indicates the email has been sent.
+  /// There is only one action, which is to accept and close the dialog.
+  ///
   Widget build(BuildContext context) {
     return AlertDialog(
       content:  Text(

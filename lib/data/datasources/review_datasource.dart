@@ -15,6 +15,15 @@ class ReviewsRemoteDataSourceImpl implements ReviewRemoteDataSource {
   ReviewsRemoteDataSourceImpl(this.client);
 
   @override
+  /// Fetches all reviews from the remote server.
+  ///
+  /// The [token] is the access token for authorization.
+  ///
+  /// Returns a [Future] that resolves to a list of [ReviewModel] if the request
+  /// is successful.
+  ///
+  /// Throws an [Exception] if the request fails.
+
   Future<List<ReviewModel>> getAllReviews(String token) async {
     final response = await client.get(
       Uri.parse('${dotenv.env['BACKEND']}/reviews'),
@@ -32,6 +41,14 @@ class ReviewsRemoteDataSourceImpl implements ReviewRemoteDataSource {
   }
 
   @override
+  /// Deletes a review from the remote server.
+  ///
+  /// The [idReviews] is the id of the review to delete.
+  /// The [token] is the access token for authorization.
+  ///
+  /// Returns a [Future] that resolves to a boolean if the request is successful.
+  /// If the status code is 200, returns true indicating the review was deleted.
+  /// Throws an [Exception] if there is an error during the deletion process.
   Future<bool> deleteReviews(int idReviews, String token) async {
     final response = await client.delete(
       Uri.parse('${dotenv.env['BACKEND']}/reviews/$idReviews'),
@@ -47,6 +64,15 @@ class ReviewsRemoteDataSourceImpl implements ReviewRemoteDataSource {
   }
 
   @override
+  /// Creates a review on the remote server.
+  ///
+  /// The [review] parameter is a [ReviewModel] object containing the data of the review to be created.
+  /// The [token] is the access token for authorization.
+  ///
+  /// Returns a [Future] that resolves to a boolean if the request is successful.
+  /// If the status code is 201, returns true indicating the review was created.
+  /// Throws an [Exception] if there is an error during the creation process.
+
   Future<bool> createReviews(ReviewModel review, String token) async {
     final response = await client.post(
       Uri.parse('${dotenv.env['BACKEND']}/reviews'),

@@ -22,6 +22,20 @@ class _DialogoUserSettingsState extends State<DialogoUpdatePassword> {
       TextEditingController();
 
   @override
+  /// Builds a dialog that allows the user to change their password.
+  ///
+  /// The dialog contains a form with three fields: the current password, the
+  /// new password, and the confirmation password. The form is validated when
+  /// the user presses the update button. If the form is valid, the
+  /// [ButtonUpdate] widget is responsible for updating the password.
+  ///
+  /// The dialog is a child of a [BlocBuilder] widget, which rebuilds the dialog
+  /// when the [LoginState] changes. This is used to show an error message if
+  /// the password update fails.
+  ///
+  /// The dialog is a [SingleChildScrollView], which allows it to be larger than
+  /// the screen size if the user's password is very long.
+  ///
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(

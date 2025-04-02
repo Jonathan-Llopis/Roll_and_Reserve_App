@@ -22,6 +22,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   late UserEntity user;
 
   @override
+  /// Called when the widget is inserted into the tree.
+  ///
+  /// This function uses the BuildContext to get the LoginBloc and add a
+  /// CheckAuthentication event to check if the user is authenticated. After
+  /// that, it gets the user from the LoginBloc and sets the user state.
   void initState() {
     BlocProvider.of<LoginBloc>(context).add(CheckAuthentication());
     LoginBloc loginBloc = context.read<LoginBloc>();
@@ -29,6 +34,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     super.initState();
   }
 
+  /// Saves the user as having finished the onboarding, and navigates
+  /// to the user home page.
+  ///
+  /// This function is called when the user finishes the onboarding.
+  /// It saves the user as having finished the onboarding by setting
+  /// the 'isFirstTime' field of the user in the SharedPreferences to
+  /// false. It also saves the user in the repository as having finished
+  /// the onboarding. Finally, it navigates to the user home page.
   void _onIntroEnd(context) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isFirstTime', false);
@@ -36,6 +49,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     router.go('/user');
   }
 
+  /// Builds an image widget with a rounded corner and a shadow.
+  ///
+  /// The image is centered and covers the whole container.
+  /// The container has a rounded corner and a shadow.
+  /// The height and width of the container are set to 0.4 and 0.8 of
+  /// the screen height and width respectively.
   Widget _buildImage(String assetPath) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.4,
@@ -62,6 +81,23 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   @override
+  /// Builds the onboarding screen for the user.
+  ///
+  /// This screen is built using the IntroductionScreen widget from the
+  /// introduction_screen package. It shows five pages with an image and a
+  /// title and body text. The pages are:
+  /// - Welcome to Roll and Reserve
+  /// - Discover nearby shops
+  /// - Reserve in few steps
+  /// - Manage your experience
+  ///
+  /// The screen has a skip button that can be used to skip the onboarding and
+  /// go to the user home page.
+  ///
+  /// When the user finishes the onboarding, it saves the user as having finished
+  /// the onboarding by setting the 'isFirstTime' field of the user in the
+  /// SharedPreferences to false. It also saves the user in the repository as
+  /// having finished the onboarding. Finally, it navigates to the user home page.
   Widget build(BuildContext context) {
     const pageDecoration = PageDecoration(
       titleTextStyle: TextStyle(

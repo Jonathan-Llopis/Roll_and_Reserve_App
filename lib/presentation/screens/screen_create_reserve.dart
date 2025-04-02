@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
-import 'package:roll_and_reserve/presentation/widgets/dialogs/body_create_reserve.dart';
+import 'package:roll_and_reserve/presentation/widgets/screen_components/screen_body/body_create_reserve.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/default_scaffold.dart';
 
 class ScreenCreateReserve extends StatefulWidget {
@@ -26,6 +26,12 @@ class ScreenCreateReserve extends StatefulWidget {
 
 class _ScreenCreateReserveState extends State<ScreenCreateReserve> {
   @override
+  /// Builds the UI for [ScreenCreateReserve].
+  ///
+  /// This uses the [ReserveBloc] to manage the state of the reserve.
+  /// The [DateTime] is parsed from the [searchDateTimeString] parameter.
+  /// The [reserve] parameter is used to determine which [DateFormat] to use.
+  ///
   Widget build(BuildContext context) {
     ReserveBloc reserveBloc = context.read<ReserveBloc>();
     DateTime searchDateTime = widget.reserve == null ?  DateFormat("dd-MM-yyyy HH:mm").parse(widget.searchDateTimeString):

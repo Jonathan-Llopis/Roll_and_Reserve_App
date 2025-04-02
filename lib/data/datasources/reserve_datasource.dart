@@ -27,6 +27,14 @@ class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
   ReservesRemoteDataSourceImpl(this.client);
 
   @override
+/// Fetches all reserves from the backend.
+///
+/// The [token] is the access token of the user, used to authorize the request.
+///
+/// Returns a [Future] that resolves to a list of [ReserveModel] if the request is successful.
+/// If the status code is 204, returns an empty list indicating no reserves are available.
+/// Throws an [Exception] if there is an error during the fetch process.
+
   Future<List<ReserveModel>> getAllReserves(String token) async {
     final response = await client.get(
       Uri.parse('${dotenv.env['BACKEND']}/reserves'),
@@ -47,6 +55,14 @@ class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
   }
 
   @override
+  /// Deletes a reserve from the backend.
+  ///
+  /// The [idReserves] is the id of the reserve to delete.
+  /// The [token] is the access token of the user, used to authorize the request.
+  ///
+  /// Returns a [Future] that resolves to a boolean if the request is successful.
+  /// If the status code is 200, returns true indicating the reserve was deleted.
+  /// Throws an [Exception] if there is an error during the deletion process.
   Future<bool> deleteReserves(int idReserves, String token) async {
     final response = await client.delete(
       Uri.parse('${dotenv.env['BACKEND']}/reserves/$idReserves'),
@@ -62,6 +78,15 @@ class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
   }
 
   @override
+  /// Updates a reserve on the backend.
+  ///
+  /// The [reserve] parameter is a [ReserveModel] object containing the updated details of the reserve.
+  /// The [token] is the access token of the user, used to authorize the request.
+  ///
+  /// Returns a [Future] that resolves to a boolean if the request is successful.
+  /// If the status code is 200, returns true indicating the reserve was updated.
+  /// Throws an [Exception] if there is an error during the update process.
+
   Future<bool> updateReserves(ReserveModel reserve, String token) async {
     final response = await client.put(
       Uri.parse('${dotenv.env['BACKEND']}/reserves/${reserve.id}'),
@@ -79,6 +104,15 @@ class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
   }
 
   @override
+  /// Creates a reserve on the backend.
+  ///
+  /// The [reserve] parameter is a [ReserveModel] object containing the details of the reserve.
+  /// The [token] is the access token of the user, used to authorize the request.
+  /// The [idShop] parameter is the id of the shop where the reserve is being created.
+  ///
+  /// Returns a [Future] that resolves to the id of the created reserve if the request is successful.
+  /// If the status code is 201, returns the id of the created reserve.
+  /// Throws an [Exception] if there is an error during the creation process.
   Future<int> createReserves(ReserveModel reserve, String token, int idShop) async {
     final response = await client.post(
       Uri.parse('${dotenv.env['BACKEND']}/reserves/$idShop'),
@@ -97,6 +131,16 @@ class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
   }
 
   @override
+  /// Adds a user to a reserve on the backend.
+  ///
+  /// The [idReserve] parameter is the id of the reserve to which the user is being added.
+  /// The [idUser] parameter is the id of the user being added to the reserve.
+  /// The [token] is the access token of the user, used to authorize the request.
+  ///
+  /// Returns a [Future] that resolves to a boolean if the request is successful.
+  /// If the status code is 201, returns true indicating the user was added successfully.
+  /// Throws an [Exception] if there is an error during the process.
+
   Future<bool> addUserToReserve(
       int idReserve, String idUser, String token) async {
     final response = await client.post(
@@ -114,6 +158,15 @@ class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
   }
 
   @override
+  /// Deletes a user from a reserve on the backend.
+  ///
+  /// The [idReserve] parameter is the id of the reserve from which the user is being deleted.
+  /// The [idUser] parameter is the id of the user being deleted from the reserve.
+  /// The [token] is the access token of the user, used to authorize the request.
+  ///
+  /// Returns a [Future] that resolves to a boolean if the request is successful.
+  /// If the status code is 200, returns true indicating the user was deleted successfully.
+  /// Throws an [Exception] if there is an error during the deletion process.
   Future<bool> deleteUserToReserve(
       int idReserve, String idUser, String token) async {
     final response = await client.delete(
@@ -132,6 +185,16 @@ class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
   }
 
   @override
+  /// Gets all reserves for a given date and table.
+  ///
+  /// The [date] parameter is the date for which to get the reserves, in the format 'YYYY-MM-DD'.
+  /// The [token] parameter is the access token of the user, used to authorize the request.
+  /// The [idTable] parameter is the id of the table for which to get the reserves.
+  ///
+  /// Returns a [Future] that resolves to a list of [ReserveModel] if the request is successful.
+  /// If the status code is 200, returns the list of reserves.
+  /// If the status code is 204, returns an empty list.
+  /// Throws an [Exception] if there is an error during the retrieval process.
   Future<List<ReserveModel>> getAllReservesByDate(
       String date, String token, int idTable) async {
       
@@ -154,6 +217,14 @@ class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
   }
 
   @override
+  /// Fetches a specific reserve by its ID from the backend.
+  ///
+  /// The [idReserve] parameter is the ID of the reserve to be fetched.
+  /// The [token] is the access token of the user, used to authorize the request.
+  ///
+  /// Returns a [Future] that resolves to a [ReserveModel] if the request is successful.
+  /// Throws an [Exception] if there is an error during the fetch process.
+
   Future<ReserveModel> getReserveById(int idReserve, String token) async {
     final response = await client.get(
       Uri.parse('${dotenv.env['BACKEND']}/reserves/$idReserve'),
@@ -171,6 +242,15 @@ class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
   }
 
   @override
+  /// Fetches all reserves of a specific user from the backend.
+  ///
+  /// The [idUser] parameter is the ID of the user whose reserves are to be fetched.
+  /// The [token] parameter is the access token of the user, used to authorize the request.
+  ///
+  /// Returns a [Future] that resolves to a list of [ReserveModel] if the request is successful.
+  /// If the status code is 200, returns the list of reserves.
+  /// If the status code is 204, returns an empty list.
+  /// Throws an [Exception] if there is an error during the fetch process.
   Future<List<ReserveModel>> getReservesOfUser(
       String idUser, String token) async {
     final response = await client.get(
@@ -194,6 +274,16 @@ class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
   }
 
   @override
+  /// Confirms a reserve for a specific user on the backend.
+  ///
+  /// The [idReserve] parameter is the ID of the reserve to be confirmed.
+  /// The [idUser] parameter is the ID of the user for whom the reserve is being confirmed.
+  /// The [token] is the access token of the user, used to authorize the request.
+  ///
+  /// Returns a [Future] that resolves to a boolean indicating if the confirmation was successful.
+  /// If the status code is 200, returns true indicating the reserve was confirmed successfully.
+  /// Throws an [Exception] if there is an error during the confirmation process.
+
   Future<bool> confirmReserve(
       int idReserve, String idUser, String token) async {
     final response = await client.put(
@@ -212,6 +302,16 @@ class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
   }
 
   @override
+  /// Creates a reserve event on the backend.
+  ///
+  /// The [reserve] parameter is a [ReserveModel] object containing the details of the reserve event.
+  /// The [token] is the access token of the user, used to authorize the request.
+  /// The [idShop] parameter is the id of the shop where the reserve event is being created.
+  ///
+  /// Returns a [Future] that resolves to the id of the created reserve event if the request is successful.
+  /// If the status code is 201, returns the id of the created reserve event.
+  /// Throws an [Exception] if there is an error during the creation process.
+
   Future<int> createReservesEvent(ReserveModel reserve, String token, int idShop) async {
     final response = await client.post(
       Uri.parse('${dotenv.env['BACKEND']}/reserves/$idShop'),
@@ -230,6 +330,16 @@ class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
   }
 
   @override
+  /// Fetches all reserve events for a specific shop from the backend.
+  ///
+  /// The [idShop] parameter is the ID of the shop for which to get the reserve events.
+  /// The [token] is the access token of the user, used to authorize the request.
+  ///
+  /// Returns a [Future] that resolves to a list of [ReserveModel] if the request is successful.
+  /// If the status code is 200, returns the list of reserve events.
+  /// If the status code is 204, returns an empty list.
+  /// Throws an [Exception] if there is an error during the fetch process.
+
   Future<List<ReserveModel>> getEvents(int idShop, String token) async {
     final response = await client.get(
       Uri.parse('${dotenv.env['BACKEND']}/reserves/shop_events/$idShop'),
@@ -249,6 +359,15 @@ class ReservesRemoteDataSourceImpl implements ReserveRemoteDataSource {
     }
   }
   @override
+  /// Fetches the last ten players that reserved a table from the backend.
+  ///
+  /// The [idGoogle] parameter is the ID of the user whose last ten players are to be fetched.
+  /// The [token] parameter is the access token of the user, used to authorize the request.
+  ///
+  /// Returns a [Future] that resolves to a list of [UserModel] if the request is successful.
+  /// If the status code is 200, returns the list of the last ten players.
+  /// If the status code is 204, returns an empty list.
+  /// Throws an [Exception] if there is an error during the fetch process.
   Future<List<UserModel>> getLastTenPlayers(String idGoogle, String token) async {
     final response = await client.get(
       Uri.parse('${dotenv.env['BACKEND']}/reserves/last_ten_players/$idGoogle'),

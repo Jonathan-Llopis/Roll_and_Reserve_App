@@ -1,6 +1,24 @@
 import 'package:flutter/material.dart';
 
-String getLocalizedPrompt(BuildContext context, String character, String theme) {
+
+/// Returns a localized RPG prompt for a given character and theme.
+/// 
+/// This function generates a prompt for an RPG game, specifically for Dungeons & Dragons 5th Edition.
+/// The prompt includes the character's name, role (Dungeon Master), theme, and tone.
+/// It also outlines the responsibilities of the RPG bot, including storytelling, world-building,
+/// NPC interactions, and ongoing tracking of character attributes.
+/// The prompt is designed to be immersive and engaging, with a focus on creating a unique and engaging experience for the player.
+///
+/// The prompt is localized for the following languages:
+///
+/// * Spanish (es)
+/// * English (en)
+/// * French (fr)
+/// * Catalan (ca)
+///
+/// If no matching locale is found, a default prompt is returned.
+String getLocalizedPrompt(
+    BuildContext context, String character, String theme) {
   Locale locale = Localizations.localeOf(context);
   switch (locale.languageCode) {
     case 'es':

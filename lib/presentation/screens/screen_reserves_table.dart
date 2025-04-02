@@ -33,6 +33,16 @@ class _ScreenReservesOfTableState extends State<ScreenReservesOfTable> {
   late TableEntity table;
 
   @override
+/// Initializes the state of the screen.
+///
+/// This method sets up the initial conditions for the screen by dispatching
+/// events to fetch tables associated with a specific shop and reserves for the
+/// selected date. It uses the `TableBloc` to retrieve tables by shop ID and
+/// all available tables. If a date filter exists in the `ReserveBloc` state,
+/// it is used as the selected date; otherwise, the current date is used. It
+/// then requests reserves for the selected date and table ID. Finally, it
+/// calls the superclass's `initState` method to complete the initialization.
+
   void initState() {
     context.read<TableBloc>().add(GetTablesByShopEvent(idShop: widget.idShop));
     ReserveBloc reserveBloc = BlocProvider.of<ReserveBloc>(context);
@@ -52,6 +62,15 @@ class _ScreenReservesOfTableState extends State<ScreenReservesOfTable> {
   }
 
   @override
+  /// Builds the screen with the reserves for a specific table and date.
+  ///
+  /// The screen fetches the tables associated with the given shop ID and the
+  /// reserves for the selected date and table ID. If the state of the
+  /// [TableBloc] has data, it shows a [BodyReservesTable] with the table and
+  /// selected date. If the state is loading, it shows a
+  /// [CircularProgressIndicator]. If there is an error, it shows an error
+  /// message. Finally, it includes a floating action button to create a new
+  /// reserve for the selected table and date.
   Widget build(BuildContext context) {
     return DefaultScaffold(
       appBar: widget.appBar,

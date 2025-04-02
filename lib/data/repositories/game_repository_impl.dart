@@ -11,6 +11,16 @@ class GameRepositoryImpl implements GameRepository {
   GameRepositoryImpl(this.remoteDataSource, this.sharedPreferences);
 
   @override
+/*************  ✨ Codeium Command ⭐  *************/
+  /// Retrieves all games from the remote data source.
+  ///
+  /// Returns a [Future] that resolves to an [Either] containing a list of [GameEntity]
+  /// on the right if the operation is successful. If an error occurs, it resolves
+  /// to the left with an [Exception].
+  ///
+  /// This function uses a token stored in shared preferences for authorization.
+
+/******  114f9aa5-e5a4-494d-af34-b658c5cbdfd6  *******/
   Future<Either<Exception, List<GameEntity>>> getAllGames() async {
     try {
       final token = sharedPreferences.getString('token');
@@ -21,6 +31,15 @@ class GameRepositoryImpl implements GameRepository {
     }
   }
   @override
+  /// Searches for games by name.
+  ///
+  /// The [name] is the name of the game to search.
+  ///
+  /// Returns a [Future] that resolves to an [Either] containing a list of [GameEntity]
+  /// on the right if the operation is successful. If an error occurs, it resolves
+  /// to the left with an [Exception].
+  ///
+  /// This function uses a token stored in shared preferences for authorization.
   Future<Either<Exception, List<GameEntity>>> searchGameByName(String name) async {
     try {
       final token = sharedPreferences.getString('token');

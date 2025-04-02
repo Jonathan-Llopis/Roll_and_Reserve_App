@@ -37,6 +37,12 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
   bool cameraPermissionGranted = false;
 
   @override
+  /// Called when the widget is inserted into the tree.
+  ///
+  /// This method is responsible for requesting the reserve with users for the
+  /// given idReserve from the database and requesting the shop with the given
+  /// idShop from the database. It is also responsible for requesting the camera
+  /// permission.
   void initState() {
     super.initState();
     context
@@ -45,6 +51,13 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
     context.read<ShopBloc>().add(GetShopEvent(idShop: widget.idShop));
     _requestCameraPermission();
   }
+
+  /// Requests camera permission from the user.
+  ///
+  /// This method checks if camera permission has been granted. If granted, it
+  /// updates the [cameraPermissionGranted] state to true. If the permission is
+  /// permanently denied, it opens the app settings to allow the user to enable
+  /// the permission manually.
 
   Future<void> _requestCameraPermission() async {
     final status = await Permission.camera.request();
@@ -57,6 +70,18 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
   }
 
   @override
+/// Builds the QR scanner screen widget.
+///
+/// This widget uses a [DefaultScaffold] with a given [appBar].
+/// If camera permission is granted, it uses [BlocBuilder]s to
+/// manage the state of [ShopBloc] and [ReserveBloc], displaying
+/// the QR scanner through [MobileScanner] and processing scanned
+/// barcodes. The scanner overlay is also built on top of the scanner.
+///
+/// If camera permission is not granted, it displays a message
+/// prompting the user to grant camera permission, with an option
+/// to request the permission again.
+
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
@@ -224,6 +249,18 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
     );
   }
 
+  /// Builds the overlay that appears when scanning a QR code.
+  ///
+  /// This is a rectangle with a solid border and a centered text that
+  /// instructs the user to align the QR code with the rectangle.
+  ///
+  /// The color scheme is used to determine the color of the border and the
+  /// text. The border width is 4 and the border style is solid.
+  ///
+  /// The text is in the bodyMedium font style with a font size of 16 and
+  /// a font weight of 500. The text is centered horizontally and vertically.
+  ///
+  /// The width and height of the overlay are both 250.
   Widget _buildScannerOverlay(ColorScheme colorScheme) {
     return Container(
       decoration: ShapeDecoration(
@@ -254,6 +291,21 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
     );
   }
 
+  /// Handles the scanned QR code and performs actions based on the code.
+  ///
+  /// If the scanned QR code matches the expected format for a user reserve,
+  /// it checks if the current time is within 5 minutes before the start time
+  /// of the reservation. If so, it attempts to confirm the user's location
+  /// and proceed with the reservation confirmation process.
+  ///
+  /// If the code is incorrect or the reservation hasn't started yet,
+  /// it shows an appropriate dialog with an error message.
+  ///
+  /// In case of an error during processing, it displays an error dialog.
+  ///
+  /// The method ensures that the scanned code is reset if it was invalid or not
+  /// the expected code.
+
   void _handleScannedCode(BuildContext context, ReserveState state) async {
     final loc = AppLocalizations.of(context)!;
 
@@ -267,7 +319,6 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
             startDate.subtract(const Duration(minutes: 5));
 
         if (fiveMinutesBefore.isBefore(DateTime.now())) {
-          // Cerrar diálogo de carga antes de nueva navegación
           if (!mounted) return;
           Navigator.of(context, rootNavigator: true).pop();
           await checkUserLocation(context, widget.idReserve);

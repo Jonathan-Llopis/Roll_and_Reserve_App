@@ -8,7 +8,7 @@ import 'package:roll_and_reserve/domain/entities/game_entity.dart';
 import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_event.dart';
-import 'package:roll_and_reserve/presentation/widgets/dialogs/body_create_event.dart';
+import 'package:roll_and_reserve/presentation/widgets/screen_components/screen_body/body_create_event.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ButtonCreateEvent extends StatelessWidget {
@@ -41,6 +41,17 @@ class ButtonCreateEvent extends StatelessWidget {
   final GameEntity? _selectedGame;
 
   @override
+  /// Builds the UI for a text button that creates a new event and saves it to
+  /// the server.
+  ///
+  /// The button is styled with [AppTheme.textButtonAcceptStyle].
+  ///
+  /// The button is enabled if the form is valid.
+  ///
+  /// When the button is pressed, it adds a [CreateEventsEvent] with the reserves
+  /// to the [ReserveBloc] and navigates to the events page of the shop.
+  ///
+  /// The reserves are created from the form values and the selected tables.
   Widget build(BuildContext context) {
     return TextButton(
       style: AppTheme.textButtonAcceptStyle,

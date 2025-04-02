@@ -20,6 +20,19 @@ class BodyReviewShop extends StatelessWidget {
   final List<ReviewEntity> reviews;
 
   @override
+  /// Builds the body of the screen that shows the reviews of the shop.
+  ///
+  /// The content of the body is a [Column] with the title of the shop, the
+  /// number of reviews, a [Divider], and a [ListView] with the reviews.
+  ///
+  /// The [ListView] is scrollable and is given by the [reviews] list.
+  ///
+  /// Each review is shown as a [CardReview] with the review.
+  ///
+  /// The floating action button is hidden if the user is an administrator.
+  /// Otherwise, the floating action button is a [FloatingActionButton] that
+  /// leads to the review creation screen if the user has already written a
+  /// review for the shop, and a [Container] otherwise.
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

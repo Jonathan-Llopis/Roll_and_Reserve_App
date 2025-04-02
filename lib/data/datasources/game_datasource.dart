@@ -14,6 +14,11 @@ class GameRemoteDataSourceImpl implements GameRemoteDataSource {
   GameRemoteDataSourceImpl(this.client);
 
   @override
+  /// Gets all the games.
+  ///
+  /// The [token] is the access token of the user.
+  ///
+  /// Throws an [Exception] if the response status code is not 200.
   Future<List<GameModel>> getAllGame(String token) async {
     final response = await client.get(
       Uri.parse('${dotenv.env['BACKEND']}/games'),
@@ -30,6 +35,15 @@ class GameRemoteDataSourceImpl implements GameRemoteDataSource {
     }
   }
   @override
+  /// Searches a game by name.
+  ///
+  /// The [token] is the access token of the user.
+  /// The [name] is the name of the game to search.
+  ///
+  /// Throws an [Exception] if the response status code is not 200 or 204.
+  ///
+  /// Returns a list of [GameModel] with the games that match the name.
+  /// If the list is empty, the method returns an empty list.
   Future<List<GameModel>> searchGameByName(String token, String name) async {
     final response = await client.get(
       Uri.parse('${dotenv.env['BACKEND']}/games/search/$name'),

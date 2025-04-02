@@ -20,11 +20,33 @@ class DefaultAppBar extends StatefulWidget implements PreferredSizeWidget {
 
 class _DefaultAppBarState extends State<DefaultAppBar> {
   @override
+  /// Initializes the state of the app bar.
+  ///
+  /// It calls the [State.initState] method of the parent class.
+  ///
+  /// This method is called when the widget is inserted into the tree.
   void initState() {
     super.initState();
   }
 
   @override
+  /// Builds the app bar with the logo and the user image.
+  ///
+  /// If the user is null, it shows a [CircularProgressIndicator].
+  /// If the user is not null, it shows a custom app bar with the logo and the
+  /// user image.
+  ///
+  /// The app bar has a gradient background and a shadow.
+  ///
+  /// The logo is a circle with a box shadow.
+  ///
+  /// The user image is a circle with a box shadow and a tap gesture to open the
+  /// end drawer.
+  ///
+  /// The app bar also has a flexible space with a gradient and a shadow.
+  /// The flexible space has an image with a color filter to darken it.
+  /// The flexible space also has a child with a blurred background and a
+  /// rounded corners.
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
       builder: (context, state) {

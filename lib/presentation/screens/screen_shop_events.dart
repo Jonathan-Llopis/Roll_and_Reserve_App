@@ -24,6 +24,10 @@ class ScreenShopEvents extends StatefulWidget {
 
 class _ScreenShopEventsState extends State<ScreenShopEvents> {
   @override
+  /// Called when the widget is inserted into the tree.
+  ///
+  /// This method is responsible for requesting the events of the shop with the given
+  /// idShop from the database and requesting the tables from the database.
   void initState() {
     context.read<ReserveBloc>().add(
           GetEventsEvent(idShop: widget.idShop),
@@ -35,6 +39,20 @@ class _ScreenShopEventsState extends State<ScreenShopEvents> {
   }
 
   @override
+  /// Builds the UI for [ScreenShopEvents].
+  ///
+  /// This uses the [ReserveBloc] to manage the state of the events of the shop.
+  /// The [ReserveState] is used to determine if the state is loading,
+  /// if there is an error, and if there is data.
+  ///
+  /// If the state is loading, it shows a [CircularProgressIndicator].
+  /// If there is an error, it shows an error message.
+  /// If there is data, it shows a [DefaultScaffold] with a [BodyEvents] with the events
+  /// and the given [appBar].
+  ///
+  /// If the user is an administrator, the floating action button is a [FloatingActionButton]
+  /// that leads to the event creation screen.
+  /// Otherwise, the floating action button is null.
   Widget build(BuildContext context) {
     LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
     return BlocBuilder<ReserveBloc, ReserveState>(builder: (context, state) {

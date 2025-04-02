@@ -19,6 +19,15 @@ class CardUser extends StatelessWidget {
   });
 
   @override
+  /// Builds a card widget displaying user information.
+  ///
+  /// The card includes the user's avatar, name, average rating in stars, and
+  /// status indicators. If `isLastPlayers` is true, the card becomes clickable
+  /// and displays a review icon, allowing users to create a review for the
+  /// player. If the logged-in user is an admin, an edit icon is shown, enabling
+  /// the admin to modify user details. The card's appearance changes based on
+  /// the user's role and confirmation status.
+
   Widget build(BuildContext context) {
     final ReviewBloc reviewBloc = BlocProvider.of<ReviewBloc>(context);
     final ThemeData theme = Theme.of(context);
@@ -108,6 +117,17 @@ class CardUser extends StatelessWidget {
     );
   }
 
+  /// Determines the color of the card based on the user's status.
+  ///
+  /// If `isLastPlayers` is true, the card will use a surface variant color
+  /// with an opacity of 0.8. Otherwise, the card color is determined by the
+  /// user's reserve confirmation status: a semi-transparent green if confirmed,
+  /// or a semi-transparent error color if not confirmed.
+  ///
+  /// [context] The build context used to access the theme colors.
+  ///
+  /// Returns the color to be used for the card background.
+
   Color _getCardColor(BuildContext context) {
     if (isLastPlayers == true) {
       return Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.8);
@@ -128,6 +148,11 @@ class CardUser extends StatelessWidget {
     }
   }
 
+  /// Builds a widget that displays the status of the user's reservation
+  /// confirmation. If the user's reservation is confirmed, the widget
+  /// displays a green background with a bold, white "Confirmed" text.
+  /// Otherwise, it displays a red background with a bold, white "Pending"
+  /// text.
   Widget _buildStatusIndicator(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -151,6 +176,15 @@ class CardUser extends StatelessWidget {
     );
   }
 
+  /// Builds a widget that displays the user's role in a colored chip.
+  ///
+  /// The color of the chip is determined by the user's role:
+  /// - Admin: Pastel red
+  /// - Owner: Pastel blue
+  /// - User: Pastel green
+  ///
+  /// The text of the chip is determined by the user's role and the
+  /// [AppLocalizations] object.
   Widget _buildRoleIndicator(BuildContext context) {
     Color roleColor;
     switch (user.role) {

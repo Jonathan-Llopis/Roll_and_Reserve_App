@@ -23,6 +23,10 @@ import 'package:roll_and_reserve/presentation/functions/notification_service.dar
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 
+  /// This is the main function of the app. It loads the environment variables
+  /// from the .env file, removes the splash screen after 2 seconds, initializes
+  /// Firebase, configures the dependencies, initializes the notification
+  /// service and runs the app.
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
@@ -50,11 +54,21 @@ class MyAppState extends State<MyApp> {
   late AppLinks _appLinks;
 
   @override
+  /// Initializes the state of the widget.
+  ///
+  /// This is called when the widget is inserted into the tree. It initializes
+  /// the deep link listener.
   void initState() {
     super.initState();
     _initDeepLinkListener();
   }
 
+  /// Initializes the deep link listener.
+  ///
+  /// This function is called when the widget is initialized. It creates an
+  /// instance of [AppLinks] and listens to the [uriLinkStream]. When a URI is
+  /// received, it extracts the path and parameters from the URI and navigates
+  /// to the path using [router.go].
   void _initDeepLinkListener() async {
     _appLinks = AppLinks();
     _appLinks.uriLinkStream.listen((Uri? uri) {
@@ -68,6 +82,12 @@ class MyAppState extends State<MyApp> {
   }
 
   @override
+  /// Builds the UI of the app.
+  ///
+  /// This widget is the root of the app. It provides the BLoCs for the app,
+  /// and builds a [MaterialApp] with the router configuration and the
+  /// internationalization settings. It also sets the locale of the app
+  /// based on the language set in the app.
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [

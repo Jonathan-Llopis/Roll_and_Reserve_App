@@ -23,6 +23,11 @@ class _ChatScreenState extends State<RolScreen> {
   final TextEditingController _controllerTheme = TextEditingController();
 
   @override
+
+  /// If the list of messages is empty, show a dialog to the user asking
+  /// for the character description and theme.
+  ///
+  /// This is called when the widget is inserted into the tree.
   void didChangeDependencies() {
     super.didChangeDependencies();
     ChatBloc chatBloc = BlocProvider.of<ChatBloc>(context);
@@ -41,18 +46,49 @@ class _ChatScreenState extends State<RolScreen> {
   }
 
   @override
+  /// Initializes the state of the chat screen.
+  ///
+  /// This function is called when the widget is inserted into the tree.
+  ///
+  /// It sets the [isRestarting] variable to false.
   void initState() {
     isRestarting = false;
     super.initState();
   }
 
   @override
+  /// Called when the widget is removed from the tree permanently.
+  ///
+  /// This is the opposite of [initState]. It is called when the widget is
+  /// discarded, and is used to free up any resources that aren't needed
+  /// anymore.
+  ///
+  /// In this case, it is used to remove the focus node from the widget tree.
+  ///
+  /// This method is called automatically when the widget is removed from the
+  /// tree, but it is also safe to call manually if you want to prematurely
+  /// release resources.
   void dispose() {
     _focusNode.dispose();
     super.dispose();
   }
 
   @override
+  /// Builds the role-playing chat screen.
+  ///
+  /// This screen allows users to engage in a role-playing conversation with the AI.
+  /// It displays the conversation history at the top and an input field at the bottom
+  /// for user interaction.
+  ///
+  /// The title of the screen is "Play role with AI" and it features an icon alongside
+  /// the title. The theme of the app is applied to the UI components.
+  ///
+  /// The [BodyMessages] widget presents the conversation history, while the [InputText]
+  /// widget provides an input field for users, with a focus node to manage input focus.
+  ///
+  /// A [DrawerCharacterRol] is available as an end drawer, displaying character data
+  /// from the [ChatBloc] state.
+
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
             return Scaffold(
@@ -99,6 +135,17 @@ class BodyMessages extends StatelessWidget {
   const BodyMessages({super.key});
 
   @override
+  /// Builds the message list view for the role-playing chat.
+  ///
+  /// This widget displays a loading indicator if the chat is loading or if the
+  /// message list is empty. Otherwise, it presents a scrollable list of chat messages.
+  ///
+  /// The list view is automatically scrolled to the bottom when new messages are
+  /// added. The [BlocBuilder] listens to changes in the [ChatBloc] state to update
+  /// the UI when necessary.
+  ///
+  /// The [scrollController] is used to manage scrolling within the list view.
+
   Widget build(BuildContext context) {
     final scrollController = ScrollController();
 
@@ -162,6 +209,21 @@ class ChatMessage extends StatelessWidget {
   });
 
   @override
+  /// Builds a chat message widget.
+  ///
+  /// This widget displays a single chat message within a styled container. The
+  /// message is aligned to the start or end of the row based on whether it is
+  /// from the user. The message text is rendered using Markdown, allowing for
+  /// rich text formatting. The container's appearance, including its color and
+  /// border radius, changes depending on who sent the message (user or narrator).
+  ///
+  /// The message displays the sender's identifier ("You" for user and "Narrator"
+  /// for the other party) and the message content. The message bubble has a max
+  /// width of 600 pixels and includes a shadow effect for messages not from the
+  /// user.
+  ///
+  /// The [context] parameter is used to access theme data and localizations.
+
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;

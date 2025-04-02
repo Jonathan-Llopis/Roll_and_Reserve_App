@@ -17,6 +17,23 @@ class BodyLastPlayers extends StatelessWidget {
   final List<UserEntity> users;
 
   @override
+  /// Builds the body of the screen that shows the last 10 players.
+  ///
+  /// This is a [Column] with the given [children].
+  ///
+  /// The first child is a [Padding] with a [Row] with a [Column] and an
+  /// [Icon]. The [Column] has a [Text] with the title "Played with" and
+  /// another [Text] with an empty string. The [Icon] is a star with a size
+  /// of 48 and a color of green.
+  ///
+  /// The second child is a [Divider] with a height of 1 and a thickness of
+  /// 1.
+  ///
+  /// The third child is an [Expanded] with a [Padding] and a [ListView].
+  /// The [ListView] has a [itemCount] equal to the length of the [users]
+  /// list, and an [itemBuilder] that returns a [BlocBuilder] with the
+  /// [LoginBloc] and the [LoginState]. The [BlocBuilder] returns a
+  /// [CardUser] with the user and the [isLastPlayers] set to true.
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

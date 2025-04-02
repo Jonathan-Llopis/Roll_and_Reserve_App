@@ -12,6 +12,15 @@ class DialogConfirmReserve extends StatelessWidget {
   const DialogConfirmReserve({super.key, required this.mensaje, required this.error});
 
   @override
+  /// Builds an [AlertDialog] that shows a message and an accept button.
+  ///
+  /// The message is given by the [mensaje] parameter.
+  ///
+  /// If the [error] parameter is true, the title of the dialog is "Error"
+  /// and the text is red. Otherwise, the title is "Reserva confirmada" and
+  /// the text is blue.
+  ///
+  /// When the accept button is pressed, the dialog is popped.
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
       return AlertDialog(

@@ -34,6 +34,14 @@ class _CustomFormFieldState extends State<CustomFormField> {
   final bool _passwordVisible = true;
 
   @override
+/// Builds a customizable text form field widget.
+///
+/// The form field uses the provided [focusNode], [controller], [icon], 
+/// [labelText], and optional [sufixIconButton] for its input decoration. 
+/// It supports password visibility toggle based on the [obscureText] flag 
+/// and [onChanged] callback for input changes. The [validator] function 
+/// is used for input validation.
+
   Widget build(BuildContext context) {
     return TextFormField(
       focusNode: widget.focusNode,

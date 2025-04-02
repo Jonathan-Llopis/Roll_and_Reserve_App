@@ -13,6 +13,11 @@ class DifficultyRemoteDataSourceImpl implements DifficultyRemoteDataSource {
   DifficultyRemoteDataSourceImpl(this.client);
 
   @override
+  /// Gets all the difficulties.
+  ///
+  /// The [token] is the access token of the user.
+  ///
+  /// Throws an [Exception] if the response status code is not 200.
   Future<List<DifficultyModel>> getAllDifficulty(String token) async {
     final response = await client.get(
       Uri.parse('${dotenv.env['BACKEND']}/difficulties'),

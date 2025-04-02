@@ -21,6 +21,11 @@ class _OnboardingDuenioScreenState extends State<OnboardingDuenioScreen> {
   final introKey = GlobalKey<IntroductionScreenState>();
   late UserEntity user;
   @override
+  /// Called when the widget is inserted into the tree.
+  ///
+  /// This function uses the BuildContext to get the LoginBloc and add a
+  /// CheckAuthentication event to check if the user is authenticated. After
+  /// that, it gets the user from the LoginBloc and sets the user state.
   void initState() {
     BlocProvider.of<LoginBloc>(context).add(CheckAuthentication());
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -32,6 +37,14 @@ class _OnboardingDuenioScreenState extends State<OnboardingDuenioScreen> {
     super.initState();
   }
 
+  /// Saves the user as having finished the onboarding, and navigates
+  /// to the user home page.
+  ///
+  /// This function is called when the user finishes the onboarding.
+  /// It saves the user as having finished the onboarding by setting
+  /// the 'isFirstTime' field of the user in the SharedPreferences to
+  /// false. It also saves the user in the repository as having finished
+  /// the onboarding. Finally, it navigates to the user home page.
   void _onIntroEnd(context) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isFirstTime', false);
@@ -39,6 +52,12 @@ class _OnboardingDuenioScreenState extends State<OnboardingDuenioScreen> {
     router.go('/user');
   }
 
+  /// Builds an image widget with a rounded corner and a shadow.
+  ///
+  /// The image is centered and covers the whole container.
+  /// The container has a rounded corner and a shadow.
+  /// The height and width of the container are set to 0.4 and 0.8 of
+  /// the screen height and width respectively.
   Widget _buildImage(String assetPath) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.4,
@@ -65,6 +84,20 @@ class _OnboardingDuenioScreenState extends State<OnboardingDuenioScreen> {
   }
 
   @override
+  /// Builds the onboarding screen for the store owner.
+  ///
+  /// This screen is built using the IntroductionScreen widget from the
+  /// introduction_screen package. It shows five pages with an image and a
+  /// title and body text. The pages are:
+  /// - Welcome to the store owner onboarding
+  /// - Setup your store
+  /// - Manage tables
+  /// - Schedule events
+  /// - Analyze and improve
+  ///
+  /// The screen has a skip button that can be used to skip the onboarding and
+  /// go to the user home page.
+  ///
   Widget build(BuildContext context) {
     const pageDecoration = PageDecoration(
       titleTextStyle: TextStyle(

@@ -11,6 +11,14 @@ class ButtonLoginGoogle extends StatelessWidget {
   });
 
   @override
+  /// A button that logs in a user with Google.
+  ///
+  /// The button is white with a subtle border and a Google logo.
+  /// It is elevated, and it has a slight animation when pressed.
+  ///
+  /// When the button is pressed, it adds a [LoginGoogle] event to the
+  /// [LoginBloc]. If there is an error, it shows a SnackBar with the error
+  /// message.
   Widget build(BuildContext context) {
     final loginBloc = BlocProvider.of<LoginBloc>(context);
     return ElevatedButton.icon(

@@ -23,6 +23,9 @@ class ScreenReviewShop extends StatefulWidget {
 
 class _ScreenReviewShopState extends State<ScreenReviewShop> {
   @override
+  /// Get reviews of the shop when the widget is initialized.
+  ///
+  /// Sends [GetReviewByShopEvent] to [ReviewBloc] to get reviews of the shop.
   void initState() {
     super.initState();
     ReviewBloc reviewBloc = BlocProvider.of<ReviewBloc>(context);
@@ -30,6 +33,20 @@ class _ScreenReviewShopState extends State<ScreenReviewShop> {
   }
 
   @override
+  /// Builds the screen with the reviews of the shop.
+  ///
+  /// This screen is the default scaffold with the given [appBar] and a
+  /// [BlocBuilder] that shows a [BodyReviewShop] if the [ReviewState] has
+  /// data, an error message if there is an error, and a
+  /// [CircularProgressIndicator] if the state is loading.
+  ///
+  /// The [BodyReviewShop] is given the [ShopBloc], the id of the shop,
+  /// and the list of reviews.
+  ///
+  /// If the user is an administrator, the floating action button is hidden.
+  /// Otherwise, the floating action button is a [FloatingActionButton] that
+  /// leads to the review creation screen if the user has already written a
+  /// review for the shop, and a [Container] otherwise.
   Widget build(BuildContext context) {
     ReviewBloc reviewBloc = BlocProvider.of<ReviewBloc>(context);
     LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);

@@ -30,6 +30,18 @@ class _BodyReservesTableState extends State<BodyReservesTable> {
   
   DateTime? selectedDate;
   @override
+  /// Builds the body of the screen for a specific table and date.
+  ///
+  /// The top row shows the table number and a button to filter the reserves
+  /// by date. The middle row shows the selected date and two buttons to
+  /// navigate to the previous and next day. The bottom row shows the reserves
+  /// for the selected date and table.
+  ///
+  /// The reserves are shown in a list view and each reserve is shown in a
+  /// [CardReserve].
+  ///
+  /// The date is shown in the format "dd-mm-yyyy" and the reserves are sorted
+  /// by start time.
   Widget build(BuildContext context) {
     selectedDate ??= widget.selectedDate;
     return Column(

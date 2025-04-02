@@ -18,6 +18,27 @@ class MapMarker extends StatelessWidget {
   final ShopEntity store;
 
   @override
+  /// Builds a [GestureDetector] that shows a [CardShopMap] when tapped.
+  ///
+  /// The [GestureDetector] child is a [Container] with a white background, a
+  /// rounded border, and a shadow. The [Container] also has a border of width
+  /// 2 and color black. The [Container] contains either a [ClipOval] with an
+  /// [Image] or an [Icon].
+  ///
+  /// If the shop's logo is not null and is a [Uint8List], the [ClipOval] contains
+  /// an [Image] with the logo. If the shop's logo is null or is not a [Uint8List],
+  /// the [ClipOval] contains an [Icon] with the [Icons.shop] icon.
+  ///
+  /// If the shop's logo is not null and is a [File], the [ClipOval] contains an
+  /// [Image] with the logo. If the shop's logo is null or is not a [File], the
+  /// [ClipOval] contains an [Icon] with the [Icons.shop] icon.
+  ///
+  /// If the shop's logo is not null and is not a [Uint8List] or a [File], the
+  /// [ClipOval] contains an [SvgPicture] with a blue color if the shop's owner
+  /// is the same as the user, and red otherwise.
+  ///
+  /// When the [GestureDetector] is tapped, it shows a [CardShopMap] with the
+  /// shop's details.
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {

@@ -22,6 +22,16 @@ class ButtonUpdate extends StatelessWidget {
   final TextEditingController _oldPasswordController;
 
   @override
+  /// Builds a row with two buttons: a cancel button and an update button.
+  ///
+  /// The cancel button pops the current route off the navigator stack using
+  /// [Navigator.pop]. The update button triggers a password validation
+  /// process by dispatching a [ValidatePasswordEvent] to the [LoginBloc]. If
+  /// the password is validated successfully (indicated by a non-null
+  /// `validatePassword` in the state), and the form is validated, an
+  /// [UpdatePasswordEvent] is dispatched to update the password, and
+  /// navigates to the login screen using [context.go].
+
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

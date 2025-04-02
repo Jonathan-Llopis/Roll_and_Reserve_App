@@ -15,6 +15,12 @@ class ButtonLogin extends StatelessWidget {
   final TextEditingController passwordController;
 
   @override
+  /// A button that triggers the login process when pressed.
+  ///
+  /// The button is disabled when the email or password fields are empty.
+  ///
+  /// The button is a child of a [Material] widget.
+  ///
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(

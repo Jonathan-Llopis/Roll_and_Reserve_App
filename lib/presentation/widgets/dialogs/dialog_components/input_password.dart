@@ -22,6 +22,15 @@ class _PasswordInputState extends State<PasswordInput> {
   String? _errorText;
 
   @override
+  /// Builds a TextFormField for entering a password.
+  ///
+  /// The form field is decorated with a label and a border. It also has
+  /// an icon button on the right side that can be used to toggle the
+  /// visibility of the password.
+  ///
+  /// The form field is validated using the [validator] passed to the
+  /// constructor. If the validation fails, the error message is displayed
+  /// below the form field.
   Widget build(BuildContext context) {
     return TextFormField(
       controller: widget.controller,

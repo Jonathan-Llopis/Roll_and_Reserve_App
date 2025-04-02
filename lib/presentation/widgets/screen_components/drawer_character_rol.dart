@@ -15,6 +15,25 @@ class DrawerCharacterRol extends StatelessWidget {
   final TextEditingController _controllerTheme = TextEditingController();
 
   @override
+/// Builds a Drawer widget displaying various sections related to the
+/// character's details.
+///
+/// This method constructs a Drawer containing the character's header, primary
+/// attributes, health and defense stats, magical skills, equipment and treasure,
+/// and companion information. If the character data or attributes are missing,
+/// an error message is displayed. The drawer includes an option to delete the
+/// current adventure, which triggers a confirmation dialog. Upon deletion
+/// confirmation, the [CleanRolPlay] event is added to the [ChatBloc], and a
+/// new [DialogCharacterDescription] is presented to start a new adventure.
+///
+/// The drawer's contents are dynamically built based on the presence of spells
+/// and companion data. The sections are organized in a [ListView] with
+/// appropriate titles and content widgets for each section, localized using
+/// [AppLocalizations].
+///
+/// Returns a [Drawer] widget populated with character information or an error
+/// message if data is incomplete.
+
   Widget build(BuildContext context) {
     final character = characterData['character'] as Map<String, dynamic>?;
     final attributes = character?['core_attributes'] as Map<String, dynamic>?;
@@ -110,6 +129,20 @@ class DrawerCharacterRol extends StatelessWidget {
     );
   }
 
+/// Builds the header section of the character drawer.
+///
+/// This header displays the character's name, race, class, and location
+/// within a styled [DrawerHeader]. The character's name is shown in a large,
+/// bold medieval style font, while the race and class are displayed in a
+/// smaller font below it. The location is shown with an icon next to it,
+/// all in an amber and grey color scheme. The layout is organized using
+/// a [Column] and [Row] to ensure proper alignment and overflow handling.
+///
+/// The header is decorated with a brown background and a border for visual
+/// distinction within the drawer.
+///
+/// Returns a [DrawerHeader] widget populated with character details.
+
   Widget _buildHeader(Map<String, dynamic> character) {
     return DrawerHeader(
       decoration: BoxDecoration(
@@ -168,6 +201,14 @@ class DrawerCharacterRol extends StatelessWidget {
     );
   }
 
+  /// Builds a styled section title for the character drawer.
+  ///
+  /// This widget displays a section title in a bold, brown, medieval style
+  /// font with a size of 18. The padding is set to 8 on the vertical axis and
+  /// 16 on the horizontal axis. The title is displayed with a brown color
+  /// with an opacity of 900.
+  ///
+  /// Returns a [Padding] widget with a [Text] widget as its child.
   Widget _buildSectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -183,6 +224,23 @@ class DrawerCharacterRol extends StatelessWidget {
       ),
     );
   }
+
+/// Builds a grid displaying character attributes.
+///
+/// This widget uses a [GridView] to show each character attribute in a
+/// [Card]. Each card contains the attribute's name and value, styled in
+/// a medieval theme. The grid is non-scrollable and contains three columns,
+/// with each cell having a fixed aspect ratio.
+///
+/// The attributes are passed as a map, where the key is the attribute
+/// abbreviation and the value is the attribute's value. The names of the
+/// attributes are localized using [AppLocalizations].
+///
+/// - `attributes`: A map with keys as attribute abbreviations (e.g., 'STR',
+///   'DEX') and values as the respective attribute values.
+/// - `context`: The [BuildContext] used for localization and theming.
+///
+/// Returns a [GridView] widget displaying the character's attributes.
 
   Widget _buildAttributesGrid(
       Map<String, dynamic> attributes, BuildContext context) {
@@ -234,6 +292,16 @@ class DrawerCharacterRol extends StatelessWidget {
     );
   }
 
+  /// Builds a row of three stat circles for the character's combat stats.
+  ///
+  /// The first circle is for the character's hit points, colored red.
+  /// The second circle is for the character's armor class, colored blue.
+  /// The third circle is for the character's level, colored green.
+  ///
+  /// - `character`: A map with the character's properties.
+  /// - `context`: The [BuildContext] used for localization and theming.
+  ///
+  /// Returns a [Row] widget with three [CircleStat] widgets.
   Widget _buildCombatStats(
       Map<String, dynamic> character, BuildContext context) {
     return Padding(
@@ -250,6 +318,17 @@ class DrawerCharacterRol extends StatelessWidget {
       ),
     );
   }
+
+/// Builds a circular widget to display a single stat for a character.
+///
+/// This widget creates a circle with the given `color` and displays
+/// the `value` in the center. Below the circle, it shows a `label` 
+/// describing the stat. The circle is styled with a medieval theme
+/// using the `GoogleFonts.medievalSharp`.
+///
+/// - `label`: A short description of the stat (e.g., 'HP', 'CA').
+/// - `value`: The value of the stat to be displayed inside the circle.
+/// - `color`: The color used for the circle and the value text.
 
   Widget _buildStatCircle(String label, String value, Color color) {
     return Column(
@@ -286,6 +365,21 @@ class DrawerCharacterRol extends StatelessWidget {
     );
   }
 
+  /// Builds a widget displaying the character's spell section.
+  ///
+  /// The section is composed of three parts:
+  /// - A spell slot indicator for level 1 spells.
+  /// - A list of known spells.
+  /// - A list of cantrips.
+  ///
+  /// The widget is a [Column] with the above three parts.
+  /// The column has a padding of 16 on both sides.
+  ///
+  /// - `spells`: A map with the character's spells, as returned by the
+  ///   [CharacterData] class.
+  /// - `context`: The [BuildContext] used for localization and theming.
+  ///
+  /// Returns a [Widget] representing the character's spell section.
   Widget _buildSpellSection(Map<String, dynamic> spells, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -302,6 +396,20 @@ class DrawerCharacterRol extends StatelessWidget {
       ),
     );
   }
+
+  /// Builds a row displaying the available spell slots for level 1 spells.
+  ///
+  /// This widget displays the label for level 1 spell slots and the
+  /// current count of available spell slots out of the total.
+  ///
+  /// The label and the count are styled with a medieval theme using
+  /// `GoogleFonts.medievalSharp`.
+  ///
+  /// - `spellSlots`: A map containing the 'available' and 'used' slots
+  ///   for level 1 spells.
+  /// - `context`: The [BuildContext] used for localization and theming.
+  ///
+  /// Returns a [Row] widget with the spell slot label and count.
 
   Widget _buildSpellSlotIndicator(
       Map<String, dynamic> spellSlots, BuildContext context) {
@@ -330,6 +438,18 @@ class DrawerCharacterRol extends StatelessWidget {
     );
   }
 
+  /// Builds a section displaying a list of spells.
+  ///
+  /// This widget displays a heading with the given [title] and a
+  /// [Column] of [ListTile]s, each displaying a spell's name.
+  ///
+  /// The heading is styled with a medieval theme using
+  /// `GoogleFonts.medievalSharp`.
+  ///
+  /// The [spells] parameter should be a [List] of [String]s or a
+  /// [List] of [Map]s with a 'name' key containing the spell's name.
+  ///
+  /// Returns a [Column] widget with the heading and the list of spells.
   Widget _buildSpellList(String title, dynamic spells) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -366,6 +486,14 @@ class DrawerCharacterRol extends StatelessWidget {
     );
   }
 
+  /// Builds a list of the character's equipment.
+  ///
+  /// The [character] parameter should be a [Map] with a 'currency' key
+  /// containing the character's currency and an 'equipment' key containing
+  /// the character's equipment.
+  ///
+  /// Returns a [Column] widget with the currency display and the list of
+  /// equipment.
   Widget _buildEquipmentList(Map<String, dynamic> character) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -396,6 +524,13 @@ class DrawerCharacterRol extends StatelessWidget {
     );
   }
 
+  /// Builds a row of three [CoinDisplay] widgets to show the character's
+  /// currency.
+  ///
+  /// The [currency] parameter should be a [Map] with 'gp', 'sp', and 'cp'
+  /// keys for the gold, silver, and copper pieces, respectively.
+  ///
+  /// Returns a [Row] widget with the three [CoinDisplay]s, spaced around.
   Widget _buildCurrencyDisplay(Map<String, dynamic> currency) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -407,6 +542,17 @@ class DrawerCharacterRol extends StatelessWidget {
     );
   }
 
+  /// Builds a widget that displays a currency amount.
+  ///
+  /// The [type] parameter should be a string of either 'GP', 'SP', or 'CP'
+  /// for the gold, silver, and copper pieces, respectively.
+  ///
+  /// The [amount] parameter is the amount of the currency to display.
+  ///
+  /// The [color] parameter is the color to use for the currency.
+  ///
+  /// Returns a [Row] widget with the currency icon and the amount, spaced
+  /// around.
   Widget _buildCoinDisplay(String type, int amount, Color color) {
     return Row(
       children: [
@@ -426,6 +572,13 @@ class DrawerCharacterRol extends StatelessWidget {
     );
   }
 
+  /// Builds a card that displays information about a companion.
+  ///
+  /// The [companion] parameter should be a [Map] with 'name', 'race', and
+  /// 'ability' keys containing the companion's name, race, and ability,
+  /// respectively.
+  ///
+  /// Returns a [Card] widget with the companion's information.
   Widget _buildCompanionInfo(Map<String, dynamic> companion) {
     return Padding(
       padding: const EdgeInsets.all(16),

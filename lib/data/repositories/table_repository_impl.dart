@@ -13,6 +13,14 @@ class TableRepositoryImpl implements TableRepository {
   TableRepositoryImpl(this.remoteDataSource, this.sharedPreferences);
 
   @override
+  /// Retrieves all tables from the backend.
+  ///
+  /// Fetches the list of tables using the access token stored in shared preferences.
+  /// Converts the fetched [TableModel] objects into [TableEntity] objects.
+  ///
+  /// Returns a [Future] that completes with a [Right] containing a list of [TableEntity]
+  /// if the operation is successful, or a [Left] containing an [Exception] if an error occurs.
+
   Future<Either<Exception, List<TableEntity>>> getAllTables() async {
     try {
       final token = sharedPreferences.getString('token');
@@ -24,6 +32,14 @@ class TableRepositoryImpl implements TableRepository {
   }
 
   @override
+  /// Deletes the table with the specified [idTable] from the backend.
+  ///
+  /// Fetches the access token from shared preferences and then calls the
+  /// [TableRemoteDataSource.deleteTables] method to perform the deletion.
+  ///
+  /// Returns a [Future] that completes with a [Right] containing a boolean
+  /// indicating whether the request was successful, or a [Left] containing an
+  /// [Exception] if an error occurs.
   Future<Either<Exception, bool>> deleteTable(int idTable) async {
     try {
       final token = sharedPreferences.getString('token');
@@ -35,6 +51,14 @@ class TableRepositoryImpl implements TableRepository {
   }
 
   @override
+  /// Updates a table on the backend.
+  ///
+  /// Converts the given [TableEntity] to a [TableModel] and uses the stored token
+  /// to authorize the request to the remote data source.
+  ///
+  /// Returns a [Future] that resolves to a [Right] containing `true` if the
+  /// request is successful, or a [Left] containing an [Exception] if an
+  /// error occurs during the operation.
   Future<Either<Exception, bool>> updateTable(TableEntity table) async {
     try {
       final token = sharedPreferences.getString('token');
@@ -47,6 +71,14 @@ class TableRepositoryImpl implements TableRepository {
   }
 
   @override
+  /// Creates a table on the backend.
+  ///
+  /// Converts the given [TableEntity] to a [TableModel] and uses the stored token
+  /// to authorize the request to the remote data source.
+  ///
+  /// Returns a [Future] that resolves to a [Right] containing `true` if the
+  /// request is successful, or a [Left] containing an [Exception] if an
+  /// error occurs during the operation.
   Future<Either<Exception, bool>> createTable(TableEntity table) async {
     try {
       final token = sharedPreferences.getString('token');
@@ -58,6 +90,16 @@ class TableRepositoryImpl implements TableRepository {
     }
   }
   @override
+  /// Retrieves all tables for a specific shop from the backend.
+  ///
+  /// Fetches the list of tables associated with the given [shopId] using the
+  /// access token stored in shared preferences. Converts the fetched
+  /// [TableModel] objects into [TableEntity] objects.
+  ///
+  /// Returns a [Future] that completes with a [Right] containing a list of
+  /// [TableEntity] if the operation is successful, or a [Left] containing an
+  /// [Exception] if an error occurs.
+
   Future<Either<Exception, List<TableEntity>>> getAllTablesByShop(int shopId) async {
     try {
       final token = sharedPreferences.getString('token');

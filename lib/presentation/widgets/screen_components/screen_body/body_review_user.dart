@@ -17,6 +17,14 @@ class BodyReviewUser extends StatelessWidget {
   final List<ReviewEntity> reviews;
 
   @override
+  /// Builds the body of the screen that shows the reviews of the user.
+  ///
+  /// This is a [Column] with the title, a [Divider], and a [ListView] with
+  /// the reviews.
+  ///
+  /// The [ListView] is scrollable and is given by the [reviews] list.
+  ///
+  /// Each review is shown as a [CardReview] with the review.
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

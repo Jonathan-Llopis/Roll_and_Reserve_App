@@ -8,7 +8,7 @@ import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_state.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_state.dart';
-import 'package:roll_and_reserve/presentation/functions/state_check.dart';
+import 'package:roll_and_reserve/presentation/functions/state_skeleton.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/screen_body/chip_time.dart';
 
 class CardReserve extends StatefulWidget {
@@ -28,13 +28,38 @@ class CardReserve extends StatefulWidget {
 class _CardReserveState extends State<CardReserve> {
 
   @override
+  /// Builds a card with information of a reserve.
+  ///
+  /// The card is divided in sections: date, shop, table, game, and time.
+  /// Each section is composed of an icon, a title and a value. The value
+  /// is obtained from the [ReserveBloc] and [ShopBloc] states.
+  ///
+  /// The date section shows the day and date of the reserve. If the reserve
+  /// is an event, it shows the day and date in the format 'EEEE, dd-MM-yyyy'.
+  /// Otherwise, it shows the day in the format 'EEEE'.
+  ///
+  /// The shop section shows the name of the shop that owns the reserve.
+  ///
+  /// The table section shows the number of the table that the reserve is
+  /// associated with.
+  ///
+  /// The game section shows the description of the game that the reserve is
+  /// associated with.
+  ///
+  /// The time section shows the start and end time of the reserve, and the
+  /// remaining time until the reserve starts. If the reserve has already
+  /// started, it shows the elapsed time since the reserve started.
+  ///
+  /// The card is colored differently depending on if the reserve is an event
+  /// or not. If the reserve is an event, the card is colored with the
+  /// secondary color. Otherwise, it is colored with the tertiary color.
   Widget build(BuildContext context) {
     ReserveBloc reserveBloc = BlocProvider.of<ReserveBloc>(context);
     ShopBloc shopBloc = BlocProvider.of<ShopBloc>(context);
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context)!;
     return BlocBuilder<ShopBloc, ShopState>(builder: (context, state) {
-      return buildContent<ShopState>(
+      return buildContentSkeleton<ShopState>(
         state: state,
         isLoading: (state) => state.isLoading,
         errorMessage: (state) => state.errorMessage,
@@ -43,7 +68,7 @@ class _CardReserveState extends State<CardReserve> {
         contentBuilder: (state) {
           return BlocBuilder<TableBloc, TableState>(
             builder: (context, state) {
-              return buildContent<TableState>(
+              return buildContentSkeleton<TableState>(
                 state: state,
                 isLoading: (state) => state.isLoading,
                 errorMessage: (state) => state.errorMessage,
@@ -135,6 +160,19 @@ class _CardReserveState extends State<CardReserve> {
     });
   }
 
+  /// A horizontal row with an [Icon] and a [Text] widget.
+  ///
+  /// The [Icon] is given the [icon] parameter and the size is set to 18.
+  /// The color of the [Icon] is set to grey[600].
+  ///
+  /// The [Text] is given the [text] parameter and the style is set to
+  /// grey[800] with a font size of 14. The height of the text is set to 1.4.
+  ///
+  /// The two widgets are separated by a [SizedBox] with a width of 8.0.
+  ///
+  /// The [Padding] is set to have a symmetric vertical padding of 4.0.
+  ///
+  /// This is used in the [CardReserve] to display information about a reserve.
   Widget _buildInfoRow(IconData icon, String text) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
@@ -157,6 +195,16 @@ class _CardReserveState extends State<CardReserve> {
     );
   }
 
+  /// A horizontal row with two [ChipTime] widgets.
+  ///
+  /// The first chip is given the [Icons.access_time_filled] icon and the
+  /// start time of the reserve. The second chip is given the [Icons.timer_off]
+  /// icon and the end time of the reserve.
+  ///
+  /// The two chips are separated by a [SizedBox] with a width of 5.0.
+  ///
+  /// The row is used in the [CardReserve] to display the start and end times
+  /// of the reserve.
   Widget _buildTimeSection(ThemeData theme, AppLocalizations loc) {
     return Row(
       children: [

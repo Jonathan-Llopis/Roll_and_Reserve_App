@@ -40,6 +40,20 @@ class _ScreenRegisterState extends State<ScreenRegister> {
   bool _passwordConfirmVisible = false;
 
   @override
+  /// Adds the [emailFocus], [passwordFocused], [nameFocus], [confirmationPasswordFocused]
+  /// and [userNameFocus] functions to the [emailFocusNode], [passwordFocusNode],
+  /// [nameFocusNode], [confirmPasswordFocusNode] and [userNameFocusNode] focus nodes.
+  ///
+  /// This is done so that the [emailFocus], [passwordFocused], [nameFocus],
+  /// [confirmationPasswordFocused] and [userNameFocus] functions are called whenever the
+  /// focus of the [emailFocusNode], [passwordFocusNode], [nameFocusNode],
+  /// [confirmPasswordFocusNode] or [userNameFocusNode] changes.
+  ///
+  /// This is used to control the visibility of the email text field.
+  ///
+  /// The [super.initState] method is called last to ensure that the
+  /// [emailFocusNode], [passwordFocusNode], [nameFocusNode],
+  /// [confirmPasswordFocusNode] and [userNameFocusNode] are properly initialized.
   void initState() {
     emailFocusNode.addListener(emailFocus);
     passwordFocusNode.addListener(passwordFocused);
@@ -50,6 +64,17 @@ class _ScreenRegisterState extends State<ScreenRegister> {
   }
 
   @override
+  /// Called when the widget is removed from the tree permanently.
+  ///
+  /// This is the opposite of [initState]. It is called when the widget is
+  /// discarded, and is used to free up any resources that aren't needed
+  /// anymore.
+  ///
+  /// In this case, it is used to remove the focus node from the widget tree.
+  ///
+  /// This method is called automatically when the widget is removed from the
+  /// tree, but it is also safe to call manually if you want to prematurely
+  /// release resources.
   void dispose() {
     emailFocusNode.removeListener(emailFocus);
     passwordFocusNode.removeListener(passwordFocused);
@@ -59,28 +84,82 @@ class _ScreenRegisterState extends State<ScreenRegister> {
     super.dispose();
   }
 
+  /// Calls [riveController?.emailFocus] with the current focus state of the
+  /// [emailFocusNode].
+  ///
+  /// This is used to control the visibility of the email text field.
+  ///
+  /// The [riveController?.emailFocus] method is called only if the
+  /// [riveController] is not null, and the [emailFocusNode] is not null.
   void emailFocus() {
     riveController?.emailFocus(emailFocusNode.hasFocus);
   }
 
+  /// Calls [riveController?.nameFocus] with the current focus state of the
+  /// [nameFocusNode].
+  ///
+  /// This is used to control the visibility of the name text field.
+  ///
+  /// The [riveController?.nameFocus] method is called only if the
+  /// [riveController] is not null, and the [nameFocusNode] is not null.
   void nameFocus() {
     riveController?.nameFocus(nameFocusNode.hasFocus);
   }
+
+  /// Calls [riveController?.nameFocus] with the current focus state of the
+  /// [userNameFocusNode].
+  ///
+  /// This is used to control the visibility of the user name text field.
+  ///
+  /// The [riveController?.nameFocus] method is called only if the
+  /// [riveController] is not null, and the [userNameFocusNode] is not null.
 
   void userNameFocus() {
     riveController?.nameFocus(nameFocusNode.hasFocus);
   }
 
+  /// Calls [riveController?.passwordFocus] with the current focus state of the
+  /// [passwordFocusNode] and the current state of the [_passwordVisible].
+  ///
+  /// This is used to control the visibility of the password text field.
+  ///
+  /// The [riveController?.passwordFocus] method is called only if the
+  /// [riveController] is not null, and the [passwordFocusNode] is not null.
   void passwordFocused() {
     riveController?.passwordFocus(passwordFocusNode.hasFocus, _passwordVisible);
   }
 
+  /// Calls [riveController?.confirmationPasswordFocused] with the current focus
+  /// state of the [confirmPasswordFocusNode] and the current state of the
+  /// [_passwordConfirmVisible].
+  ///
+  /// This is used to control the visibility of the confirmation password text
+  /// field.
+  ///
+  /// The [riveController?.confirmationPasswordFocused] method is called only if
+  /// the [riveController] is not null, and the [confirmPasswordFocusNode] is not
+  /// null.
   void confirmationPasswordFocused() {
     riveController?.confirmationPasswordFocused(
         confirmPasswordFocusNode.hasFocus, _passwordConfirmVisible);
   }
 
   @override
+  /// Builds the register screen.
+  ///
+  /// This screen is used to register a new user. It shows the
+  /// conversation history at the top and an input field at the bottom.
+  ///
+  /// The title of the screen is "Describe your move" and it shows a restart
+  /// icon in the actions section that restarts the conversation when pressed.
+  ///
+  /// The input field is an [InputTextImage] widget that allows the user to
+  /// input text and images. The focus node is passed as a parameter so that
+  /// the input field can request focus when the user starts typing.
+  ///
+  /// The conversation history is a [BodyMessages] widget that shows the
+  /// conversation history. It is passed the [ChatBloc] as a parameter so that
+  /// it can retrieve the messages from the bloc.
   Widget build(BuildContext context) {
     final loginBloc = BlocProvider.of<LoginBloc>(context);
     return Scaffold(

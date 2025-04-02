@@ -21,6 +21,12 @@ class ScreenLastPlayers extends StatefulWidget {
 
 class _ScreenLastPlayersState extends State<ScreenLastPlayers> {
   @override
+  /// Called when the widget is inserted into the tree.
+  ///
+  /// This method is responsible for requesting the last 10 players
+  /// to the server, with the user's Google ID.
+  ///
+  /// This method is only called once, when the widget is first created.
   void initState() {
     super.initState();
     ReserveBloc reserveBloc = BlocProvider.of<ReserveBloc>(context);
@@ -29,6 +35,12 @@ class _ScreenLastPlayersState extends State<ScreenLastPlayers> {
   }
 
   @override
+  /// Builds the screen with the last 10 players.
+  ///
+  /// This screen is the default scaffold with the given [appBar] and a
+  /// [BodyLastPlayers] as the body. The body shows the last 10 players
+  /// that have played in the game, with their respective user id, name,
+  /// and date of the last time they played.
   Widget build(BuildContext context) {
  LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
     return DefaultScaffold(

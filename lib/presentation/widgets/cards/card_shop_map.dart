@@ -12,6 +12,25 @@ class CardShopMap extends StatelessWidget {
   final ShopEntity store;
 
   @override
+  /// Builds a widget that shows a shop as a card with a logo, name, address,
+  /// rating, and a button to go to the shop.
+  ///
+  /// The logo is shown as a [ClipRRect] with a circular border radius of 8.
+  /// The name of the shop is shown as a [Text] with a bold font size of 22.
+  /// The address of the shop is shown as a [Text] with a font size of 14 and
+  /// a grey color.
+  /// The rating of the shop is shown as a [Row] with a [Text] with a font size
+  /// of 14 and a [buildStars] with the average rating of the shop.
+  /// The button to go to the shop is shown as an [ElevatedButton] with a text
+  /// "Ir a la tienda" and an onPressed function that navigates to the shop
+  /// page with the id of the shop.
+  ///
+  /// The widget is wrapped in a [Padding] with a padding of 16.0 on all sides.
+  /// The content of the widget is aligned to the start of the column.
+  /// The widget is wrapped in a [Column] with a mainAxisSize of min and
+  /// a crossAxisAlignment of start.
+  /// The widget is wrapped in a [Row] with the logo and the column of text.
+  /// The widget is wrapped in a [Center] with a button to go to the shop.
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),

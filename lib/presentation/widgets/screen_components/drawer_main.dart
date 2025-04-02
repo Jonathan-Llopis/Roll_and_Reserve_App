@@ -12,6 +12,24 @@ class DrawerMain extends StatelessWidget {
   const DrawerMain({super.key, required this.appBar});
   final PreferredSizeWidget appBar;
 
+  /// Builds the chat features submenu.
+  ///
+  /// This submenu is used to navigate to the different chat features of the
+  /// app. It shows four options: "Ask AI about rules", "Play role with AI",
+  /// "Identify board games", and "Game vision AI". When the user taps on one
+  /// of these options, the corresponding screen is shown.
+  ///
+  /// The menu is an [ExpansionTile] widget that shows the title "Chat features"
+  /// and has the chat icon. The children of the tile are four [ListTile]
+  /// widgets, one for each of the options mentioned above. The leading of
+  /// each tile is an icon, and the title is the text that describes the
+  /// option. The onTap callback of each tile is a function that navigates to
+  /// the corresponding screen.
+  ///
+  /// The theme is used to style the menu. The color of the icons is the
+  /// primary color of the theme, and the text color is the onSurface color
+  /// of the theme.
+  ///
   Widget _buildChatSubmenu(BuildContext context, ThemeData theme) {
     return ExpansionTile(
       leading: Icon(Icons.chat, color: theme.colorScheme.primary),
@@ -41,6 +59,23 @@ class DrawerMain extends StatelessWidget {
     );
   }
 
+  /// Builds the user submenu.
+  ///
+  /// This submenu is used to navigate to the different user features of the
+  /// app. It shows three options: "Received reviews", "Your reservations", and
+  /// "Latest players". When the user taps on one of these options, the corresponding
+  /// screen is shown.
+  ///
+  /// The menu is an [ExpansionTile] widget that shows the title "User management"
+  /// and has the person icon. The children of the tile are three [ListTile]
+  /// widgets, one for each of the options mentioned above. The leading of
+  /// each tile is an icon, and the title is the text that describes the
+  /// option. The onTap callback of each tile is a function that navigates to
+  /// the corresponding screen.
+  ///
+  /// The theme is used to style the menu. The color of the icons is the
+  /// primary color of the theme, and the text color is the onSurface color
+  /// of the theme.
   Widget _buildUserSubmenu(BuildContext context, ThemeData theme) {
     
     return ExpansionTile(
@@ -66,6 +101,23 @@ class DrawerMain extends StatelessWidget {
     );
   }
 
+  /// Builds the settings submenu.
+  ///
+  /// This submenu is used to navigate to the different settings screens of the
+  /// app. It shows three options: "Profile settings", "Change password", and
+  /// "Change language". When the user taps on one of these options, the corresponding
+  /// screen is shown.
+  ///
+  /// The menu is an [ExpansionTile] widget that shows the title "Settings"
+  /// and has the settings icon. The children of the tile are three [ListTile]
+  /// widgets, one for each of the options mentioned above. The leading of
+  /// each tile is an icon, and the title is the text that describes the
+  /// option. The onTap callback of each tile is a function that navigates to
+  /// the corresponding screen or shows a dialog to change the language.
+  ///
+  /// The theme is used to style the menu. The color of the icons is the
+  /// primary color of the theme, and the text color is the onSurface color
+  /// of the theme.
   Widget _buildSettingsSubmenu(BuildContext context, ThemeData theme) {
     return ExpansionTile(
       leading: Icon(Icons.settings, color: theme.colorScheme.primary),
@@ -90,11 +142,24 @@ class DrawerMain extends StatelessWidget {
     );
   }
 
+  /// Navigates to the given route and pops the current context.
+  ///
+  /// This is a helper function used to navigate to different screens
+  /// in the app. It takes the current BuildContext and the route
+  /// to navigate to as parameters. It pops the current context
+  /// and then navigates to the given route.
   void _navigateTo(BuildContext context, String route) {
     Navigator.pop(context);
     context.go(route);
   }
 
+  /// Navigates to the user's reviews screen.
+  ///
+  /// This is a helper function that navigates to the user's reviews
+  /// screen. It takes the current BuildContext as a parameter.
+  /// It uses the PageRouteBuilder to build the route, and sets the
+  /// transition duration to zero so that the navigation happens
+  /// immediately. It then pushes the route to the navigator.
   void _navigateToReviewScreen(BuildContext context) {
     Navigator.push(
       context,
@@ -105,6 +170,12 @@ class DrawerMain extends StatelessWidget {
     );
   }
 
+  /// Closes the current context and shows the user edit dialog.
+  ///
+  /// This method is called to display the user edit dialog by popping
+  /// the current screen and then calling [mostrarUserEdit] to show the dialog.
+  /// It takes the current [BuildContext] as a parameter.
+
   void _showUserEdit(BuildContext context) {
     Navigator.pop(context);
     mostrarUserEdit(context);
@@ -112,15 +183,47 @@ class DrawerMain extends StatelessWidget {
 
   void _updatePassword(BuildContext context) {
     Navigator.pop(context);
+  /// Closes the current context and invokes the password update process.
+  ///
+  /// This method is used to handle password updates by first closing the 
+  /// current dialog or screen and then calling [updatePassword] to initiate 
+  /// the process. It takes the current [BuildContext] as a parameter.
+
     updatePassword(context);
   }
 
+  /// Closes the current context and shows the language change dialog.
+  ///
+  /// This method is used to handle language changes by first closing the 
+  /// current dialog or screen and then calling [changeLanguage] to show the 
+  /// dialog. It takes the current [BuildContext] as a parameter.
   void _changeLanguage(BuildContext context) {
     Navigator.pop(context);
     changeLanguage(context);
   }
 
   @override
+  /// Builds the main drawer of the app.
+  ///
+  /// This is a main drawer for the app that is displayed when the user
+  /// taps on the hamburger button in the appbar. It shows the user's
+  /// profile picture, username, and email. It also shows a list of
+  /// items that the user can navigate to. The items are different
+  /// depending on the role of the user. If the user is an admin, the
+  /// drawer shows a link to the administrator's panel. If the user
+  /// is a store owner, the drawer shows a link to the store's statistics.
+  /// If the user is a normal user, the drawer shows a link to the user's
+  /// profile and the user's reservations. All users can navigate to
+  /// the chat features, the settings, and the logout.
+  ///
+  /// The drawer is a [Column] with a [UserAccountsDrawerHeader] as its
+  /// first child. The header shows the user's profile picture, username,
+  /// and email. The column's children are a [ListView] with the list of
+  /// items that the user can navigate to, and a [ListTile] with the logout
+  /// option. The [ListView] is an [Expanded] child of the column, so that
+  /// it takes all the available space. The logout [ListTile] is at the
+  /// bottom of the column, and has a red color to indicate that it is a
+  /// destructive action.
   Widget build(BuildContext context) {
     final userBloc = BlocProvider.of<LoginBloc>(context);
     final theme = Theme.of(context);

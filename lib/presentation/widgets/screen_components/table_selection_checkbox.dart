@@ -19,6 +19,23 @@ class TableSelectionCheckbox extends StatefulWidget {
 class _TableSelectionCheckboxState extends State<TableSelectionCheckbox> {
   final List<int> _selectedTableIds = [];
   @override
+/// Builds the widget displaying a list of tables with selectable checkboxes.
+///
+/// This widget is a [Column] containing a title and a [Wrap] of table
+/// checkboxes. Each table is represented as an [InkWell] that toggles
+/// its selection state when tapped. The selection state is visually
+/// indicated by the background color and border of the table's container.
+///
+/// The title displays a localized string indicating the purpose of the
+/// selection. The [Wrap] arranges the table checkboxes with spacing
+/// between them. The selection state of each table is managed by
+/// [_selectedTableIds], and changes are communicated via
+/// [widget.onSelectionChanged].
+///
+/// The widget uses the current theme's color scheme to style
+/// text, borders, and background colors, ensuring consistency with
+/// the app's overall design.
+
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;

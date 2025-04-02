@@ -27,11 +27,37 @@ class _StoreMapState extends State<StoreMap> {
   bool _isUpdatingLocation = false;
 
   @override
+  /// Initialize the state of the store map widget.
+  ///
+  /// This function is called when the widget is inserted into the tree.
+  /// It triggers the fetching of shops data by dispatching a `GetShopsEvent`
+  /// to the `ShopBloc` and sets the initial zoom level for the map.
+
   void initState() {
     context.read<ShopBloc>().add(GetShopsEvent());
     currentZoomLevel = 10;
     super.initState();
   }
+  /// Gets the current location of the user.
+  ///
+  /// This function is used to get the user's current location.
+  /// It can be used to either get the user's location using the device's GPS
+  /// or to set the location to a predefined value.
+  ///
+  /// The [userLocation] parameter indicates if the user's location should be
+  /// obtained from the device's GPS or if it should be set to a predefined value.
+  /// If the value is true, the user's location is obtained from the device's GPS.
+  /// If the value is false, the user's location is set to the value of the
+  /// [latitudeController] and [longitudeController] controllers.
+  ///
+  /// The function returns a Future that completes when the user's location has
+  /// been obtained.
+  ///
+  /// If the user's location is not available, or if the user has denied the
+  /// permission to access the location, the Future completes with an error.
+  ///
+  /// The function is used to initialize the map with the user's current location
+  /// and to update the map when the user's location changes.
   Future<void> _getCurrentLocation(bool userLocation) async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -83,6 +109,21 @@ class _StoreMapState extends State<StoreMap> {
   }
 
   @override
+  /// Builds the screen with the nearby shops.
+  ///
+  /// The screen is a [Scaffold] with an [AppBar] and a [FlutterMap] as the body.
+  /// The [AppBar] has a title with the text "Tiendas cercanas" and a leading
+  /// button to go back to the previous page.
+  /// The [FlutterMap] shows a map with the user's current location and the
+  /// nearby shops. The shops are shown as markers on the map with a
+  /// [MapMarker] widget. The user can zoom in and out of the map by tapping
+  /// the zoom in and out buttons on the bottom right of the screen.
+  /// The user can also tap the my location button to update their location
+  /// and show their current location on the map.
+  ///
+  /// If the user's location is not available, the screen shows an error message.
+  /// If the user has denied the permission to access the location, the screen
+  /// shows an error message with a retry button.
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;

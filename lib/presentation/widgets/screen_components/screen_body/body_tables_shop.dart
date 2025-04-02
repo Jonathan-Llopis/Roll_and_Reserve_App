@@ -29,6 +29,17 @@ class BodyTablesShop extends StatefulWidget {
 
 class _BodyTablesShopState extends State<BodyTablesShop> {
   @override
+  /// Builds the body of the screen that shows the tables of the shop.
+  ///
+  /// This is a [Column] with the title, a [Divider], and a [GridView] with
+  /// the tables.
+  ///
+  /// The [GridView] is scrollable and is given by the [tables] list.
+  ///
+  /// Each table is shown as a [Card] with the number of the table, the
+  /// number of players, and a button to go to the table page if the user
+  /// is a shop, or to the table creation screen if the user is an admin.
+  ///
   Widget build(BuildContext context) {
     return Column(
       children: [

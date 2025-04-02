@@ -15,6 +15,30 @@ class DialogCharacterDescription extends StatelessWidget {
   final TextEditingController controllerTheme;
 
   @override
+  /// Builds a dialog that allows the user to input a description of the
+  /// adventurers and the setting of the game. This dialog is used to start
+  /// a new game of Roll & Reserve.
+  ///
+  /// The dialog consists of two text fields: one for the adventurers'
+  /// description and one for the setting description. The dialog is
+  /// scrollable and has a start game button at the bottom.
+  ///
+  /// When the start game button is pressed, the [OnRolPlayStart] event is
+  /// added to the [ChatBloc] with the text of the two text fields as the
+  /// character and theme descriptions.
+  ///
+  /// The dialog is dismissed when the start game button is pressed.
+  ///
+  /// The dialog is centered on the screen and has a rounded rectangle shape.
+  /// The text fields have a filled style and a rounded rectangle shape with
+  /// a slightly transparent fill color. The text fields also have a
+  /// floating label with a slight animation when the field is focused.
+  /// The start game button is an elevated button with a rounded rectangle
+  /// shape and a white foreground color.
+  ///
+  /// The dialog is themed according to the [Theme] of the provided
+  /// [BuildContext].
+  ///
   Widget build(BuildContext context) {
     return AlertDialog(
       icon: Icon(Icons.person_4_rounded,

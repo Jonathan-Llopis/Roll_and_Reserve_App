@@ -19,6 +19,18 @@ class BodyMain extends StatefulWidget {
 
 class _BodyMainState extends State<BodyMain> {
   @override
+/// Builds the widget tree for displaying the list of shops.
+///
+/// This method uses a [BlocBuilder] to rebuild the UI based on the state of
+/// the [ShopBloc]. It displays a loading indicator if the state is loading,
+/// an error message if there is an error, or a list of shops if the data is
+/// available.
+///
+/// The widget tree includes a welcome message for the user, a description
+/// of the available shops, and a list of [InformationShop] widgets. Each
+/// shop in the list is wrapped in a [GestureDetector] to navigate to the
+/// shop's details when tapped, unless the user is an admin.
+
   Widget build(BuildContext context) {
     return BlocBuilder<ShopBloc, ShopState>(builder: (context, state) {
       final loginBloc = BlocProvider.of<LoginBloc>(context);

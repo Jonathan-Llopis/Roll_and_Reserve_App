@@ -22,6 +22,14 @@ class DialogCreateUpdateTable extends StatefulWidget {
   });
 
   @override
+  /// Returns the state object for this [DialogCreateUpdateTable].
+  ///
+  /// The returned state object is a [_DialogCreateUpdateTableState].
+  ///
+  /// The [_DialogCreateUpdateTableState] is a [State] object that is used to
+  /// manage the state of the [DialogCreateUpdateTable]. This state object is
+  /// responsible for managing the form key, the text editing controller for
+  /// the table name, and the validation of the form.
   State<DialogCreateUpdateTable> createState() =>
       _DialogCreateUpdateTableState();
 }
@@ -31,12 +39,28 @@ class _DialogCreateUpdateTableState extends State<DialogCreateUpdateTable> {
   final TextEditingController _tableNameController = TextEditingController();
 
   @override
+  /// Called when the widget is inserted into the tree.
+  ///
+  /// This method is responsible for initializing the text editing controller
+  /// with the table number if the table is not null.
   void initState() {
     super.initState();
     _tableNameController.text = widget.table?.numberTable.toString() ?? '';
   }
 
   @override
+/// Builds the UI for a dialog to create or update a table.
+///
+/// This method returns a [Dialog] widget that contains a [Form] for
+/// entering or editing the table number. The dialog has a title indicating
+/// whether a new table is being created or an existing table is being edited.
+/// It also includes a text field for the table number with validation,
+/// a save button to submit the form, and a cancel button to close the dialog.
+/// If the table already exists, additional buttons for managing reservations
+/// and deleting the table are included.
+///
+/// The dialog is styled with the current theme and localized text.
+
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context)!;
@@ -158,6 +182,11 @@ class _DialogCreateUpdateTableState extends State<DialogCreateUpdateTable> {
     );
   }
 
+  /// Validates the form and if it is valid, creates a new table or updates an
+  /// existing one and adds the respective event to the [TableBloc] and pops the
+  /// dialog.
+  ///
+  /// If the form is invalid, it does nothing.
   void _submitForm() {
     if (_formKey.currentState?.validate() ?? false) {
       final newTable = TableEntity(

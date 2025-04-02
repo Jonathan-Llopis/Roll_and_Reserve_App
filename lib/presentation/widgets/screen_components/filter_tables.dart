@@ -31,6 +31,13 @@ class _FilterTablesState extends State<FilterTables> {
   final _endTimeController = TextEditingController();
 
   @override
+  /// Initializes the [_dateController], [_startTimeController], and
+  /// [_endTimeController] with the values from [ReserveState.filterTables] if
+  /// they are not null. This is done so that the values are set the first time
+  /// the widget is built.
+  ///
+  /// This also calls [super.initState()] to complete the initialization of
+  /// the [StatefulWidget].
   void initState() {
     ReserveBloc reserveBloc = BlocProvider.of<ReserveBloc>(context);
     if (reserveBloc.state.filterTables != null) {
@@ -48,6 +55,22 @@ class _FilterTablesState extends State<FilterTables> {
   }
 
   @override
+  /// Builds the UI for the filter tables dialog.
+  ///
+  /// This widget is wrapped in a [BlocListener] to listen to the [ReserveBloc]
+  /// events. When the reserves are loaded, it adds a [GetAvailableTablesEvent]
+  /// to the [TableBloc] and pops the dialog. If there is an error, it shows a
+  /// snack bar with the error message.
+  ///
+  /// The dialog contains a form with three [TextFormField]s for the date,
+  /// start time, and end time. The date and times are read-only and can be
+  /// selected using a date picker and a time picker. The form is validated
+  /// before submitting.
+  ///
+  /// When the form is submitted, it adds a [GetReservesByShopEvent] to the
+  /// [ReserveBloc] with the current shop, date, start time, and end time.
+  ///
+  /// The dialog is padded with 16 pixels of padding.
   Widget build(BuildContext context) {
     return BlocListener<ReserveBloc, ReserveState>(
       listener: (context, state) {

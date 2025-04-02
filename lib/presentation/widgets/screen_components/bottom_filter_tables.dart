@@ -29,6 +29,12 @@ class _BottomFilterTablesState extends State<BottomFilterTables> {
   bool _isFilterApplied = false;
 
   @override
+/// Initializes the state of the widget.
+///
+/// Checks if any filters are applied by accessing the [ReserveBloc] state
+/// and updates the [_isFilterApplied] flag accordingly. This flag determines
+/// the icon and color of the filter button in the bottom navigation bar.
+
   void initState() {
     super.initState();
     ReserveBloc reserveBloc = BlocProvider.of<ReserveBloc>(context);
@@ -36,8 +42,23 @@ class _BottomFilterTablesState extends State<BottomFilterTables> {
   }
 
   @override
+
+  /// Builds the bottom navigation bar with the "Remove filters" and "Filter"
+  /// buttons.
+  ///
+  /// The "Remove filters" button is used to remove any existing table filters
+  /// and to fetch the tables from the backend. The "Filter" button is used to
+  /// apply filters to the tables, and to show the filter dialog.
+  ///
+  /// The color of the "Filter" icon changes based on whether filters are
+  /// currently applied or not. The color is blue if filters are applied,
+  /// and grey if not.
+  ///
+  /// The state of the widget is updated whenever the user applies or removes
+  /// filters.
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+
       items: [
         BottomNavigationBarItem(
           icon: Icon(Icons.delete_outline),

@@ -25,6 +25,11 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   late List<Message> chatHistory;
   late List<Message> rolePlayHistory;
 
+  /// Initializes the DeepSeek AI service with the API key found in the environment variables.
+  ///
+  /// If the API key is not found, throws an exception.
+  ///
+  /// Also, initializes the chat history and role play history to empty lists.
   void _initializeDeepSeek() {
     final apiKey = dotenv.env['DEEP_SEEK_API_KEY'];
     if (apiKey == null || apiKey.isEmpty) {
@@ -37,6 +42,16 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   }
 
   @override
+  /// Initiates a chat session by sending a user message to the DeepSeek AI service.
+  ///
+  /// Clears the chat history and adds the user's message to it. Sends the message
+  /// to the DeepSeek service, waiting for an assistant's response.
+  ///
+  /// Returns the assistant's response as a string if successful.
+  ///
+  /// Throws an exception if the response is empty or if there is an error while
+  /// interacting with the DeepSeek service.
+
   Future<String> startChat(String message) async {
     chatHistory.clear();
     chatHistory.add(Message(role: "user", content: message));
@@ -67,6 +82,18 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   }
 
   @override
+  /// Sends a message to the DeepSeek AI service to continue a chat session.
+  ///
+  /// Before calling this method, the chat session must be initialized by calling
+  /// [startChat]. If not, throws an exception.
+  ///
+  /// Adds the user's message to the chat history and sends it to the DeepSeek
+  /// service, waiting for an assistant's response.
+  ///
+  /// Returns the assistant's response as a string if successful.
+  ///
+  /// Throws an exception if the response is empty or if there is an error while
+  /// interacting with the DeepSeek service.
   Future<String> sendMessage(String message) async {
     if (chatHistory.isEmpty) {
       throw Exception('Chat session not initialized. Call startChat first.');
@@ -100,6 +127,20 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   }
 
   @override
+  /// Starts a role play chat session with the DeepSeek AI service.
+  ///
+  /// A role play chat session is a special type of chat session where the AI
+  /// service acts as a character in the context of a story or scenario provided
+  /// by the user. The AI service will generate a response based on the scenario
+  /// and the user's message.
+  ///
+  /// The [prompt] parameter must be a string describing the scenario and the
+  /// character the AI service should act as.
+  ///
+  /// Returns the AI service response as a string if successful.
+  ///
+  /// Throws an exception if the response is empty or if there is an error while
+  /// interacting with the DeepSeek service.
   Future<String> startRolPlay(String prompt) async {
     rolePlayHistory.clear();
     rolePlayHistory.add(Message(role: "user", content: prompt));
@@ -130,6 +171,22 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   }
 
   @override
+  /// Sends a message to the DeepSeek AI service as part of a role play session.
+  ///
+  /// A role play session is a special type of chat session where the AI service
+  /// acts as a character in the context of a story or scenario provided by the
+  /// user. The AI service will generate a response based on the scenario and the
+  /// user's message.
+  ///
+  /// The [message] parameter is the message to be sent to the AI service.
+  ///
+  /// Returns the AI service response as a string if successful.
+  ///
+  /// Throws an exception if the response is empty or if there is an error while
+  /// interacting with the DeepSeek service.
+  ///
+  /// Before calling this method, you must call [startRolPlay] to start the role
+  /// play session.
   Future<String> sendRolPlay(String message) async {
     if (rolePlayHistory.isEmpty) {
       throw Exception(
@@ -171,6 +228,14 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   late dynamic chat;
 
   @override
+  /// Starts a chat session with the AI service using the Gemini model.
+  ///
+  /// The [prompt] parameter is the initial message to be sent to the AI service.
+  ///
+  /// Returns the AI service response as a string if successful.
+  ///
+  /// Throws an exception if the response is empty or if there is an error while
+  /// interacting with the AI service.
   Future<String> startChatGemini(String prompt) async {
     chat = model.startChat();
     final content = [Content.text(prompt)];
@@ -183,6 +248,21 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     }
   }
   @override
+  /// Sends a message to the AI service using the Gemini model.
+  ///
+  /// The [message] parameter is the text message to be sent to the AI service.
+  ///
+  /// The [imageBytes] parameter is a list of ByteData objects representing the
+  /// images to be sent to the AI service. If the list is not empty, the message
+  /// will be sent as a multi-part message with the text and images.
+  ///
+  /// Returns the AI service response as a string if successful.
+  ///
+  /// Throws an exception if the response is empty or if there is an error while
+  /// interacting with the AI service.
+  ///
+  /// Before calling this method, you must call [startChatGemini] to start the
+  /// chat session.
   Future<String> sendMessageGemini(String message, List<ByteData>? imageBytes) async {
     List<Content> content = [Content.text(message)];
 
@@ -203,6 +283,14 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   }
 
   @override
+  /// Starts a chat session with the AI service using the assistant model.
+  ///
+  /// The [prompt] parameter is the initial message to be sent to the AI service.
+  ///
+  /// Returns the AI service response as a string if successful.
+  ///
+  /// Throws an exception if the response is empty or if there is an error while
+  /// interacting with the AI service.
   Future<String> startChatAssistant(String prompt) async {
     chat = model.startChat();
     final content = [Content.text(prompt)];
@@ -215,6 +303,19 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     }
   }
   @override
+  /// Sends a message to the AI service using the assistant model.
+  ///
+  /// The [message] parameter is the text message to be sent to the AI service.
+  ///
+  /// The [imageBytes] parameter is a list of ByteData objects representing the
+  /// images to be sent to the AI service. If the list is not empty, the message
+  /// will be sent as a multi-part message with the text and images.
+  ///
+  /// Returns the AI service response as a string if successful.
+  ///
+  /// Throws an exception if the response is empty or if there is an error while
+  /// interacting with the AI service.
+
   Future<String> sendMessageAssitant(String message, List<ByteData>? imageBytes) async {
     List<Content> content = [Content.text(message)];
 

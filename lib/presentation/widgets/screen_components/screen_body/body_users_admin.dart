@@ -18,6 +18,11 @@ class BodyUsersAdmin extends StatefulWidget {
 
 class _BodyUsersAdminState extends State<BodyUsersAdmin> {
   @override
+  /// Called when the widget is inserted into the tree.
+  ///
+  /// This function uses the BuildContext to get the LoginBloc and set the
+  /// list of users to the users of the LoginBloc. If the users are null,
+  /// it sets the list to an empty list.
   void initState() {
     LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
     if (loginBloc.state.users != null) {
@@ -29,6 +34,19 @@ class _BodyUsersAdminState extends State<BodyUsersAdmin> {
   }
 
   @override
+  /// Builds the body of the screen that shows the users.
+  ///
+  /// This is a [Flexible] with a [Column] with the given [children].
+  ///
+  /// The first child is a [Padding] with a [TextField] that filters the users
+  /// by name.
+  ///
+  /// The second child is a [Divider] with a height of 1 and a thickness of
+  /// 1.
+  ///
+  /// The third child is an [Expanded] with a [Padding] and a [ListView].
+  /// The [ListView] has a [itemCount] equal to the length of the [users]
+  /// list, and an [itemBuilder] that returns a [CardUser] with the user.
   Widget build(BuildContext context) {
     LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
     return Flexible(

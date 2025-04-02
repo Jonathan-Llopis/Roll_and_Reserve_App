@@ -28,6 +28,23 @@ class ButtonCreateUpdateShop extends StatelessWidget {
   final dynamic _imageFile;
   final int idShop;
   @override
+/// Builds a [TextButton] for creating or updating a shop.
+///
+/// The button's appearance is styled using [AppTheme.textButtonAcceptStyle].
+/// When pressed, it determines if the shop is new (idShop == 0) or existing,
+/// and dispatches either a [CreateShopEvent] or an [UpdateShopEvent] to the
+/// [ShopBloc] with the shop details gathered from the provided controllers.
+/// Once the operation is complete, it navigates to the user page.
+///
+/// The shop details include the name, address, logo, owner ID, location
+/// (latitude and longitude), and other properties. The owner ID is determined
+/// based on the role of the logged-in user, using the [LoginBloc].
+///
+/// Uses:
+/// - [BlocProvider] to access [LoginBloc] and [ShopBloc].
+/// - [TextEditingController] to retrieve input data.
+/// - [AppLocalizations] for localization of button text.
+
   Widget build(BuildContext context) {
     final loginBloc = BlocProvider.of<LoginBloc>(context);
     final shopBloc = BlocProvider.of<ShopBloc>(context);

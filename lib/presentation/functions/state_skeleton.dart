@@ -2,6 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+/// Builds a widget that shows a skeleton while loading, an error message
+/// with a retry button if there is an error, and the content if there is
+/// data, otherwise an empty widget.
+///
+/// The [isLoading] function should return true if the state is loading,
+/// [errorMessage] should return an error message string if the state is
+/// an error, [hasData] should return true if the state has data, and
+/// [contentBuilder] should return the widget to show if there is data.
+///
+/// The [context] is used to navigate to the home page if the user taps
+/// the retry button.
 Widget buildContentSkeleton<T>({
   required T state,
   required bool Function(T) isLoading,

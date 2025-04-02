@@ -8,6 +8,23 @@ class ChangeLanguageDialog extends StatelessWidget {
   const ChangeLanguageDialog({super.key});
 
   @override
+  /// Builds a dialog for changing the application's language.
+  ///
+  /// This dialog presents a list of available languages, each represented
+  /// by a `ListTile` with an icon and a text label for the language name.
+  /// When a language option is tapped, it triggers a `ChangeLanguageEvent`
+  /// with the corresponding locale using the `LanguageBloc`, and the dialog
+  /// is dismissed.
+  ///
+  /// The available languages are:
+  /// - English
+  /// - Spanish
+  /// - French
+  /// - Catalan
+  ///
+  /// The [context] is used to access localization and bloc functionalities,
+  /// and to pop the dialog off the navigation stack.
+
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(AppLocalizations.of(context)!.changeLanguage),

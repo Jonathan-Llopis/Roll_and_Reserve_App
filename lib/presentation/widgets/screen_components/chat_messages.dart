@@ -14,6 +14,17 @@ class ChatMessage extends StatelessWidget {
   });
 
   @override
+  /// Builds a single chat message.
+  ///
+  /// The message is a [Row] with a single flexible child. The flexible
+  /// child is a [Container] with a [BoxDecoration] that has a
+  /// [BorderRadius] and a [BoxShadow] if the message is not from the
+  /// user. The container has a [Column] with a [Text] widget that shows
+  /// the name of the user, and a [MarkdownBody] widget that shows the
+  /// message text.
+  ///
+  /// The [MarkdownBody] widget is given a [MarkdownStyleSheet] that
+  /// styles the text with the given theme.
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;

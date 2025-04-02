@@ -1,5 +1,12 @@
  import 'package:flutter/material.dart';
 
+/// Builds a chip with an icon and a text above a centered hour.
+///
+/// The chip is a white container with a slight opacity and rounded
+/// corners. The icon and text are centered and aligned to the top of the
+/// chip. The hour is centered and aligned to the bottom of the chip.
+/// The text style is set to a smaller font size and a medium weight, while
+/// the hour style is set to a larger font size and a bold weight.
 Widget buildTimeChip(IconData icon, String text, String hour) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),

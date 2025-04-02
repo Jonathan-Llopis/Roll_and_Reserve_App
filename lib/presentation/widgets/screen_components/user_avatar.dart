@@ -15,6 +15,19 @@ class UserAvatar extends StatelessWidget {
   final UserEntity user;
 
   @override
+  /// Builds a [CircleAvatar] with the user's avatar or a default image.
+  ///
+  /// If the user's avatar is not null, it is displayed in a [ClipOval] to make
+  /// it a circle. If the user's avatar is null, a default image is displayed.
+  ///
+  /// The image is displayed in a [CircleAvatar] with a radius of 28 and a
+  /// background color of [Colors.grey.shade200].
+  ///
+  /// If the image fails to load, an [Icon] is displayed with the person outline
+  /// icon and a size of 28.
+  ///
+  /// If the image is loading, a [CircularProgressIndicator] is displayed with
+  /// the value of the progress.
   Widget build(BuildContext context) {
     return CircleAvatar(
       radius: 28,

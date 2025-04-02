@@ -12,6 +12,15 @@ class DialogErrorDatepicker extends StatelessWidget {
   const DialogErrorDatepicker({super.key, required this.mensaje, required this.idShop});
 
   @override
+/// Builds an [AlertDialog] displaying an error message with an accept button.
+///
+/// The dialog has a red title indicating an error, with the content showing
+/// the provided [mensaje]. When the accept button is pressed, the user is
+/// navigated to the events page for the given [idShop].
+///
+/// The dialog utilizes a [BlocBuilder] to build the widget based on the
+/// [LoginBloc] state.
+
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
       return AlertDialog(

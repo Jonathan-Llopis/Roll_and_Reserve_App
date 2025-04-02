@@ -29,11 +29,32 @@ class _LocationPickerState extends State<LocationPicker> {
   late double currentZoomLevel;
 
   @override
+  /// Initializes the state of the widget.
+  ///
+  /// It calls the [State.initState] method of the parent class.
+  ///
+  /// This method is called when the widget is inserted into the tree.
   void initState() {
     super.initState();
     currentZoomLevel = widget.zoomLevel;
   }
 
+  /// Gets the current location of the user.
+  ///
+  /// The [userLocation] parameter indicates if the user's location should be
+  /// obtained from the device's GPS or if it should be set to a predefined value.
+  /// If the value is true, the user's location is obtained from the device's GPS.
+  /// If the value is false, the user's location is set to the value of the
+  /// [latitudeController] and [longitudeController] controllers.
+  ///
+  /// The function returns a Future that completes when the user's location has
+  /// been obtained.
+  ///
+  /// If the user's location is not available, or if the user has denied the
+  /// permission to access the location, the Future completes with an error.
+  ///
+  /// The function is used to initialize the map with the user's current location
+  /// and to update the map when the user's location changes.
   Future<void> _getCurrentLocation(bool userLocation) async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -83,6 +104,21 @@ class _LocationPickerState extends State<LocationPicker> {
   }
 
   @override
+/// Builds a widget to display a map for picking a location.
+///
+/// The widget uses a [FutureBuilder] to handle the asynchronous process of
+/// obtaining the user's current location. While waiting for the location,
+/// a [CircularProgressIndicator] is shown. If an error occurs during this process,
+/// an error message is displayed.
+///
+/// Once the location is obtained, a [FlutterMap] widget is displayed, allowing
+/// the user to select a location on the map. The selected location's coordinates
+/// are updated in the [longitudeController] and [latitudeController].
+///
+/// The map includes zoom controls and a button to center on the user's current
+/// location, unless the [displayOnly] flag is set to true, in which case these
+/// controls are hidden.
+
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;

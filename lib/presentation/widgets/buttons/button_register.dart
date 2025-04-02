@@ -22,6 +22,15 @@ class ButtonRegister extends StatelessWidget {
   final TextEditingController userNameController;
 
   @override
+  /// Builds the button to register a new user.
+  ///
+  /// This button is the default elevated button with the given style and
+  /// child. When pressed, it adds [IsEmailUserUsed] to the [LoginBloc] with
+  /// the email and name of the user. It then waits for the state to not be
+  /// loading and checks if the email is used. If it is not used, it adds
+  /// [ButtonRegisterPressed] to the [LoginBloc] with the email, password,
+  /// name, and username of the user. It then navigates to the user's page.
+  ///
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () async {

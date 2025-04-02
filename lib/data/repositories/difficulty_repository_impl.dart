@@ -11,6 +11,13 @@ class DifficultyRepositoryImpl implements DifficultyRepository {
   DifficultyRepositoryImpl(this.remoteDataSource, this.sharedPreferences);
 
   @override
+  /// Gets all difficulties from the backend.
+  ///
+  /// Returns a [Future] that resolves to an [Either].
+  /// If the request is successful, the [Either] is a [Right] containing a list of [DifficultyEntity].
+  /// If the request fails, the [Either] is a [Left] containing an [Exception].
+  ///
+  /// The [Exception] is thrown if there is an error during the retrieval process.
   Future<Either<Exception, List<DifficultyEntity>>> getAllDifficultys() async {
     try {
       final token = sharedPreferences.getString('token');

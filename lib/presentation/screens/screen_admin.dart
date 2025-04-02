@@ -25,6 +25,11 @@ class _ScreenMainState extends State<ScreenAdmin> {
   int currentIndex = 0;
 
   @override
+  /// Initialize the state of the widget.
+  ///
+  /// This function is called when the widget is inserted into the tree.
+  ///
+  /// It requests the Firebase token and fetches all users and shops.
   void initState() {
     super.initState();
     NotificationService().getToken();
@@ -33,6 +38,21 @@ class _ScreenMainState extends State<ScreenAdmin> {
   }
 
   @override
+  /// Builds the main UI of the admin screen with a `BlocBuilder` for `LoginBloc` to handle 
+  /// user login state and a `BlocBuilder` for `ShopBloc` to handle shop state.
+  ///
+  /// This widget returns a `DefaultScaffold` containing an app bar, a dynamic body that 
+  /// switches between user and shop views based on the selected tab index, and a bottom 
+  /// navigation bar for navigation. The body displays either a list of users or shops 
+  /// depending on the `currentIndex`. The bottom navigation bar allows toggling between 
+  /// viewing users or shops.
+  ///
+  /// The floating action button is currently empty (represented by an empty `Container`).
+  ///
+  /// The `BlocBuilder` constructs the UI based on the current state of the respective 
+  /// blocs, showing loading indicators, error messages, or the main content when data is 
+  /// available.
+
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
       return buildContent<LoginState>(

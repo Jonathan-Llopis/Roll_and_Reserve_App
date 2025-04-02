@@ -35,6 +35,9 @@ class _DialogCreateReviewState extends State<DialogCreateReview> {
   bool _isSubmitting = false;
 
   @override
+  /// Disposes of the [_descriptionController] when the widget is removed from the tree.
+  ///
+  /// This is necessary to prevent memory leaks.
   void dispose() {
     _descriptionController.dispose();
     super.dispose();
@@ -43,6 +46,21 @@ class _DialogCreateReviewState extends State<DialogCreateReview> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+  /// Builds the UI for a dialog that allows the user to create a review for a shop.
+  ///
+  /// The dialog is a [Dialog] with a [Form] inside. The form contains a
+  /// [TextFormField] for the description of the review, a [StarRating] for the
+  /// rating of the review, and a submit button.
+  ///
+  /// The form is validated when the user interacts with it. If the form is valid,
+  /// the submit button is enabled. If the form is invalid, the submit button is
+  /// disabled.
+  ///
+  /// When the submit button is pressed, it adds a [CreateReviewEvent] with the
+  /// description and rating of the review to the [ReviewBloc].
+  ///
+  /// The dialog is closed when the user presses the submit button or the close
+  /// button.
     final loc = AppLocalizations.of(context)!;
 
     return Dialog(
@@ -117,6 +135,13 @@ class _DialogCreateReviewState extends State<DialogCreateReview> {
     );
   }
 
+  /// Builds the submit button for the dialog.
+  ///
+  /// The button is disabled when submitting is in progress.
+  /// Otherwise, it is enabled and the text is either "Add review"
+  /// or "Loading" depending on if submitting is in progress.
+  /// The button is also decorated with a review icon or a
+  /// CircularProgressIndicator depending on if submitting is in progress.
   Widget _buildSubmitButton(ThemeData theme, AppLocalizations loc) {
     final loc = AppLocalizations.of(context)!;
     return ElevatedButton.icon(
@@ -140,6 +165,24 @@ class _DialogCreateReviewState extends State<DialogCreateReview> {
     );
   }
 
+  /// Submits the review to the server.
+  ///
+  /// If the form is invalid, returns immediately.
+  ///
+  /// Otherwise, sets [_isSubmitting] to true and tries to create a
+  /// [ReviewEntity] with the given rating and description. Then, it
+  /// adds a [CreateReviewEvent] with the review to the [ReviewBloc].
+  ///
+  /// If the review is for a shop, it adds a [GetShopsEvent] to the
+  /// [ShopBloc] and a [GetShopEvent] with the id of the shop.
+  ///
+  /// If the review is for a user, it adds a [GetLastTenPlayersEvent]
+  /// with the id of the user to the [ReserveBloc].
+  ///
+  /// If there is an error, it shows a [SnackBar] with the error message
+  /// and sets [_isSubmitting] to false.
+  ///
+  /// If the review is successfully submitted, it pops the dialog.
   void _submitReview() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -199,6 +242,15 @@ class StarRating extends StatelessWidget {
   });
 
   @override
+  /// Builds a row of 5 stars with the given [rating] and [color].
+  ///
+  /// The [rating] is the number of stars that are filled in.
+  /// The [color] is the color of the stars.
+  ///
+  /// When the user taps on a star, the [onRatingChanged] callback is called
+  /// with the index of the star that was tapped, plus one.
+  ///
+  /// The stars are centered horizontally and have a padding of 4.0 on either side.
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,

@@ -7,6 +7,20 @@ class DrawerLogin extends StatelessWidget {
   const DrawerLogin({super.key});
 
   @override
+  /// Builds a drawer widget containing user account information and navigation
+  /// options.
+  ///
+  /// The drawer includes a header with an image, account name, and account
+  /// email. It also features a list of navigation options such as login,
+  /// registration, and language change. Each list tile has an icon and text,
+  /// and navigates to a different route when tapped.
+  ///
+  /// - Parameters:
+  ///   - context: The BuildContext to access theme and localization resources.
+  ///
+  /// - Returns: A Drawer widget with user account header and navigation
+  ///   options.
+
   Widget build(BuildContext context) {
       final theme = Theme.of(context);
     return Drawer(

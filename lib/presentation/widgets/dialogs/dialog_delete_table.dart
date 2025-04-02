@@ -15,6 +15,12 @@ class DialogoDeleteTable extends StatelessWidget {
       {super.key, required this.idTable, required this.idShop, required this.tableBloc});
 
   @override
+  /// Returns a dialog to delete a table
+  ///
+  /// The dialog shows a message asking to confirm the deletion of the table.
+  /// The user can cancel or accept.
+  /// If the user accepts, the table is deleted and the dialog is closed.
+  /// The user is returned to the shop table list.
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
       return AlertDialog(

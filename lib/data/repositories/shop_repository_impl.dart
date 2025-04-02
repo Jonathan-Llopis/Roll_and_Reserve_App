@@ -13,6 +13,16 @@ class ShopRepositoryImpl implements ShopsRepository {
   ShopRepositoryImpl(this.remoteDataSource, this.sharedPreferences);
 
   @override
+  /// Fetches all shops from the backend and returns them as a list of [ShopEntity].
+  ///
+  /// Retrieves a list of all shops and their associated logos from the backend.
+  /// The method uses a stored token for authorization and maps the resulting
+  /// [ShopModel]s to [ShopEntity]s including the shop logos.
+  ///
+  /// Returns a [Future] that resolves to a [Right] containing a list of [ShopEntity]
+  /// if the operation is successful, or a [Left] containing an [Exception] if an
+  /// error occurs.
+
   Future<Either<Exception, List<ShopEntity>>> getAllShops() async {
     try {
       final token = sharedPreferences.getString('token');
@@ -30,6 +40,15 @@ class ShopRepositoryImpl implements ShopsRepository {
   }
 
   @override
+  /// Fetches a shop from the backend with the given [idShop].
+  ///
+  /// Retrieves the shop with the given [idShop] and its associated logo from the
+  /// backend. The method uses a stored token for authorization and maps the
+  /// resulting [ShopModel] to a [ShopEntity] including the shop logo.
+  ///
+  /// Returns a [Future] that resolves to a [Right] containing a [ShopEntity]
+  /// if the operation is successful, or a [Left] containing an [Exception] if an
+  /// error occurs.
   Future<Either<Exception, ShopEntity>> getShop(int idShop) async {
     try {
       final token = sharedPreferences.getString('token');
@@ -43,6 +62,17 @@ class ShopRepositoryImpl implements ShopsRepository {
   }
 
   @override
+  /// Fetches a list of shops owned by the user with the given [ownerId]
+  /// from the backend.
+  ///
+  /// Retrieves the list of shops owned by the user with the given [ownerId]
+  /// and their associated logos from the backend. The method uses a stored
+  /// token for authorization and maps the resulting [ShopModel] to a
+  /// [ShopEntity] including the shop logo.
+  ///
+  /// Returns a [Future] that resolves to a [Right] containing a [List] of
+  /// [ShopEntity] if the operation is successful, or a [Left] containing an
+  /// [Exception] if an error occurs.
   Future<Either<Exception, List<ShopEntity>>> getShopByOwner(
       String ownerId) async {
     try {
@@ -62,6 +92,14 @@ class ShopRepositoryImpl implements ShopsRepository {
   }
 
   @override
+  /// Deletes the shop with the specified [idShops] from the backend.
+  ///
+  /// Uses a stored token for authorization to delete the shop.
+  ///
+  /// Returns a [Future] that resolves to a [Right] containing `true` if the
+  /// deletion is successful, or a [Left] containing an [Exception] if an
+  /// error occurs during the operation.
+
   Future<Either<Exception, bool>> deleteShops(int idShops) async {
     try {
       final token = sharedPreferences.getString('token');
@@ -73,6 +111,13 @@ class ShopRepositoryImpl implements ShopsRepository {
   }
 
   @override
+  /// Updates a shop on the backend.
+  ///
+  /// Uses a stored token for authorization to update the shop.
+  ///
+  /// Returns a [Future] that resolves to a [Right] containing `true` if the
+  /// update is successful, or a [Left] containing an [Exception] if an
+  /// error occurs during the operation.
   Future<Either<Exception, bool>> updateShops(ShopEntity shops) async {
     try {
       final token = sharedPreferences.getString('token');
@@ -87,6 +132,16 @@ class ShopRepositoryImpl implements ShopsRepository {
   }
 
   @override
+  /// Creates a new shop on the backend.
+  ///
+  /// Converts the given [ShopEntity] to a [ShopModel] and uses a stored token
+  /// for authorization to create the shop. Additionally, it updates the shop
+  /// with a logo if provided.
+  ///
+  /// Returns a [Future] that resolves to a [Right] containing `true` if the
+  /// creation is successful, or a [Left] containing an [Exception] if an
+  /// error occurs during the operation.
+
   Future<Either<Exception, bool>> createShops(ShopEntity shops) async {
     try {
       String logoId;
@@ -110,6 +165,19 @@ class ShopRepositoryImpl implements ShopsRepository {
   }
 
   @override
+  /// Fetches the most played games for a given shop and time period from the
+  /// backend.
+  ///
+  /// The [idShop] parameter is the identifier of the shop for which to fetch
+  /// the most played games.
+  ///
+  /// The [startTime] and [endTime] parameters are the start and end times of
+  /// the time period for which to fetch the most played games.
+  ///
+  /// Returns a [Future] that resolves to a [Right] containing a list of
+  /// objects containing the game identifiers, names and play counts if the
+  /// request is successful, or a [Left] containing an [Exception] if an error
+  /// occurs during the operation.
   Future<Either<Exception, List<dynamic>>> getMostPlayedGames(
       int idShop, String startTime, String endTime) async {
     try {
@@ -123,6 +191,18 @@ class ShopRepositoryImpl implements ShopsRepository {
   }
 
   @override
+  /// Fetches the total number of reservations for a given shop and time period
+  /// from the backend.
+  ///
+  /// The [idShop] parameter is the identifier of the shop for which to fetch the
+  /// total number of reservations.
+  ///
+  /// The [startTime] and [endTime] parameters are the start and end times of the
+  /// time period for which to fetch the total number of reservations.
+  ///
+  /// Returns a [Future] that resolves to a [Right] containing the total number
+  /// of reservations if the request is successful, or a [Left] containing an
+  /// [Exception] if an error occurs during the operation.
   Future<Either<Exception, int>> getTotalReservations(
       int idShop, String startTime, String endTime) async {
     try {
@@ -136,6 +216,18 @@ class ShopRepositoryImpl implements ShopsRepository {
   }
 
   @override
+  /// Fetches the player count for a given shop and time period from the
+  /// backend.
+  ///
+  /// The [idShop] parameter is the identifier of the shop for which to fetch
+  /// the player count.
+  ///
+  /// The [startTime] and [endTime] parameters are the start and end times of the
+  /// time period for which to fetch the player count.
+  ///
+  /// Returns a [Future] that resolves to a [Right] containing the player count
+  /// if the request is successful, or a [Left] containing an [Exception] if an
+  /// error occurs during the operation.
   Future<Either<Exception, int>> getPlayerCount(
       int idShop, String startTime, String endTime) async {
     try {
@@ -149,6 +241,20 @@ class ShopRepositoryImpl implements ShopsRepository {
   }
 
   @override
+  /// Fetches the peak reservation hours for a given shop and time period
+  /// from the backend.
+  ///
+  /// The [idShop] parameter is the identifier of the shop for which to fetch
+  /// the peak reservation hours.
+  ///
+  /// The [startTime] and [endTime] parameters are the start and end times of
+  /// the time period for which to fetch the peak reservation hours.
+  ///
+  /// Returns a [Future] that resolves to a [Right] containing a list of
+  /// objects with hour and reservation count if the request is successful, 
+  /// or a [Left] containing an [Exception] if an error occurs during the
+  /// operation.
+
   Future<Either<Exception, List<dynamic>>> getPeakReservationHours(
       int idShop, String startTime, String endTime) async {
     try {

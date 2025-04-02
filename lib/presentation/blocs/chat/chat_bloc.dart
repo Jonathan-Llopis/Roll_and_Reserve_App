@@ -72,8 +72,10 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<OnRolPlayStart>((event, emit) async {
       emit(ChatState.loading(state));
       try {
-        final responseIA = await startChatRolUseCase(
-            StartRolPlayParams(event.context, character: event.character, theme: event.theme));
+        final responseIA = await startChatRolUseCase(StartRolPlayParams(
+            event.context,
+            character: event.character,
+            theme: event.theme));
         final List<Map<String, String>> messagesUpdate = [];
         final jsonStart = responseIA.indexOf('```json');
         final jsonEnd = responseIA.lastIndexOf('```');
@@ -121,10 +123,12 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       }
     });
     on<OnChatGeminiStart>((event, emit) async {
-        emit(ChatState.loading(state));
+      emit(ChatState.loading(state));
       try {
         final responseIA = await startChatGeminiUseCase(Context(event.context));
-        final List<Map<String, String>> messagesUpdate = [{'role': 'IA', 'text': responseIA}];
+        final List<Map<String, String>> messagesUpdate = [
+          {'role': 'IA', 'text': responseIA}
+        ];
         emit(ChatState.geminiMessage(state, messagesUpdate));
       } catch (e) {
         emit(state.copyWith(isLoading: false));
@@ -132,15 +136,17 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     });
     on<OnChatGeminiSendMessage>((event, emit) async {
       emit(ChatState.loading(state));
-      final List<Map<String, String>> messagesUpdate = List.from(state.messagesGemini)
-        ..add({'role': 'user', 'text': event.message});
+      final List<Map<String, String>> messagesUpdate =
+          List.from(state.messagesGemini)
+            ..add({'role': 'user', 'text': event.message});
       emit(ChatState.geminiUserMessage(state, messagesUpdate));
       emit(ChatState.loading(state));
       try {
         final responseIA = await sendMessageGeminiUseCase(
             SendMessageGeminiParams(event.message, event.imageBytes));
         final List<Map<String, String>> messagesUpdateIA =
-            List.from(state.messagesGemini)..add({'role': 'IA', 'text': responseIA});
+            List.from(state.messagesGemini)
+              ..add({'role': 'IA', 'text': responseIA});
         emit(ChatState.geminiMessage(state, messagesUpdateIA));
       } catch (e) {
         emit(state.copyWith(isLoading: false));
@@ -152,8 +158,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<OnChatAssistantStart>((event, emit) async {
       emit(ChatState.loading(state));
       try {
-        final responseIA = await startChatAssistantUsecases(
-            Context(event.context));
+        final responseIA =
+            await startChatAssistantUsecases(Context(event.context));
         final List<Map<String, String>> messagesUpdate = [
           {'role': 'IA', 'text': responseIA}
         ];
@@ -164,15 +170,17 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     });
     on<OnChatAssistantSendMessage>((event, emit) async {
       emit(ChatState.loading(state));
-      final List<Map<String, String>> messagesUpdate = List.from(state.messagesAssistant)
-        ..add({'role': 'user', 'text': event.message});
+      final List<Map<String, String>> messagesUpdate =
+          List.from(state.messagesAssistant)
+            ..add({'role': 'user', 'text': event.message});
       emit(ChatState.assistantUserMessage(state, messagesUpdate));
       emit(ChatState.loading(state));
       try {
-        final responseIA =
-            await sendMessageAssistantUsecase(SendMessageGeminiParams(event.message, event.imageBytes));
+        final responseIA = await sendMessageAssistantUsecase(
+            SendMessageGeminiParams(event.message, event.imageBytes));
         final List<Map<String, String>> messagesUpdateIA =
-            List.from(state.messagesAssistant)..add({'role': 'IA', 'text': responseIA});
+            List.from(state.messagesAssistant)
+              ..add({'role': 'IA', 'text': responseIA});
         emit(ChatState.assistantMessage(state, messagesUpdateIA));
       } catch (e) {
         emit(state.copyWith(isLoading: false));

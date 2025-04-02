@@ -3,7 +3,6 @@ import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_reserve.dart';
 import 'package:roll_and_reserve/presentation/widgets/cards/card_reserve.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 DateTime? selectedDate;
 
@@ -21,6 +20,7 @@ class BodyReservesUser extends StatefulWidget {
 }
 
 class _BodyReservesUserState extends State<BodyReservesUser> {
+  
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -74,7 +74,7 @@ class _BodyReservesUserState extends State<BodyReservesUser> {
                         ),
                       );
                     },
-                    child: CardReserve(
+                    child:  CardReserve(
                       reserve: reserve,
                       idShop: reserve.shopId!,
                     ),

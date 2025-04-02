@@ -15,6 +15,16 @@ class CardReview extends StatelessWidget {
   final ReviewEntity review;
 
   @override
+/// Builds a review card widget.
+///
+/// This widget displays a review with the following components:
+/// - An avatar image of the review writer, displayed as a circular image.
+/// - The name of the review writer. If the name is empty, it displays "anonymous".
+/// - The review rating represented by stars.
+/// - The review text content.
+///
+/// The card has a bottom margin and handles image loading errors by displaying an error icon.
+
   Widget build(BuildContext context) {
     return Card(
       margin: EdgeInsets.only(bottom: 8),

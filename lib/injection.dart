@@ -97,6 +97,14 @@ import 'package:http/http.dart' as http;
 
 final GetIt sl = GetIt.instance;
 
+/// Configures the dependencies of the application.
+///
+/// This function registers all the necessary dependencies with
+/// [GetIt.instance], such as the repositories, use cases, and data sources.
+/// It also sets up the BLoCs and the underlying services.
+///
+/// This function is called when the application starts.
+///
 void configureDependencies() async {
   // BLocs
   sl.registerFactory<LoginBloc>(

@@ -26,6 +26,12 @@ class _DialogoUserSettingsState extends State<DialogoUserSettings> {
   final TextEditingController _nombreRealController = TextEditingController();
 
   @override
+  /// Initialize the dialog with the information of the user to edit.
+  ///
+  /// Get the user from the [LoginBloc] with the [idUser] and set the information
+  /// of the user in the [TextEditingController]s and the [_imageFile].
+  ///
+  /// The information of the user is used to fill the form of the dialog.
   void initState() {
     final userBloc = BlocProvider.of<LoginBloc>(context);
     super.initState();
@@ -35,6 +41,20 @@ class _DialogoUserSettingsState extends State<DialogoUserSettings> {
   }
 
   @override
+  /// Builds the dialog for editing user settings.
+  ///
+  /// The dialog is a [Dialog] widget with a [BlocBuilder] of the [LoginBloc].
+  /// The form of the dialog is a [Form] widget with a [CircleAvatar] to show the
+  /// avatar of the user, a [TextDialogInput] to edit the username, a [DropdownButtonFormField]
+  /// to select the role, a [TextDialogInput] to edit the name, and two [TextButton]s
+  /// to cancel or save the changes.
+  ///
+  /// When the user selects a new avatar, the [_imageFile] is updated with the new image.
+  /// When the user selects a new role, the [_roleController] is updated with the new role.
+  /// When the user saves the changes, the [UpdateUserInfoEvent] is added to the [LoginBloc]
+  /// with the new user information.
+  ///
+  /// The dialog is closed when the user cancels or saves the changes.
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
@@ -154,6 +174,11 @@ class _DialogoUserSettingsState extends State<DialogoUserSettings> {
     );
   }
 
+  /// A bottom sheet that is shown when the user wants to add a new avatar.
+  /// It shows a message that indicates the user can select a new avatar from the gallery or take a photo with the camera.
+  /// There are two actions: one to select a new avatar from the gallery and one to take a photo with the camera.
+  /// When the user selects an avatar, the [_imageFile] is updated with the new image and the dialog is closed.
+  ///
   Widget bottomSheet() {
     return Container(
       height: 100.0,

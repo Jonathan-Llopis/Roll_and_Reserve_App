@@ -25,6 +25,29 @@ class InformationReserve extends StatelessWidget {
   final int idShop;
 
   @override
+  /// Builds the UI for the information of a reserve.
+  ///
+  /// The widget is divided into four parts: a title with the name of the
+  /// game, a section with the schedule of the reserve, a section with the
+  /// additional information of the reserve, and a section with the users in
+  /// the reserve.
+  ///
+  /// The title is styled with [AppTheme.textButtonAcceptStyle].
+  ///
+  /// The schedule section shows the day, start time, and end time of the
+  /// reserve. It also shows the number of free places of the reserve.
+  ///
+  /// The additional information section shows the description of the reserve.
+  ///
+  /// The users section shows the users in the reserve and the free places of
+  /// the reserve. If the user is a shop owner, the widget also shows a button
+  /// to add or remove the user from the reserve. If the user is already in the
+  /// reserve, it shows a button to remove the user. If the user is not in the
+  /// reserve, it shows a button to add the user. If the event has already
+  /// started, the button is not shown.
+  ///
+  /// The widget is given the [ReserveEntity] of the reserve, the [LoginBloc],
+  /// and the date and time of the reserve.
   Widget build(BuildContext context) {
     ReserveBloc reserveBloc = BlocProvider.of<ReserveBloc>(context);
     return Padding(

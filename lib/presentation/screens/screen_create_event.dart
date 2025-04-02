@@ -5,7 +5,7 @@ import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_state.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.dart';
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
-import 'package:roll_and_reserve/presentation/widgets/dialogs/body_create_event.dart';
+import 'package:roll_and_reserve/presentation/widgets/screen_components/screen_body/body_create_event.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/default_scaffold.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -22,6 +22,11 @@ class ScreenCreateEvent extends StatefulWidget {
 class _ScreenCreateEventState extends State<ScreenCreateEvent> {
   Map<String, DateTime>? _selectedDates;
 
+  /// Shows a series of date and time pickers to the user. If the user selects a
+  /// start and end date and time, the [_selectedDates] map is updated with the
+  /// selected start and end date and time. If the user cancels the date or time
+  /// picker, or if the end date is before the start date, an error dialog is
+  /// shown to the user.
   Future<void> _selectDateAndTime() async {
     try {
       DateTime? startDate = await showDatePicker(
@@ -118,6 +123,8 @@ class _ScreenCreateEventState extends State<ScreenCreateEvent> {
   }
 
   @override
+  /// Calls [GetReservesEvent] and [_selectDateAndTime] when the widget is inserted
+  /// into the tree.
   void initState() {
     super.initState();
     context.read<ReserveBloc>().add(GetReservesEvent());
@@ -127,6 +134,17 @@ class _ScreenCreateEventState extends State<ScreenCreateEvent> {
   }
 
   @override
+  /// If [_selectedDates] is null, shows a [CircularProgressIndicator].
+  ///
+  /// Otherwise, shows a [DefaultScaffold] with the given [appBar] and a
+  /// [BlocBuilder] that shows a [BodyCreateEvent] if the [ReserveState] has
+  /// data, an error message if there is an error, and a
+  /// [CircularProgressIndicator] if the state is loading.
+  ///
+  /// The [BodyCreateEvent] is given the [ReserveBloc], the list of reserves,
+  /// the [idShop], the start date and time, and the end date and time.
+  ///
+  /// The start and end date and time are taken from the [_selectedDates] map.
   Widget build(BuildContext context) {
     if (_selectedDates == null) {
       return const Scaffold(

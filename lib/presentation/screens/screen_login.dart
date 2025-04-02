@@ -34,6 +34,17 @@ class _ScreenLoginState extends State<ScreenLogin> {
   bool _passwordVisible = false;
 
   @override
+  /// Adds the [emailFocus] and [passwordFocused] functions to the
+  /// [emailFocusNode] and [passwordFocusNode] focus nodes.
+  ///
+  /// This is done so that the [emailFocus] and [passwordFocused] functions
+  /// are called whenever the focus of the [emailFocusNode] or
+  /// [passwordFocusNode] changes.
+  ///
+  /// This is used to control the visibility of the password text field.
+  ///
+  /// The [super.initState] method is called last to ensure that the
+  /// [emailFocusNode] and [passwordFocusNode] are properly initialized.
   void initState() {
     emailFocusNode.addListener(emailFocus);
     passwordFocusNode.addListener(passwordFocused);
@@ -42,21 +53,62 @@ class _ScreenLoginState extends State<ScreenLogin> {
   }
 
   @override
+  /// Called when the widget is removed from the tree permanently.
+  ///
+  /// This is the opposite of [initState]. It is called when the widget is
+  /// discarded, and is used to free up any resources that aren't needed
+  /// anymore.
+  ///
+  /// In this case, it is used to remove the focus node from the widget tree.
+  ///
+  /// This method is called automatically when the widget is removed from the
+  /// tree, but it is also safe to call manually if you want to prematurely
+  /// release resources.
   void dispose() {
     emailFocusNode.removeListener(emailFocus);
     passwordFocusNode.removeListener(passwordFocused);
     super.dispose();
   }
 
+  /// Calls [riveController?.emailFocus] with the current focus state of the
+  /// [emailFocusNode].
+  ///
+  /// This is used to control the visibility of the email text field.
+  ///
+  /// The [riveController?.emailFocus] method is called only if the
+  /// [riveController] is not null, and the [emailFocusNode] is not null.
   void emailFocus() {
     riveController?.emailFocus(emailFocusNode.hasFocus);
   }
 
+  /// Calls [riveController?.passwordFocus] with the current focus state of the
+  /// [passwordFocusNode] and the current state of the [_passwordVisible].
+  ///
+  /// This is used to control the visibility of the password text field.
+  ///
+  /// The [riveController?.passwordFocus] method is called only if the
+  /// [riveController] is not null, and the [passwordFocusNode] is not null.
   void passwordFocused() {
     riveController?.passwordFocus(passwordFocusNode.hasFocus, _passwordVisible);
   }
 
   @override
+    /// Builds the login screen.
+  ///
+  /// This screen is used to login to the app. It shows the
+  /// conversation history at the top and an input field at the bottom.
+  ///
+  /// The title of the screen is "Describe your move" and it shows a restart
+  /// icon in the actions section that restarts the conversation when pressed.
+  ///
+  /// The input field is an [InputTextImage] widget that allows the user to
+  /// input text and images. The focus node is passed as a parameter so that
+  /// the input field can request focus when the user starts typing.
+  ///
+  /// The conversation history is a [BodyMessages] widget that shows the
+  /// conversation history. It is passed the [ChatBloc] as a parameter so that
+  /// it can retrieve the messages from the bloc.
+  ///
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(

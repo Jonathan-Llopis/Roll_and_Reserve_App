@@ -20,6 +20,14 @@ class ScreenReservesOfUser extends StatefulWidget {
 
 class _ScreenReservesOfUserState extends State<ScreenReservesOfUser> {
   @override
+/// Initializes the state of the widget when it is inserted into the tree.
+///
+/// This method retrieves the `LoginBloc` to access the current user's ID and
+/// dispatches a `GetReservesByUserEvent` to the `ReserveBloc` to fetch the
+/// user's reserves. Additionally, it dispatches a `GetTablesEvent` to the
+/// `TableBloc` to retrieve the tables information. Finally, it calls the
+/// superclass's `initState` method to ensure proper initialization.
+
   void initState() {
     LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
     context.read<ReserveBloc>().add(
@@ -35,6 +43,16 @@ class _ScreenReservesOfUserState extends State<ScreenReservesOfUser> {
   }
 
   @override
+  /// Builds the UI for [ScreenReservesOfUser].
+  ///
+  /// This uses the [ReserveBloc] to manage the state of the reserves.
+  /// The [ReserveState] is used to determine if the state is loading,
+  /// if there is an error, and if there is data.
+  ///
+  /// If the state is loading, it shows a [CircularProgressIndicator].
+  /// If there is an error, it shows an error message.
+  /// If there is data, it shows a [BodyReservesUser] with the reserves and
+  /// the given [appBar].
   Widget build(BuildContext context) {
     return DefaultScaffold(
       appBar: widget.appBar,

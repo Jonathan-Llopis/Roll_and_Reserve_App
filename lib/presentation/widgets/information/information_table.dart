@@ -11,6 +11,22 @@ class InformationTable extends StatelessWidget {
   final TableEntity table;
 
   @override
+  /// Builds the UI for the information of a table.
+  ///
+  /// The widget is divided into three parts: a title with the number of the
+  /// table, a section with the number of reservations, and a section with a
+  /// tag with the status of the table.
+  ///
+  /// The title is styled with [AppTheme.textButtonAcceptStyle].
+  ///
+  /// The number of reservations section shows the number of reservations of
+  /// the table.
+  ///
+  /// The tag section shows a tag with the status of the table. If the table
+  /// has reservations, the tag is green and shows the number of reservations.
+  /// If the table does not have reservations, the tag is gray and shows the
+  /// message 'No reservations'.
+  ///
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),

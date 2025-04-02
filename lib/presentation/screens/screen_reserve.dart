@@ -37,6 +37,11 @@ class _ScreenReserveState extends State<ScreenReserve> {
   late TableEntity table;
 
   @override
+  /// Called when the widget is inserted into the tree.
+  ///
+  /// This method is responsible for requesting the reserve with users for the
+  /// given idReserve from the database, requesting all difficulty from the
+  /// database, and requesting all games from the database.
   void initState() {
     context
         .read<ReserveBloc>()
@@ -47,6 +52,21 @@ class _ScreenReserveState extends State<ScreenReserve> {
   }
 
   @override
+  /// Builds the screen with the information of the reserve with id [idReserve].
+  ///
+  /// The screen is divided into two parts: a [DefaultScaffold] with an
+  /// [InformationReserve] as body, and a [FloatingActionButton].
+  ///
+  /// The [FloatingActionButton] is only visible if the user is a shop owner,
+  /// the reserve has not started yet, and the user has not confirmed the
+  /// reserve. When pressed, it navigates to the [QRScannerScreen] with the
+  /// idReserve, idShop, and idTable of the reserve and the appBar of the
+  /// screen.
+  ///
+  /// The [InformationReserve] is given the reserve with users, the
+  /// [LoginBloc], the date and time of the reserve, and the idShop of the
+  /// table.
+  ///
   Widget build(BuildContext context) {
     LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
     TableBloc tableBloc = BlocProvider.of<TableBloc>(context);

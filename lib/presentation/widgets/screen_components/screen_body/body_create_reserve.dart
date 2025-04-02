@@ -50,6 +50,16 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
   GameEntity? _selectedGame;
 
   @override
+/// Initializes the state of the widget.
+///
+/// If the `reserve` is not null, this method populates the form fields
+/// with the existing reserve details such as day date, free places,
+/// start and end times, description, and required materials. It also
+/// sets the selected difficulty and game based on the reserve's data.
+///
+/// This initialization ensures that when editing an existing reserve,
+/// the form is pre-filled with the correct information.
+
   void initState() {
     if (widget.reserve != null) {
       ReserveBloc reserveBloc = widget.reserveBloc;
@@ -72,6 +82,10 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
   }
 
   @override
+  /// Disposes all the [TextEditingController] used in this widget.
+  ///
+  /// This is necessary to prevent memory leaks when the widget is removed from
+  /// the tree.
   void dispose() {
     _dayReservationController.dispose();
     _freePlacesController.dispose();
@@ -83,6 +97,21 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
   }
 
   @override
+  /// Builds the UI for [BodyCreateReserve].
+  ///
+  /// This widget is divided into two main parts: a [SingleChildScrollView]
+  /// with a [Form] as child, and a [Row] with two [TextButton].
+  ///
+  /// The [Form] is used to validate the input fields of the reserve.
+  /// It is composed of a [SearchableDropdownFormField] for selecting the game,
+  /// five [buildInputField] for the day date, free places, start and end times,
+  /// description, and required materials respectively, and a
+  /// [DropdownButtonFormField] for selecting the difficulty.
+  ///
+  /// The [Row] is used to show the buttons for cancelling and creating the
+  /// reserve. The [TextButton] with the cancel label is used to pop the screen,
+  /// and the [ButtonCreateReserve] is used to create the reserve.
+  ///
   Widget build(BuildContext context) {
 
     return SingleChildScrollView(

@@ -22,7 +22,13 @@ class ScreenMain extends StatefulWidget {
 
 class _ScreenMainState extends State<ScreenMain> {
   @override
-  @override
+  /// Initializes the state of the main screen.
+  ///
+  /// This method is called when the widget is inserted into the widget tree.
+  /// It retrieves the notification token using [NotificationService] and
+  /// triggers an authentication check by dispatching the [CheckAuthentication]
+  /// event to the [LoginBloc].
+
   void initState() {
     super.initState();
     NotificationService().getToken();
@@ -31,6 +37,13 @@ class _ScreenMainState extends State<ScreenMain> {
   }
 
   @override
+  /// This method builds the main screen widget.
+  ///
+  /// This widget is a [BlocBuilder] of the [LoginBloc].
+  /// It displays a [DefaultScaffold] with a [BodyMain] as the body.
+  /// The bottom navigation bar is a [BottomFilterShops] if the user is user, null otherwise.
+  /// The floating action button is a [FloatingActionButton] that leads to the shop creation
+  /// screen if the user is an admin, or to the shop map screen if the user is a shop.
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
       return buildContent<LoginState>(

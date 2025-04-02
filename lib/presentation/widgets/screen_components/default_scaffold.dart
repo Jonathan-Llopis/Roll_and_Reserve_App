@@ -15,6 +15,12 @@ class DefaultScaffold extends StatelessWidget {
   });
 
   @override
+  /// Builds a Scaffold with the given [appBar], [body], [floatingActionButton],
+  /// and [bottomNavigationBar].
+  ///
+  /// The [endDrawer] is a [DrawerMain] with the given [appBar].
+  ///
+  /// This is a default Scaffold for the screens of the app.
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar,

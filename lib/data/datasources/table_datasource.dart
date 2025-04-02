@@ -17,6 +17,13 @@ class TablesRemoteDataSourceImpl implements TableRemoteDataSource {
   TablesRemoteDataSourceImpl(this.client);
 
   @override
+  /// Gets all the tables from the backend.
+  ///
+  /// The [token] parameter is the access token of the user, used to authorize the request.
+  ///
+  /// Throws an [Exception] if there is an error during the retrieval process.
+  ///
+  /// Returns a [Future] that resolves to a list of [TableModel] if the request is successful.
   Future<List<TableModel>> getAllTables(String token) async {
     final response = await client.get(
       Uri.parse('${dotenv.env['BACKEND']}/tables'),
@@ -34,6 +41,15 @@ class TablesRemoteDataSourceImpl implements TableRemoteDataSource {
   }
 
   @override
+  /// Deletes the table with the specified [idTables] from the backend.
+  ///
+  /// The [token] parameter is the access token required for authorization.
+  ///
+  /// Returns a [Future] that resolves to a boolean indicating whether the
+  /// request is successful (HTTP status code 200).
+  ///
+  /// Throws an [Exception] if there is an error during the request or if the
+  /// response status code is not 200.
   Future<bool> deleteTables(int idTables, String token) async {
     final response = await client.delete(
       Uri.parse('${dotenv.env['BACKEND']}/tables/$idTables'),
@@ -49,6 +65,17 @@ class TablesRemoteDataSourceImpl implements TableRemoteDataSource {
   }
 
   @override
+  /// Updates the table with the specified [idTables] in the backend.
+  ///
+  /// The [table] parameter is the table to be updated.
+  ///
+  /// The [token] parameter is the access token required for authorization.
+  ///
+  /// Returns a [Future] that resolves to a boolean indicating whether the
+  /// request is successful (HTTP status code 200).
+  ///
+  /// Throws an [Exception] if there is an error during the request or if the
+  /// response status code is not 200.
   Future<bool> updateTables(TableModel table, String token) async {
     final response = await client.put(
       Uri.parse('${dotenv.env['BACKEND']}/tables/${table.id}'),
@@ -66,6 +93,18 @@ class TablesRemoteDataSourceImpl implements TableRemoteDataSource {
   }
 
   @override
+  /// Creates a new table on the backend.
+  ///
+  /// The [table] parameter is the table to be created.
+  ///
+  /// The [token] is the access token required for authorization.
+  ///
+  /// Returns a [Future] that resolves to a boolean indicating whether the
+  /// request is successful (HTTP status code 201).
+  ///
+  /// Throws an [Exception] if there is an error during the request or if the
+  /// response status code is not 201.
+
   Future<bool> createTables(TableModel table, String token) async {
     final response = await client.post(
       Uri.parse('${dotenv.env['BACKEND']}/tables'),
@@ -82,6 +121,16 @@ class TablesRemoteDataSourceImpl implements TableRemoteDataSource {
     }
   }
   @override
+  /// Fetches all tables from the backend that belong to the shop with the
+  /// specified [shopId].
+  ///
+  /// The [token] is the access token required for authorization.
+  ///
+  /// Returns a [Future] that resolves to a list of [TableModel] if the request
+  /// is successful (HTTP status code 200).
+  ///
+  /// Throws an [Exception] if there is an error during the request or if the
+  /// response status code is not 200.
   Future<List<TableModel>> getAllTablesByShop(int shopId, String token) async {
     final response = await client.get(
       Uri.parse('${dotenv.env['BACKEND']}/tables/shop/$shopId'),

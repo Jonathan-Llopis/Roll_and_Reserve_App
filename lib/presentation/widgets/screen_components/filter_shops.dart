@@ -17,6 +17,13 @@ class _FilterShopsState extends State<FilterShops> {
   final _localidadTiendaController = TextEditingController();
 
   @override
+  /// Called when the widget is inserted into the tree.
+  ///
+  /// This method is responsible for filling the text fields with the values
+  /// of the filters of the shops, if they are not null.
+  ///
+  /// The filters of the shops are the ones that are currently applied to the
+  /// list of shops shown in the main screen.
   void initState() {
    if(widget.shopBloc.state.filterShops != null){
       if(widget.shopBloc.state.filterShops!.containsKey('name')){
@@ -31,6 +38,33 @@ class _FilterShopsState extends State<FilterShops> {
 
 
   @override
+  /// Builds a widget that shows a form with two text fields and a button.
+  ///
+  /// The text fields are used to filter the shops by their name and direction.
+  /// The button is used to apply the filters to the list of shops shown in
+  /// the main screen.
+  ///
+  /// The filters are applied by calling the [GetShopByFilterEvent] event
+  /// of the [ShopBloc] with the values of the text fields.
+  ///
+  /// The widget is wrapped in a [Padding] with a padding of 20.0 on all sides.
+  /// The widget is also wrapped in a [Form] with a [GlobalKey] that is used
+  /// to validate the form.
+  ///
+  /// The form contains a [TextFormField] for the shop name and a
+  /// [TextFormField] for the shop direction. The shop name is used to filter
+  /// the shops by their name, and the shop direction is used to filter the
+  /// shops by their direction.
+  ///
+  /// The form also contains a button with the text "Filtrar" that is used to
+  /// apply the filters to the list of shops shown in the main screen.
+  ///
+  /// When the button is pressed, the [GetShopByFilterEvent] event is called
+  /// with the values of the text fields. The filters are then applied to the
+  /// list of shops shown in the main screen.
+  ///
+  /// If the form is not valid, the button is not enabled.
+  ///
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(20.0),

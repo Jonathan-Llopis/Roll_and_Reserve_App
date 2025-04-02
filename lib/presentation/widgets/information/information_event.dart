@@ -22,6 +22,27 @@ class InformationEvent extends StatelessWidget {
   final DateTime dateReserve;
 
   @override
+  /// Builds the UI for the information of an event.
+  ///
+  /// The widget is divided into three parts: a title with the name of the
+  /// game, a section with the schedule of the event, and a section with the
+  /// additional information of the event.
+  ///
+  /// The title is styled with [AppTheme.textButtonAcceptStyle].
+  ///
+  /// The schedule section shows the day, start time, and end time of the event.
+  /// It also shows the number of free places of the event.
+  ///
+  /// The additional information section shows the description of the event.
+  ///
+  /// If the user is a shop owner, the widget also shows a button to add or
+  /// remove the user from the event. If the user is already in the event, it
+  /// shows a button to remove the user. If the user is not in the event, it
+  /// shows a button to add the user. If the event has already started, the
+  /// button is not shown.
+  ///
+  /// The widget is given the [ReserveEntity] of the event, the [LoginBloc],
+  /// and the date and time of the event.
   Widget build(BuildContext context) {
     ReserveBloc reserveBloc = BlocProvider.of<ReserveBloc>(context);
     return Padding(

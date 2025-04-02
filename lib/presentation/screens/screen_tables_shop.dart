@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/domain/entities/shop_entity.dart';
-import 'package:roll_and_reserve/domain/usecases/shop_usecases/get_all_shops_usecase.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
@@ -31,6 +30,11 @@ class _ScreenTablesOfShopState extends State<ScreenTablesOfShop> {
   late ShopEntity currentShop;
 
   @override
+  /// Called when the widget is inserted into the tree.
+  ///
+  /// This method is responsible for requesting the shop with the given idShop
+  /// and all the tables of the shop from the database.
+  ///
   void initState() {
     context.read<ShopBloc>().add(GetShopEvent(idShop: widget.idShop));
     context.read<ShopBloc>().add(GetShopsEvent());
@@ -39,6 +43,22 @@ class _ScreenTablesOfShopState extends State<ScreenTablesOfShop> {
   }
 
   @override
+  /// Builds the screen with the tables of the shop.
+  ///
+  /// This screen is the default scaffold with the given [appBar] and a
+  /// [BlocBuilder] that shows a [BodyTablesShop] if the [ShopState] has
+  /// data, an error message if there is an error, and a
+  /// [CircularProgressIndicator] if the state is loading.
+  ///
+  /// The [BodyTablesShop] is given the shop with the id of the shop,
+  /// and the list of tables of the shop.
+  ///
+  /// The floating action button is a [FloatingActionButton] that leads to the
+  /// table creation screen if the user is an admin, or to the table map
+  /// screen if the user is a shop. For the shop, the bottom navigation bar is
+  /// a [BottomFilterTables] that shows the filters of the tables of the shop.
+  /// For the admin, the bottom navigation bar is null.
+  ///
   Widget build(BuildContext context) {
     ShopBloc shopBloc = BlocProvider.of<ShopBloc>(context);
     LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);

@@ -18,6 +18,9 @@ class ScreenReviewUser extends StatefulWidget {
 
 class _ScreenReviewUserState extends State<ScreenReviewUser> {
   @override
+  /// Gets reviews of the user when the widget is initialized.
+  ///
+  /// Sends [GetReviewByUserEvent] to [ReviewBloc] to get reviews of the user.
   void initState() {
     super.initState();
     LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
@@ -26,8 +29,18 @@ class _ScreenReviewUserState extends State<ScreenReviewUser> {
   }
 
   @override
+
+  /// Builds the screen with the reviews of the user.
+  ///
+  /// This screen is the default scaffold with the given [appBar] and a
+  /// [BlocBuilder] that shows a [BodyReviewUser] if the [ReviewState] has
+  /// data, an error message if there is an error, and a
+  /// [CircularProgressIndicator] if the state is loading.
+  ///
+  /// The [BodyReviewUser] is given the id of the user, and the list of reviews.
   Widget build(BuildContext context) {
     LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
+
     return DefaultScaffold(
       appBar: widget.appBar,
       body: BlocBuilder<ReviewBloc, ReviewState>(
