@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_event.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/filter_shops.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class BottomFilterShops extends StatefulWidget {
   final ShopBloc shopBloc;
@@ -16,11 +16,12 @@ class _BottomFilterShopsState extends State<BottomFilterShops> {
   bool _isFilterApplied = false;
 
   @override
-/// Initializes the state of the widget.
-///
-/// Sets [_isFilterApplied] to true if there are existing shop filters
-/// in the [ShopBloc] state. This indicates if any filters are currently
-/// applied when the widget is first created.
+
+  /// Initializes the state of the widget.
+  ///
+  /// Sets [_isFilterApplied] to true if there are existing shop filters
+  /// in the [ShopBloc] state. This indicates if any filters are currently
+  /// applied when the widget is first created.
 
   void initState() {
     _isFilterApplied = widget.shopBloc.state.filterShops != null;
@@ -28,6 +29,7 @@ class _BottomFilterShopsState extends State<BottomFilterShops> {
   }
 
   @override
+
   /// Builds the bottom navigation bar with the "Remove filters" and "Filter"
   /// buttons.
   ///

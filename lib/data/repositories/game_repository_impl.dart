@@ -20,7 +20,7 @@ class GameRepositoryImpl implements GameRepository {
   ///
   /// This function uses a token stored in shared preferences for authorization.
 
-/******  114f9aa5-e5a4-494d-af34-b658c5cbdfd6  *******/
+/// ****  114f9aa5-e5a4-494d-af34-b658c5cbdfd6  ******
   Future<Either<Exception, List<GameEntity>>> getAllGames() async {
     try {
       final token = sharedPreferences.getString('token');

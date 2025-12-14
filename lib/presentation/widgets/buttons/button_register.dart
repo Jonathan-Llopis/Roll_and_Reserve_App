@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:roll_and_reserve/config/theme/theme.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class ButtonRegister extends StatelessWidget {
   const ButtonRegister(
@@ -22,6 +22,7 @@ class ButtonRegister extends StatelessWidget {
   final TextEditingController userNameController;
 
   @override
+
   /// Builds the button to register a new user.
   ///
   /// This button is the default elevated button with the given style and
@@ -37,21 +38,21 @@ class ButtonRegister extends StatelessWidget {
         final loginBloc = context.read<LoginBloc>();
         loginBloc.add(IsEmailUserUsed(
             email: emailController.text, name: nameController.text));
-            do {
-              await Future.delayed(const Duration(milliseconds: 100));
-            } while (loginBloc.state.isLoading);
+        do {
+          await Future.delayed(const Duration(milliseconds: 100));
+        } while (loginBloc.state.isLoading);
 
-            if (loginBloc.state.isEmailUsed != null &&
-                formKey.currentState!.validate()) {
-              loginBloc.add(ButtonRegisterPressed(
-                  email: emailController.text,
-                  password: passwordController.text,
-                  name: nameController.text,
-                  username: userNameController.text));
-              if (context.mounted) {
-                context.go('/user');
-              }
-            }
+        if (loginBloc.state.isEmailUsed != null &&
+            formKey.currentState!.validate()) {
+          loginBloc.add(ButtonRegisterPressed(
+              email: emailController.text,
+              password: passwordController.text,
+              name: nameController.text,
+              username: userNameController.text));
+          if (context.mounted) {
+            context.go('/user');
+          }
+        }
       },
       style: AppTheme.elevatedButtonAcceptStyle,
       child: Text(AppLocalizations.of(context)!.register,

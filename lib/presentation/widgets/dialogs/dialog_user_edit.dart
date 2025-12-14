@@ -9,7 +9,7 @@ import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_components/input_text.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class DialogoUserSettings extends StatefulWidget {
   const DialogoUserSettings({super.key});
@@ -26,6 +26,7 @@ class _DialogoUserSettingsState extends State<DialogoUserSettings> {
   final TextEditingController _nombreRealController = TextEditingController();
 
   @override
+
   /// Initialize the dialog with the information of the user to edit.
   ///
   /// Get the user from the [LoginBloc] with the [idUser] and set the information
@@ -41,6 +42,7 @@ class _DialogoUserSettingsState extends State<DialogoUserSettings> {
   }
 
   @override
+
   /// Builds the dialog for editing user settings.
   ///
   /// The dialog is a [Dialog] widget with a [BlocBuilder] of the [LoginBloc].
@@ -68,8 +70,8 @@ class _DialogoUserSettingsState extends State<DialogoUserSettings> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                   Text(
-                     AppLocalizations.of(context)!.user_settings,
+                  Text(
+                    AppLocalizations.of(context)!.user_settings,
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -120,12 +122,12 @@ class _DialogoUserSettingsState extends State<DialogoUserSettings> {
                       children: [
                         TextDialogInput(
                           controller: _nombreController,
-                          labelText:  AppLocalizations.of(context)!.username,
+                          labelText: AppLocalizations.of(context)!.username,
                         ),
                         const SizedBox(height: 12),
                         TextDialogInput(
                           controller: _nombreRealController,
-                          labelText:  AppLocalizations.of(context)!.name,
+                          labelText: AppLocalizations.of(context)!.name,
                         ),
                         const SizedBox(height: 12),
                       ],
@@ -140,7 +142,7 @@ class _DialogoUserSettingsState extends State<DialogoUserSettings> {
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        child:  Text(AppLocalizations.of(context)!.cancel),
+                        child: Text(AppLocalizations.of(context)!.cancel),
                       ),
                       TextButton(
                         style: AppTheme.textButtonAcceptStyle,
@@ -161,7 +163,7 @@ class _DialogoUserSettingsState extends State<DialogoUserSettings> {
                               );
                           Navigator.pop(context);
                         },
-                        child:  Text(AppLocalizations.of(context)!.save),
+                        child: Text(AppLocalizations.of(context)!.save),
                       ),
                     ],
                   ),
@@ -188,8 +190,8 @@ class _DialogoUserSettingsState extends State<DialogoUserSettings> {
         vertical: 20,
       ),
       child: Column(children: <Widget>[
-         Text(
-           AppLocalizations.of(context)!.add_profile_image,
+        Text(
+          AppLocalizations.of(context)!.add_profile_image,
           style: TextStyle(
             fontSize: 20.0,
           ),
@@ -204,7 +206,7 @@ class _DialogoUserSettingsState extends State<DialogoUserSettings> {
               takePhoto(ImageSource.camera);
               Navigator.pop(context);
             },
-            label:  Text( AppLocalizations.of(context)!.camera),
+            label: Text(AppLocalizations.of(context)!.camera),
           ),
           const SizedBox(
             width: 10,
@@ -215,8 +217,8 @@ class _DialogoUserSettingsState extends State<DialogoUserSettings> {
               takePhoto(ImageSource.gallery);
               Navigator.pop(context);
             },
-            label:  Text(
-               AppLocalizations.of(context)!.gallery,
+            label: Text(
+              AppLocalizations.of(context)!.gallery,
             ),
           )
         ])

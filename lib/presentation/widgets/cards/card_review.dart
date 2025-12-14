@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:roll_and_reserve/domain/entities/review_entity.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_utils.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class CardReview extends StatelessWidget {
   const CardReview({
@@ -15,15 +15,16 @@ class CardReview extends StatelessWidget {
   final ReviewEntity review;
 
   @override
-/// Builds a review card widget.
-///
-/// This widget displays a review with the following components:
-/// - An avatar image of the review writer, displayed as a circular image.
-/// - The name of the review writer. If the name is empty, it displays "anonymous".
-/// - The review rating represented by stars.
-/// - The review text content.
-///
-/// The card has a bottom margin and handles image loading errors by displaying an error icon.
+
+  /// Builds a review card widget.
+  ///
+  /// This widget displays a review with the following components:
+  /// - An avatar image of the review writer, displayed as a circular image.
+  /// - The name of the review writer. If the name is empty, it displays "anonymous".
+  /// - The review rating represented by stars.
+  /// - The review text content.
+  ///
+  /// The card has a bottom margin and handles image loading errors by displaying an error icon.
 
   Widget build(BuildContext context) {
     return Card(
@@ -42,10 +43,14 @@ class CardReview extends StatelessWidget {
             },
           ),
         ),
-        title: Text(review.userNameWriter == "" ?  AppLocalizations.of(context)!.anonymous : review.userNameWriter),
+        title: Text(review.userNameWriter == ""
+            ? AppLocalizations.of(context)!.anonymous
+            : review.userNameWriter),
         subtitle: Column(
           children: [
-            buildStars(review.raiting.toDouble(),),
+            buildStars(
+              review.raiting.toDouble(),
+            ),
             Text(review.review),
           ],
         ),

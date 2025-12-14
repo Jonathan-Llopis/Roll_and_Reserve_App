@@ -12,7 +12,7 @@ import 'package:roll_and_reserve/presentation/blocs/tables/table_state.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
 import 'package:roll_and_reserve/presentation/widgets/buttons/button_create_event.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/input_field.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/table_selection_checkbox.dart';
 import 'package:searchable_paginated_dropdown/searchable_paginated_dropdown.dart';
@@ -50,6 +50,7 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
   List<int> _selectedTableIds = [];
 
   @override
+
   /// Disposes of the [TextEditingController]s used in the form.
   //
   /// This is necessary to prevent memory leaks when the widget is removed from
@@ -62,12 +63,13 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
   }
 
   @override
-/// Initializes the state of the widget.
-///
-/// This method sends a [GetAvailableTablesEvent] to the [TableBloc] to fetch
-/// the tables available for reservation. It uses the start and end time of the
-/// event, the date, and the list of existing reserves to filter the available
-/// tables for the given shop.
+
+  /// Initializes the state of the widget.
+  ///
+  /// This method sends a [GetAvailableTablesEvent] to the [TableBloc] to fetch
+  /// the tables available for reservation. It uses the start and end time of the
+  /// event, the date, and the list of existing reserves to filter the available
+  /// tables for the given shop.
 
   void initState() {
     context.read<TableBloc>().add(GetAvailableTablesEvent(
@@ -81,6 +83,7 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
   }
 
   @override
+
   /// Builds the form to create a new event.
   ///
   /// The form is inside a [SingleChildScrollView] and contains a [Form] with
@@ -104,7 +107,6 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
   /// difficulty of the event, and the game.
   ///
   Widget build(BuildContext context) {
-
     return BlocBuilder<TableBloc, TableState>(
       builder: (context, state) {
         return buildContent<TableState>(
@@ -131,7 +133,7 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
                               filled: true,
                               fillColor: Theme.of(context)
                                   .colorScheme
-                                  .surfaceVariant
+                                  .surfaceContainerHighest
                                   .withOpacity(0.3),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
@@ -233,7 +235,7 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
                             filled: true,
                             fillColor: Theme.of(context)
                                 .colorScheme
-                                .surfaceVariant
+                                .surfaceContainerHighest
                                 .withOpacity(0.3),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8.0),
@@ -259,8 +261,9 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
                                       .withOpacity(0.6),
                                 ),
                           ),
-                          dropdownColor:
-                              Theme.of(context).colorScheme.surfaceVariant,
+                          dropdownColor: Theme.of(context)
+                              .colorScheme
+                              .surfaceContainerHighest,
                           style: Theme.of(context).textTheme.bodyMedium,
                           icon: Icon(
                             Icons.arrow_drop_down_rounded,
@@ -270,7 +273,7 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
                                 .withOpacity(0.8),
                           ),
                           borderRadius: BorderRadius.circular(8.0),
-                          value: _selectedDifficulty,
+                          initialValue: _selectedDifficulty,
                           items: widget.reserveBloc.state.difficulties!
                               .map((difficulty) => DropdownMenuItem(
                                     value: difficulty,
@@ -294,15 +297,15 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
                         ),
                       ),
                     ),
-                     const SizedBox(height: 20.0),
-                      TableSelectionCheckbox(
-                        tables: state.tablesFromShop!,
-                        onSelectionChanged: (selectedTableIds) {
-                          setState(() {
-                            _selectedTableIds = selectedTableIds;
-                          });
-                        },
-                      ),
+                    const SizedBox(height: 20.0),
+                    TableSelectionCheckbox(
+                      tables: state.tablesFromShop!,
+                      onSelectionChanged: (selectedTableIds) {
+                        setState(() {
+                          _selectedTableIds = selectedTableIds;
+                        });
+                      },
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Row(

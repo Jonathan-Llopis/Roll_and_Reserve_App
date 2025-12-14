@@ -5,7 +5,7 @@ import 'package:roll_and_reserve/config/theme/theme.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class ButtonUpdate extends StatelessWidget {
   const ButtonUpdate({
@@ -22,6 +22,7 @@ class ButtonUpdate extends StatelessWidget {
   final TextEditingController _oldPasswordController;
 
   @override
+
   /// Builds a row with two buttons: a cancel button and an update button.
   ///
   /// The cancel button pops the current route off the navigator stack using
@@ -37,7 +38,7 @@ class ButtonUpdate extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         TextButton(
-          style:AppTheme.textButtonCancelStyle,
+          style: AppTheme.textButtonCancelStyle,
           onPressed: () {
             Navigator.pop(context);
           },
@@ -47,14 +48,15 @@ class ButtonUpdate extends StatelessWidget {
           listener: (context, state) {
             if (state.validatePassword != null) {
               if (_formKey.currentState!.validate()) {
-                context.read<LoginBloc>().add(
-                    UpdatePasswordEvent(password: _newPasswordController.text, oldPassword: _oldPasswordController.text));
+                context.read<LoginBloc>().add(UpdatePasswordEvent(
+                    password: _newPasswordController.text,
+                    oldPassword: _oldPasswordController.text));
                 context.go('/login');
               }
             }
           },
           child: TextButton(
-            style:AppTheme.textButtonAcceptStyle,
+            style: AppTheme.textButtonAcceptStyle,
             onPressed: () {
               context.read<LoginBloc>().add(
                     ValidatePasswordEvent(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 import 'package:roll_and_reserve/domain/entities/table_entity.dart';
 
 class TableSelectionCheckbox extends StatefulWidget {
@@ -19,22 +19,23 @@ class TableSelectionCheckbox extends StatefulWidget {
 class _TableSelectionCheckboxState extends State<TableSelectionCheckbox> {
   final List<int> _selectedTableIds = [];
   @override
-/// Builds the widget displaying a list of tables with selectable checkboxes.
-///
-/// This widget is a [Column] containing a title and a [Wrap] of table
-/// checkboxes. Each table is represented as an [InkWell] that toggles
-/// its selection state when tapped. The selection state is visually
-/// indicated by the background color and border of the table's container.
-///
-/// The title displays a localized string indicating the purpose of the
-/// selection. The [Wrap] arranges the table checkboxes with spacing
-/// between them. The selection state of each table is managed by
-/// [_selectedTableIds], and changes are communicated via
-/// [widget.onSelectionChanged].
-///
-/// The widget uses the current theme's color scheme to style
-/// text, borders, and background colors, ensuring consistency with
-/// the app's overall design.
+
+  /// Builds the widget displaying a list of tables with selectable checkboxes.
+  ///
+  /// This widget is a [Column] containing a title and a [Wrap] of table
+  /// checkboxes. Each table is represented as an [InkWell] that toggles
+  /// its selection state when tapped. The selection state is visually
+  /// indicated by the background color and border of the table's container.
+  ///
+  /// The title displays a localized string indicating the purpose of the
+  /// selection. The [Wrap] arranges the table checkboxes with spacing
+  /// between them. The selection state of each table is managed by
+  /// [_selectedTableIds], and changes are communicated via
+  /// [widget.onSelectionChanged].
+  ///
+  /// The widget uses the current theme's color scheme to style
+  /// text, borders, and background colors, ensuring consistency with
+  /// the app's overall design.
 
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -76,7 +77,7 @@ class _TableSelectionCheckboxState extends State<TableSelectionCheckbox> {
                 decoration: BoxDecoration(
                   color: isSelected
                       ? colorScheme.primary.withOpacity(0.1)
-                      : colorScheme.surfaceVariant.withOpacity(0.3),
+                      : colorScheme.surfaceContainerHighest.withOpacity(0.3),
                   borderRadius: BorderRadius.circular(12.0),
                   border: Border.all(
                     color: isSelected
@@ -110,9 +111,9 @@ class _TableSelectionCheckboxState extends State<TableSelectionCheckbox> {
                         width: 1.5,
                       ),
                       checkColor: colorScheme.onPrimary,
-                      fillColor: MaterialStateProperty.resolveWith<Color>(
+                      fillColor: WidgetStateProperty.resolveWith<Color>(
                         (states) {
-                          if (states.contains(MaterialState.selected)) {
+                          if (states.contains(WidgetState.selected)) {
                             return colorScheme.primary;
                           }
                           return Colors.transparent;

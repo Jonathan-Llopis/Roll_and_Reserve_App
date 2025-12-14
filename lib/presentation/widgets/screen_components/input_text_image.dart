@@ -11,7 +11,7 @@ import 'package:roll_and_reserve/presentation/blocs/chat/chat_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/chat/chat_state.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class InputTextImage extends StatefulWidget {
   const InputTextImage(
@@ -31,16 +31,17 @@ class _InputTextState extends State<InputTextImage> {
   final TextEditingController textController = TextEditingController();
 
   @override
-/// Initializes the state of the widget by performing the following actions:
-/// 
-/// 1. Calls the superclass's initState method to ensure proper
-///    initialization of the inherited properties and functionality.
-/// 2. Checks for necessary permissions related to the microphone,
-///    requesting them if they are not already granted.
-/// 3. Initializes the speech-to-text functionality to enable speech
-///    recognition features.
-/// 4. Checks the availability of the speech recognition service and
-///    updates the state accordingly.
+
+  /// Initializes the state of the widget by performing the following actions:
+  ///
+  /// 1. Calls the superclass's initState method to ensure proper
+  ///    initialization of the inherited properties and functionality.
+  /// 2. Checks for necessary permissions related to the microphone,
+  ///    requesting them if they are not already granted.
+  /// 3. Initializes the speech-to-text functionality to enable speech
+  ///    recognition features.
+  /// 4. Checks the availability of the speech recognition service and
+  ///    updates the state accordingly.
 
   void initState() {
     super.initState();
@@ -48,14 +49,15 @@ class _InputTextState extends State<InputTextImage> {
     _initSpeech();
     _checkAvailability();
   }
-/// Checks and requests microphone permissions.
-///
-/// This function checks the current status of the microphone permission.
-/// If the permission is not granted, it requests the user for the
-/// permission. If the permission is denied permanently, it opens the
-/// app settings to let the user manually enable the permission.
-///
-/// Updates the widget's state after checking the permissions.
+
+  /// Checks and requests microphone permissions.
+  ///
+  /// This function checks the current status of the microphone permission.
+  /// If the permission is not granted, it requests the user for the
+  /// permission. If the permission is denied permanently, it opens the
+  /// app settings to let the user manually enable the permission.
+  ///
+  /// Updates the widget's state after checking the permissions.
 
   void _checkPermissions() async {
     final status = await Permission.microphone.status;
@@ -91,7 +93,6 @@ class _InputTextState extends State<InputTextImage> {
     setState(() {});
   }
 
-
   /// Checks the availability of the speech recognition service and updates the
   /// state accordingly.
   ///
@@ -99,11 +100,10 @@ class _InputTextState extends State<InputTextImage> {
   /// and updates the [_isAvailable] property with the result. The state of
   /// the widget is updated after checking the availability.
   void _checkAvailability() async {
-    _isAvailable = await _speechToText.isAvailable;
+    _isAvailable = _speechToText.isAvailable;
 
     setState(() {});
   }
-
 
   /// Starts listening for speech recognition.
   ///
@@ -132,7 +132,6 @@ class _InputTextState extends State<InputTextImage> {
     setState(() {});
   }
 
-
   /// Handles the speech recognition result.
   ///
   /// This function is called when the speech recognition service recognizes
@@ -142,7 +141,6 @@ class _InputTextState extends State<InputTextImage> {
   /// updated after handling the result.
   void _onSpeechResult(SpeechRecognitionResult result) {
     setState(() {
-
       textController.text = result.recognizedWords;
       if (result.finalResult) {
         textController.text = result.recognizedWords;
@@ -150,9 +148,10 @@ class _InputTextState extends State<InputTextImage> {
     });
   }
 
-  ImagePicker _picker = ImagePicker();
+  final ImagePicker _picker = ImagePicker();
   XFile? _image;
   @override
+
   /// Builds the input field widget for chat interaction.
   ///
   /// This widget contains a [TextField] for user input, an image picker button,

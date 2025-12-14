@@ -7,7 +7,7 @@ import 'package:roll_and_reserve/presentation/functions/constants.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_utils.dart';
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class BodyStadistics extends StatefulWidget {
   final int idShop;
@@ -26,6 +26,7 @@ class _BodyStadisticsState extends State<BodyStadistics> {
   late List<String> monthNames;
 
   @override
+
   /// Called when the widget is inserted into the tree.
   ///
   /// This method is responsible for requesting the most played games,
@@ -62,6 +63,7 @@ class _BodyStadisticsState extends State<BodyStadistics> {
   int _selectedChart = 1;
 
   @override
+
   /// Builds the body of the statistics screen.
   ///
   /// This screen is a [SingleChildScrollView] with a [Column] of children.

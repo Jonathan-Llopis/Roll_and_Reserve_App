@@ -7,7 +7,7 @@ import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_event.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class DialogCreateUpdateTable extends StatefulWidget {
   final ShopEntity currentShop;
@@ -22,6 +22,7 @@ class DialogCreateUpdateTable extends StatefulWidget {
   });
 
   @override
+
   /// Returns the state object for this [DialogCreateUpdateTable].
   ///
   /// The returned state object is a [_DialogCreateUpdateTableState].
@@ -39,6 +40,7 @@ class _DialogCreateUpdateTableState extends State<DialogCreateUpdateTable> {
   final TextEditingController _tableNameController = TextEditingController();
 
   @override
+
   /// Called when the widget is inserted into the tree.
   ///
   /// This method is responsible for initializing the text editing controller
@@ -49,17 +51,18 @@ class _DialogCreateUpdateTableState extends State<DialogCreateUpdateTable> {
   }
 
   @override
-/// Builds the UI for a dialog to create or update a table.
-///
-/// This method returns a [Dialog] widget that contains a [Form] for
-/// entering or editing the table number. The dialog has a title indicating
-/// whether a new table is being created or an existing table is being edited.
-/// It also includes a text field for the table number with validation,
-/// a save button to submit the form, and a cancel button to close the dialog.
-/// If the table already exists, additional buttons for managing reservations
-/// and deleting the table are included.
-///
-/// The dialog is styled with the current theme and localized text.
+
+  /// Builds the UI for a dialog to create or update a table.
+  ///
+  /// This method returns a [Dialog] widget that contains a [Form] for
+  /// entering or editing the table number. The dialog has a title indicating
+  /// whether a new table is being created or an existing table is being edited.
+  /// It also includes a text field for the table number with validation,
+  /// a save button to submit the form, and a cancel button to close the dialog.
+  /// If the table already exists, additional buttons for managing reservations
+  /// and deleting the table are included.
+  ///
+  /// The dialog is styled with the current theme and localized text.
 
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -138,7 +141,8 @@ class _DialogCreateUpdateTableState extends State<DialogCreateUpdateTable> {
                         child: Text(loc.cancel)),
                     const SizedBox(width: 12),
                     FilledButton.icon(
-                      icon: const Icon(Icons.save, size: 20, color: Color(0xFF00695C)),
+                      icon: const Icon(Icons.save,
+                          size: 20, color: Color(0xFF00695C)),
                       label: Text(loc.save),
                       style: AppTheme.textButtonAcceptStyle,
                       onPressed: _submitForm,

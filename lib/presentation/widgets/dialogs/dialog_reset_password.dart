@@ -5,7 +5,7 @@ import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class DialogResetPassword extends StatefulWidget {
   const DialogResetPassword({super.key});
@@ -18,6 +18,7 @@ class _DialogResetPasswordState extends State<DialogResetPassword> {
   final TextEditingController emailController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   @override
+
   /// A dialog that shows a message when the reset password button is pressed.
   ///
   /// It shows a message that indicates the user needs to enter their email
@@ -31,7 +32,7 @@ class _DialogResetPasswordState extends State<DialogResetPassword> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      title:  Text( AppLocalizations.of(context)!.reset_password,
+      title: Text(AppLocalizations.of(context)!.reset_password,
           style: TextStyle(
             color: Colors.black,
             fontSize: 30,
@@ -39,7 +40,7 @@ class _DialogResetPasswordState extends State<DialogResetPassword> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-           Text(
+          Text(
             AppLocalizations.of(context)!.enter_your_email_to_reset_password,
             style: TextStyle(
               fontSize: 18,
@@ -54,27 +55,27 @@ class _DialogResetPasswordState extends State<DialogResetPassword> {
             child: TextFormField(
                 controller: emailController,
                 style: const TextStyle(color: Colors.black),
-                decoration:  InputDecoration(
+                decoration: InputDecoration(
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.black),
                   ),
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.black),
                   ),
-                  labelText:  AppLocalizations.of(context)!.email,
+                  labelText: AppLocalizations.of(context)!.email,
                   labelStyle: TextStyle(color: Colors.black),
                 ),
-                validator:(value) => basicValidation(value, context)),
+                validator: (value) => basicValidation(value, context)),
           )
         ],
       ),
       actions: <Widget>[
         TextButton(
-          style:AppTheme.textButtonCancelStyle,
+          style: AppTheme.textButtonCancelStyle,
           onPressed: () {
             Navigator.pop(context);
           },
-          child:  Text(AppLocalizations.of(context)!.cancel),
+          child: Text(AppLocalizations.of(context)!.cancel),
         ),
         TextButton(
           style: AppTheme.textButtonCancelStyle,

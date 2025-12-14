@@ -9,7 +9,7 @@ import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_utils.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
 import 'package:roll_and_reserve/presentation/widgets/buttons/button_create_reserve.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/input_field.dart';
 import 'package:searchable_paginated_dropdown/searchable_paginated_dropdown.dart';
 
@@ -50,15 +50,16 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
   GameEntity? _selectedGame;
 
   @override
-/// Initializes the state of the widget.
-///
-/// If the `reserve` is not null, this method populates the form fields
-/// with the existing reserve details such as day date, free places,
-/// start and end times, description, and required materials. It also
-/// sets the selected difficulty and game based on the reserve's data.
-///
-/// This initialization ensures that when editing an existing reserve,
-/// the form is pre-filled with the correct information.
+
+  /// Initializes the state of the widget.
+  ///
+  /// If the `reserve` is not null, this method populates the form fields
+  /// with the existing reserve details such as day date, free places,
+  /// start and end times, description, and required materials. It also
+  /// sets the selected difficulty and game based on the reserve's data.
+  ///
+  /// This initialization ensures that when editing an existing reserve,
+  /// the form is pre-filled with the correct information.
 
   void initState() {
     if (widget.reserve != null) {
@@ -82,6 +83,7 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
   }
 
   @override
+
   /// Disposes all the [TextEditingController] used in this widget.
   ///
   /// This is necessary to prevent memory leaks when the widget is removed from
@@ -97,6 +99,7 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
   }
 
   @override
+
   /// Builds the UI for [BodyCreateReserve].
   ///
   /// This widget is divided into two main parts: a [SingleChildScrollView]
@@ -113,7 +116,6 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
   /// and the [ButtonCreateReserve] is used to create the reserve.
   ///
   Widget build(BuildContext context) {
-
     return SingleChildScrollView(
       child: Form(
         key: _formKey,
@@ -129,7 +131,7 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
                       filled: true,
                       fillColor: Theme.of(context)
                           .colorScheme
-                          .surfaceVariant
+                          .surfaceContainerHighest
                           .withOpacity(0.3),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -287,7 +289,7 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
                     filled: true,
                     fillColor: Theme.of(context)
                         .colorScheme
-                        .surfaceVariant
+                        .surfaceContainerHighest
                         .withOpacity(0.3),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
@@ -311,7 +313,8 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
                                   .withOpacity(0.6),
                             ),
                   ),
-                  dropdownColor: Theme.of(context).colorScheme.surfaceVariant,
+                  dropdownColor:
+                      Theme.of(context).colorScheme.surfaceContainerHighest,
                   style: Theme.of(context).textTheme.bodyMedium,
                   icon: Icon(
                     Icons.arrow_drop_down_rounded,
@@ -319,7 +322,7 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
                         Theme.of(context).colorScheme.primary.withOpacity(0.8),
                   ),
                   borderRadius: BorderRadius.circular(8.0),
-                  value: _selectedDifficulty,
+                  initialValue: _selectedDifficulty,
                   items: widget.reserveBloc.state.difficulties!
                       .map((difficulty) => DropdownMenuItem(
                             value: difficulty,

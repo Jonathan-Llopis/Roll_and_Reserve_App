@@ -10,7 +10,7 @@ import 'package:roll_and_reserve/presentation/functions/state_check.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/bottom_filter_shops.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/screen_body/body_main_shops.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/default_scaffold.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class ScreenMain extends StatefulWidget {
   final PreferredSizeWidget appBar;
@@ -22,6 +22,7 @@ class ScreenMain extends StatefulWidget {
 
 class _ScreenMainState extends State<ScreenMain> {
   @override
+
   /// Initializes the state of the main screen.
   ///
   /// This method is called when the widget is inserted into the widget tree.
@@ -33,10 +34,10 @@ class _ScreenMainState extends State<ScreenMain> {
     super.initState();
     NotificationService().getToken();
     BlocProvider.of<LoginBloc>(context).add(CheckAuthentication());
-
   }
 
   @override
+
   /// This method builds the main screen widget.
   ///
   /// This widget is a [BlocBuilder] of the [LoginBloc].
@@ -68,20 +69,22 @@ class _ScreenMainState extends State<ScreenMain> {
                           context.go('/user/map');
                         },
                         child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.map_sharp),
-                              Text(AppLocalizations.of(context)!.store_map,
-                                  style: TextStyle(fontSize: 10), textAlign: TextAlign.center,),
-                            ],
-                          ),
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.map_sharp),
+                            Text(
+                              AppLocalizations.of(context)!.store_map,
+                              style: TextStyle(fontSize: 10),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
                       ),
                 bottomNavigationBar: state.user!.role == 2
                     ? BottomFilterShops(
                         shopBloc: context.read<ShopBloc>(),
                       )
                     : null);
-                    
           });
     });
   }

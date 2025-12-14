@@ -7,7 +7,7 @@ import 'package:roll_and_reserve/presentation/blocs/shops/shop_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_state.dart';
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
 import 'package:roll_and_reserve/presentation/widgets/information/information_shop.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class BodyMain extends StatefulWidget {
   const BodyMain({
@@ -25,18 +25,19 @@ class _BodyMainState extends State<BodyMain> {
   }
 
   @override
-/// Builds the main body of the shops screen.
-///
-/// This widget uses a [BlocBuilder] to listen to the state of the [ShopBloc].
-/// If the list of shops is not available, an event is dispatched to fetch
-/// the shops based on the user's role. If the user is an admin or a regular user,
-/// all shops are fetched. If the user is an owner, only the shops registered
-/// under their name are fetched.
-///
-/// The UI consists of a [Column] with a welcome message for admins, a message
-/// about registered shops for owners, or all shops for regular users. A [ListView]
-/// is used to display the list of shops, each represented by an [InformationShop]
-/// widget. Tapping on a shop navigates to the shop's detail page, except for owners.
+
+  /// Builds the main body of the shops screen.
+  ///
+  /// This widget uses a [BlocBuilder] to listen to the state of the [ShopBloc].
+  /// If the list of shops is not available, an event is dispatched to fetch
+  /// the shops based on the user's role. If the user is an admin or a regular user,
+  /// all shops are fetched. If the user is an owner, only the shops registered
+  /// under their name are fetched.
+  ///
+  /// The UI consists of a [Column] with a welcome message for admins, a message
+  /// about registered shops for owners, or all shops for regular users. A [ListView]
+  /// is used to display the list of shops, each represented by an [InformationShop]
+  /// widget. Tapping on a shop navigates to the shop's detail page, except for owners.
 
   Widget build(BuildContext context) {
     final loginBloc = BlocProvider.of<LoginBloc>(context);

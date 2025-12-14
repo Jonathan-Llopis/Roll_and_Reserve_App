@@ -77,12 +77,12 @@ class AppTheme {
   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8), // Más compacto
   minimumSize: const Size(0, 36), // Altura fija más pequeña
 ).copyWith(
-  overlayColor: MaterialStateProperty.resolveWith<Color>(
+  overlayColor: WidgetStateProperty.resolveWith<Color>(
     (states) {
-      if (states.contains(MaterialState.pressed)) {
+      if (states.contains(WidgetState.pressed)) {
         return Colors.red.withOpacity(0.2);
       }
-      if (states.contains(MaterialState.hovered)) {
+      if (states.contains(WidgetState.hovered)) {
         return Colors.red.withOpacity(0.15);
       }
       return Colors.transparent;
@@ -99,12 +99,12 @@ static ButtonStyle textButtonAcceptStyle = TextButton.styleFrom(
   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
   minimumSize: const Size(0, 36), // Misma altura
 ).copyWith(
-  overlayColor: MaterialStateProperty.resolveWith<Color>(
+  overlayColor: WidgetStateProperty.resolveWith<Color>(
     (states) {
-      if (states.contains(MaterialState.pressed)) {
+      if (states.contains(WidgetState.pressed)) {
         return const Color(0xFF00695C).withOpacity(0.2);
       }
-      if (states.contains(MaterialState.hovered)) {
+      if (states.contains(WidgetState.hovered)) {
         return const Color(0xFF00695C).withOpacity(0.15);
       }
       return Colors.transparent;

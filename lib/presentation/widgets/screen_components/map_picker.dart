@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart' as coordinates;
 import 'package:geolocator/geolocator.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class LocationPicker extends StatefulWidget {
   final double zoomLevel;
@@ -29,6 +29,7 @@ class _LocationPickerState extends State<LocationPicker> {
   late double currentZoomLevel;
 
   @override
+
   /// Initializes the state of the widget.
   ///
   /// It calls the [State.initState] method of the parent class.
@@ -104,20 +105,21 @@ class _LocationPickerState extends State<LocationPicker> {
   }
 
   @override
-/// Builds a widget to display a map for picking a location.
-///
-/// The widget uses a [FutureBuilder] to handle the asynchronous process of
-/// obtaining the user's current location. While waiting for the location,
-/// a [CircularProgressIndicator] is shown. If an error occurs during this process,
-/// an error message is displayed.
-///
-/// Once the location is obtained, a [FlutterMap] widget is displayed, allowing
-/// the user to select a location on the map. The selected location's coordinates
-/// are updated in the [longitudeController] and [latitudeController].
-///
-/// The map includes zoom controls and a button to center on the user's current
-/// location, unless the [displayOnly] flag is set to true, in which case these
-/// controls are hidden.
+
+  /// Builds a widget to display a map for picking a location.
+  ///
+  /// The widget uses a [FutureBuilder] to handle the asynchronous process of
+  /// obtaining the user's current location. While waiting for the location,
+  /// a [CircularProgressIndicator] is shown. If an error occurs during this process,
+  /// an error message is displayed.
+  ///
+  /// Once the location is obtained, a [FlutterMap] widget is displayed, allowing
+  /// the user to select a location on the map. The selected location's coordinates
+  /// are updated in the [longitudeController] and [latitudeController].
+  ///
+  /// The map includes zoom controls and a button to center on the user's current
+  /// location, unless the [displayOnly] flag is set to true, in which case these
+  /// controls are hidden.
 
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -190,7 +192,7 @@ class _LocationPickerState extends State<LocationPicker> {
                       width: constraints.maxWidth,
                       height: constraints.maxWidth * 0.6,
                       decoration: BoxDecoration(
-                        color: colorScheme.surfaceVariant,
+                        color: colorScheme.surfaceContainerHighest,
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
                           color: colorScheme.outline,

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart' as coordinates;
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_event.dart';
@@ -27,6 +27,7 @@ class _StoreMapState extends State<StoreMap> {
   bool _isUpdatingLocation = false;
 
   @override
+
   /// Initialize the state of the store map widget.
   ///
   /// This function is called when the widget is inserted into the tree.
@@ -38,6 +39,7 @@ class _StoreMapState extends State<StoreMap> {
     currentZoomLevel = 10;
     super.initState();
   }
+
   /// Gets the current location of the user.
   ///
   /// This function is used to get the user's current location.
@@ -109,6 +111,7 @@ class _StoreMapState extends State<StoreMap> {
   }
 
   @override
+
   /// Builds the screen with the nearby shops.
   ///
   /// The screen is a [Scaffold] with an [AppBar] and a [FlutterMap] as the body.
@@ -128,7 +131,7 @@ class _StoreMapState extends State<StoreMap> {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
     LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
-    
+
     return FutureBuilder(
       future: _getCurrentLocation(false),
       builder: (context, snapshot) {
@@ -181,7 +184,8 @@ class _StoreMapState extends State<StoreMap> {
                     ),
                     const SizedBox(height: 16),
                     FilledButton.tonal(
-                      onPressed: () => context.read<ShopBloc>().add(GetShopsEvent()),
+                      onPressed: () =>
+                          context.read<ShopBloc>().add(GetShopsEvent()),
                       child: Text(AppLocalizations.of(context)!.retry),
                     ),
                   ],
@@ -209,8 +213,9 @@ class _StoreMapState extends State<StoreMap> {
                             AppLocalizations.of(context)!.tap_marker_info,
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: colors.onSurface.withOpacity(0.6),
-                          ),
-                      )],
+                            ),
+                          )
+                        ],
                       ),
                       leading: IconButton(
                         icon: const Icon(Icons.arrow_back_rounded),
@@ -237,7 +242,8 @@ class _StoreMapState extends State<StoreMap> {
                             TileLayer(
                               urlTemplate:
                                   'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                              userAgentPackageName: 'com.example.roll_and_reserve',
+                              userAgentPackageName:
+                                  'com.example.roll_and_reserve',
                             ),
                             MarkerLayer(
                               markers: state.shops!
@@ -247,7 +253,8 @@ class _StoreMapState extends State<StoreMap> {
                                       height: 50.0,
                                       point: coordinates.LatLng(
                                           store.latitude, store.longitude),
-                                      child: MapMarker(store: store, loginBloc: loginBloc),
+                                      child: MapMarker(
+                                          store: store, loginBloc: loginBloc),
                                     ),
                                   )
                                   .toList(),
@@ -261,13 +268,15 @@ class _StoreMapState extends State<StoreMap> {
                             children: [
                               MapControlButton(
                                 icon: Icons.zoom_in_rounded,
-                                onPressed: () => setState(() => currentZoomLevel += 1),
+                                onPressed: () =>
+                                    setState(() => currentZoomLevel += 1),
                                 color: colors.primary,
                               ),
                               const SizedBox(height: 12),
                               MapControlButton(
                                 icon: Icons.zoom_out_rounded,
-                                onPressed: () => setState(() => currentZoomLevel -= 1),
+                                onPressed: () =>
+                                    setState(() => currentZoomLevel -= 1),
                                 color: colors.primary,
                               ),
                               const SizedBox(height: 12),
@@ -282,9 +291,11 @@ class _StoreMapState extends State<StoreMap> {
                                   MapControlButton(
                                     icon: Icons.my_location_rounded,
                                     onPressed: () {
-                                      setState(() => _isUpdatingLocation = true);
+                                      setState(
+                                          () => _isUpdatingLocation = true);
                                       _getCurrentLocation(true).then((_) {
-                                        setState(() => _isUpdatingLocation = false);
+                                        setState(
+                                            () => _isUpdatingLocation = false);
                                       });
                                     },
                                     color: colors.tertiary,
@@ -306,4 +317,3 @@ class _StoreMapState extends State<StoreMap> {
     );
   }
 }
-

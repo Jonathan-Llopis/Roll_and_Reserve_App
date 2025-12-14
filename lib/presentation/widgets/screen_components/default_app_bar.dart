@@ -3,13 +3,15 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class DefaultAppBar extends StatefulWidget implements PreferredSizeWidget {
-  const DefaultAppBar(
-      {super.key,});
+  const DefaultAppBar({
+    super.key,
+  });
 
   @override
   State<DefaultAppBar> createState() => _DefaultAppBarState();
@@ -20,6 +22,7 @@ class DefaultAppBar extends StatefulWidget implements PreferredSizeWidget {
 
 class _DefaultAppBarState extends State<DefaultAppBar> {
   @override
+
   /// Initializes the state of the app bar.
   ///
   /// It calls the [State.initState] method of the parent class.
@@ -30,6 +33,7 @@ class _DefaultAppBarState extends State<DefaultAppBar> {
   }
 
   @override
+
   /// Builds the app bar with the logo and the user image.
   ///
   /// If the user is null, it shows a [CircularProgressIndicator].
@@ -64,67 +68,68 @@ class _DefaultAppBarState extends State<DefaultAppBar> {
             titleSpacing: 0,
             title: LayoutBuilder(
               builder: (context, constraints) {
-              double width = constraints.maxWidth;
-              double logoSize = width * 0.15;
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                SizedBox(width: width * 0.04),
-                Container(
-                  width: logoSize,
-                  height: logoSize,
-                  decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 6,
-                    offset: const Offset(2, 2),
-                    ),
-                  ],
-                  ),
-                  child: ClipOval(
-                  child: Image.asset(
-                    'assets/icon/logo.png',
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                    return Icon(Icons.error, color: Colors.red, size: logoSize * 0.5);
-                    },
-                  ),
-                  ),
-                ),
-                SizedBox(width: width * 0.04),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                double width = constraints.maxWidth;
+                double logoSize = width * 0.15;
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                  Text(
-                    'Roll & Reserve',
-                    style: TextStyle(
-                    fontSize: width * 0.075,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                    letterSpacing: 1.5,
+                    SizedBox(width: width * 0.04),
+                    Container(
+                      width: logoSize,
+                      height: logoSize,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 6,
+                            offset: const Offset(2, 2),
+                          ),
+                        ],
+                      ),
+                      child: ClipOval(
+                        child: Image.asset(
+                          'assets/icon/logo.png',
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Icon(Icons.error,
+                                color: Colors.red, size: logoSize * 0.5);
+                          },
+                        ),
+                      ),
                     ),
-                  ),
-                  Text(
-                    AppLocalizations.of(context)!.find_your_game_table,
-                    style: TextStyle(
-                    fontSize: width * 0.045,
-                    color: Colors.white70,
+                    SizedBox(width: width * 0.04),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Roll & Reserve',
+                          style: TextStyle(
+                            fontSize: width * 0.075,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                            letterSpacing: 1.5,
+                          ),
+                        ),
+                        Text(
+                          AppLocalizations.of(context)!.find_your_game_table,
+                          style: TextStyle(
+                            fontSize: width * 0.045,
+                            color: Colors.white70,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
                   ],
-                ),
-                ],
-              );
+                );
               },
             ),
             actions: [
               Padding(
                 padding: const EdgeInsets.only(right: 16.0),
                 child: GestureDetector(
-                    onTap: () {
+                  onTap: () {
                     Scaffold.of(context).openEndDrawer();
                   },
                   child: Container(

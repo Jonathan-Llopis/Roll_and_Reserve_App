@@ -12,7 +12,7 @@ import 'package:roll_and_reserve/presentation/functions/state_check.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_qr.dart';
 import 'package:roll_and_reserve/presentation/widgets/information/information_event.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/default_scaffold.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class ScreenEvent extends StatefulWidget {
   final int idReserve;
@@ -32,6 +32,7 @@ class ScreenEvent extends StatefulWidget {
 
 class _ScreenEventState extends State<ScreenEvent> {
   @override
+
   /// Called when the widget is inserted into the tree.
   ///
   /// This method is responsible for requesting the tables and the reserve
@@ -47,21 +48,22 @@ class _ScreenEventState extends State<ScreenEvent> {
   @override
   Widget build(BuildContext context) {
     LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
-  /// Builds the content of the screen.
-  ///
-  /// The screen is divided into three parts: a [DefaultScaffold] with an
-  /// [InformationEvent] as body, a [FloatingActionButton] if the user is a
-  /// shop owner, and a [Text] with the reserve confirmation if the user is not
-  /// a shop owner.
-  ///
-  /// The [FloatingActionButton] is only visible if the user is a shop owner,
-  /// the reserve has not started yet, and the user has not confirmed the
-  /// reserve. When pressed, it navigates to the [QRScannerScreen] with the
-  /// idReserve, idShop, and idTable of the reserve and the appBar of the
-  /// screen.
-  ///
-  /// The [Text] with the reserve confirmation is only visible if the user is
-  /// not a shop owner. It shows the status of the reserve confirmation.
+
+    /// Builds the content of the screen.
+    ///
+    /// The screen is divided into three parts: a [DefaultScaffold] with an
+    /// [InformationEvent] as body, a [FloatingActionButton] if the user is a
+    /// shop owner, and a [Text] with the reserve confirmation if the user is not
+    /// a shop owner.
+    ///
+    /// The [FloatingActionButton] is only visible if the user is a shop owner,
+    /// the reserve has not started yet, and the user has not confirmed the
+    /// reserve. When pressed, it navigates to the [QRScannerScreen] with the
+    /// idReserve, idShop, and idTable of the reserve and the appBar of the
+    /// screen.
+    ///
+    /// The [Text] with the reserve confirmation is only visible if the user is
+    /// not a shop owner. It shows the status of the reserve confirmation.
     return BlocBuilder<ReserveBloc, ReserveState>(
       builder: (context, state) {
         return buildContent<ReserveState>(

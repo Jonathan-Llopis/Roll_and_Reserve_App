@@ -5,7 +5,7 @@ import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/widgets/cards/card_review.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class BodyReviewShop extends StatelessWidget {
   const BodyReviewShop({
@@ -20,6 +20,7 @@ class BodyReviewShop extends StatelessWidget {
   final List<ReviewEntity> reviews;
 
   @override
+
   /// Builds the body of the screen that shows the reviews of the shop.
   ///
   /// The content of the body is a [Column] with the title of the shop, the

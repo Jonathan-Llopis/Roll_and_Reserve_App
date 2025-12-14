@@ -6,15 +6,16 @@ import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_event.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class DialogDeleteShop extends StatelessWidget {
   final int idShop;
   final ShopBloc shopBloc;
-  const DialogDeleteShop({super.key, required this.idShop, required this.shopBloc});
+  const DialogDeleteShop(
+      {super.key, required this.idShop, required this.shopBloc});
 
   @override
+
   /// Builds a widget that displays a dialog for deleting a shop.
   ///
   /// The dialog shows a confirmation message for deleting the shop
@@ -29,13 +30,13 @@ class DialogDeleteShop extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
       return AlertDialog(
-        title:  Text( AppLocalizations.of(context)!.shop_delete,
+        title: Text(AppLocalizations.of(context)!.shop_delete,
             style: TextStyle(
               color: Color.fromARGB(255, 0, 0, 0),
               fontSize: 30,
             )),
-        content:  Text(
-           AppLocalizations.of(context)!.confirm_delete_shop,
+        content: Text(
+          AppLocalizations.of(context)!.confirm_delete_shop,
           style: TextStyle(
             fontSize: 18,
             color: Color.fromARGB(255, 0, 0, 0),
@@ -53,9 +54,9 @@ class DialogDeleteShop extends StatelessWidget {
             style: AppTheme.textButtonAcceptStyle,
             onPressed: () {
               shopBloc.add(DeleteShopEvent(
-                    idShop: idShop,
-                    idOwner: state.user!.id,
-                  ));
+                idShop: idShop,
+                idOwner: state.user!.id,
+              ));
               context.go('/user');
             },
             child: Text(AppLocalizations.of(context)!.accept),

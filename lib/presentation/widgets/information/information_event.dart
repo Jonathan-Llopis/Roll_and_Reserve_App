@@ -7,7 +7,7 @@ import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_event.dart';
 
 import 'package:roll_and_reserve/presentation/widgets/cards/card_user.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class InformationEvent extends StatelessWidget {
   const InformationEvent({
@@ -22,6 +22,7 @@ class InformationEvent extends StatelessWidget {
   final DateTime dateReserve;
 
   @override
+
   /// Builds the UI for the information of an event.
   ///
   /// The widget is divided into three parts: a title with the name of the
@@ -52,7 +53,10 @@ class InformationEvent extends StatelessWidget {
         children: [
           Text(
             reserve.isEvent
-                ?  AppLocalizations.of(context)!.game_event(reserveBloc.state.games!.firstWhere((element) => element.id == reserve.gameId).description)
+                ? AppLocalizations.of(context)!.game_event(reserveBloc
+                    .state.games!
+                    .firstWhere((element) => element.id == reserve.gameId)
+                    .description)
                 : AppLocalizations.of(context)!.active_game(reserveBloc
                     .state.games!
                     .firstWhere((element) => element.id == reserve.gameId)
@@ -143,15 +147,13 @@ class InformationEvent extends StatelessWidget {
                               ));
                         } else {
                           if (reserve.users!.length < reserve.freePlaces) {
-                            context
-                                .read<ReserveBloc>()
-                                .add(AddUserToReserveEvent(
-                                  idReserve: reserve.id,
-                                  idUser: loginBloc.state.user!.id,
-                                  idTable: reserve.tableId,
-                                  dateReserve: dateReserve,
-                                  searchDateTime: DateTime.now()
-                                ));
+                            context.read<ReserveBloc>().add(
+                                AddUserToReserveEvent(
+                                    idReserve: reserve.id,
+                                    idUser: loginBloc.state.user!.id,
+                                    idTable: reserve.tableId,
+                                    dateReserve: dateReserve,
+                                    searchDateTime: DateTime.now()));
                           }
                         }
                       },

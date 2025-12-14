@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 import 'package:roll_and_reserve/presentation/blocs/chat/chat_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/chat/chat_event.dart';
 
@@ -15,6 +15,7 @@ class DialogCharacterDescription extends StatelessWidget {
   final TextEditingController controllerTheme;
 
   @override
+
   /// Builds a dialog that allows the user to input a description of the
   /// adventurers and the setting of the game. This dialog is used to start
   /// a new game of Roll & Reserve.
@@ -77,7 +78,8 @@ class DialogCharacterDescription extends StatelessWidget {
               autofocus: true,
               decoration: InputDecoration(
                 floatingLabelBehavior: FloatingLabelBehavior.always,
-                labelText: AppLocalizations.of(context)!.adventurers_description,
+                labelText:
+                    AppLocalizations.of(context)!.adventurers_description,
                 alignLabelWithHint: true,
                 prefixIcon: Icon(Icons.edit_note_rounded,
                     color: Theme.of(context).colorScheme.outline),
@@ -89,7 +91,7 @@ class DialogCharacterDescription extends StatelessWidget {
                 filled: true,
                 fillColor: Theme.of(context)
                     .colorScheme
-                    .surfaceVariant
+                    .surfaceContainerHighest
                     .withOpacity(0.4),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -103,8 +105,7 @@ class DialogCharacterDescription extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             TextField(
-              controller:
-                  controllerTheme,
+              controller: controllerTheme,
               maxLines: 4,
               minLines: 3,
               decoration: InputDecoration(
@@ -121,7 +122,7 @@ class DialogCharacterDescription extends StatelessWidget {
                 filled: true,
                 fillColor: Theme.of(context)
                     .colorScheme
-                    .surfaceVariant
+                    .surfaceContainerHighest
                     .withOpacity(0.4),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -157,7 +158,9 @@ class DialogCharacterDescription extends StatelessWidget {
               if (controllerDescription.text.isNotEmpty &&
                   controllerTheme.text.isNotEmpty) {
                 context.read<ChatBloc>().add(OnRolPlayStart(
-                    context: context, character: controllerDescription.text, theme: controllerTheme.text));
+                    context: context,
+                    character: controllerDescription.text,
+                    theme: controllerTheme.text));
                 Navigator.of(context).pop();
               }
             },

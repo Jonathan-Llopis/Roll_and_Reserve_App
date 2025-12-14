@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/domain/entities/shop_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/widgets/information/information_shop.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 List<ShopEntity>? shops;
 
@@ -18,6 +18,7 @@ class BodyAdminShops extends StatefulWidget {
 
 class _BodyMainState extends State<BodyAdminShops> {
   @override
+
   /// Initialize the shops list with the ones from the ShopBloc state.
   /// This is done to have a reference to the list of shops that doesn't change
   /// when the state of the bloc changes, which is important because the list
@@ -29,6 +30,7 @@ class _BodyMainState extends State<BodyAdminShops> {
   }
 
   @override
+
   /// Builds a Column with a TextField that filters the shops by their name
   /// and a ListView of InformationShop widgets that show the shops that
   /// match the filter.

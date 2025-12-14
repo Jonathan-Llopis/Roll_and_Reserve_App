@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/chat/chat_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/chat/chat_state.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_character_description.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/drawer_character_rol.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/input_text.dart';
@@ -38,7 +38,9 @@ class _ChatScreenState extends State<RolScreen> {
           barrierDismissible: false,
           builder: (context) {
             return DialogCharacterDescription(
-                controllerDescription: _controllerDescription, controllerTheme: _controllerTheme,);
+              controllerDescription: _controllerDescription,
+              controllerTheme: _controllerTheme,
+            );
           },
         );
       });
@@ -46,6 +48,7 @@ class _ChatScreenState extends State<RolScreen> {
   }
 
   @override
+
   /// Initializes the state of the chat screen.
   ///
   /// This function is called when the widget is inserted into the tree.
@@ -57,6 +60,7 @@ class _ChatScreenState extends State<RolScreen> {
   }
 
   @override
+
   /// Called when the widget is removed from the tree permanently.
   ///
   /// This is the opposite of [initState]. It is called when the widget is
@@ -74,6 +78,7 @@ class _ChatScreenState extends State<RolScreen> {
   }
 
   @override
+
   /// Builds the role-playing chat screen.
   ///
   /// This screen allows users to engage in a role-playing conversation with the AI.
@@ -91,50 +96,50 @@ class _ChatScreenState extends State<RolScreen> {
 
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-            return Scaffold(
-                appBar: AppBar(
-                  title: Row(
-                    children: [
-                      Icon(Icons.auto_awesome, color: theme.colorScheme.primary),
-                      const SizedBox(width: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            AppLocalizations.of(context)!.play_role_with_ai,
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                body: Column(
-                  children: [
-                    Expanded(
-                      child: BodyMessages(),
+    return Scaffold(
+        appBar: AppBar(
+          title: Row(
+            children: [
+              Icon(Icons.auto_awesome, color: theme.colorScheme.primary),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!.play_role_with_ai,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
                     ),
-                    InputText(focusNode: _focusNode, isRolPlay: true),
-                  ],
-                ),
-                endDrawer: BlocBuilder<ChatBloc, ChatState>(
-                  builder: (context, state) {
-                    return DrawerCharacterRol(
-                      characterData: state.character,
-                    );
-                  },
-                ));
-          }
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              child: BodyMessages(),
+            ),
+            InputText(focusNode: _focusNode, isRolPlay: true),
+          ],
+        ),
+        endDrawer: BlocBuilder<ChatBloc, ChatState>(
+          builder: (context, state) {
+            return DrawerCharacterRol(
+              characterData: state.character,
+            );
+          },
+        ));
   }
-
+}
 
 class BodyMessages extends StatelessWidget {
   const BodyMessages({super.key});
 
   @override
+
   /// Builds the message list view for the role-playing chat.
   ///
   /// This widget displays a loading indicator if the chat is loading or if the
@@ -209,6 +214,7 @@ class ChatMessage extends StatelessWidget {
   });
 
   @override
+
   /// Builds a chat message widget.
   ///
   /// This widget displays a single chat message within a styled container. The
@@ -240,7 +246,7 @@ class ChatMessage extends StatelessWidget {
               decoration: BoxDecoration(
                 color: isFromUser
                     ? colors.primaryContainer
-                    : colors.surfaceVariant,
+                    : colors.surfaceContainerHighest,
                 borderRadius: BorderRadius.only(
                   topLeft: const Radius.circular(20),
                   topRight: const Radius.circular(20),
@@ -283,7 +289,7 @@ class ChatMessage extends StatelessWidget {
                       ),
                       a: TextStyle(color: colors.primary),
                       code: TextStyle(
-                        backgroundColor: colors.surfaceVariant,
+                        backgroundColor: colors.surfaceContainerHighest,
                         color: colors.onSurface,
                         fontFamily: 'FiraCode',
                       ),

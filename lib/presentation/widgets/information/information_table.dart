@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:roll_and_reserve/domain/entities/table_entity.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class InformationTable extends StatelessWidget {
   const InformationTable({
@@ -11,6 +11,7 @@ class InformationTable extends StatelessWidget {
   final TableEntity table;
 
   @override
+
   /// Builds the UI for the information of a table.
   ///
   /// The widget is divided into three parts: a title with the number of the

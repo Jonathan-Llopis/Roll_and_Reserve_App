@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
 import 'package:roll_and_reserve/domain/entities/shop_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 /// Basic validation to check if a value is not null or empty
 /// and if not, return a message indicating that the field is required.
@@ -19,6 +19,7 @@ String? basicValidation(String? value, BuildContext context) {
   }
   return null;
 }
+
 /// Basic validation to check if a value is not null or empty
 /// and if not, it must contain only numbers.
 ///
@@ -27,7 +28,7 @@ String? basicValidation(String? value, BuildContext context) {
 ///
 /// Returns a message if the value is null or empty, or if it does not contain
 /// only numbers, otherwise, it returns null.
-String? basicValidationWithNumber(String? value, BuildContext context){
+String? basicValidationWithNumber(String? value, BuildContext context) {
   if (value == null || value.isEmpty) {
     return AppLocalizations.of(context)!.required_field;
   }
@@ -65,7 +66,7 @@ String? validateHour(String? value, BuildContext context) {
   if (!regex.hasMatch(value)) {
     return AppLocalizations.of(context)!.format_must_be_hh_mm;
   }
-  
+
   return null;
 }
 
@@ -113,7 +114,8 @@ bool isEmailValid(String value) {
 /// Returns a localized error message if the username is invalid or
 /// already in use, otherwise returns null.
 
-String? validateUserName(String? value, LoginBloc loginBloc, BuildContext context) {
+String? validateUserName(
+    String? value, LoginBloc loginBloc, BuildContext context) {
   if (value == null || value.isEmpty) {
     return AppLocalizations.of(context)!.required_field;
   }
@@ -156,7 +158,8 @@ String? validateName(String? value, BuildContext context) {
 ///
 /// Returns a localized error message if the email is invalid or already in use,
 /// otherwise returns null.
-String? validateEmail(String? value, LoginBloc loginBloc, BuildContext context) {
+String? validateEmail(
+    String? value, LoginBloc loginBloc, BuildContext context) {
   if (value == null || value.isEmpty) {
     return AppLocalizations.of(context)!.required_field;
   }
@@ -193,13 +196,16 @@ String? validatePassword(String? value, BuildContext context) {
     return AppLocalizations.of(context)!.password_must_be_at_least_8_characters;
   }
   if (!hasNumber(value)) {
-    return AppLocalizations.of(context)!.password_must_contain_at_least_one_number;
+    return AppLocalizations.of(context)!
+        .password_must_contain_at_least_one_number;
   }
   if (!hasUppercaseLetter(value)) {
-    return AppLocalizations.of(context)!.password_must_contain_at_least_one_uppercase_letter;
+    return AppLocalizations.of(context)!
+        .password_must_contain_at_least_one_uppercase_letter;
   }
   if (!hasLowercaseLetter(value)) {
-    return AppLocalizations.of(context)!.password_must_contain_at_least_one_lowercase_letter;
+    return AppLocalizations.of(context)!
+        .password_must_contain_at_least_one_lowercase_letter;
   }
   return null;
 }
@@ -222,8 +228,8 @@ String? validatePassword(String? value, BuildContext context) {
 /// Returns a localized error message if the confirmation password is invalid
 /// or does not match the original password, otherwise returns null.
 
-String? validateConfirmPassword(
-    String? value, TextEditingController passwordController, BuildContext context) {
+String? validateConfirmPassword(String? value,
+    TextEditingController passwordController, BuildContext context) {
   if (value == null || value.isEmpty) {
     return AppLocalizations.of(context)!.required_field;
   }
@@ -231,16 +237,19 @@ String? validateConfirmPassword(
     return AppLocalizations.of(context)!.password_must_be_at_least_8_characters;
   }
   if (!hasNumber(value)) {
-    return AppLocalizations.of(context)!.password_must_contain_at_least_one_number;
+    return AppLocalizations.of(context)!
+        .password_must_contain_at_least_one_number;
   }
   if (!hasUppercaseLetter(value)) {
-    return AppLocalizations.of(context)!.password_must_contain_at_least_one_uppercase_letter;
+    return AppLocalizations.of(context)!
+        .password_must_contain_at_least_one_uppercase_letter;
   }
   if (!hasLowercaseLetter(value)) {
-    return AppLocalizations.of(context)!.password_must_contain_at_least_one_lowercase_letter;
+    return AppLocalizations.of(context)!
+        .password_must_contain_at_least_one_lowercase_letter;
   }
   if (value != passwordController.text) {
-    return  AppLocalizations.of(context)!.passwords_do_not_match;
+    return AppLocalizations.of(context)!.passwords_do_not_match;
   }
   return null;
 }
@@ -261,9 +270,10 @@ String? validateConfirmPassword(
 ///
 /// Returns a localized error message if the current password is invalid,
 /// otherwise returns null.
-String? validateCurrentPassword(String? value, LoginBloc loginBloc, BuildContext context) {
+String? validateCurrentPassword(
+    String? value, LoginBloc loginBloc, BuildContext context) {
   if (value == null || value.isEmpty) {
-    return  AppLocalizations.of(context)!.required_field;
+    return AppLocalizations.of(context)!.required_field;
   } else {
     final validatePassword = loginBloc.state.validatePassword;
     if (validatePassword != null) {
@@ -271,7 +281,7 @@ String? validateCurrentPassword(String? value, LoginBloc loginBloc, BuildContext
         return AppLocalizations.of(context)!.password_is_incorrect;
       }
     } else {
-      return  AppLocalizations.of(context)!.error_validating_password;
+      return AppLocalizations.of(context)!.error_validating_password;
     }
   }
   return null;
@@ -296,7 +306,11 @@ int horaAMinutos(String hora) {
 /// [horaReserva] The time to check.
 ///
 /// Returns true if the given time is taken, false otherwise.
-bool isHourTaken(List<ReserveEntity> reservas, DateTime fecha, String horaReserva,) {
+bool isHourTaken(
+  List<ReserveEntity> reservas,
+  DateTime fecha,
+  String horaReserva,
+) {
   final horaReservaMinutos = horaAMinutos(horaReserva);
 
   for (var reserva in reservas) {
@@ -304,7 +318,8 @@ bool isHourTaken(List<ReserveEntity> reservas, DateTime fecha, String horaReserv
       final reservaHoraInicioMinutos = horaAMinutos(reserva.horaInicio);
       final reservaHoraFinMinutos = horaAMinutos(reserva.horaFin);
 
-      if (horaReservaMinutos >= reservaHoraInicioMinutos && horaReservaMinutos < reservaHoraFinMinutos) {
+      if (horaReservaMinutos >= reservaHoraInicioMinutos &&
+          horaReservaMinutos < reservaHoraFinMinutos) {
         return true;
       }
     }
@@ -326,16 +341,16 @@ bool isHourTaken(List<ReserveEntity> reservas, DateTime fecha, String horaReserv
 /// Returns a localized error message if the table number is invalid or
 /// already exists, otherwise returns null.
 
-String? basicValidationTable(String? value, ShopEntity currentShop, BuildContext context) {
+String? basicValidationTable(
+    String? value, ShopEntity currentShop, BuildContext context) {
   if (value == null || value.isEmpty) {
-    return  AppLocalizations.of(context)!.required_field;
+    return AppLocalizations.of(context)!.required_field;
   }
   if (!value.contains(RegExp(r'^[0-9]+$'))) {
-    return  AppLocalizations.of(context)!.must_be_a_number;
+    return AppLocalizations.of(context)!.must_be_a_number;
   }
-  if(currentShop.tablesShop.any((element) => element == int.parse(value))){
-    return  AppLocalizations.of(context)!.table_number_already_exists;
-
+  if (currentShop.tablesShop.any((element) => element == int.parse(value))) {
+    return AppLocalizations.of(context)!.table_number_already_exists;
   }
   return null;
 }

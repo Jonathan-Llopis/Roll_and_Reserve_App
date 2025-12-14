@@ -6,7 +6,7 @@ import 'package:roll_and_reserve/presentation/blocs/chat/chat_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/chat/chat_state.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class InputText extends StatefulWidget {
   const InputText(
@@ -25,6 +25,7 @@ class _InputTextState extends State<InputText> {
   final TextEditingController textController = TextEditingController();
 
   @override
+
   /// Initializes the speech-to-text functionality, requests the microphone
   /// permission if it has not been granted, and checks if the speech recognition
   /// service is available.
@@ -82,7 +83,7 @@ class _InputTextState extends State<InputText> {
   /// The state of the widget is updated with the result of the availability
   /// check.
   void _checkAvailability() async {
-    _isAvailable = await _speechToText.isAvailable;
+    _isAvailable = _speechToText.isAvailable;
     print('Reconocimiento disponible: $_isAvailable');
     setState(() {});
   }
@@ -132,6 +133,7 @@ class _InputTextState extends State<InputText> {
   }
 
   @override
+
   /// Builds the chat input field.
   ///
   /// This function builds a form field with a label, icon, and optional tap
@@ -192,7 +194,8 @@ class _InputTextState extends State<InputText> {
                       fillColor: Colors.grey[200],
                       filled: true,
                     ),
-                    onSubmitted: (_) => _sendMessage(context, textController, widget.isRolPlay),
+                    onSubmitted: (_) =>
+                        _sendMessage(context, textController, widget.isRolPlay),
                   ),
                 ),
               ),
@@ -235,7 +238,8 @@ class _InputTextState extends State<InputText> {
                             strokeWidth: 2, color: theme.colorScheme.primary),
                       )
                     : IconButton.filled(
-                        onPressed: () => _sendMessage(context, textController, widget.isRolPlay),
+                        onPressed: () => _sendMessage(
+                            context, textController, widget.isRolPlay),
                         icon: Icon(Icons.send_rounded,
                             color: theme.colorScheme.onPrimary),
                         style: IconButton.styleFrom(
@@ -252,14 +256,14 @@ class _InputTextState extends State<InputText> {
     );
   }
 
-/// Sends a message using the provided [controller] and [context].
-///
-/// If [isRolPlay] is true, triggers a role play message event in the [ChatBloc].
-/// Otherwise, it checks if the chat is empty. If it is, starts the chat with the
-/// provided message; otherwise, sends the message.
-///
-/// Clears the [controller] after the message is sent and requests focus on the
-/// input field.
+  /// Sends a message using the provided [controller] and [context].
+  ///
+  /// If [isRolPlay] is true, triggers a role play message event in the [ChatBloc].
+  /// Otherwise, it checks if the chat is empty. If it is, starts the chat with the
+  /// provided message; otherwise, sends the message.
+  ///
+  /// Clears the [controller] after the message is sent and requests focus on the
+  /// input field.
 
   void _sendMessage(
       BuildContext context, TextEditingController controller, bool isRolPlay) {

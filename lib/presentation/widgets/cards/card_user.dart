@@ -5,7 +5,7 @@ import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reviews/reviews_bloc.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_utils.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/user_avatar.dart';
 
 class CardUser extends StatelessWidget {
@@ -19,6 +19,7 @@ class CardUser extends StatelessWidget {
   });
 
   @override
+
   /// Builds a card widget displaying user information.
   ///
   /// The card includes the user's avatar, name, average rating in stars, and
@@ -130,7 +131,10 @@ class CardUser extends StatelessWidget {
 
   Color _getCardColor(BuildContext context) {
     if (isLastPlayers == true) {
-      return Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.8);
+      return Theme.of(context)
+          .colorScheme
+          .surfaceContainerHighest
+          .withOpacity(0.8);
     }
     return user.reserveConfirmation ?? false
         ? const Color.fromARGB(255, 173, 255, 173).withOpacity(0.5)

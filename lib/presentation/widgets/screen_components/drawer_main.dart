@@ -6,8 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_review_user.dart';
+
 class DrawerMain extends StatelessWidget {
   const DrawerMain({super.key, required this.appBar});
   final PreferredSizeWidget appBar;
@@ -50,7 +51,7 @@ class DrawerMain extends StatelessWidget {
           title: Text(AppLocalizations.of(context)!.identify_board_games),
           onTap: () => _navigateTo(context, '/user/chatGemini'),
         ),
-           ListTile(
+        ListTile(
           leading: Icon(Icons.castle, color: theme.colorScheme.primary),
           title: Text(AppLocalizations.of(context)!.game_vision_ai),
           onTap: () => _navigateTo(context, '/user/chatAssistant'),
@@ -77,7 +78,6 @@ class DrawerMain extends StatelessWidget {
   /// primary color of the theme, and the text color is the onSurface color
   /// of the theme.
   Widget _buildUserSubmenu(BuildContext context, ThemeData theme) {
-    
     return ExpansionTile(
       leading: Icon(Icons.person, color: theme.colorScheme.primary),
       title: Text(AppLocalizations.of(context)!.user_management),
@@ -183,19 +183,20 @@ class DrawerMain extends StatelessWidget {
 
   void _updatePassword(BuildContext context) {
     Navigator.pop(context);
-  /// Closes the current context and invokes the password update process.
-  ///
-  /// This method is used to handle password updates by first closing the 
-  /// current dialog or screen and then calling [updatePassword] to initiate 
-  /// the process. It takes the current [BuildContext] as a parameter.
+
+    /// Closes the current context and invokes the password update process.
+    ///
+    /// This method is used to handle password updates by first closing the
+    /// current dialog or screen and then calling [updatePassword] to initiate
+    /// the process. It takes the current [BuildContext] as a parameter.
 
     updatePassword(context);
   }
 
   /// Closes the current context and shows the language change dialog.
   ///
-  /// This method is used to handle language changes by first closing the 
-  /// current dialog or screen and then calling [changeLanguage] to show the 
+  /// This method is used to handle language changes by first closing the
+  /// current dialog or screen and then calling [changeLanguage] to show the
   /// dialog. It takes the current [BuildContext] as a parameter.
   void _changeLanguage(BuildContext context) {
     Navigator.pop(context);
@@ -203,6 +204,7 @@ class DrawerMain extends StatelessWidget {
   }
 
   @override
+
   /// Builds the main drawer of the app.
   ///
   /// This is a main drawer for the app that is displayed when the user
@@ -262,8 +264,8 @@ class DrawerMain extends StatelessWidget {
                         onTap: () => _navigateTo(context, '/user'),
                       )
                     : ListTile(
-                        leading: Icon(Icons.home,
-                            color: theme.colorScheme.primary),
+                        leading:
+                            Icon(Icons.home, color: theme.colorScheme.primary),
                         title: Text(AppLocalizations.of(context)!.home),
                         onTap: () => _navigateTo(context, '/user'),
                       ),
@@ -274,10 +276,9 @@ class DrawerMain extends StatelessWidget {
 
                 if (user.role != 2 && user.role != 0)
                   ListTile(
-                    leading: Icon(Icons.bar_chart,
-                        color: theme.colorScheme.primary),
-                    title: Text(
-                        AppLocalizations.of(context)!.store_statistics),
+                    leading:
+                        Icon(Icons.bar_chart, color: theme.colorScheme.primary),
+                    title: Text(AppLocalizations.of(context)!.store_statistics),
                     onTap: () => _navigateTo(context, '/user/stadistics'),
                   ),
 

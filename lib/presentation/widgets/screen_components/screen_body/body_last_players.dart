@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/domain/entities/user_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 import 'package:roll_and_reserve/presentation/widgets/cards/card_user.dart';
 
 class BodyLastPlayers extends StatelessWidget {
@@ -17,6 +17,7 @@ class BodyLastPlayers extends StatelessWidget {
   final List<UserEntity> users;
 
   @override
+
   /// Builds the body of the screen that shows the last 10 players.
   ///
   /// This is a [Column] with the given [children].
@@ -54,7 +55,7 @@ class BodyLastPlayers extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                 '',
+                    '',
                     style: TextStyle(fontSize: 14, color: Colors.grey),
                   ),
                 ],
@@ -73,7 +74,7 @@ class BodyLastPlayers extends StatelessWidget {
                 final user = users[index];
                 return BlocBuilder<LoginBloc, LoginState>(
                   builder: (context, state) {
-                    return CardUser( user: user, isLastPlayers: true);
+                    return CardUser(user: user, isLastPlayers: true);
                   },
                 );
               },

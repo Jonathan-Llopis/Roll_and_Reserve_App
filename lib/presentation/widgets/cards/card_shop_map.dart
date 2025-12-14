@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:roll_and_reserve/domain/entities/shop_entity.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_utils.dart';
@@ -12,6 +12,7 @@ class CardShopMap extends StatelessWidget {
   final ShopEntity store;
 
   @override
+
   /// Builds a widget that shows a shop as a card with a logo, name, address,
   /// rating, and a button to go to the shop.
   ///

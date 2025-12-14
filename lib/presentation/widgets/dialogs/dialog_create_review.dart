@@ -10,7 +10,7 @@ import 'package:roll_and_reserve/presentation/blocs/reviews/reviews_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reviews/reviews_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_event.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class DialogCreateReview extends StatefulWidget {
   final int? idShop;
@@ -35,6 +35,7 @@ class _DialogCreateReviewState extends State<DialogCreateReview> {
   bool _isSubmitting = false;
 
   @override
+
   /// Disposes of the [_descriptionController] when the widget is removed from the tree.
   ///
   /// This is necessary to prevent memory leaks.
@@ -46,27 +47,28 @@ class _DialogCreateReviewState extends State<DialogCreateReview> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-  /// Builds the UI for a dialog that allows the user to create a review for a shop.
-  ///
-  /// The dialog is a [Dialog] with a [Form] inside. The form contains a
-  /// [TextFormField] for the description of the review, a [StarRating] for the
-  /// rating of the review, and a submit button.
-  ///
-  /// The form is validated when the user interacts with it. If the form is valid,
-  /// the submit button is enabled. If the form is invalid, the submit button is
-  /// disabled.
-  ///
-  /// When the submit button is pressed, it adds a [CreateReviewEvent] with the
-  /// description and rating of the review to the [ReviewBloc].
-  ///
-  /// The dialog is closed when the user presses the submit button or the close
-  /// button.
+
+    /// Builds the UI for a dialog that allows the user to create a review for a shop.
+    ///
+    /// The dialog is a [Dialog] with a [Form] inside. The form contains a
+    /// [TextFormField] for the description of the review, a [StarRating] for the
+    /// rating of the review, and a submit button.
+    ///
+    /// The form is validated when the user interacts with it. If the form is valid,
+    /// the submit button is enabled. If the form is invalid, the submit button is
+    /// disabled.
+    ///
+    /// When the submit button is pressed, it adds a [CreateReviewEvent] with the
+    /// description and rating of the review to the [ReviewBloc].
+    ///
+    /// The dialog is closed when the user presses the submit button or the close
+    /// button.
     final loc = AppLocalizations.of(context)!;
 
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
-    ),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -92,7 +94,6 @@ class _DialogCreateReviewState extends State<DialogCreateReview> {
                 ],
               ),
               const SizedBox(height: 24),
-              
               TextFormField(
                 controller: _descriptionController,
                 maxLines: 4,
@@ -106,12 +107,11 @@ class _DialogCreateReviewState extends State<DialogCreateReview> {
                   prefixIcon: const Icon(Icons.description_outlined),
                   filled: true,
                 ),
-                validator: (value) => value?.isEmpty ?? true 
-                    ? loc.please_write_a_description 
+                validator: (value) => value?.isEmpty ?? true
+                    ? loc.please_write_a_description
                     : null,
               ),
               const SizedBox(height: 28),
-      
               Text(
                 loc.rating,
                 style: theme.textTheme.bodyLarge?.copyWith(
@@ -119,14 +119,12 @@ class _DialogCreateReviewState extends State<DialogCreateReview> {
                 ),
               ),
               const SizedBox(height: 12),
-              
               StarRating(
                 rating: _rating,
                 onRatingChanged: (rating) => setState(() => _rating = rating),
                 starSize: 36,
               ),
               const SizedBox(height: 24),
-      
               _buildSubmitButton(theme, loc),
             ],
           ),
@@ -145,21 +143,21 @@ class _DialogCreateReviewState extends State<DialogCreateReview> {
   Widget _buildSubmitButton(ThemeData theme, AppLocalizations loc) {
     final loc = AppLocalizations.of(context)!;
     return ElevatedButton.icon(
-      icon: _isSubmitting 
+      icon: _isSubmitting
           ? SizedBox(
               width: 20,
               height: 20,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-
               ),
             )
           : const Icon(Icons.reviews_outlined, size: 20),
-      label: Text(_isSubmitting ? AppLocalizations.of(context)!.loading : loc.add_review),
+      label: Text(_isSubmitting
+          ? AppLocalizations.of(context)!.loading
+          : loc.add_review),
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       onPressed: _isSubmitting ? null : _submitReview,
     );
@@ -187,11 +185,11 @@ class _DialogCreateReviewState extends State<DialogCreateReview> {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _isSubmitting = true);
-    
+
     try {
       final loginBloc = BlocProvider.of<LoginBloc>(context);
       final user = loginBloc.state.user!;
-      
+
       final review = ReviewEntity(
         id: 0,
         raiting: _rating,
@@ -211,16 +209,16 @@ class _DialogCreateReviewState extends State<DialogCreateReview> {
           ..add(GetShopsEvent())
           ..add(GetShopEvent(idShop: widget.idShop!));
       } else {
-        context.read<ReserveBloc>()
-          .add(GetLastTenPlayersEvent(idGoogle: user.id));
+        context
+            .read<ReserveBloc>()
+            .add(GetLastTenPlayersEvent(idGoogle: user.id));
       }
 
       if (mounted) Navigator.pop(context);
-      
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Error: $e')));
         setState(() => _isSubmitting = false);
       }
     }
@@ -242,6 +240,7 @@ class StarRating extends StatelessWidget {
   });
 
   @override
+
   /// Builds a row of 5 stars with the given [rating] and [color].
   ///
   /// The [rating] is the number of stars that are filled in.
@@ -255,7 +254,7 @@ class StarRating extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(5, (index) {
-        return GestureDetector( 
+        return GestureDetector(
           onTap: () => onRatingChanged(index + 1),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4.0),

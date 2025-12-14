@@ -13,7 +13,7 @@ import 'package:roll_and_reserve/presentation/functions/functions_validation.dar
 import 'package:roll_and_reserve/presentation/widgets/buttons/button_login_google.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/custom_form_field.dart';
 import 'package:roll_and_reserve/presentation/widgets/buttons/button_login.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/drawer_login.dart';
 
 class ScreenLogin extends StatefulWidget {
@@ -34,6 +34,7 @@ class _ScreenLoginState extends State<ScreenLogin> {
   bool _passwordVisible = false;
 
   @override
+
   /// Adds the [emailFocus] and [passwordFocused] functions to the
   /// [emailFocusNode] and [passwordFocusNode] focus nodes.
   ///
@@ -53,6 +54,7 @@ class _ScreenLoginState extends State<ScreenLogin> {
   }
 
   @override
+
   /// Called when the widget is removed from the tree permanently.
   ///
   /// This is the opposite of [initState]. It is called when the widget is
@@ -93,7 +95,8 @@ class _ScreenLoginState extends State<ScreenLogin> {
   }
 
   @override
-    /// Builds the login screen.
+
+  /// Builds the login screen.
   ///
   /// This screen is used to login to the app. It shows the
   /// conversation history at the top and an input field at the bottom.

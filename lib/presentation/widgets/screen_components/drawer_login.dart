@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class DrawerLogin extends StatelessWidget {
   const DrawerLogin({super.key});
 
   @override
+
   /// Builds a drawer widget containing user account information and navigation
   /// options.
   ///
@@ -22,7 +23,7 @@ class DrawerLogin extends StatelessWidget {
   ///   options.
 
   Widget build(BuildContext context) {
-      final theme = Theme.of(context);
+    final theme = Theme.of(context);
     return Drawer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -56,14 +57,16 @@ class DrawerLogin extends StatelessWidget {
                   },
                 ),
                 ListTile(
-                  leading: Icon(Icons.person_add, color: theme.colorScheme.primary),
+                  leading:
+                      Icon(Icons.person_add, color: theme.colorScheme.primary),
                   title: Text(AppLocalizations.of(context)!.register),
                   onTap: () {
                     context.go('/login/signIn');
                   },
                 ),
                 ListTile(
-                  leading: Icon(Icons.translate, color: theme.colorScheme.primary),
+                  leading:
+                      Icon(Icons.translate, color: theme.colorScheme.primary),
                   title: Text(AppLocalizations.of(context)!.changeLanguage),
                   onTap: () {
                     changeLanguage(context);

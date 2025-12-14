@@ -7,7 +7,7 @@ import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.d
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/screen_body/body_create_event.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/default_scaffold.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class ScreenCreateEvent extends StatefulWidget {
   const ScreenCreateEvent(
@@ -123,6 +123,7 @@ class _ScreenCreateEventState extends State<ScreenCreateEvent> {
   }
 
   @override
+
   /// Calls [GetReservesEvent] and [_selectDateAndTime] when the widget is inserted
   /// into the tree.
   void initState() {
@@ -134,6 +135,7 @@ class _ScreenCreateEventState extends State<ScreenCreateEvent> {
   }
 
   @override
+
   /// If [_selectedDates] is null, shows a [CircularProgressIndicator].
   ///
   /// Otherwise, shows a [DefaultScaffold] with the given [appBar] and a

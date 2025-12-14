@@ -14,7 +14,7 @@ import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/injection.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -22,11 +22,10 @@ import 'package:roll_and_reserve/presentation/functions/notification_service.dar
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-
-  /// This is the main function of the app. It loads the environment variables
-  /// from the .env file, removes the splash screen after 2 seconds, initializes
-  /// Firebase, configures the dependencies, initializes the notification
-  /// service and runs the app.
+/// This is the main function of the app. It loads the environment variables
+/// from the .env file, removes the splash screen after 2 seconds, initializes
+/// Firebase, configures the dependencies, initializes the notification
+/// service and runs the app.
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
@@ -54,6 +53,7 @@ class MyAppState extends State<MyApp> {
   late AppLinks _appLinks;
 
   @override
+
   /// Initializes the state of the widget.
   ///
   /// This is called when the widget is inserted into the tree. It initializes
@@ -82,6 +82,7 @@ class MyAppState extends State<MyApp> {
   }
 
   @override
+
   /// Builds the UI of the app.
   ///
   /// This widget is the root of the app. It provides the BLoCs for the app,
@@ -109,7 +110,7 @@ class MyAppState extends State<MyApp> {
         BlocProvider(
           create: (_) => sl<ReviewBloc>(),
         ),
-       BlocProvider(
+        BlocProvider(
           create: (_) => sl<ChatBloc>(),
         ),
       ],

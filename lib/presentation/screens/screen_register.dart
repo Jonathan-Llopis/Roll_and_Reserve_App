@@ -8,7 +8,7 @@ import 'package:roll_and_reserve/presentation/functions/controller_rive_animatio
 import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/custom_form_field.dart';
 import 'package:roll_and_reserve/presentation/widgets/buttons/button_register.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/drawer_login.dart';
 
 class ScreenRegister extends StatefulWidget {
@@ -40,6 +40,7 @@ class _ScreenRegisterState extends State<ScreenRegister> {
   bool _passwordConfirmVisible = false;
 
   @override
+
   /// Adds the [emailFocus], [passwordFocused], [nameFocus], [confirmationPasswordFocused]
   /// and [userNameFocus] functions to the [emailFocusNode], [passwordFocusNode],
   /// [nameFocusNode], [confirmPasswordFocusNode] and [userNameFocusNode] focus nodes.
@@ -64,6 +65,7 @@ class _ScreenRegisterState extends State<ScreenRegister> {
   }
 
   @override
+
   /// Called when the widget is removed from the tree permanently.
   ///
   /// This is the opposite of [initState]. It is called when the widget is
@@ -145,6 +147,7 @@ class _ScreenRegisterState extends State<ScreenRegister> {
   }
 
   @override
+
   /// Builds the register screen.
   ///
   /// This screen is used to register a new user. It shows the
@@ -163,12 +166,12 @@ class _ScreenRegisterState extends State<ScreenRegister> {
   Widget build(BuildContext context) {
     final loginBloc = BlocProvider.of<LoginBloc>(context);
     return Scaffold(
-       appBar: AppBar(
-          backgroundColor: Color(0xFF6A11CB),
-            iconTheme: IconThemeData(
-              color: Colors.white,
-            ),
+      appBar: AppBar(
+        backgroundColor: Color(0xFF6A11CB),
+        iconTheme: IconThemeData(
+          color: Colors.white,
         ),
+      ),
       endDrawer: const DrawerLogin(),
       body: Container(
         width: double.infinity,

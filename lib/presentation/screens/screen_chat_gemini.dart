@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/chat/chat_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/chat/chat_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/chat/chat_state.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_rol.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/input_text_image.dart';
 
@@ -17,12 +17,13 @@ class ChatGeminiScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatGeminiScreen> {
   final FocusNode _focusNode = FocusNode();
   @override
-/// Initializes the state of the chat Gemini screen.
-///
-/// This function is called when the widget is inserted into the tree.
-///
-/// If the Gemini chat messages are empty, it adds a [OnChatGeminiStart] event
-/// to the [ChatBloc] to start the chat with Gemini.
+
+  /// Initializes the state of the chat Gemini screen.
+  ///
+  /// This function is called when the widget is inserted into the tree.
+  ///
+  /// If the Gemini chat messages are empty, it adds a [OnChatGeminiStart] event
+  /// to the [ChatBloc] to start the chat with Gemini.
 
   void initState() {
     ChatBloc chatBloc = context.read<ChatBloc>();
@@ -34,6 +35,7 @@ class _ChatScreenState extends State<ChatGeminiScreen> {
   }
 
   @override
+
   /// Called when the widget is removed from the tree permanently.
   ///
   /// This is the opposite of [initState]. It is called when the widget is
@@ -46,11 +48,12 @@ class _ChatScreenState extends State<ChatGeminiScreen> {
   /// tree, but it is also safe to call manually if you want to prematurely
   /// release resources.
   void dispose() {
-  _focusNode.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
   @override
+
   /// Builds the chat Gemini screen.
   ///
   /// This screen is used to chat with Gemini about board games. It shows the
@@ -118,7 +121,8 @@ class _ChatScreenState extends State<ChatGeminiScreen> {
               child: BodyMessages(),
             ),
             InputTextImage(
-              focusNode: _focusNode, isAssitant:  false,
+              focusNode: _focusNode,
+              isAssitant: false,
             ),
           ],
         ));
@@ -129,16 +133,17 @@ class BodyMessages extends StatelessWidget {
   const BodyMessages({super.key});
 
   @override
-/// Builds a widget that displays the chat messages with Gemini.
-///
-/// This widget uses a [BlocBuilder] to listen to the state of the [ChatBloc].
-/// If there are messages from Gemini, it displays them in a [ListView] and
-/// automatically scrolls to the bottom when new messages arrive. If there are
-/// no messages, it shows a loading text.
-///
-/// The [scrollController] is used to manage the scrolling of the [ListView].
-/// The widget triggers a post-frame callback to ensure the list scrolls to the
-/// latest message once the frame is rendered.
+
+  /// Builds a widget that displays the chat messages with Gemini.
+  ///
+  /// This widget uses a [BlocBuilder] to listen to the state of the [ChatBloc].
+  /// If there are messages from Gemini, it displays them in a [ListView] and
+  /// automatically scrolls to the bottom when new messages arrive. If there are
+  /// no messages, it shows a loading text.
+  ///
+  /// The [scrollController] is used to manage the scrolling of the [ListView].
+  /// The widget triggers a post-frame callback to ensure the list scrolls to the
+  /// latest message once the frame is rendered.
 
   Widget build(BuildContext context) {
     ScrollController scrollController = ScrollController();

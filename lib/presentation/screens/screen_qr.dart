@@ -13,7 +13,7 @@ import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.d
 import 'package:roll_and_reserve/presentation/functions/functions_utils.dart';
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/default_scaffold.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class QRScannerScreen extends StatefulWidget {
   final int idTable;
@@ -37,6 +37,7 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
   bool cameraPermissionGranted = false;
 
   @override
+
   /// Called when the widget is inserted into the tree.
   ///
   /// This method is responsible for requesting the reserve with users for the
@@ -70,17 +71,18 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
   }
 
   @override
-/// Builds the QR scanner screen widget.
-///
-/// This widget uses a [DefaultScaffold] with a given [appBar].
-/// If camera permission is granted, it uses [BlocBuilder]s to
-/// manage the state of [ShopBloc] and [ReserveBloc], displaying
-/// the QR scanner through [MobileScanner] and processing scanned
-/// barcodes. The scanner overlay is also built on top of the scanner.
-///
-/// If camera permission is not granted, it displays a message
-/// prompting the user to grant camera permission, with an option
-/// to request the permission again.
+
+  /// Builds the QR scanner screen widget.
+  ///
+  /// This widget uses a [DefaultScaffold] with a given [appBar].
+  /// If camera permission is granted, it uses [BlocBuilder]s to
+  /// manage the state of [ShopBloc] and [ReserveBloc], displaying
+  /// the QR scanner through [MobileScanner] and processing scanned
+  /// barcodes. The scanner overlay is also built on top of the scanner.
+  ///
+  /// If camera permission is not granted, it displays a message
+  /// prompting the user to grant camera permission, with an option
+  /// to request the permission again.
 
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -328,7 +330,6 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
             context,
             loc.game_session_not_started,
             true,
-            
           );
         }
       } else {
@@ -337,7 +338,6 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
           context,
           loc.wrong_reservation_table,
           true,
-      
         );
       }
     } catch (e) {

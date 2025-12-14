@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ScreenTransition extends StatelessWidget {
+  const ScreenTransition({super.key});
+
   @override
   /// Builds the screen transition widget.
   ///

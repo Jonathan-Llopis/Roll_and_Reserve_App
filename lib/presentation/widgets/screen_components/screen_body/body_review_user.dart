@@ -4,7 +4,7 @@ import 'package:roll_and_reserve/domain/entities/review_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
 import 'package:roll_and_reserve/presentation/widgets/cards/card_review.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class BodyReviewUser extends StatelessWidget {
   const BodyReviewUser({
@@ -17,6 +17,7 @@ class BodyReviewUser extends StatelessWidget {
   final List<ReviewEntity> reviews;
 
   @override
+
   /// Builds the body of the screen that shows the reviews of the user.
   ///
   /// This is a [Column] with the title, a [Divider], and a [ListView] with
@@ -39,7 +40,7 @@ class BodyReviewUser extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                   "Reviews",
+                    "Reviews",
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold, color: Colors.black87),
                   ),

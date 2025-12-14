@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:roll_and_reserve/presentation/blocs/language/language_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/language/language_event.dart';
@@ -8,6 +8,7 @@ class ChangeLanguageDialog extends StatelessWidget {
   const ChangeLanguageDialog({super.key});
 
   @override
+
   /// Builds a dialog for changing the application's language.
   ///
   /// This dialog presents a list of available languages, each represented
@@ -33,7 +34,7 @@ class ChangeLanguageDialog extends StatelessWidget {
         children: [
           ListTile(
             leading: const Icon(Icons.flag, color: Colors.blue),
-            title:  Text(AppLocalizations.of(context)!.english),
+            title: Text(AppLocalizations.of(context)!.english),
             onTap: () {
               context
                   .read<LanguageBloc>()
@@ -43,7 +44,7 @@ class ChangeLanguageDialog extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.flag, color: Colors.red),
-            title:  Text(AppLocalizations.of(context)!.spanish),
+            title: Text(AppLocalizations.of(context)!.spanish),
             onTap: () {
               context
                   .read<LanguageBloc>()
@@ -53,7 +54,7 @@ class ChangeLanguageDialog extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.flag, color: Colors.blueAccent),
-            title:  Text(AppLocalizations.of(context)!.french),
+            title: Text(AppLocalizations.of(context)!.french),
             onTap: () {
               context
                   .read<LanguageBloc>()
@@ -63,7 +64,7 @@ class ChangeLanguageDialog extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.flag, color: Colors.orange),
-            title:  Text(AppLocalizations.of(context)!.catalan),
+            title: Text(AppLocalizations.of(context)!.catalan),
             onTap: () {
               context
                   .read<LanguageBloc>()

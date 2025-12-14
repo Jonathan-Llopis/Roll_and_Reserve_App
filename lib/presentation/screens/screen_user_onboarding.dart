@@ -7,7 +7,7 @@ import 'package:roll_and_reserve/domain/repositories/user_repository.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 import 'package:roll_and_reserve/injection.dart' as di;
 
 class OnboardingScreen extends StatefulWidget {
@@ -22,6 +22,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   late UserEntity user;
 
   @override
+
   /// Called when the widget is inserted into the tree.
   ///
   /// This function uses the BuildContext to get the LoginBloc and add a
@@ -81,6 +82,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   @override
+
   /// Builds the onboarding screen for the user.
   ///
   /// This screen is built using the IntroductionScreen widget from the

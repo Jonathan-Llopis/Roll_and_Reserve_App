@@ -9,11 +9,11 @@ import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_components/input_text.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class DialogoUserAdminSettings extends StatefulWidget {
   const DialogoUserAdminSettings({super.key, required this.idUser});
- final String idUser;
+  final String idUser;
   @override
   State<DialogoUserAdminSettings> createState() => _DialogoUserSettingsState();
 }
@@ -28,6 +28,7 @@ class _DialogoUserSettingsState extends State<DialogoUserAdminSettings> {
   late UserEntity user;
 
   @override
+
   /// Initialize the dialog with the information of the user to edit.
   ///
   /// Get the user from the [LoginBloc] with the [idUser] and set the information
@@ -37,17 +38,19 @@ class _DialogoUserSettingsState extends State<DialogoUserAdminSettings> {
   void initState() {
     final userBloc = BlocProvider.of<LoginBloc>(context);
     super.initState();
-    user = userBloc.state.users!.firstWhere((element) => element.id == widget.idUser);
+    user = userBloc.state.users!
+        .firstWhere((element) => element.id == widget.idUser);
     _nombreController.text = user.username;
     _nombreRealController.text = user.name;
     _imageFile = user.avatar;
     _roleController = user.role;
 
-    user = userBloc.state.users!.firstWhere((element) => element.id == widget.idUser);
-    
+    user = userBloc.state.users!
+        .firstWhere((element) => element.id == widget.idUser);
   }
 
   @override
+
   /// Builds the dialog for editing user settings.
   ///
   /// The dialog is a [Dialog] widget with a [BlocBuilder] of the [LoginBloc].
@@ -132,37 +135,38 @@ class _DialogoUserSettingsState extends State<DialogoUserAdminSettings> {
                           labelText: AppLocalizations.of(context)!.username,
                         ),
                         if (loginBloc.state.user!.role == 0)
-                        const SizedBox(height: 12),
-                          DropdownButtonFormField<int>(
-                            value: _roleController,
-                            decoration: InputDecoration(
-                              labelText: AppLocalizations.of(context)!.role,
-                              border: OutlineInputBorder(
+                          const SizedBox(height: 12),
+                        DropdownButtonFormField<int>(
+                          initialValue: _roleController,
+                          decoration: InputDecoration(
+                            labelText: AppLocalizations.of(context)!.role,
+                            border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              ),
                             ),
-                            items: [
-                              DropdownMenuItem(
-                                value: 0,
-                                child:
-                                    Text(AppLocalizations.of(context)!.role_admin),
-                              ),
-                              DropdownMenuItem(
-                                value: 1,
-                                child:
-                                    Text(AppLocalizations.of(context)!.role_owner),
-                              ),
-                              DropdownMenuItem(
-                                value: 2,
-                                child: Text(AppLocalizations.of(context)!.role_user),
-                              ),
-                            ],
-                            onChanged: (value) {
-                              setState(() {
-                                _roleController = value!;
-                              });
-                            },
                           ),
+                          items: [
+                            DropdownMenuItem(
+                              value: 0,
+                              child: Text(
+                                  AppLocalizations.of(context)!.role_admin),
+                            ),
+                            DropdownMenuItem(
+                              value: 1,
+                              child: Text(
+                                  AppLocalizations.of(context)!.role_owner),
+                            ),
+                            DropdownMenuItem(
+                              value: 2,
+                              child:
+                                  Text(AppLocalizations.of(context)!.role_user),
+                            ),
+                          ],
+                          onChanged: (value) {
+                            setState(() {
+                              _roleController = value!;
+                            });
+                          },
+                        ),
                         const SizedBox(height: 12),
                         TextDialogInput(
                           controller: _nombreRealController,

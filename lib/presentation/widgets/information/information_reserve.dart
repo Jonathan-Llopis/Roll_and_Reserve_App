@@ -8,7 +8,7 @@ import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_event.dart';
 
 import 'package:roll_and_reserve/presentation/widgets/cards/card_user.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class InformationReserve extends StatelessWidget {
   const InformationReserve({
@@ -25,6 +25,7 @@ class InformationReserve extends StatelessWidget {
   final int idShop;
 
   @override
+
   /// Builds the UI for the information of a reserve.
   ///
   /// The widget is divided into four parts: a title with the name of the

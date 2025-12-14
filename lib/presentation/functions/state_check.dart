@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 /// Builds a widget based on the given state.
 ///
@@ -34,10 +34,10 @@ Widget buildContent<T>({
       children: [
         Text(error),
         ElevatedButton(
-            onPressed: () {
-              context.go('/user');
-            },
-          child:  Text(AppLocalizations.of(context)!.go_to_home),
+          onPressed: () {
+            context.go('/user');
+          },
+          child: Text(AppLocalizations.of(context)!.go_to_home),
         ),
       ],
     ));

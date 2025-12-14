@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/domain/entities/user_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 import 'package:roll_and_reserve/presentation/widgets/cards/card_user.dart';
 
 late List<UserEntity> users;
@@ -18,6 +18,7 @@ class BodyUsersAdmin extends StatefulWidget {
 
 class _BodyUsersAdminState extends State<BodyUsersAdmin> {
   @override
+
   /// Called when the widget is inserted into the tree.
   ///
   /// This function uses the BuildContext to get the LoginBloc and set the
@@ -34,6 +35,7 @@ class _BodyUsersAdminState extends State<BodyUsersAdmin> {
   }
 
   @override
+
   /// Builds the body of the screen that shows the users.
   ///
   /// This is a [Flexible] with a [Column] with the given [children].
@@ -54,45 +56,45 @@ class _BodyUsersAdminState extends State<BodyUsersAdmin> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-        Padding(
-          padding:
-              const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-          child: TextField(
-            onChanged: (value) {
-              setState(() {
-                users = loginBloc.state.users!
-                    .where((user) =>
-                        user.name.toLowerCase().contains(value.toLowerCase()))
-                    .toList();
-              });
-            },
-            decoration: InputDecoration(
-              labelText: AppLocalizations.of(context)!.username,
-              prefixIcon: const Icon(Icons.search),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8.0),
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+            child: TextField(
+              onChanged: (value) {
+                setState(() {
+                  users = loginBloc.state.users!
+                      .where((user) =>
+                          user.name.toLowerCase().contains(value.toLowerCase()))
+                      .toList();
+                });
+              },
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.username,
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
               ),
             ),
           ),
-        ),
-        const Divider(height: 1, thickness: 1),
-        Expanded(
-          child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: ListView.builder(
-                itemCount: users.isNotEmpty
-                    ? users.length
-                    : loginBloc.state.users!.length,
-                itemBuilder: (context, index) {
-                  final user = users.isNotEmpty
-                      ? users[index]
-                      : loginBloc.state.users![index];
-                  return CardUser(user: user);
-                },
-              )),
-      )],
+          const Divider(height: 1, thickness: 1),
+          Expanded(
+            child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: ListView.builder(
+                  itemCount: users.isNotEmpty
+                      ? users.length
+                      : loginBloc.state.users!.length,
+                  itemBuilder: (context, index) {
+                    final user = users.isNotEmpty
+                        ? users[index]
+                        : loginBloc.state.users![index];
+                    return CardUser(user: user);
+                  },
+                )),
+          )
+        ],
       ),
     );
   }
 }
-

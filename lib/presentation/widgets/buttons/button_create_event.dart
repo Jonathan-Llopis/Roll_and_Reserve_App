@@ -9,7 +9,7 @@ import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_event.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/screen_body/body_create_event.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class ButtonCreateEvent extends StatelessWidget {
   const ButtonCreateEvent({
@@ -28,7 +28,6 @@ class ButtonCreateEvent extends StatelessWidget {
         _descriptionController = descriptionController,
         _requiredMaterialController = requiredMaterialController,
         _selectedDifficulty = selectedDifficulty,
-
         _selectedGame = selectedGame;
 
   final GlobalKey<FormState> _formKey;
@@ -41,6 +40,7 @@ class ButtonCreateEvent extends StatelessWidget {
   final GameEntity? _selectedGame;
 
   @override
+
   /// Builds the UI for a text button that creates a new event and saves it to
   /// the server.
   ///
@@ -75,12 +75,12 @@ class ButtonCreateEvent extends StatelessWidget {
               usersInTables: 0,
               isEvent: true,
               shopId: widget.idShop,
-               userReserveId: loginBloc.state.user!.id,
+              userReserveId: loginBloc.state.user!.id,
             ));
           }
           widget.reserveBloc.add(CreateEventsEvent(reserves: reserves));
-           context.go('/user/events/${widget.idShop}');
-        }    
+          context.go('/user/events/${widget.idShop}');
+        }
       },
       child: Text(AppLocalizations.of(context)!.save),
     );

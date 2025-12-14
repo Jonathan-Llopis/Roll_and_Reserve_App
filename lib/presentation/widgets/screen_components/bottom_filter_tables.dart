@@ -5,7 +5,7 @@ import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_event.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/filter_tables.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 import '../../blocs/reserve/reserve_event.dart';
 
@@ -14,7 +14,6 @@ class BottomFilterTables extends StatefulWidget {
     required this.currentShop,
     required this.reserveBloc,
     required this.tableBloc,
-
     super.key,
   });
   final ShopEntity currentShop;
@@ -29,11 +28,12 @@ class _BottomFilterTablesState extends State<BottomFilterTables> {
   bool _isFilterApplied = false;
 
   @override
-/// Initializes the state of the widget.
-///
-/// Checks if any filters are applied by accessing the [ReserveBloc] state
-/// and updates the [_isFilterApplied] flag accordingly. This flag determines
-/// the icon and color of the filter button in the bottom navigation bar.
+
+  /// Initializes the state of the widget.
+  ///
+  /// Checks if any filters are applied by accessing the [ReserveBloc] state
+  /// and updates the [_isFilterApplied] flag accordingly. This flag determines
+  /// the icon and color of the filter button in the bottom navigation bar.
 
   void initState() {
     super.initState();
@@ -58,7 +58,6 @@ class _BottomFilterTablesState extends State<BottomFilterTables> {
   /// filters.
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-
       items: [
         BottomNavigationBarItem(
           icon: Icon(Icons.delete_outline),
@@ -74,17 +73,19 @@ class _BottomFilterTablesState extends State<BottomFilterTables> {
       ],
       onTap: (index) {
         if (index == 0) {
-        context.read<ReserveBloc>().add(ClearFilterEvent());
-         widget.tableBloc.add(GetTablesByShopEvent(
-                idShop: widget.currentShop.id,
-              ));
+          context.read<ReserveBloc>().add(ClearFilterEvent());
+          widget.tableBloc.add(GetTablesByShopEvent(
+            idShop: widget.currentShop.id,
+          ));
           _isFilterApplied = false;
         } else if (index == 1) {
           showModalBottomSheet(
             context: context,
             builder: (BuildContext context) {
               return FilterTables(
-                currentShop: widget.currentShop, reserveBloc: widget.reserveBloc,  tableBloc: widget.tableBloc,
+                currentShop: widget.currentShop,
+                reserveBloc: widget.reserveBloc,
+                tableBloc: widget.tableBloc,
               );
             },
           );

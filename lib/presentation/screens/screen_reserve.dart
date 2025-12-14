@@ -13,7 +13,7 @@ import 'package:roll_and_reserve/presentation/screens/screen_create_reserve.dart
 import 'package:roll_and_reserve/presentation/screens/screen_qr.dart';
 import 'package:roll_and_reserve/presentation/widgets/information/information_reserve.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/default_scaffold.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class ScreenReserve extends StatefulWidget {
   final int idReserve;
@@ -37,6 +37,7 @@ class _ScreenReserveState extends State<ScreenReserve> {
   late TableEntity table;
 
   @override
+
   /// Called when the widget is inserted into the tree.
   ///
   /// This method is responsible for requesting the reserve with users for the
@@ -52,6 +53,7 @@ class _ScreenReserveState extends State<ScreenReserve> {
   }
 
   @override
+
   /// Builds the screen with the information of the reserve with id [idReserve].
   ///
   /// The screen is divided into two parts: a [DefaultScaffold] with an
@@ -89,9 +91,9 @@ class _ScreenReserveState extends State<ScreenReserve> {
               context: context,
               contentBuilder: (state) {
                 if (state.reserve!.id != widget.idReserve) {
-                            return Center(
-                            child: CircularProgressIndicator(),
-                            );
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
                 }
                 return InformationReserve(
                   reserve: state.reserve!,
@@ -130,7 +132,8 @@ class _ScreenReserveState extends State<ScreenReserve> {
                               .parse(
                                   '${state.reserve!.dayDate} ${state.reserve!.horaInicio}')
                               .subtract(Duration(minutes: 5))
-                              .isBefore(DateTime.now()) && DateFormat('dd - MM - yyyy HH:mm')
+                              .isBefore(DateTime.now()) &&
+                          DateFormat('dd - MM - yyyy HH:mm')
                               .parse(
                                   '${state.reserve!.dayDate} ${state.reserve!.horaFin}')
                               .subtract(Duration(minutes: 0))

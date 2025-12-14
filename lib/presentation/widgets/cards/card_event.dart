@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_state.dart';
@@ -30,6 +30,7 @@ class CardEvent extends StatefulWidget {
 
 class _CardEventState extends State<CardEvent> {
   @override
+
   /// Called when the widget is inserted into the tree.
   ///
   /// This method is responsible for requesting all tables and shops from the database.
@@ -40,6 +41,7 @@ class _CardEventState extends State<CardEvent> {
   }
 
   @override
+
   /// Builds a card with information of an event.
   ///
   /// This method builds a card with the date, shop name, game name, start time,

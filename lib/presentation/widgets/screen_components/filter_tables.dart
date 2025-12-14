@@ -8,7 +8,7 @@ import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_event.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_utils.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class FilterTables extends StatefulWidget {
   const FilterTables(
@@ -31,6 +31,7 @@ class _FilterTablesState extends State<FilterTables> {
   final _endTimeController = TextEditingController();
 
   @override
+
   /// Initializes the [_dateController], [_startTimeController], and
   /// [_endTimeController] with the values from [ReserveState.filterTables] if
   /// they are not null. This is done so that the values are set the first time
@@ -42,19 +43,21 @@ class _FilterTablesState extends State<FilterTables> {
     ReserveBloc reserveBloc = BlocProvider.of<ReserveBloc>(context);
     if (reserveBloc.state.filterTables != null) {
       if (reserveBloc.state.filterTables!.containsKey('dateReserve')) {
-      _dateController.text = reserveBloc.state.filterTables!['dateReserve']!;
+        _dateController.text = reserveBloc.state.filterTables!['dateReserve']!;
       }
       if (reserveBloc.state.filterTables!.containsKey('startTime')) {
-      _startTimeController.text = reserveBloc.state.filterTables!['startTime']!;
+        _startTimeController.text =
+            reserveBloc.state.filterTables!['startTime']!;
       }
       if (reserveBloc.state.filterTables!.containsKey('endTime')) {
-      _endTimeController.text = reserveBloc.state.filterTables!['endTime']!;
+        _endTimeController.text = reserveBloc.state.filterTables!['endTime']!;
       }
     }
     super.initState();
   }
 
   @override
+
   /// Builds the UI for the filter tables dialog.
   ///
   /// This widget is wrapped in a [BlocListener] to listen to the [ReserveBloc]

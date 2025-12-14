@@ -5,7 +5,7 @@ import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_state.dart';
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_reserve.dart';
 import 'package:roll_and_reserve/presentation/widgets/cards/card_reserve.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/data/models/functions_for_models.dart';
 import 'package:roll_and_reserve/presentation/blocs/language/language_bloc.dart';
@@ -27,9 +27,9 @@ class BodyReservesTable extends StatefulWidget {
 }
 
 class _BodyReservesTableState extends State<BodyReservesTable> {
-  
   DateTime? selectedDate;
   @override
+
   /// Builds the body of the screen for a specific table and date.
   ///
   /// The top row shows the table number and a button to filter the reserves

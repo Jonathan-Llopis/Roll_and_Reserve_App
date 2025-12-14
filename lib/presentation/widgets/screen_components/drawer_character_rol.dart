@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:roll_and_reserve/presentation/blocs/chat/chat_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/chat/chat_event.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_character_description.dart';
 
 class DrawerCharacterRol extends StatelessWidget {
@@ -15,24 +15,25 @@ class DrawerCharacterRol extends StatelessWidget {
   final TextEditingController _controllerTheme = TextEditingController();
 
   @override
-/// Builds a Drawer widget displaying various sections related to the
-/// character's details.
-///
-/// This method constructs a Drawer containing the character's header, primary
-/// attributes, health and defense stats, magical skills, equipment and treasure,
-/// and companion information. If the character data or attributes are missing,
-/// an error message is displayed. The drawer includes an option to delete the
-/// current adventure, which triggers a confirmation dialog. Upon deletion
-/// confirmation, the [CleanRolPlay] event is added to the [ChatBloc], and a
-/// new [DialogCharacterDescription] is presented to start a new adventure.
-///
-/// The drawer's contents are dynamically built based on the presence of spells
-/// and companion data. The sections are organized in a [ListView] with
-/// appropriate titles and content widgets for each section, localized using
-/// [AppLocalizations].
-///
-/// Returns a [Drawer] widget populated with character information or an error
-/// message if data is incomplete.
+
+  /// Builds a Drawer widget displaying various sections related to the
+  /// character's details.
+  ///
+  /// This method constructs a Drawer containing the character's header, primary
+  /// attributes, health and defense stats, magical skills, equipment and treasure,
+  /// and companion information. If the character data or attributes are missing,
+  /// an error message is displayed. The drawer includes an option to delete the
+  /// current adventure, which triggers a confirmation dialog. Upon deletion
+  /// confirmation, the [CleanRolPlay] event is added to the [ChatBloc], and a
+  /// new [DialogCharacterDescription] is presented to start a new adventure.
+  ///
+  /// The drawer's contents are dynamically built based on the presence of spells
+  /// and companion data. The sections are organized in a [ListView] with
+  /// appropriate titles and content widgets for each section, localized using
+  /// [AppLocalizations].
+  ///
+  /// Returns a [Drawer] widget populated with character information or an error
+  /// message if data is incomplete.
 
   Widget build(BuildContext context) {
     final character = characterData['character'] as Map<String, dynamic>?;
@@ -100,7 +101,8 @@ class DrawerCharacterRol extends StatelessWidget {
                               barrierDismissible: false,
                               builder: (context) {
                                 return DialogCharacterDescription(
-                                  controllerDescription: _controllerDescription, controllerTheme: _controllerTheme,
+                                  controllerDescription: _controllerDescription,
+                                  controllerTheme: _controllerTheme,
                                 );
                               },
                             );
@@ -129,19 +131,19 @@ class DrawerCharacterRol extends StatelessWidget {
     );
   }
 
-/// Builds the header section of the character drawer.
-///
-/// This header displays the character's name, race, class, and location
-/// within a styled [DrawerHeader]. The character's name is shown in a large,
-/// bold medieval style font, while the race and class are displayed in a
-/// smaller font below it. The location is shown with an icon next to it,
-/// all in an amber and grey color scheme. The layout is organized using
-/// a [Column] and [Row] to ensure proper alignment and overflow handling.
-///
-/// The header is decorated with a brown background and a border for visual
-/// distinction within the drawer.
-///
-/// Returns a [DrawerHeader] widget populated with character details.
+  /// Builds the header section of the character drawer.
+  ///
+  /// This header displays the character's name, race, class, and location
+  /// within a styled [DrawerHeader]. The character's name is shown in a large,
+  /// bold medieval style font, while the race and class are displayed in a
+  /// smaller font below it. The location is shown with an icon next to it,
+  /// all in an amber and grey color scheme. The layout is organized using
+  /// a [Column] and [Row] to ensure proper alignment and overflow handling.
+  ///
+  /// The header is decorated with a brown background and a border for visual
+  /// distinction within the drawer.
+  ///
+  /// Returns a [DrawerHeader] widget populated with character details.
 
   Widget _buildHeader(Map<String, dynamic> character) {
     return DrawerHeader(
@@ -225,22 +227,22 @@ class DrawerCharacterRol extends StatelessWidget {
     );
   }
 
-/// Builds a grid displaying character attributes.
-///
-/// This widget uses a [GridView] to show each character attribute in a
-/// [Card]. Each card contains the attribute's name and value, styled in
-/// a medieval theme. The grid is non-scrollable and contains three columns,
-/// with each cell having a fixed aspect ratio.
-///
-/// The attributes are passed as a map, where the key is the attribute
-/// abbreviation and the value is the attribute's value. The names of the
-/// attributes are localized using [AppLocalizations].
-///
-/// - `attributes`: A map with keys as attribute abbreviations (e.g., 'STR',
-///   'DEX') and values as the respective attribute values.
-/// - `context`: The [BuildContext] used for localization and theming.
-///
-/// Returns a [GridView] widget displaying the character's attributes.
+  /// Builds a grid displaying character attributes.
+  ///
+  /// This widget uses a [GridView] to show each character attribute in a
+  /// [Card]. Each card contains the attribute's name and value, styled in
+  /// a medieval theme. The grid is non-scrollable and contains three columns,
+  /// with each cell having a fixed aspect ratio.
+  ///
+  /// The attributes are passed as a map, where the key is the attribute
+  /// abbreviation and the value is the attribute's value. The names of the
+  /// attributes are localized using [AppLocalizations].
+  ///
+  /// - `attributes`: A map with keys as attribute abbreviations (e.g., 'STR',
+  ///   'DEX') and values as the respective attribute values.
+  /// - `context`: The [BuildContext] used for localization and theming.
+  ///
+  /// Returns a [GridView] widget displaying the character's attributes.
 
   Widget _buildAttributesGrid(
       Map<String, dynamic> attributes, BuildContext context) {
@@ -319,16 +321,16 @@ class DrawerCharacterRol extends StatelessWidget {
     );
   }
 
-/// Builds a circular widget to display a single stat for a character.
-///
-/// This widget creates a circle with the given `color` and displays
-/// the `value` in the center. Below the circle, it shows a `label` 
-/// describing the stat. The circle is styled with a medieval theme
-/// using the `GoogleFonts.medievalSharp`.
-///
-/// - `label`: A short description of the stat (e.g., 'HP', 'CA').
-/// - `value`: The value of the stat to be displayed inside the circle.
-/// - `color`: The color used for the circle and the value text.
+  /// Builds a circular widget to display a single stat for a character.
+  ///
+  /// This widget creates a circle with the given `color` and displays
+  /// the `value` in the center. Below the circle, it shows a `label`
+  /// describing the stat. The circle is styled with a medieval theme
+  /// using the `GoogleFonts.medievalSharp`.
+  ///
+  /// - `label`: A short description of the stat (e.g., 'HP', 'CA').
+  /// - `value`: The value of the stat to be displayed inside the circle.
+  /// - `color`: The color used for the circle and the value text.
 
   Widget _buildStatCircle(String label, String value, Color color) {
     return Column(

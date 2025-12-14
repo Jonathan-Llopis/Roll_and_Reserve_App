@@ -13,7 +13,7 @@ import 'package:roll_and_reserve/presentation/functions/functions_validation.dar
 import 'package:roll_and_reserve/presentation/screens/screen_edit_shop.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/map_picker.dart';
 import 'package:roll_and_reserve/presentation/widgets/buttons/button_cu_shop.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/user_avatar.dart';
 
 class BodyEditShop extends StatefulWidget {
@@ -40,14 +40,15 @@ class _BodyEditShopState extends State<BodyEditShop> {
   final TextEditingController _idUserController = TextEditingController();
 
   @override
-/// Initializes the state of the `_BodyEditShopState` widget.
-///
-/// This method is responsible for setting initial values for the form fields
-/// based on the shop data. If the `idShop` is not zero, it retrieves the 
-/// shop details from the `ShopBloc` state and populates the form fields with 
-/// the shop's name, address, latitude, longitude, logo, and owner ID. If the 
-/// `idShop` is zero, it sets default values for a new shop entry. Calls 
-/// `super.initState()` at the end.
+
+  /// Initializes the state of the `_BodyEditShopState` widget.
+  ///
+  /// This method is responsible for setting initial values for the form fields
+  /// based on the shop data. If the `idShop` is not zero, it retrieves the
+  /// shop details from the `ShopBloc` state and populates the form fields with
+  /// the shop's name, address, latitude, longitude, logo, and owner ID. If the
+  /// `idShop` is zero, it sets default values for a new shop entry. Calls
+  /// `super.initState()` at the end.
 
   void initState() {
     final shopBloc = BlocProvider.of<ShopBloc>(context);
@@ -73,6 +74,7 @@ class _BodyEditShopState extends State<BodyEditShop> {
   }
 
   @override
+
   /// Builds the body of the shop edition screen.
   ///
   /// This widget is a [SingleChildScrollView] with a [Form] as child.

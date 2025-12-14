@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/chat/chat_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/chat/chat_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/chat/chat_state.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_rol.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/input_text_image.dart';
 
@@ -17,6 +17,7 @@ class ChatAssistantScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatAssistantScreen> {
   final FocusNode _focusNode = FocusNode();
   @override
+
   /// Initializes the state of the chat assistant screen.
   ///
   /// This function is called when the widget is inserted into the tree.
@@ -33,6 +34,7 @@ class _ChatScreenState extends State<ChatAssistantScreen> {
   }
 
   @override
+
   /// Called when the widget is removed from the tree permanently.
   ///
   /// This is the opposite of [initState]. It is called when the widget is
@@ -50,6 +52,7 @@ class _ChatScreenState extends State<ChatAssistantScreen> {
   }
 
   @override
+
   /// Builds the chat assistant screen.
   ///
   /// This screen is used to chat with the AI assistant. It shows the
@@ -118,7 +121,8 @@ class _ChatScreenState extends State<ChatAssistantScreen> {
               child: BodyMessages(),
             ),
             InputTextImage(
-              focusNode: _focusNode, isAssitant:  true,
+              focusNode: _focusNode,
+              isAssitant: true,
             ),
           ],
         ));
@@ -129,6 +133,7 @@ class BodyMessages extends StatelessWidget {
   const BodyMessages({super.key});
 
   @override
+
   /// Builds the widget tree for displaying chat messages with the assistant.
   ///
   /// This widget uses a [BlocBuilder] to listen to the [ChatBloc] and

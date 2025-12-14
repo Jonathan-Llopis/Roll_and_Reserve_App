@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 import 'package:roll_and_reserve/config/theme/theme.dart';
 
 class DialogEmailSent extends StatelessWidget {
   const DialogEmailSent({super.key});
 
   @override
+
   /// A dialog that shows a message when the reset password email is sent.
   ///
   /// It shows a message that indicates the email has been sent.
@@ -13,8 +14,8 @@ class DialogEmailSent extends StatelessWidget {
   ///
   Widget build(BuildContext context) {
     return AlertDialog(
-      content:  Text(
-         AppLocalizations.of(context)!.email_sent_reset_password,
+      content: Text(
+        AppLocalizations.of(context)!.email_sent_reset_password,
         style: TextStyle(
           fontSize: 18,
           color: Colors.black,

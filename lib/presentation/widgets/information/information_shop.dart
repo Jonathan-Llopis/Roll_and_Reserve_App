@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:roll_and_reserve/domain/entities/shop_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_utils.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class InformationShop extends StatefulWidget {
   const InformationShop({
@@ -22,6 +22,7 @@ class InformationShop extends StatefulWidget {
 
 class _ShopListInventoryState extends State<InformationShop> {
   @override
+
   /// Called when the widget is inserted into the tree.
   ///
   /// This function is called when the widget is inserted into the tree.
@@ -30,6 +31,7 @@ class _ShopListInventoryState extends State<InformationShop> {
   }
 
   @override
+
   /// Builds the UI for the information of the shop.
   ///
   /// This widget is a [Container] with a [BoxDecoration] that has a white
@@ -107,7 +109,7 @@ class _ShopListInventoryState extends State<InformationShop> {
                 _buildActionButtons(context, theme, loc),
               ],
             ),
-          ) 
+          )
         ],
       ),
     );
@@ -128,7 +130,7 @@ class _ShopListInventoryState extends State<InformationShop> {
       height: isSmallScreen ? 100 : 120,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: theme.colorScheme.surfaceVariant,
+        color: theme.colorScheme.surfaceContainerHighest,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -288,7 +290,6 @@ class _ShopListInventoryState extends State<InformationShop> {
       ],
     );
   }
-
 
   /// Builds an admin action button with an icon and label.
   ///

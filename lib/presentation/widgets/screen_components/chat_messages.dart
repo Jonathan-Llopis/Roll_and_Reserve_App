@@ -1,7 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class ChatMessage extends StatelessWidget {
   final String text;
@@ -14,6 +13,7 @@ class ChatMessage extends StatelessWidget {
   });
 
   @override
+
   /// Builds a single chat message.
   ///
   /// The message is a [Row] with a single flexible child. The flexible
@@ -41,7 +41,7 @@ class ChatMessage extends StatelessWidget {
               decoration: BoxDecoration(
                 color: isFromUser
                     ? colors.primaryContainer
-                    : colors.surfaceVariant,
+                    : colors.surfaceContainerHighest,
                 borderRadius: BorderRadius.only(
                   topLeft: const Radius.circular(20),
                   topRight: const Radius.circular(20),
@@ -84,7 +84,7 @@ class ChatMessage extends StatelessWidget {
                       ),
                       a: TextStyle(color: colors.primary),
                       code: TextStyle(
-                        backgroundColor: colors.surfaceVariant,
+                        backgroundColor: colors.surfaceContainerHighest,
                         color: colors.onSurface,
                         fontFamily: 'FiraCode',
                       ),

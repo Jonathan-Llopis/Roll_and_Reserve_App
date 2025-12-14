@@ -6,7 +6,7 @@ import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_state.dart';
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
 import 'package:roll_and_reserve/presentation/widgets/information/information_shop.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class BodyMain extends StatefulWidget {
   const BodyMain({
@@ -19,17 +19,18 @@ class BodyMain extends StatefulWidget {
 
 class _BodyMainState extends State<BodyMain> {
   @override
-/// Builds the widget tree for displaying the list of shops.
-///
-/// This method uses a [BlocBuilder] to rebuild the UI based on the state of
-/// the [ShopBloc]. It displays a loading indicator if the state is loading,
-/// an error message if there is an error, or a list of shops if the data is
-/// available.
-///
-/// The widget tree includes a welcome message for the user, a description
-/// of the available shops, and a list of [InformationShop] widgets. Each
-/// shop in the list is wrapped in a [GestureDetector] to navigate to the
-/// shop's details when tapped, unless the user is an admin.
+
+  /// Builds the widget tree for displaying the list of shops.
+  ///
+  /// This method uses a [BlocBuilder] to rebuild the UI based on the state of
+  /// the [ShopBloc]. It displays a loading indicator if the state is loading,
+  /// an error message if there is an error, or a list of shops if the data is
+  /// available.
+  ///
+  /// The widget tree includes a welcome message for the user, a description
+  /// of the available shops, and a list of [InformationShop] widgets. Each
+  /// shop in the list is wrapped in a [GestureDetector] to navigate to the
+  /// shop's details when tapped, unless the user is an admin.
 
   Widget build(BuildContext context) {
     return BlocBuilder<ShopBloc, ShopState>(builder: (context, state) {

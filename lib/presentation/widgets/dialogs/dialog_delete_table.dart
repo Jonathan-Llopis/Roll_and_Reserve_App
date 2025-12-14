@@ -5,16 +5,20 @@ import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_event.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class DialogoDeleteTable extends StatelessWidget {
   final int idTable;
   final int idShop;
   final TableBloc tableBloc;
   const DialogoDeleteTable(
-      {super.key, required this.idTable, required this.idShop, required this.tableBloc});
+      {super.key,
+      required this.idTable,
+      required this.idShop,
+      required this.tableBloc});
 
   @override
+
   /// Returns a dialog to delete a table
   ///
   /// The dialog shows a message asking to confirm the deletion of the table.

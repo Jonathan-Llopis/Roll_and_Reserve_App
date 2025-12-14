@@ -8,7 +8,7 @@ import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
 import 'package:roll_and_reserve/presentation/functions/notification_service.dart';
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
 import 'package:roll_and_reserve/presentation/widgets/cards/card_reserve.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 DateTime? selectedDate;
 
@@ -26,8 +26,8 @@ class BodyEvents extends StatefulWidget {
 }
 
 class _BodyEventsState extends State<BodyEvents> {
-  
   @override
+
   /// Builds the body of the screen that shows all events of a shop.
   ///
   /// This body is a column with a row at the top that has the title of the
@@ -87,14 +87,20 @@ class _BodyEventsState extends State<BodyEvents> {
                                 await NotificationService()
                                     .unsubscribeFromTopic(widget.idShop);
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(AppLocalizations.of(context)!.unsubscribed)),
+                                  SnackBar(
+                                      content: Text(
+                                          AppLocalizations.of(context)!
+                                              .unsubscribed)),
                                 );
                                 state.user!.notifications.remove(widget.idShop);
                               } else {
                                 await NotificationService()
                                     .subscribeToTopic(widget.idShop);
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(AppLocalizations.of(context)!.subscribed)),
+                                  SnackBar(
+                                      content: Text(
+                                          AppLocalizations.of(context)!
+                                              .subscribed)),
                                 );
                                 state.user!.notifications.add(widget.idShop);
                               }
@@ -106,8 +112,9 @@ class _BodyEventsState extends State<BodyEvents> {
                             icon: Icon(isSubscribed
                                 ? Icons.notifications_off
                                 : Icons.notifications),
-                            label: Text(
-                                isSubscribed ? AppLocalizations.of(context)!.unsubscribed : AppLocalizations.of(context)!.subscribed),
+                            label: Text(isSubscribed
+                                ? AppLocalizations.of(context)!.unsubscribed
+                                : AppLocalizations.of(context)!.subscribed),
                           );
                         },
                       );
@@ -135,8 +142,9 @@ class _BodyEventsState extends State<BodyEvents> {
                           '/user/events/${widget.idShop}/eventReserve/${reserve.id}');
                     },
                     child: CardReserve(
-                        reserve: reserve,
-                        idShop: widget.idShop,),
+                      reserve: reserve,
+                      idShop: widget.idShop,
+                    ),
                   );
                 },
               ),
