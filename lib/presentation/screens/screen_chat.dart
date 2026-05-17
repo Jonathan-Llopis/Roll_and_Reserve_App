@@ -82,7 +82,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 Text(
                   AppLocalizations.of(context)!.ai_assistant,
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                 ),
               ],
@@ -93,17 +93,18 @@ class _ChatScreenState extends State<ChatScreen> {
           Tooltip(
             message: AppLocalizations.of(context)!.restart_conversation,
             child: IconButton(
-                icon: Icon(Icons.restart_alt, size: 28),
-                onPressed: () {
-                  context.read<ChatBloc>().add(CleanChat());
-                  setState(() => isRestarting = true);
-                }),
-          )
+              icon: const Icon(Icons.restart_alt, size: 28),
+              onPressed: () {
+                context.read<ChatBloc>().add(CleanChat());
+                setState(() => isRestarting = true);
+              },
+            ),
+          ),
         ],
       ),
       body: Column(
         children: [
-          Expanded(
+          const Expanded(
             child: BodyMessages(),
           ),
           InputText(focusNode: _focusNode, isRolPlay: false),
@@ -135,7 +136,8 @@ class BodyMessages extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 CircularProgressIndicator(
-                    color: Theme.of(context).colorScheme.primary),
+                  color: Theme.of(context).colorScheme.primary,
+                ),
                 const SizedBox(height: 16),
                 Text(
                   AppLocalizations.of(context)!.loading_chat,
@@ -143,9 +145,9 @@ class BodyMessages extends StatelessWidget {
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
-                            .withOpacity(0.6),
+                            .withValues(alpha: 0.6),
                       ),
-                )
+                ),
               ],
             ),
           );

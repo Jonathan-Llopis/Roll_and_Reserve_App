@@ -32,41 +32,44 @@ class _DialogResetPasswordState extends State<DialogResetPassword> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      title: Text(AppLocalizations.of(context)!.reset_password,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 30,
-          )),
+      title: Text(
+        AppLocalizations.of(context)!.reset_password,
+        style: const TextStyle(
+          color: Colors.black,
+          fontSize: 30,
+        ),
+      ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             AppLocalizations.of(context)!.enter_your_email_to_reset_password,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 18,
               color: Colors.black,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Form(
             key: formKey,
             child: TextFormField(
-                controller: emailController,
-                style: const TextStyle(color: Colors.black),
-                decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
-                  ),
-                  labelText: AppLocalizations.of(context)!.email,
-                  labelStyle: TextStyle(color: Colors.black),
+              controller: emailController,
+              style: const TextStyle(color: Colors.black),
+              decoration: InputDecoration(
+                enabledBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black),
                 ),
-                validator: (value) => basicValidation(value, context)),
-          )
+                focusedBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black),
+                ),
+                labelText: AppLocalizations.of(context)!.email,
+                labelStyle: const TextStyle(color: Colors.black),
+              ),
+              validator: (value) => basicValidation(value, context),
+            ),
+          ),
         ],
       ),
       actions: <Widget>[

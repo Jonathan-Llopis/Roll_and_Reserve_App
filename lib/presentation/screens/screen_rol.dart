@@ -97,41 +97,42 @@ class _ChatScreenState extends State<RolScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-        appBar: AppBar(
-          title: Row(
-            children: [
-              Icon(Icons.auto_awesome, color: theme.colorScheme.primary),
-              const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    AppLocalizations.of(context)!.play_role_with_ai,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        body: Column(
+      appBar: AppBar(
+        title: Row(
           children: [
-            Expanded(
-              child: BodyMessages(),
+            Icon(Icons.auto_awesome, color: theme.colorScheme.primary),
+            const SizedBox(width: 12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  AppLocalizations.of(context)!.play_role_with_ai,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
             ),
-            InputText(focusNode: _focusNode, isRolPlay: true),
           ],
         ),
-        endDrawer: BlocBuilder<ChatBloc, ChatState>(
-          builder: (context, state) {
-            return DrawerCharacterRol(
-              characterData: state.character,
-            );
-          },
-        ));
+      ),
+      body: Column(
+        children: [
+          const Expanded(
+            child: BodyMessages(),
+          ),
+          InputText(focusNode: _focusNode, isRolPlay: true),
+        ],
+      ),
+      endDrawer: BlocBuilder<ChatBloc, ChatState>(
+        builder: (context, state) {
+          return DrawerCharacterRol(
+            characterData: state.character,
+          );
+        },
+      ),
+    );
   }
 }
 
@@ -163,7 +164,8 @@ class BodyMessages extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 CircularProgressIndicator(
-                    color: Theme.of(context).colorScheme.primary),
+                  color: Theme.of(context).colorScheme.primary,
+                ),
                 const SizedBox(height: 16),
                 Text(
                   AppLocalizations.of(context)!.loading_chat,
@@ -171,9 +173,9 @@ class BodyMessages extends StatelessWidget {
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
-                            .withOpacity(0.6),
+                            .withValues(alpha: 0.6),
                       ),
-                )
+                ),
               ],
             ),
           );
@@ -256,7 +258,7 @@ class ChatMessage extends StatelessWidget {
                 boxShadow: [
                   if (!isFromUser)
                     BoxShadow(
-                      color: colors.shadow.withOpacity(0.1),
+                      color: colors.shadow.withValues(alpha: 0.1),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),

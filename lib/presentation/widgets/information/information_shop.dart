@@ -17,10 +17,10 @@ class InformationShop extends StatefulWidget {
   final ShopEntity shop;
 
   @override
-  State<InformationShop> createState() => _ShopListInventoryState();
+  State<InformationShop> createState() => _InformationShopState();
 }
 
-class _ShopListInventoryState extends State<InformationShop> {
+class _InformationShopState extends State<InformationShop> {
   @override
 
   /// Called when the widget is inserted into the tree.
@@ -67,14 +67,14 @@ class _ShopListInventoryState extends State<InformationShop> {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: theme.colorScheme.shadow.withOpacity(0.1),
+            color: theme.colorScheme.shadow.withValues(alpha: 0.1),
             blurRadius: 20,
             spreadRadius: 2,
             offset: const Offset(0, 4),
           ),
         ],
         border: Border.all(
-          color: theme.colorScheme.outline.withOpacity(0.1),
+          color: theme.colorScheme.outline.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -109,7 +109,7 @@ class _ShopListInventoryState extends State<InformationShop> {
                 _buildActionButtons(context, theme, loc),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
@@ -133,7 +133,7 @@ class _ShopListInventoryState extends State<InformationShop> {
         color: theme.colorScheme.surfaceContainerHighest,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(2, 2),
           ),
@@ -192,14 +192,14 @@ class _ShopListInventoryState extends State<InformationShop> {
         Icon(
           Icons.location_on_outlined,
           size: 18,
-          color: theme.colorScheme.onSurface.withOpacity(0.6),
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
         ),
         const SizedBox(width: 8),
         Expanded(
           child: Text(
             widget.shop.address,
             style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.7),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
             ),
           ),
         ),
@@ -256,7 +256,10 @@ class _ShopListInventoryState extends State<InformationShop> {
   /// [loc] is used for localized labels on the buttons.
 
   Widget _buildActionButtons(
-      BuildContext context, ThemeData theme, AppLocalizations loc) {
+    BuildContext context,
+    ThemeData theme,
+    AppLocalizations loc,
+  ) {
     final isAdmin = context.read<LoginBloc>().state.user!.role == 1 ||
         context.read<LoginBloc>().state.user!.role == 0;
 

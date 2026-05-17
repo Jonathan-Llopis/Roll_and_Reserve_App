@@ -48,17 +48,20 @@ class BodyReviewShop extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    AppLocalizations.of(context)!.shop_name(shopBloc
-                        .state.shops!
-                        .firstWhere((shop) => shop.id == idShop)
-                        .name),
+                    AppLocalizations.of(context)!.shop_name(
+                      shopBloc.state.shops!
+                          .firstWhere((shop) => shop.id == idShop)
+                          .name,
+                    ),
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold, color: Colors.black87),
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     AppLocalizations.of(context)!.shop_reviews,
-                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                    style: const TextStyle(fontSize: 14, color: Colors.grey),
                   ),
                 ],
               ),

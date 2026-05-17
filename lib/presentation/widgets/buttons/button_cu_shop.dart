@@ -53,39 +53,45 @@ class ButtonCreateUpdateShop extends StatelessWidget {
       style: AppTheme.textButtonAcceptStyle,
       onPressed: () {
         if (idShop == 0) {
-          context.read<ShopBloc>().add(CreateShopEvent(
+          context.read<ShopBloc>().add(
+                CreateShopEvent(
                   shop: ShopEntity(
-                name: titleController.text,
-                address: adressController.text,
-                logo: _imageFile,
-                ownerId: loginBloc.state.user!.role == 0
-                    ? idUserController.text
-                    : loginBloc.state.user!.id,
-                id: 0,
-                averageRaiting: 0,
-                logoId: '0',
-                tablesShop: [],
-                gamesShop: [],
-                latitude: double.parse(latitudController.text),
-                longitude: double.parse(longitudController.text),
-              )));
+                    name: titleController.text,
+                    address: adressController.text,
+                    logo: _imageFile,
+                    ownerId: loginBloc.state.user!.role == 0
+                        ? idUserController.text
+                        : loginBloc.state.user!.id,
+                    id: 0,
+                    averageRaiting: 0,
+                    logoId: '0',
+                    tablesShop: [],
+                    gamesShop: [],
+                    latitude: double.parse(latitudController.text),
+                    longitude: double.parse(longitudController.text),
+                  ),
+                ),
+              );
         } else {
-          context.read<ShopBloc>().add(UpdateShopEvent(
+          context.read<ShopBloc>().add(
+                UpdateShopEvent(
                   shop: ShopEntity(
-                id: idShop,
-                name: titleController.text,
-                address: adressController.text,
-                logo: _imageFile,
-                averageRaiting: shopBloc.state.shop?.averageRaiting ?? 0,
-                logoId: "",
-                ownerId: loginBloc.state.user!.role == 0
-                    ? idUserController.text
-                    : loginBloc.state.user!.id,
-                tablesShop: shopBloc.state.shop?.tablesShop ?? [],
-                gamesShop: shopBloc.state.shop?.gamesShop ?? [],
-                latitude: double.parse(latitudController.text),
-                longitude: double.parse(longitudController.text),
-              )));
+                    id: idShop,
+                    name: titleController.text,
+                    address: adressController.text,
+                    logo: _imageFile,
+                    averageRaiting: shopBloc.state.shop?.averageRaiting ?? 0,
+                    logoId: '',
+                    ownerId: loginBloc.state.user!.role == 0
+                        ? idUserController.text
+                        : loginBloc.state.user!.id,
+                    tablesShop: shopBloc.state.shop?.tablesShop ?? [],
+                    gamesShop: shopBloc.state.shop?.gamesShop ?? [],
+                    latitude: double.parse(latitudController.text),
+                    longitude: double.parse(longitudController.text),
+                  ),
+                ),
+              );
         }
 
         context.go('/user');

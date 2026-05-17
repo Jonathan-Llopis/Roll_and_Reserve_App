@@ -55,14 +55,19 @@ class _BodyTablesShopState extends State<BodyTablesShop> {
                 children: [
                   Text(
                     widget.currentShop.name,
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Row(
                     children: [
-                      Text(AppLocalizations.of(context)!.rating,
-                          style: TextStyle(fontSize: 14)),
-                      SizedBox(width: 8),
+                      Text(
+                        AppLocalizations.of(context)!.rating,
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                      const SizedBox(width: 8),
                       buildStars(widget.currentShop.averageRaiting),
                     ],
                   ),
@@ -75,15 +80,19 @@ class _BodyTablesShopState extends State<BodyTablesShop> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.storefront, size: 48, color: Colors.blueAccent),
-                    Text(AppLocalizations.of(context)!.all_reviews)
+                    const Icon(
+                      Icons.storefront,
+                      size: 48,
+                      color: Colors.blueAccent,
+                    ),
+                    Text(AppLocalizations.of(context)!.all_reviews),
                   ],
                 ),
               ),
             ],
           ),
         ),
-        Divider(),
+        const Divider(),
         buildActionButton(
           icon: Icons.event_available_rounded,
           label: AppLocalizations.of(context)!.events,
@@ -94,14 +103,14 @@ class _BodyTablesShopState extends State<BodyTablesShop> {
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Text(
             AppLocalizations.of(context)!.available_tables,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: 200,
                 crossAxisSpacing: 16.0,
                 mainAxisSpacing: 16.0,
@@ -120,9 +129,13 @@ class _BodyTablesShopState extends State<BodyTablesShop> {
                       onTap: () {
                         widget.loginBloc.state.user!.role == 1
                             ? showUpdateCreateTableDialog(
-                                context, widget.currentShop, table)
+                                context,
+                                widget.currentShop,
+                                table,
+                              )
                             : context.go(
-                                '/user/shop/${widget.widget.idShop}/table/${table.id}');
+                                '/user/shop/${widget.widget.idShop}/table/${table.id}',
+                              );
                       },
                       child: Card(
                         elevation: 4,
@@ -144,11 +157,11 @@ class _BodyTablesShopState extends State<BodyTablesShop> {
                                         Theme.of(context)
                                             .colorScheme
                                             .primary
-                                            .withOpacity(0.05),
+                                            .withValues(alpha: 0.05),
                                         Theme.of(context)
                                             .colorScheme
                                             .secondary
-                                            .withOpacity(0.05),
+                                            .withValues(alpha: 0.05),
                                       ],
                                     ),
                                   ),

@@ -13,10 +13,10 @@ class BodyAdminShops extends StatefulWidget {
   });
 
   @override
-  State<BodyAdminShops> createState() => _BodyMainState();
+  State<BodyAdminShops> createState() => _BodyAdminShopsState();
 }
 
-class _BodyMainState extends State<BodyAdminShops> {
+class _BodyAdminShopsState extends State<BodyAdminShops> {
   @override
 
   /// Initialize the shops list with the ones from the ShopBloc state.
@@ -44,8 +44,10 @@ class _BodyMainState extends State<BodyAdminShops> {
             onChanged: (value) {
               setState(() {
                 shops = shopBloc.state.shops!
-                    .where((shop) =>
-                        shop.name.toLowerCase().contains(value.toLowerCase()))
+                    .where(
+                      (shop) =>
+                          shop.name.toLowerCase().contains(value.toLowerCase()),
+                    )
                     .toList();
               });
             },
@@ -60,13 +62,14 @@ class _BodyMainState extends State<BodyAdminShops> {
         ),
         const Divider(height: 1, thickness: 1),
         Expanded(
-            child: ListView.builder(
-          itemCount: shops!.length,
-          itemBuilder: (context, index) {
-            final shop = shops![index];
-            return Builder(builder: (context) => InformationShop(shop: shop));
-          },
-        )),
+          child: ListView.builder(
+            itemCount: shops!.length,
+            itemBuilder: (context, index) {
+              final shop = shops![index];
+              return Builder(builder: (context) => InformationShop(shop: shop));
+            },
+          ),
+        ),
       ],
     );
   }

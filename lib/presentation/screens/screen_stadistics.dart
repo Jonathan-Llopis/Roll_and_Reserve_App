@@ -5,9 +5,14 @@ import 'package:roll_and_reserve/presentation/widgets/screen_components/screen_b
 class ScreenStadistics extends StatelessWidget {
   final PreferredSizeWidget appBar;
   final int idShop;
-  const ScreenStadistics({super.key, required this.appBar, required this.idShop});
+  const ScreenStadistics({
+    super.key,
+    required this.appBar,
+    required this.idShop,
+  });
 
   @override
+
   /// Builds the stadistics screen widget.
   ///
   /// This widget is a [DefaultScaffold] with the given [appBar] and a

@@ -29,20 +29,20 @@ class DrawerLogin extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           UserAccountsDrawerHeader(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('assets/images/appbar_back.jpg'),
                 fit: BoxFit.cover,
               ),
             ),
-            accountName: Text(
+            accountName: const Text(
               'Roll and Reserve',
               style: TextStyle(fontSize: 20),
             ),
             accountEmail: Text(
               AppLocalizations.of(context)!.find_your_game_table,
             ),
-            currentAccountPicture: CircleAvatar(
+            currentAccountPicture: const CircleAvatar(
               backgroundImage: AssetImage('assets/icon/logo.png'),
             ),
           ),

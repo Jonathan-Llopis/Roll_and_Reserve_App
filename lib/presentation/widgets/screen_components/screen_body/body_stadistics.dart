@@ -95,8 +95,8 @@ class _BodyStadisticsState extends State<BodyStadistics> {
         children: [
           _buildChartSelector(),
           const SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Divider(
               color: Colors.grey,
               thickness: 1,
@@ -105,8 +105,8 @@ class _BodyStadisticsState extends State<BodyStadistics> {
           const SizedBox(height: 10),
           _buildPeriodSelector(),
           const SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Divider(
               color: Colors.grey,
               thickness: 1,
@@ -185,9 +185,9 @@ class _BodyStadisticsState extends State<BodyStadistics> {
             {'label': AppLocalizations.of(context)!.month, 'value': 'Month'},
             {
               'label': AppLocalizations.of(context)!.quarter,
-              'value': 'Quarter'
+              'value': 'Quarter',
             },
-            {'label': AppLocalizations.of(context)!.annual, 'value': 'Year'}
+            {'label': AppLocalizations.of(context)!.annual, 'value': 'Year'},
           ].map<Widget>((Map<String, String> period) {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4.0),
@@ -223,7 +223,7 @@ class _BodyStadisticsState extends State<BodyStadistics> {
             {'label': AppLocalizations.of(context)!.peak_hours, 'value': 3},
             {
               'label': AppLocalizations.of(context)!.total_reservations,
-              'value': 4
+              'value': 4,
             }
           ].map((Map<String, dynamic> chart) {
             return Padding(
@@ -261,9 +261,10 @@ class _BodyStadisticsState extends State<BodyStadistics> {
         child: SfCartesianChart(
           tooltipBehavior: _tooltipBehavior,
           title: ChartTitle(
-              text: AppLocalizations.of(context)!
-                  .total_reservations_by_period(_selectedPeriod)),
-          primaryXAxis: CategoryAxis(
+            text: AppLocalizations.of(context)!
+                .total_reservations_by_period(_selectedPeriod),
+          ),
+          primaryXAxis: const CategoryAxis(
             labelRotation: 45,
             edgeLabelPlacement: EdgeLabelPlacement.shift,
             labelStyle: TextStyle(fontSize: 10),
@@ -279,14 +280,14 @@ class _BodyStadisticsState extends State<BodyStadistics> {
                           ? convertMonthRangeToText(entry.key, monthNames)
                           : monthStadistics(entry.key, monthNames),
               yValueMapper: (MapEntry<String, int> entry, _) => entry.value,
-              markerSettings: MarkerSettings(
+              markerSettings: const MarkerSettings(
                 shape: DataMarkerType.circle,
                 borderWidth: 1,
                 borderColor: Colors.blueAccent,
                 isVisible: true,
               ),
               color: Colors.blue,
-            )
+            ),
           ],
         ),
       ),
@@ -319,9 +320,10 @@ class _BodyStadisticsState extends State<BodyStadistics> {
         child: SfCartesianChart(
           tooltipBehavior: _tooltipBehavior,
           title: ChartTitle(
-              text: AppLocalizations.of(context)!
-                  .active_players_by_period(_selectedPeriod)),
-          primaryXAxis: CategoryAxis(
+            text: AppLocalizations.of(context)!
+                .active_players_by_period(_selectedPeriod),
+          ),
+          primaryXAxis: const CategoryAxis(
             labelRotation: 45,
             edgeLabelPlacement: EdgeLabelPlacement.shift,
             labelStyle: TextStyle(fontSize: 10),
@@ -338,7 +340,7 @@ class _BodyStadisticsState extends State<BodyStadistics> {
                           : monthStadistics(entry.key, monthNames),
               yValueMapper: (MapEntry<String, int> entry, _) => entry.value,
               color: Colors.green,
-            )
+            ),
           ],
         ),
       ),
@@ -371,8 +373,9 @@ class _BodyStadisticsState extends State<BodyStadistics> {
         child: SfCartesianChart(
           tooltipBehavior: _tooltipBehavior,
           title: ChartTitle(
-              text: AppLocalizations.of(context)!.peak_reservation_hours),
-          primaryXAxis: CategoryAxis(
+            text: AppLocalizations.of(context)!.peak_reservation_hours,
+          ),
+          primaryXAxis: const CategoryAxis(
             labelRotation: 45,
             edgeLabelPlacement: EdgeLabelPlacement.shift,
             labelStyle: TextStyle(fontSize: 10),
@@ -392,10 +395,10 @@ class _BodyStadisticsState extends State<BodyStadistics> {
               yValueMapper: (entry, _) => entry['reservation_count'] as int?,
               markerSettings: const MarkerSettings(isVisible: true),
               color: Colors.orange,
-              emptyPointSettings: EmptyPointSettings(
+              emptyPointSettings: const EmptyPointSettings(
                 mode: EmptyPointMode.drop,
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -427,14 +430,15 @@ class _BodyStadisticsState extends State<BodyStadistics> {
         child: SfCircularChart(
           tooltipBehavior: _tooltipBehavior,
           title: ChartTitle(
-              text: AppLocalizations.of(context)!.most_popular_games),
+            text: AppLocalizations.of(context)!.most_popular_games,
+          ),
           series: <CircularSeries>[
             PieSeries<Map<String, dynamic>, String>(
               dataSource: choseData,
               xValueMapper: (Map<String, dynamic> entry, _) => entry['name'],
               yValueMapper: (Map<String, dynamic> entry, _) =>
                   entry['play_count'],
-            )
+            ),
           ],
           legend: Legend(
             isVisible: true,

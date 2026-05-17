@@ -37,7 +37,9 @@ class _BodyReservesUserState extends State<BodyReservesUser> {
                   Text(
                     AppLocalizations.of(context)!.your_reservations,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold, color: Colors.black87),
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
                   ),
                   const SizedBox(height: 4),
                 ],
@@ -52,7 +54,7 @@ class _BodyReservesUserState extends State<BodyReservesUser> {
             child: SingleChildScrollView(
               child: ListView.builder(
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: widget.reserves?.length,
                 itemBuilder: (context, index) {
                   final reserve = widget.reserves![index];

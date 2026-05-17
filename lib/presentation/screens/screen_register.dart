@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rive/rive.dart' as rive;
 import 'package:go_router/go_router.dart';
-import 'package:roll_and_reserve/config/theme/theme.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
 import 'package:roll_and_reserve/presentation/functions/controller_rive_animation.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_validation.dart';
-import 'package:roll_and_reserve/presentation/widgets/screen_components/custom_form_field.dart';
 import 'package:roll_and_reserve/presentation/widgets/buttons/button_register.dart';
+import 'package:roll_and_reserve/presentation/widgets/screen_components/custom_form_field.dart';
 import 'package:roll_and_reserve/l10n/app_localizations.dart';
-import 'package:roll_and_reserve/presentation/widgets/screen_components/drawer_login.dart';
 
 class ScreenRegister extends StatefulWidget {
   const ScreenRegister({super.key});
@@ -19,324 +18,251 @@ class ScreenRegister extends StatefulWidget {
 }
 
 class _ScreenRegisterState extends State<ScreenRegister> {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
       TextEditingController();
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController userNameController = TextEditingController();
 
-  final formKey = GlobalKey<FormState>();
+  final FocusNode _emailFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
+  final FocusNode _confirmPasswordFocusNode = FocusNode();
+  final FocusNode _usernameFocusNode = FocusNode();
 
-  FocusNode emailFocusNode = FocusNode();
-  FocusNode nameFocusNode = FocusNode();
-  FocusNode passwordFocusNode = FocusNode();
-  FocusNode confirmPasswordFocusNode = FocusNode();
-  FocusNode userNameFocusNode = FocusNode();
-
-  RiveAnimationController? riveController;
-
-  bool _passwordVisible = false;
-  bool _passwordConfirmVisible = false;
+  late DragonRiveController riveController;
+  bool isPasswordVisible = false;
+  bool isConfirmPasswordVisible = false;
 
   @override
-
-  /// Adds the [emailFocus], [passwordFocused], [nameFocus], [confirmationPasswordFocused]
-  /// and [userNameFocus] functions to the [emailFocusNode], [passwordFocusNode],
-  /// [nameFocusNode], [confirmPasswordFocusNode] and [userNameFocusNode] focus nodes.
-  ///
-  /// This is done so that the [emailFocus], [passwordFocused], [nameFocus],
-  /// [confirmationPasswordFocused] and [userNameFocus] functions are called whenever the
-  /// focus of the [emailFocusNode], [passwordFocusNode], [nameFocusNode],
-  /// [confirmPasswordFocusNode] or [userNameFocusNode] changes.
-  ///
-  /// This is used to control the visibility of the email text field.
-  ///
-  /// The [super.initState] method is called last to ensure that the
-  /// [emailFocusNode], [passwordFocusNode], [nameFocusNode],
-  /// [confirmPasswordFocusNode] and [userNameFocusNode] are properly initialized.
   void initState() {
-    emailFocusNode.addListener(emailFocus);
-    passwordFocusNode.addListener(passwordFocused);
-    nameFocusNode.addListener(emailFocus);
-    confirmPasswordFocusNode.addListener(confirmationPasswordFocused);
-    userNameFocusNode.addListener(userNameFocus);
     super.initState();
   }
 
   @override
-
-  /// Called when the widget is removed from the tree permanently.
-  ///
-  /// This is the opposite of [initState]. It is called when the widget is
-  /// discarded, and is used to free up any resources that aren't needed
-  /// anymore.
-  ///
-  /// In this case, it is used to remove the focus node from the widget tree.
-  ///
-  /// This method is called automatically when the widget is removed from the
-  /// tree, but it is also safe to call manually if you want to prematurely
-  /// release resources.
   void dispose() {
-    emailFocusNode.removeListener(emailFocus);
-    passwordFocusNode.removeListener(passwordFocused);
-    nameFocusNode.removeListener(emailFocus);
-    confirmPasswordFocusNode.removeListener(confirmationPasswordFocused);
-    userNameFocusNode.removeListener(userNameFocus);
+    _nameController.dispose();
+    _usernameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    _confirmPasswordFocusNode.dispose();
+    _usernameFocusNode.dispose();
     super.dispose();
   }
 
-  /// Calls [riveController?.emailFocus] with the current focus state of the
-  /// [emailFocusNode].
-  ///
-  /// This is used to control the visibility of the email text field.
-  ///
-  /// The [riveController?.emailFocus] method is called only if the
-  /// [riveController] is not null, and the [emailFocusNode] is not null.
   void emailFocus() {
-    riveController?.emailFocus(emailFocusNode.hasFocus);
+    _emailFocusNode.addListener(() {
+      riveController.emailFocus(_emailFocusNode.hasFocus);
+    });
   }
 
-  /// Calls [riveController?.nameFocus] with the current focus state of the
-  /// [nameFocusNode].
-  ///
-  /// This is used to control the visibility of the name text field.
-  ///
-  /// The [riveController?.nameFocus] method is called only if the
-  /// [riveController] is not null, and the [nameFocusNode] is not null.
-  void nameFocus() {
-    riveController?.nameFocus(nameFocusNode.hasFocus);
-  }
-
-  /// Calls [riveController?.nameFocus] with the current focus state of the
-  /// [userNameFocusNode].
-  ///
-  /// This is used to control the visibility of the user name text field.
-  ///
-  /// The [riveController?.nameFocus] method is called only if the
-  /// [riveController] is not null, and the [userNameFocusNode] is not null.
-
-  void userNameFocus() {
-    riveController?.nameFocus(nameFocusNode.hasFocus);
-  }
-
-  /// Calls [riveController?.passwordFocus] with the current focus state of the
-  /// [passwordFocusNode] and the current state of the [_passwordVisible].
-  ///
-  /// This is used to control the visibility of the password text field.
-  ///
-  /// The [riveController?.passwordFocus] method is called only if the
-  /// [riveController] is not null, and the [passwordFocusNode] is not null.
   void passwordFocused() {
-    riveController?.passwordFocus(passwordFocusNode.hasFocus, _passwordVisible);
-  }
-
-  /// Calls [riveController?.confirmationPasswordFocused] with the current focus
-  /// state of the [confirmPasswordFocusNode] and the current state of the
-  /// [_passwordConfirmVisible].
-  ///
-  /// This is used to control the visibility of the confirmation password text
-  /// field.
-  ///
-  /// The [riveController?.confirmationPasswordFocused] method is called only if
-  /// the [riveController] is not null, and the [confirmPasswordFocusNode] is not
-  /// null.
-  void confirmationPasswordFocused() {
-    riveController?.confirmationPasswordFocused(
-        confirmPasswordFocusNode.hasFocus, _passwordConfirmVisible);
+    _passwordFocusNode.addListener(() {
+      riveController.passwordFocus(
+        _passwordFocusNode.hasFocus,
+        isPasswordVisible,
+      );
+    });
+    _confirmPasswordFocusNode.addListener(() {
+      riveController.confirmationPasswordFocused(
+        _confirmPasswordFocusNode.hasFocus,
+        isConfirmPasswordVisible,
+      );
+    });
   }
 
   @override
-
-  /// Builds the register screen.
-  ///
-  /// This screen is used to register a new user. It shows the
-  /// conversation history at the top and an input field at the bottom.
-  ///
-  /// The title of the screen is "Describe your move" and it shows a restart
-  /// icon in the actions section that restarts the conversation when pressed.
-  ///
-  /// The input field is an [InputTextImage] widget that allows the user to
-  /// input text and images. The focus node is passed as a parameter so that
-  /// the input field can request focus when the user starts typing.
-  ///
-  /// The conversation history is a [BodyMessages] widget that shows the
-  /// conversation history. It is passed the [ChatBloc] as a parameter so that
-  /// it can retrieve the messages from the bloc.
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     final loginBloc = BlocProvider.of<LoginBloc>(context);
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF6A11CB),
-        iconTheme: IconThemeData(
-          color: Colors.white,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
+          onPressed: () => context.go('/login'),
         ),
       ),
-      endDrawer: const DrawerLogin(),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: AppTheme.backgroundDecoration,
+      extendBodyBehindAppBar: true,
+      body: BlocListener<LoginBloc, LoginState>(
+        listener: (context, state) {
+          if (state is LoginSuccess) {
+            context.go('/login');
+          }
+        },
         child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text(
-                  'Roll and Reserve',
-                  style: AppTheme.titleStyle,
-                ),
-                const SizedBox(height: 10),
-                Text(AppLocalizations.of(context)!.sign_in_to_continue,
-                    style: AppTheme.subtitleStyle),
-                const SizedBox(height: 30),
-                SizedBox(
-                  height: 230,
-                  width: 400,
-                  child: rive.RiveAnimation.asset(
-                    "assets/animation/dragon_animations.riv",
-                    fit: BoxFit.cover,
-                    stateMachines: const ["State Machine 1"],
-                    onInit: (artboard) {
-                      riveController = RiveAnimationController(artboard);
-                      emailFocus();
-                      passwordFocused();
-                    },
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: AppTheme.containerDecoration,
-                  child: Column(children: [
+          child: Container(
+            padding: const EdgeInsets.only(top: 80, bottom: 40),
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xFF1D1B4B), Color(0xFF111827)],
+              ),
+            ),
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Column(
+                  children: [
+                    Text(
+                      loc.create_account,
+                      style:
+                          Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      loc.fill_details,
+                      style: const TextStyle(color: Colors.white70),
+                    ),
+                    const SizedBox(height: 20),
+                    SizedBox(
+                      height: 180,
+                      child: rive.RiveAnimation.asset(
+                        'assets/animation/dragon_animations.riv',
+                        fit: BoxFit.contain,
+                        stateMachines: const ['State Machine 1'],
+                        onInit: (artboard) {
+                          riveController = DragonRiveController(artboard);
+                          emailFocus();
+                          passwordFocused();
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 20),
                     Form(
-                      key: formKey,
+                      key: _formKey,
                       child: Column(
                         children: [
                           CustomFormField(
-                              controller: userNameController,
-                              labelText: AppLocalizations.of(context)!.username,
-                              icon: Icons.badge_rounded,
-                              validator: (value) =>
-                                  validateUserName(value, loginBloc, context),
-                              onChanged: (value) {
-                                nameFocus();
-                                riveController?.updateLookNumber(value.length);
-                              },
-                              focusNode: userNameFocusNode,
-                              riveController: null),
-                          const SizedBox(height: 20),
+                            controller: _nameController,
+                            labelText: loc.full_name,
+                            icon: Icons.person_outline,
+                            validator: (value) => validateName(value, context),
+                            onChanged: (value) {},
+                            focusNode: FocusNode(),
+                            riveController: riveController,
+                          ),
+                          const SizedBox(height: 16),
                           CustomFormField(
-                              controller: nameController,
-                              labelText: AppLocalizations.of(context)!.name,
-                              icon: Icons.person,
-                              validator: (value) =>
-                                  validateName(value, context),
-                              onChanged: (value) {
-                                nameFocus();
-                                riveController?.updateLookNumber(value.length);
-                              },
-                              focusNode: nameFocusNode,
-                              riveController: null),
-                          const SizedBox(height: 20),
+                            controller: _usernameController,
+                            focusNode: _usernameFocusNode,
+                            labelText: loc.username,
+                            icon: Icons.alternate_email,
+                            validator: (value) =>
+                                validateUserName(value, loginBloc, context),
+                            onChanged: (value) {},
+                            riveController: riveController,
+                          ),
+                          const SizedBox(height: 16),
                           CustomFormField(
-                              controller: emailController,
-                              labelText: AppLocalizations.of(context)!.email,
-                              icon: Icons.email,
-                              validator: (value) =>
-                                  validateEmail(value, loginBloc, context),
-                              onChanged: (value) {
-                                emailFocus();
-                                riveController?.updateLookNumber(value.length);
-                              },
-                              focusNode: emailFocusNode,
-                              riveController: null),
-                          const SizedBox(height: 20),
+                            controller: _emailController,
+                            focusNode: _emailFocusNode,
+                            labelText: loc.email,
+                            icon: Icons.email_outlined,
+                            onChanged: (value) {
+                              riveController.updateLookNumber(value.length);
+                            },
+                            validator: (value) =>
+                                validateEmail(value, loginBloc, context),
+                            riveController: riveController,
+                          ),
+                          const SizedBox(height: 16),
                           CustomFormField(
-                            controller: passwordController,
-                            labelText: AppLocalizations.of(context)!.password,
-                            icon: Icons.lock,
+                            controller: _passwordController,
+                            focusNode: _passwordFocusNode,
+                            labelText: loc.password,
+                            icon: Icons.lock_outline,
+                            obscureText: !isPasswordVisible,
+                            sufixIconButton: IconButton(
+                              icon: Icon(
+                                isPasswordVisible
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                color: Colors.white70,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  isPasswordVisible = !isPasswordVisible;
+                                  riveController
+                                      .toggleUnHide(isPasswordVisible);
+                                });
+                              },
+                            ),
                             validator: (value) =>
                                 validatePassword(value, context),
-                            obscureText: !_passwordVisible,
-                            focusNode: passwordFocusNode,
-                            onChanged: (String value) {},
-                            riveController: null,
-                            sufixIconButton: IconButton(
-                              icon: Icon(
-                                _passwordVisible
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _passwordVisible = !_passwordVisible;
-                                  riveController!
-                                      .toggleUnHide(_passwordVisible);
-                                });
-                              },
-                            ),
+                            onChanged: (value) {},
+                            riveController: riveController,
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 16),
                           CustomFormField(
-                            controller: confirmPasswordController,
-                            labelText: AppLocalizations.of(context)!
-                                .confirmation_password,
-                            icon: Icons.lock,
-                            validator: (value) => validateConfirmPassword(
-                                value, passwordController, context),
-                            obscureText: !_passwordConfirmVisible,
-                            focusNode: confirmPasswordFocusNode,
-                            onChanged: (String value) {},
-                            riveController: null,
+                            controller: _confirmPasswordController,
+                            focusNode: _confirmPasswordFocusNode,
+                            labelText: loc.confirmation_password,
+                            icon: Icons.lock_clock_outlined,
+                            obscureText: !isConfirmPasswordVisible,
                             sufixIconButton: IconButton(
                               icon: Icon(
-                                _passwordConfirmVisible
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
+                                isConfirmPasswordVisible
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                color: Colors.white70,
                               ),
                               onPressed: () {
                                 setState(() {
-                                  _passwordConfirmVisible =
-                                      !_passwordConfirmVisible;
-                                  riveController!
-                                      .toggleUnHide(_passwordConfirmVisible);
+                                  isConfirmPasswordVisible =
+                                      !isConfirmPasswordVisible;
                                 });
                               },
                             ),
+                            validator: (value) => validateConfirmPassword(
+                                value, _passwordController, context,),
+                            onChanged: (value) {},
+                            riveController: riveController,
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 32),
+                          ButtonRegister(
+                            formKey: _formKey,
+                            emailController: _emailController,
+                            passwordController: _passwordController,
+                            nameController: _nameController,
+                            userNameController: _usernameController,
+                          ),
+                          const SizedBox(height: 24),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Expanded(
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    context.go('/login');
-                                  },
-                                  style: AppTheme.elevatedButtonCancelStyle,
-                                  child: Text(
-                                      AppLocalizations.of(context)!.cancel,
-                                      style: AppTheme.buttonStyle),
+                              Text(
+                                loc.already_have_account,
+                                style: const TextStyle(color: Colors.white70),
+                              ),
+                              TextButton(
+                                onPressed: () => context.go('/login'),
+                                child: Text(
+                                  loc.login,
+                                  style: const TextStyle(
+                                    color: Colors.blueAccent,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
-                              const SizedBox(width: 20),
-                              Expanded(
-                                child: ButtonRegister(
-                                    formKey: formKey,
-                                    emailController: emailController,
-                                    passwordController: passwordController,
-                                    nameController: nameController,
-                                    userNameController: userNameController),
-                              )
                             ],
                           ),
                         ],
                       ),
                     ),
-                  ]),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),

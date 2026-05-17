@@ -45,21 +45,26 @@ Widget buildInputField({
         validator: validator,
         style: InputDecoration(
           filled: true,
-          fillColor: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
+          fillColor:
+              theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide.none,
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: theme.colorScheme.primary, width: 1.5),
+            borderSide:
+                BorderSide(color: theme.colorScheme.primary, width: 1.5),
           ),
           contentPadding:
               const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-          prefixIcon:
-              Icon(icon, color: theme.colorScheme.primary.withOpacity(0.8)),
-          labelStyle: theme.textTheme.bodyMedium
-              ?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6)),
+          prefixIcon: Icon(
+            icon,
+            color: theme.colorScheme.primary.withValues(alpha: 0.8),
+          ),
+          labelStyle: theme.textTheme.bodyMedium?.copyWith(
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+          ),
           label: Text(label),
         ),
       ),

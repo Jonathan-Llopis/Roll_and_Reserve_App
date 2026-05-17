@@ -15,6 +15,7 @@ class DefaultScaffold extends StatelessWidget {
   });
 
   @override
+
   /// Builds a Scaffold with the given [appBar], [body], [floatingActionButton],
   /// and [bottomNavigationBar].
   ///
@@ -25,10 +26,9 @@ class DefaultScaffold extends StatelessWidget {
     return Scaffold(
       appBar: appBar,
       body: body,
-      floatingActionButton:
-          floatingActionButton,
+      floatingActionButton: floatingActionButton,
       bottomNavigationBar: bottomNavigationBar,
-      endDrawer:  DrawerMain(appBar: appBar),
+      endDrawer: DrawerMain(appBar: appBar),
     );
   }
 }

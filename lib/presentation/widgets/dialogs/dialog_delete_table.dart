@@ -11,11 +11,12 @@ class DialogoDeleteTable extends StatelessWidget {
   final int idTable;
   final int idShop;
   final TableBloc tableBloc;
-  const DialogoDeleteTable(
-      {super.key,
-      required this.idTable,
-      required this.idShop,
-      required this.tableBloc});
+  const DialogoDeleteTable({
+    super.key,
+    required this.idTable,
+    required this.idShop,
+    required this.tableBloc,
+  });
 
   @override
 
@@ -26,44 +27,48 @@ class DialogoDeleteTable extends StatelessWidget {
   /// If the user accepts, the table is deleted and the dialog is closed.
   /// The user is returned to the shop table list.
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
-      return AlertDialog(
-        title: Text(AppLocalizations.of(context)!.delete_table,
-            style: TextStyle(
+    return BlocBuilder<LoginBloc, LoginState>(
+      builder: (context, state) {
+        return AlertDialog(
+          title: Text(
+            AppLocalizations.of(context)!.delete_table,
+            style: const TextStyle(
               color: Color.fromARGB(255, 0, 0, 0),
               fontSize: 30,
-            )),
-        content: Text(
-          AppLocalizations.of(context)!.confirm_delete_table,
-          style: TextStyle(
-            fontSize: 18,
-            color: Color.fromARGB(255, 0, 0, 0),
+            ),
           ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            style: AppTheme.textButtonCancelStyle,
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text(AppLocalizations.of(context)!.cancel),
+          content: Text(
+            AppLocalizations.of(context)!.confirm_delete_table,
+            style: const TextStyle(
+              fontSize: 18,
+              color: Color.fromARGB(255, 0, 0, 0),
+            ),
           ),
-          TextButton(
-            style: AppTheme.textButtonAcceptStyle,
-            onPressed: () {
-              tableBloc.add(
-                DeleteTableEvent(
-                  idTable: idTable,
-                  idShop: idShop,
-                ),
-              );
-              Navigator.of(context).pop();
-              Navigator.of(context).pop();
-            },
-            child: Text(AppLocalizations.of(context)!.accept),
-          ),
-        ],
-      );
-    });
+          actions: <Widget>[
+            TextButton(
+              style: AppTheme.textButtonCancelStyle,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text(AppLocalizations.of(context)!.cancel),
+            ),
+            TextButton(
+              style: AppTheme.textButtonAcceptStyle,
+              onPressed: () {
+                tableBloc.add(
+                  DeleteTableEvent(
+                    idTable: idTable,
+                    idShop: idShop,
+                  ),
+                );
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+              child: Text(AppLocalizations.of(context)!.accept),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

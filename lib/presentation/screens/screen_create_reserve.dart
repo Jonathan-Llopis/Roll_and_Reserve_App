@@ -7,13 +7,14 @@ import 'package:roll_and_reserve/presentation/widgets/screen_components/screen_b
 import 'package:roll_and_reserve/presentation/widgets/screen_components/default_scaffold.dart';
 
 class ScreenCreateReserve extends StatefulWidget {
-  const ScreenCreateReserve(
-      {super.key,
-      required this.idTable,
-      required this.idShop,
-      required this.searchDateTimeString,
-      required this.appBar,
-      this.reserve});
+  const ScreenCreateReserve({
+    super.key,
+    required this.idTable,
+    required this.idShop,
+    required this.searchDateTimeString,
+    required this.appBar,
+    this.reserve,
+  });
   final int idTable;
   final int idShop;
   final String searchDateTimeString;
@@ -26,6 +27,7 @@ class ScreenCreateReserve extends StatefulWidget {
 
 class _ScreenCreateReserveState extends State<ScreenCreateReserve> {
   @override
+
   /// Builds the UI for [ScreenCreateReserve].
   ///
   /// This uses the [ReserveBloc] to manage the state of the reserve.
@@ -34,16 +36,18 @@ class _ScreenCreateReserveState extends State<ScreenCreateReserve> {
   ///
   Widget build(BuildContext context) {
     ReserveBloc reserveBloc = context.read<ReserveBloc>();
-    DateTime searchDateTime = widget.reserve == null ?  DateFormat("dd-MM-yyyy HH:mm").parse(widget.searchDateTimeString):
-        DateFormat("dd - MM - yyyy HH:mm").parse(widget.searchDateTimeString);
+    DateTime searchDateTime = widget.reserve == null
+        ? DateFormat('dd-MM-yyyy HH:mm').parse(widget.searchDateTimeString)
+        : DateFormat('dd - MM - yyyy HH:mm').parse(widget.searchDateTimeString);
     return DefaultScaffold(
-        appBar: widget.appBar,
-        body: BodyCreateReserve(
-          idTable: widget.idTable,
-          reserveBloc: reserveBloc,
-          idShop: widget.idShop,
-          searchDateTime: searchDateTime,
-          reserve: widget.reserve,
-        ));
+      appBar: widget.appBar,
+      body: BodyCreateReserve(
+        idTable: widget.idTable,
+        reserveBloc: reserveBloc,
+        idShop: widget.idShop,
+        searchDateTime: searchDateTime,
+        reserve: widget.reserve,
+      ),
+    );
   }
 }

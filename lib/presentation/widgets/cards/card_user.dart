@@ -51,7 +51,7 @@ class CardUser extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12.0),
               side: BorderSide(
-                color: theme.dividerColor.withOpacity(0.1),
+                color: theme.dividerColor.withValues(alpha: 0.1),
                 width: 1,
               ),
             ),
@@ -89,7 +89,7 @@ class CardUser extends StatelessWidget {
                           loginBloc.state.user!.role == 0
                               ? _buildRoleIndicator(context)
                               : _buildStatusIndicator(context),
-                        ]
+                        ],
                       ],
                     ),
                   ),
@@ -134,21 +134,21 @@ class CardUser extends StatelessWidget {
       return Theme.of(context)
           .colorScheme
           .surfaceContainerHighest
-          .withOpacity(0.8);
+          .withValues(alpha: 0.8);
     }
     return user.reserveConfirmation ?? false
-        ? const Color.fromARGB(255, 173, 255, 173).withOpacity(0.5)
-        : Theme.of(context).colorScheme.errorContainer.withOpacity(0.5);
+        ? const Color.fromARGB(255, 173, 255, 173).withValues(alpha: 0.5)
+        : Theme.of(context).colorScheme.errorContainer.withValues(alpha: 0.5);
   }
 
   Color _getRoleColor(BuildContext context) {
     switch (user.role) {
       case 0:
-        return const Color(0xFFFFC1C1).withOpacity(0.5); // Pastel red
+        return const Color(0xFFFFC1C1).withValues(alpha: 0.5); // Pastel red
       case 1:
-        return const Color(0xFFADD8E6).withOpacity(0.5); // Pastel blue
+        return const Color(0xFFADD8E6).withValues(alpha: 0.5); // Pastel blue
       default:
-        return const Color(0xFFB2F2BB).withOpacity(0.5); // Pastel green
+        return const Color(0xFFB2F2BB).withValues(alpha: 0.5); // Pastel green
     }
   }
 
@@ -162,8 +162,8 @@ class CardUser extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: user.reserveConfirmation!
-            ? Color(0xFF00695C).withOpacity(0.1)
-            : Theme.of(context).colorScheme.error.withOpacity(0.1),
+            ? const Color(0xFF00695C).withValues(alpha: 0.1)
+            : Theme.of(context).colorScheme.error.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
@@ -172,7 +172,7 @@ class CardUser extends StatelessWidget {
             : AppLocalizations.of(context)!.pending,
         style: Theme.of(context).textTheme.labelSmall?.copyWith(
               color: user.reserveConfirmation!
-                  ? Color(0xFF00695C)
+                  ? const Color(0xFF00695C)
                   : Theme.of(context).colorScheme.error,
               fontWeight: FontWeight.w500,
             ),
@@ -193,13 +193,13 @@ class CardUser extends StatelessWidget {
     Color roleColor;
     switch (user.role) {
       case 0: // Admin
-        roleColor = Colors.red.withOpacity(0.1);
+        roleColor = Colors.red.withValues(alpha: 0.1);
         break;
       case 1: // Owner
-        roleColor = Colors.blue.withOpacity(0.1);
+        roleColor = Colors.blue.withValues(alpha: 0.1);
         break;
       default: // User
-        roleColor = Colors.green.withOpacity(0.1);
+        roleColor = Colors.green.withValues(alpha: 0.1);
     }
 
     return Container(

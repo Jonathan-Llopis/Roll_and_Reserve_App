@@ -9,8 +9,11 @@ class DialogConfirmReserve extends StatelessWidget {
   final String mensaje;
   final bool error;
 
-  const DialogConfirmReserve(
-      {super.key, required this.mensaje, required this.error});
+  const DialogConfirmReserve({
+    super.key,
+    required this.mensaje,
+    required this.error,
+  });
 
   @override
 
@@ -24,33 +27,36 @@ class DialogConfirmReserve extends StatelessWidget {
   ///
   /// When the accept button is pressed, the dialog is popped.
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
-      return AlertDialog(
-        title: Text(
+    return BlocBuilder<LoginBloc, LoginState>(
+      builder: (context, state) {
+        return AlertDialog(
+          title: Text(
             error
                 ? AppLocalizations.of(context)!.error
                 : AppLocalizations.of(context)!.reserva_confirmada,
             style: TextStyle(
-              color: error ? Colors.red : Color(0xFF00695C),
+              color: error ? Colors.red : const Color(0xFF00695C),
               fontSize: 30,
-            )),
-        content: Text(
-          mensaje,
-          style: TextStyle(
-            fontSize: 18,
-            color: Color.fromARGB(255, 0, 0, 0),
+            ),
           ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            style: AppTheme.textButtonAcceptStyle,
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text(AppLocalizations.of(context)!.accept),
+          content: Text(
+            mensaje,
+            style: const TextStyle(
+              fontSize: 18,
+              color: Color.fromARGB(255, 0, 0, 0),
+            ),
           ),
-        ],
-      );
-    });
+          actions: <Widget>[
+            TextButton(
+              style: AppTheme.textButtonAcceptStyle,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(AppLocalizations.of(context)!.accept),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

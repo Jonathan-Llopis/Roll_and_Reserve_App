@@ -16,7 +16,7 @@ class DialogEmailSent extends StatelessWidget {
     return AlertDialog(
       content: Text(
         AppLocalizations.of(context)!.email_sent_reset_password,
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 18,
           color: Colors.black,
         ),

@@ -18,6 +18,7 @@ class ScreenReviewUser extends StatefulWidget {
 
 class _ScreenReviewUserState extends State<ScreenReviewUser> {
   @override
+
   /// Gets reviews of the user when the widget is initialized.
   ///
   /// Sends [GetReviewByUserEvent] to [ReviewBloc] to get reviews of the user.
@@ -53,7 +54,9 @@ class _ScreenReviewUserState extends State<ScreenReviewUser> {
             context: context,
             contentBuilder: (state) {
               return BodyReviewUser(
-                  idUser: loginBloc.state.user!.id, reviews: state.reviews!);
+                idUser: loginBloc.state.user!.id,
+                reviews: state.reviews!,
+              );
             },
           );
         },

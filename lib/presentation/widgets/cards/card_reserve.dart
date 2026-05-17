@@ -58,106 +58,122 @@ class _CardReserveState extends State<CardReserve> {
     ShopBloc shopBloc = BlocProvider.of<ShopBloc>(context);
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context)!;
-    return BlocBuilder<ShopBloc, ShopState>(builder: (context, state) {
-      return buildContentSkeleton<ShopState>(
-        state: state,
-        isLoading: (state) => state.isLoading,
-        errorMessage: (state) => state.errorMessage,
-        hasData: (state) => state.shops != null,
-        context: context,
-        contentBuilder: (state) {
-          return BlocBuilder<TableBloc, TableState>(
-            builder: (context, state) {
-              return buildContentSkeleton<TableState>(
-                state: state,
-                isLoading: (state) => state.isLoading,
-                errorMessage: (state) => state.errorMessage,
-                hasData: (state) =>
-                    state.tables != null || state.tablesFromShop != null,
-                context: context,
-                contentBuilder: (state) {
-                  late TableEntity table;
-                  final shop = shopBloc.state.shops!
-                      .firstWhere((shop) => shop.id == widget.idShop);
-                  if (state.tables != null) {
-                    table = state.tables!.firstWhere(
-                        (table) => table.id == widget.reserve.tableId);
-                  } else {
-                    table = state.tablesFromShop!.firstWhere(
-                        (table) => table.id == widget.reserve.tableId);
-                  }
+    return BlocBuilder<ShopBloc, ShopState>(
+      builder: (context, state) {
+        return buildContentSkeleton<ShopState>(
+          state: state,
+          isLoading: (state) => state.isLoading,
+          errorMessage: (state) => state.errorMessage,
+          hasData: (state) => state.shops != null,
+          context: context,
+          contentBuilder: (state) {
+            return BlocBuilder<TableBloc, TableState>(
+              builder: (context, state) {
+                return buildContentSkeleton<TableState>(
+                  state: state,
+                  isLoading: (state) => state.isLoading,
+                  errorMessage: (state) => state.errorMessage,
+                  hasData: (state) =>
+                      state.tables != null || state.tablesFromShop != null,
+                  context: context,
+                  contentBuilder: (state) {
+                    late TableEntity table;
+                    final shop = shopBloc.state.shops!
+                        .firstWhere((shop) => shop.id == widget.idShop);
+                    if (state.tables != null) {
+                      table = state.tables!.firstWhere(
+                        (table) => table.id == widget.reserve.tableId,
+                      );
+                    } else {
+                      table = state.tablesFromShop!.firstWhere(
+                        (table) => table.id == widget.reserve.tableId,
+                      );
+                    }
 
-                  final game = reserveBloc.state.games!
-                      .firstWhere((game) => game.id == widget.reserve.gameId);
-                  return Padding(
+                    final game = reserveBloc.state.games!
+                        .firstWhere((game) => game.id == widget.reserve.gameId);
+                    return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Card(
-                          elevation: 4,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                            side: BorderSide(
-                              color: theme.dividerColor.withOpacity(0.2),
-                            ),
+                        elevation: 4,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          side: BorderSide(
+                            color: theme.dividerColor.withValues(alpha: 0.2),
                           ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: widget.reserve.isEvent
-                                  ? theme.colorScheme.tertiaryContainer
-                                  : theme.colorScheme.secondaryContainer,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Flexible(
-                                        child: Text(
-                                          widget.reserve.isEvent
-                                              ? loc.event_day_date(
-                                                  widget.reserve.dayDate)
-                                              : loc.reserve_day(
-                                                  widget.reserve.dayDate),
-                                          style: theme.textTheme.titleMedium
-                                              ?.copyWith(
-                                            fontWeight: FontWeight.w600,
-                                            color: theme.colorScheme.onSurface,
-                                          ),
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: widget.reserve.isEvent
+                                ? theme.colorScheme.tertiaryContainer
+                                : theme.colorScheme.secondaryContainer,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Flexible(
+                                      child: Text(
+                                        widget.reserve.isEvent
+                                            ? loc.event_day_date(
+                                                widget.reserve.dayDate,
+                                              )
+                                            : loc.reserve_day(
+                                                widget.reserve.dayDate,
+                                              ),
+                                        style: theme.textTheme.titleMedium
+                                            ?.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          color: theme.colorScheme.onSurface,
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 12),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 12),
+                                _buildInfoRow(
+                                  Icons.store,
+                                  loc.shop_name(shop.name),
+                                ),
+                                if (!widget.reserve.isEvent)
                                   _buildInfoRow(
-                                      Icons.store, loc.shop_name(shop.name)),
-                                  if (!widget.reserve.isEvent)
-                                    _buildInfoRow(Icons.table_restaurant,
-                                        loc.table_number(table.numberTable)),
-                                  _buildInfoRow(Icons.sports_esports,
-                                      loc.game_description(game.description)),
-                                  if (!widget.reserve.isEvent)
-                                    _buildInfoRow(
-                                        Icons.people_alt,
-                                        loc.total_players_at_table(
-                                            widget.reserve.usersInTables,
-                                            widget.reserve.freePlaces)),
-                                  const SizedBox(height: 12),
-                                  _buildTimeSection(theme, loc),
-                                ],
-                              ),
+                                    Icons.table_restaurant,
+                                    loc.table_number(table.numberTable),
+                                  ),
+                                _buildInfoRow(
+                                  Icons.sports_esports,
+                                  loc.game_description(game.description),
+                                ),
+                                if (!widget.reserve.isEvent)
+                                  _buildInfoRow(
+                                    Icons.people_alt,
+                                    loc.total_players_at_table(
+                                      widget.reserve.usersInTables,
+                                      widget.reserve.freePlaces,
+                                    ),
+                                  ),
+                                const SizedBox(height: 12),
+                                _buildTimeSection(theme, loc),
+                              ],
                             ),
-                          )));
-                },
-              );
-            },
-          );
-        },
-      );
-    });
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            );
+          },
+        );
+      },
+    );
   }
 
   /// A horizontal row with an [Icon] and a [Text] widget.
@@ -218,7 +234,10 @@ class _CardReserveState extends State<CardReserve> {
         const SizedBox(width: 5.0),
         Expanded(
           child: buildTimeChip(
-              Icons.timer_off, loc.end_time, widget.reserve.horaFin),
+            Icons.timer_off,
+            loc.end_time,
+            widget.reserve.horaFin,
+          ),
         ),
       ],
     );

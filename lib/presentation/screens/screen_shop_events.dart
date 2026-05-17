@@ -15,8 +15,11 @@ class ScreenShopEvents extends StatefulWidget {
   final int idShop;
 
   final PreferredSizeWidget appBar;
-  const ScreenShopEvents(
-      {super.key, required this.idShop, required this.appBar});
+  const ScreenShopEvents({
+    super.key,
+    required this.idShop,
+    required this.appBar,
+  });
 
   @override
   State<ScreenShopEvents> createState() => _ScreenShopEventsState();
@@ -24,6 +27,7 @@ class ScreenShopEvents extends StatefulWidget {
 
 class _ScreenShopEventsState extends State<ScreenShopEvents> {
   @override
+
   /// Called when the widget is inserted into the tree.
   ///
   /// This method is responsible for requesting the events of the shop with the given
@@ -39,6 +43,7 @@ class _ScreenShopEventsState extends State<ScreenShopEvents> {
   }
 
   @override
+
   /// Builds the UI for [ScreenShopEvents].
   ///
   /// This uses the [ReserveBloc] to manage the state of the events of the shop.
@@ -55,8 +60,9 @@ class _ScreenShopEventsState extends State<ScreenShopEvents> {
   /// Otherwise, the floating action button is null.
   Widget build(BuildContext context) {
     LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
-    return BlocBuilder<ReserveBloc, ReserveState>(builder: (context, state) {
-      return buildContent<ReserveState>(
+    return BlocBuilder<ReserveBloc, ReserveState>(
+      builder: (context, state) {
+        return buildContent<ReserveState>(
           state: state,
           isLoading: (state) => state.isLoading,
           errorMessage: (state) => state.errorMessage,
@@ -64,21 +70,23 @@ class _ScreenShopEventsState extends State<ScreenShopEvents> {
           context: context,
           contentBuilder: (state) {
             return DefaultScaffold(
-                appBar: widget.appBar,
-                body: BodyEvents(
-                  events: state.eventsShop!,
-                  idShop: widget.idShop,
-                ),
-                floatingActionButton: loginBloc.state.user!.role == 1
-                    ? FloatingActionButton(
-                        onPressed: () {
-                          context
-                              .go('/user/events/${widget.idShop}/createEvent');
-                        },
-                        child: Icon(Icons.add),
-                      )
-                    : null);
-          });
-    });
+              appBar: widget.appBar,
+              body: BodyEvents(
+                events: state.eventsShop!,
+                idShop: widget.idShop,
+              ),
+              floatingActionButton: loginBloc.state.user!.role == 1
+                  ? FloatingActionButton(
+                      onPressed: () {
+                        context.go('/user/events/${widget.idShop}/createEvent');
+                      },
+                      child: const Icon(Icons.add),
+                    )
+                  : null,
+            );
+          },
+        );
+      },
+    );
   }
 }

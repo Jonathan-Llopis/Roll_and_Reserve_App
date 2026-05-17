@@ -49,7 +49,7 @@ class _TableSelectionCheckboxState extends State<TableSelectionCheckbox> {
           child: Text(
             AppLocalizations.of(context)!.select_tables_to_occupy,
             style: theme.textTheme.titleSmall?.copyWith(
-              color: colorScheme.onSurface.withOpacity(0.8),
+              color: colorScheme.onSurface.withValues(alpha: 0.8),
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -76,18 +76,21 @@ class _TableSelectionCheckboxState extends State<TableSelectionCheckbox> {
                 width: 160.0,
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? colorScheme.primary.withOpacity(0.1)
-                      : colorScheme.surfaceContainerHighest.withOpacity(0.3),
+                      ? colorScheme.primary.withValues(alpha: 0.1)
+                      : colorScheme.surfaceContainerHighest
+                          .withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(12.0),
                   border: Border.all(
                     color: isSelected
                         ? colorScheme.primary
-                        : colorScheme.outline.withOpacity(0.2),
+                        : colorScheme.outline.withValues(alpha: 0.2),
                     width: 1.5,
                   ),
                 ),
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0, vertical: 12.0),
+                  horizontal: 16.0,
+                  vertical: 12.0,
+                ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -107,7 +110,7 @@ class _TableSelectionCheckboxState extends State<TableSelectionCheckbox> {
                         borderRadius: BorderRadius.circular(6.0),
                       ),
                       side: BorderSide(
-                        color: colorScheme.outline.withOpacity(0.4),
+                        color: colorScheme.outline.withValues(alpha: 0.4),
                         width: 1.5,
                       ),
                       checkColor: colorScheme.onPrimary,

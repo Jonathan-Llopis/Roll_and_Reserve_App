@@ -53,14 +53,16 @@ class InformationEvent extends StatelessWidget {
         children: [
           Text(
             reserve.isEvent
-                ? AppLocalizations.of(context)!.game_event(reserveBloc
-                    .state.games!
-                    .firstWhere((element) => element.id == reserve.gameId)
-                    .description)
-                : AppLocalizations.of(context)!.active_game(reserveBloc
-                    .state.games!
-                    .firstWhere((element) => element.id == reserve.gameId)
-                    .description),
+                ? AppLocalizations.of(context)!.game_event(
+                    reserveBloc.state.games!
+                        .firstWhere((element) => element.id == reserve.gameId)
+                        .description,
+                  )
+                : AppLocalizations.of(context)!.active_game(
+                    reserveBloc.state.games!
+                        .firstWhere((element) => element.id == reserve.gameId)
+                        .description,
+                  ),
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 16),
@@ -72,12 +74,18 @@ class InformationEvent extends StatelessWidget {
                 children: [
                   Text(
                     AppLocalizations.of(context)!.schedule,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   Text(
                     AppLocalizations.of(context)!.day_schedule(
-                        reserve.dayDate, reserve.horaInicio, reserve.horaFin),
-                    style: TextStyle(color: Colors.black54),
+                      reserve.dayDate,
+                      reserve.horaInicio,
+                      reserve.horaFin,
+                    ),
+                    style: const TextStyle(color: Colors.black54),
                   ),
                 ],
               ),
@@ -93,7 +101,7 @@ class InformationEvent extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             AppLocalizations.of(context)!.players,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Expanded(
@@ -110,7 +118,7 @@ class InformationEvent extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             AppLocalizations.of(context)!.additional_information,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Container(
@@ -121,7 +129,7 @@ class InformationEvent extends StatelessWidget {
             ),
             child: Text(
               reserve.description,
-              style: TextStyle(color: Colors.black54),
+              style: const TextStyle(color: Colors.black54),
             ),
           ),
           const SizedBox(height: 16),
@@ -137,23 +145,25 @@ class InformationEvent extends StatelessWidget {
                         if (reserve.users!
                             .map((user) => user.id)
                             .contains(loginBloc.state.user!.id)) {
-                          context
-                              .read<ReserveBloc>()
-                              .add(DeleteUserOfReserveEvent(
-                                idReserve: reserve.id,
-                                idUser: loginBloc.state.user!.id,
-                                idTable: reserve.tableId,
-                                dateReserve: dateReserve,
-                              ));
+                          context.read<ReserveBloc>().add(
+                                DeleteUserOfReserveEvent(
+                                  idReserve: reserve.id,
+                                  idUser: loginBloc.state.user!.id,
+                                  idTable: reserve.tableId,
+                                  dateReserve: dateReserve,
+                                ),
+                              );
                         } else {
                           if (reserve.users!.length < reserve.freePlaces) {
                             context.read<ReserveBloc>().add(
-                                AddUserToReserveEvent(
+                                  AddUserToReserveEvent(
                                     idReserve: reserve.id,
                                     idUser: loginBloc.state.user!.id,
                                     idTable: reserve.tableId,
                                     dateReserve: dateReserve,
-                                    searchDateTime: DateTime.now()));
+                                    searchDateTime: DateTime.now(),
+                                  ),
+                                );
                           }
                         }
                       },

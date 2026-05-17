@@ -58,14 +58,16 @@ class InformationReserve extends StatelessWidget {
         children: [
           Text(
             reserve.isEvent
-                ? AppLocalizations.of(context)!.game_event(reserveBloc
-                    .state.games!
-                    .firstWhere((element) => element.id == reserve.gameId)
-                    .description)
-                : AppLocalizations.of(context)!.active_game(reserveBloc
-                    .state.games!
-                    .firstWhere((element) => element.id == reserve.gameId)
-                    .description),
+                ? AppLocalizations.of(context)!.game_event(
+                    reserveBloc.state.games!
+                        .firstWhere((element) => element.id == reserve.gameId)
+                        .description,
+                  )
+                : AppLocalizations.of(context)!.active_game(
+                    reserveBloc.state.games!
+                        .firstWhere((element) => element.id == reserve.gameId)
+                        .description,
+                  ),
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 16),
@@ -77,25 +79,32 @@ class InformationReserve extends StatelessWidget {
                 children: [
                   Text(
                     AppLocalizations.of(context)!.schedule,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   Text(
                     AppLocalizations.of(context)!.day_schedule(
-                        reserve.dayDate, reserve.horaInicio, reserve.horaFin),
-                    style: TextStyle(color: Colors.black54),
+                      reserve.dayDate,
+                      reserve.horaInicio,
+                      reserve.horaFin,
+                    ),
+                    style: const TextStyle(color: Colors.black54),
                   ),
                 ],
               ),
               reserve.isEvent &&
                       DateFormat('dd - MM - yyyy HH:mm')
                           .parse('${reserve.dayDate} ${reserve.horaFin}')
-                          .subtract(Duration(minutes: 0))
+                          .subtract(const Duration(minutes: 0))
                           .isAfter(DateTime.now())
                   ? Container()
                   : Chip(
                       label: Text(
                         AppLocalizations.of(context)!.free_places(
-                            reserve.freePlaces - reserve.usersInTables),
+                          reserve.freePlaces - reserve.usersInTables,
+                        ),
                       ),
                       backgroundColor: Colors.blue.shade50,
                     ),
@@ -106,7 +115,10 @@ class InformationReserve extends StatelessWidget {
               ? Container()
               : Text(
                   AppLocalizations.of(context)!.players,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
           const SizedBox(height: 8),
           reserve.isEvent
@@ -125,7 +137,7 @@ class InformationReserve extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             AppLocalizations.of(context)!.additional_information,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Container(
@@ -136,7 +148,7 @@ class InformationReserve extends StatelessWidget {
             ),
             child: Text(
               reserve.description,
-              style: TextStyle(color: Colors.black54),
+              style: const TextStyle(color: Colors.black54),
             ),
           ),
           const SizedBox(height: 16),
@@ -153,23 +165,25 @@ class InformationReserve extends StatelessWidget {
                         if (reserve.users!
                             .map((user) => user.id)
                             .contains(loginBloc.state.user!.id)) {
-                          context
-                              .read<ReserveBloc>()
-                              .add(DeleteUserOfReserveEvent(
-                                idReserve: reserve.id,
-                                idUser: loginBloc.state.user!.id,
-                                idTable: reserve.tableId,
-                                dateReserve: dateReserve,
-                              ));
+                          context.read<ReserveBloc>().add(
+                                DeleteUserOfReserveEvent(
+                                  idReserve: reserve.id,
+                                  idUser: loginBloc.state.user!.id,
+                                  idTable: reserve.tableId,
+                                  dateReserve: dateReserve,
+                                ),
+                              );
                         } else {
                           if (reserve.users!.length < reserve.freePlaces) {
                             context.read<ReserveBloc>().add(
-                                AddUserToReserveEvent(
+                                  AddUserToReserveEvent(
                                     idReserve: reserve.id,
                                     idUser: loginBloc.state.user!.id,
                                     idTable: reserve.tableId,
                                     dateReserve: dateReserve,
-                                    searchDateTime: dateReserve));
+                                    searchDateTime: dateReserve,
+                                  ),
+                                );
                           }
                         }
                       },
@@ -192,9 +206,10 @@ class InformationReserve extends StatelessWidget {
                       ? ElevatedButton.icon(
                           onPressed: () {
                             context.go(
-                                '/user/events/$idShop/eventReserve/${reserve.id}');
+                              '/user/events/$idShop/eventReserve/${reserve.id}',
+                            );
                           },
-                          icon: Icon(Icons.event),
+                          icon: const Icon(Icons.event),
                           label:
                               Text(AppLocalizations.of(context)!.go_to_events),
                         )

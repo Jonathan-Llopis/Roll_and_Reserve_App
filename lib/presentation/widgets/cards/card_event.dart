@@ -55,89 +55,100 @@ class _CardEventState extends State<CardEvent> {
   Widget build(BuildContext context) {
     ReserveBloc reserveBloc = BlocProvider.of<ReserveBloc>(context);
     ShopBloc shopBloc = BlocProvider.of<ShopBloc>(context);
-    return BlocBuilder<ShopBloc, ShopState>(builder: (context, state) {
-      return buildContentSkeleton<ShopState>(
-        state: state,
-        isLoading: (state) => state.isLoading,
-        errorMessage: (state) => state.errorMessage,
-        hasData: (state) => state.shops != null,
-        context: context,
-        contentBuilder: (state) {
-          return BlocBuilder<TableBloc, TableState>(
-            builder: (context, state) {
-              return buildContentSkeleton<TableState>(
-                state: state,
-                isLoading: (state) => state.isLoading,
-                errorMessage: (state) => state.errorMessage,
-                hasData: (state) => state.tables != null,
-                context: context,
-                contentBuilder: (state) {
-                  final shop = shopBloc.state.shops!
-                      .firstWhere((shop) => shop.id == widget.idShop);
-                  return Card(
-                    elevation: 6,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    margin: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            AppLocalizations.of(context)!
-                                .reserve_day(widget.reserve.dayDate),
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
-                                ?.copyWith(fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            AppLocalizations.of(context)!.shop_name(shop.name),
-                            style: const TextStyle(
-                                fontSize: 14, color: Colors.black87),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            AppLocalizations.of(context)!.game_event(reserveBloc
-                                .state.games!
-                                .firstWhere(
-                                    (game) => game.id == widget.reserve.gameId)
-                                .description),
-                            style: const TextStyle(
-                                fontSize: 14, color: Colors.black87),
-                          ),
-                          const SizedBox(height: 6),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: buildTimeChip(
-                                  Icons.access_time_filled,
-                                  AppLocalizations.of(context)!.start_time,
-                                  widget.reserve.horaInicio,
-                                ),
+    return BlocBuilder<ShopBloc, ShopState>(
+      builder: (context, state) {
+        return buildContentSkeleton<ShopState>(
+          state: state,
+          isLoading: (state) => state.isLoading,
+          errorMessage: (state) => state.errorMessage,
+          hasData: (state) => state.shops != null,
+          context: context,
+          contentBuilder: (state) {
+            return BlocBuilder<TableBloc, TableState>(
+              builder: (context, state) {
+                return buildContentSkeleton<TableState>(
+                  state: state,
+                  isLoading: (state) => state.isLoading,
+                  errorMessage: (state) => state.errorMessage,
+                  hasData: (state) => state.tables != null,
+                  context: context,
+                  contentBuilder: (state) {
+                    final shop = shopBloc.state.shops!
+                        .firstWhere((shop) => shop.id == widget.idShop);
+                    return Card(
+                      elevation: 6,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      margin: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              AppLocalizations.of(context)!
+                                  .reserve_day(widget.reserve.dayDate),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              AppLocalizations.of(context)!
+                                  .shop_name(shop.name),
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.black87,
                               ),
-                              const SizedBox(width: 5.0),
-                              Expanded(
-                                child: buildTimeChip(
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              AppLocalizations.of(context)!.game_event(
+                                reserveBloc.state.games!
+                                    .firstWhere(
+                                      (game) =>
+                                          game.id == widget.reserve.gameId,
+                                    )
+                                    .description,
+                              ),
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: buildTimeChip(
+                                    Icons.access_time_filled,
+                                    AppLocalizations.of(context)!.start_time,
+                                    widget.reserve.horaInicio,
+                                  ),
+                                ),
+                                const SizedBox(width: 5.0),
+                                Expanded(
+                                  child: buildTimeChip(
                                     Icons.timer_off,
                                     AppLocalizations.of(context)!.end_time,
-                                    widget.reserve.horaFin),
-                              ),
-                            ],
-                          )
-                        ],
+                                    widget.reserve.horaFin,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
-              );
-            },
-          );
-        },
-      );
-    });
+                    );
+                  },
+                );
+              },
+            );
+          },
+        );
+      },
+    );
   }
 }

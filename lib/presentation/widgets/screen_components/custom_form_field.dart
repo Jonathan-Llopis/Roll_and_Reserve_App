@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:roll_and_reserve/presentation/functions/controller_rive_animation.dart';
 
-
 class CustomFormField extends StatefulWidget {
   final TextEditingController controller;
   final String labelText;
@@ -10,7 +9,7 @@ class CustomFormField extends StatefulWidget {
   final bool obscureText;
   final ValueChanged<String>? onChanged;
   final FocusNode focusNode;
-  final RiveAnimationController? riveController;
+  final DragonRiveController? riveController;
   final IconButton? sufixIconButton;
 
   const CustomFormField({
@@ -23,7 +22,7 @@ class CustomFormField extends StatefulWidget {
     required this.onChanged,
     required this.focusNode,
     required this.riveController,
-     this.sufixIconButton,
+    this.sufixIconButton,
   });
 
   @override
@@ -34,13 +33,14 @@ class _CustomFormFieldState extends State<CustomFormField> {
   final bool _passwordVisible = true;
 
   @override
-/// Builds a customizable text form field widget.
-///
-/// The form field uses the provided [focusNode], [controller], [icon], 
-/// [labelText], and optional [sufixIconButton] for its input decoration. 
-/// It supports password visibility toggle based on the [obscureText] flag 
-/// and [onChanged] callback for input changes. The [validator] function 
-/// is used for input validation.
+
+  /// Builds a customizable text form field widget.
+  ///
+  /// The form field uses the provided [focusNode], [controller], [icon],
+  /// [labelText], and optional [sufixIconButton] for its input decoration.
+  /// It supports password visibility toggle based on the [obscureText] flag
+  /// and [onChanged] callback for input changes. The [validator] function
+  /// is used for input validation.
 
   Widget build(BuildContext context) {
     return TextFormField(
@@ -53,7 +53,7 @@ class _CustomFormFieldState extends State<CustomFormField> {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        suffixIcon: widget.sufixIconButton
+        suffixIcon: widget.sufixIconButton,
       ),
       onChanged: widget.onChanged,
       validator: (value) => widget.validator(value),

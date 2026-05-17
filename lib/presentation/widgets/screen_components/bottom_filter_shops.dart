@@ -47,7 +47,7 @@ class _BottomFilterShopsState extends State<BottomFilterShops> {
     return BottomNavigationBar(
       items: [
         BottomNavigationBarItem(
-          icon: Icon(Icons.delete_outline),
+          icon: const Icon(Icons.delete_outline),
           label: AppLocalizations.of(context)!.remove_filters,
         ),
         BottomNavigationBarItem(
@@ -65,16 +65,17 @@ class _BottomFilterShopsState extends State<BottomFilterShops> {
           _isFilterApplied = false;
         } else if (index == 1) {
           showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              builder: (BuildContext context) {
-                return Padding(
-                  padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom,
-                  ),
-                  child: FilterShops(shopBloc: widget.shopBloc),
-                );
-              }).then((value) {
+            context: context,
+            isScrollControlled: true,
+            builder: (BuildContext context) {
+              return Padding(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                ),
+                child: FilterShops(shopBloc: widget.shopBloc),
+              );
+            },
+          ).then((value) {
             setState(() {
               _isFilterApplied = widget.shopBloc.state.filterShops != null;
             });

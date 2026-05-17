@@ -68,43 +68,53 @@ class _StoreMapState extends State<StoreMap> {
       return;
     }
 
-    if (latitudeController.text != "0" &&
-        longitudeController.text != "0" &&
+    if (latitudeController.text != '0' &&
+        longitudeController.text != '0' &&
         latitudeController.text.isNotEmpty &&
         longitudeController.text.isNotEmpty) {
       _currentLocation = coordinates.LatLng(
-          double.parse(latitudeController.text),
-          double.parse(longitudeController.text));
+        double.parse(latitudeController.text),
+        double.parse(longitudeController.text),
+      );
     }
 
     // Verificar si los servicios de ubicación están habilitados
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!mounted) return;
     if (!serviceEnabled) {
       // Los servicios de ubicación no están habilitados, no se puede continuar
       return Future.error(
-          AppLocalizations.of(context)!.location_service_disabled);
+        AppLocalizations.of(context)!.location_service_disabled,
+      );
     }
 
     // Verificar los permisos de ubicación
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
+      if (!mounted) return;
       if (permission == LocationPermission.denied) {
         // Los permisos están denegados, no se puede continuar
         return Future.error(
-            AppLocalizations.of(context)!.location_permission_denied);
+          AppLocalizations.of(context)!.location_permission_denied,
+        );
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
       // Los permisos están denegados permanentemente, no se puede continuar
+      if (!mounted) return;
       return Future.error(
-          AppLocalizations.of(context)!.location_permission_denied_permanently);
+        AppLocalizations.of(context)!.location_permission_denied_permanently,
+      );
     }
 
     // Obtener la posición actual del usuario
     Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.high,
+      ),
+    );
 
     _currentLocation =
         coordinates.LatLng(position.latitude, position.longitude);
@@ -148,7 +158,7 @@ class _StoreMapState extends State<StoreMap> {
                 Text(
                   AppLocalizations.of(context)!.locating_you,
                   style: theme.textTheme.bodyLarge?.copyWith(
-                    color: colors.onSurface.withOpacity(0.8),
+                    color: colors.onSurface.withValues(alpha: 0.8),
                   ),
                 ),
               ],
@@ -212,9 +222,9 @@ class _StoreMapState extends State<StoreMap> {
                           Text(
                             AppLocalizations.of(context)!.tap_marker_info,
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: colors.onSurface.withOpacity(0.6),
+                              color: colors.onSurface.withValues(alpha: 0.6),
                             ),
-                          )
+                          ),
                         ],
                       ),
                       leading: IconButton(
@@ -252,9 +262,13 @@ class _StoreMapState extends State<StoreMap> {
                                       width: 50.0,
                                       height: 50.0,
                                       point: coordinates.LatLng(
-                                          store.latitude, store.longitude),
+                                        store.latitude,
+                                        store.longitude,
+                                      ),
                                       child: MapMarker(
-                                          store: store, loginBloc: loginBloc),
+                                        store: store,
+                                        loginBloc: loginBloc,
+                                      ),
                                     ),
                                   )
                                   .toList(),
@@ -292,10 +306,12 @@ class _StoreMapState extends State<StoreMap> {
                                     icon: Icons.my_location_rounded,
                                     onPressed: () {
                                       setState(
-                                          () => _isUpdatingLocation = true);
+                                        () => _isUpdatingLocation = true,
+                                      );
                                       _getCurrentLocation(true).then((_) {
                                         setState(
-                                            () => _isUpdatingLocation = false);
+                                          () => _isUpdatingLocation = false,
+                                        );
                                       });
                                     },
                                     color: colors.tertiary,

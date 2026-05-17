@@ -9,6 +9,7 @@ class ScreenEditShop extends StatelessWidget {
   const ScreenEditShop({super.key, this.idShop, required this.appBar});
 
   @override
+
   /// Builds the DefaultScaffold widget with the appBar and
   /// BodyEditShop widgets as its body.
   ///
@@ -17,6 +18,8 @@ class ScreenEditShop extends StatelessWidget {
   ///
   Widget build(BuildContext context) {
     return DefaultScaffold(
-        appBar: appBar, body: BodyEditShop(idShop: idShop, widget: this));
+      appBar: appBar,
+      body: BodyEditShop(idShop: idShop, widget: this),
+    );
   }
 }

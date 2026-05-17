@@ -9,8 +9,11 @@ import 'package:speech_to_text/speech_to_text.dart';
 import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class InputText extends StatefulWidget {
-  const InputText(
-      {super.key, required this.focusNode, required this.isRolPlay});
+  const InputText({
+    super.key,
+    required this.focusNode,
+    required this.isRolPlay,
+  });
   final bool isRolPlay;
   final FocusNode focusNode;
 
@@ -45,7 +48,7 @@ class _InputTextState extends State<InputText> {
     if (!status.isGranted) {
       final result = await Permission.microphone.request();
       if (result.isDenied) {
-        print('Permiso del micrófono denegado permanentemente');
+        debugPrint('Permiso del micrófono denegado permanentemente');
         if (result.isPermanentlyDenied) {
           await openAppSettings();
         }
@@ -67,10 +70,10 @@ class _InputTextState extends State<InputText> {
     try {
       _speechEnabled = await _speechToText.initialize(
         onStatus: (status) => setState(() {}),
-        onError: (error) => print('Error en reconocimiento: $error'),
+        onError: (error) => debugPrint('Error en reconocimiento: $error'),
       );
     } catch (e) {
-      print('Error inicializando speech: $e');
+      debugPrint('Error inicializando speech: $e');
       _speechEnabled = false;
     }
     setState(() {});
@@ -84,7 +87,7 @@ class _InputTextState extends State<InputText> {
   /// check.
   void _checkAvailability() async {
     _isAvailable = _speechToText.isAvailable;
-    print('Reconocimiento disponible: $_isAvailable');
+    debugPrint('Reconocimiento disponible: $_isAvailable');
     setState(() {});
   }
 
@@ -101,7 +104,9 @@ class _InputTextState extends State<InputText> {
       onResult: _onSpeechResult,
       localeId: 'es_ES',
       listenFor: const Duration(seconds: 30),
-      partialResults: true,
+      listenOptions: SpeechListenOptions(
+        partialResults: true,
+      ),
     );
     setState(() {});
   }
@@ -183,14 +188,17 @@ class _InputTextState extends State<InputText> {
                     decoration: InputDecoration(
                       hintText: AppLocalizations.of(context)!.send_message,
                       hintStyle: theme.textTheme.bodyLarge?.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.4),
+                        color:
+                            theme.colorScheme.onSurface.withValues(alpha: 0.4),
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(50),
                         borderSide: BorderSide.none,
                       ),
                       contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 14),
+                        horizontal: 16,
+                        vertical: 14,
+                      ),
                       fillColor: Colors.grey[200],
                       filled: true,
                     ),
@@ -222,7 +230,8 @@ class _InputTextState extends State<InputText> {
                         style: IconButton.styleFrom(
                           backgroundColor: _speechEnabled
                               ? theme.colorScheme.primary
-                              : theme.colorScheme.surface.withOpacity(0.5),
+                              : theme.colorScheme.surface
+                                  .withValues(alpha: 0.5),
                           shape: const CircleBorder(),
                           padding: const EdgeInsets.all(16),
                         ),
@@ -235,13 +244,20 @@ class _InputTextState extends State<InputText> {
                     ? Padding(
                         padding: const EdgeInsets.only(bottom: 8.0),
                         child: CircularProgressIndicator(
-                            strokeWidth: 2, color: theme.colorScheme.primary),
+                          strokeWidth: 2,
+                          color: theme.colorScheme.primary,
+                        ),
                       )
                     : IconButton.filled(
                         onPressed: () => _sendMessage(
-                            context, textController, widget.isRolPlay),
-                        icon: Icon(Icons.send_rounded,
-                            color: theme.colorScheme.onPrimary),
+                          context,
+                          textController,
+                          widget.isRolPlay,
+                        ),
+                        icon: Icon(
+                          Icons.send_rounded,
+                          color: theme.colorScheme.onPrimary,
+                        ),
                         style: IconButton.styleFrom(
                           backgroundColor: theme.colorScheme.primary,
                           shape: const CircleBorder(),
@@ -266,7 +282,10 @@ class _InputTextState extends State<InputText> {
   /// input field.
 
   void _sendMessage(
-      BuildContext context, TextEditingController controller, bool isRolPlay) {
+    BuildContext context,
+    TextEditingController controller,
+    bool isRolPlay,
+  ) {
     if (isRolPlay) {
       context
           .read<ChatBloc>()

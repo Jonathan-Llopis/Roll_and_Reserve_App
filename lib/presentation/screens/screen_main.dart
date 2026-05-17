@@ -46,8 +46,9 @@ class _ScreenMainState extends State<ScreenMain> {
   /// The floating action button is a [FloatingActionButton] that leads to the shop creation
   /// screen if the user is an admin, or to the shop map screen if the user is a shop.
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
-      return buildContent<LoginState>(
+    return BlocBuilder<LoginBloc, LoginState>(
+      builder: (context, state) {
+        return buildContent<LoginState>(
           state: state,
           isLoading: (state) => state.isLoading,
           errorMessage: (state) => state.errorMessage,
@@ -55,37 +56,40 @@ class _ScreenMainState extends State<ScreenMain> {
           context: context,
           contentBuilder: (state) {
             return DefaultScaffold(
-                appBar: widget.appBar,
-                body: BodyMain(),
-                floatingActionButton: state.user!.role == 1
-                    ? FloatingActionButton(
-                        onPressed: () {
-                          context.go('/user/shop_edit/${0}');
-                        },
-                        child: const Icon(Icons.add),
-                      )
-                    : FloatingActionButton(
-                        onPressed: () {
-                          context.go('/user/map');
-                        },
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.map_sharp),
-                            Text(
-                              AppLocalizations.of(context)!.store_map,
-                              style: TextStyle(fontSize: 10),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
+              appBar: widget.appBar,
+              body: const BodyMain(),
+              floatingActionButton: state.user!.role == 1
+                  ? FloatingActionButton(
+                      onPressed: () {
+                        context.go('/user/shop_edit/${0}');
+                      },
+                      child: const Icon(Icons.add),
+                    )
+                  : FloatingActionButton(
+                      onPressed: () {
+                        context.go('/user/map');
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.map_sharp),
+                          Text(
+                            AppLocalizations.of(context)!.store_map,
+                            style: const TextStyle(fontSize: 10),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
                       ),
-                bottomNavigationBar: state.user!.role == 2
-                    ? BottomFilterShops(
-                        shopBloc: context.read<ShopBloc>(),
-                      )
-                    : null);
-          });
-    });
+                    ),
+              bottomNavigationBar: state.user!.role == 2
+                  ? BottomFilterShops(
+                      shopBloc: context.read<ShopBloc>(),
+                    )
+                  : null,
+            );
+          },
+        );
+      },
+    );
   }
 }

@@ -11,8 +11,11 @@ import 'package:roll_and_reserve/l10n/app_localizations.dart';
 class DialogDeleteShop extends StatelessWidget {
   final int idShop;
   final ShopBloc shopBloc;
-  const DialogDeleteShop(
-      {super.key, required this.idShop, required this.shopBloc});
+  const DialogDeleteShop({
+    super.key,
+    required this.idShop,
+    required this.shopBloc,
+  });
 
   @override
 
@@ -28,41 +31,47 @@ class DialogDeleteShop extends StatelessWidget {
   /// The title and content text are localized using [AppLocalizations].
 
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
-      return AlertDialog(
-        title: Text(AppLocalizations.of(context)!.shop_delete,
-            style: TextStyle(
+    return BlocBuilder<LoginBloc, LoginState>(
+      builder: (context, state) {
+        return AlertDialog(
+          title: Text(
+            AppLocalizations.of(context)!.shop_delete,
+            style: const TextStyle(
               color: Color.fromARGB(255, 0, 0, 0),
               fontSize: 30,
-            )),
-        content: Text(
-          AppLocalizations.of(context)!.confirm_delete_shop,
-          style: TextStyle(
-            fontSize: 18,
-            color: Color.fromARGB(255, 0, 0, 0),
+            ),
           ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            style: AppTheme.textButtonCancelStyle,
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text(AppLocalizations.of(context)!.cancel),
+          content: Text(
+            AppLocalizations.of(context)!.confirm_delete_shop,
+            style: const TextStyle(
+              fontSize: 18,
+              color: Color.fromARGB(255, 0, 0, 0),
+            ),
           ),
-          TextButton(
-            style: AppTheme.textButtonAcceptStyle,
-            onPressed: () {
-              shopBloc.add(DeleteShopEvent(
-                idShop: idShop,
-                idOwner: state.user!.id,
-              ));
-              context.go('/user');
-            },
-            child: Text(AppLocalizations.of(context)!.accept),
-          ),
-        ],
-      );
-    });
+          actions: <Widget>[
+            TextButton(
+              style: AppTheme.textButtonCancelStyle,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text(AppLocalizations.of(context)!.cancel),
+            ),
+            TextButton(
+              style: AppTheme.textButtonAcceptStyle,
+              onPressed: () {
+                shopBloc.add(
+                  DeleteShopEvent(
+                    idShop: idShop,
+                    idOwner: state.user!.id,
+                  ),
+                );
+                context.go('/user');
+              },
+              child: Text(AppLocalizations.of(context)!.accept),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

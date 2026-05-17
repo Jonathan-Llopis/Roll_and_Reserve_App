@@ -51,7 +51,7 @@ class ChatMessage extends StatelessWidget {
                 boxShadow: [
                   if (!isFromUser)
                     BoxShadow(
-                      color: colors.shadow.withOpacity(0.1),
+                      color: colors.shadow.withValues(alpha: 0.1),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),

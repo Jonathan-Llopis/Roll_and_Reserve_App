@@ -11,10 +11,10 @@ class DialogoUpdatePassword extends StatefulWidget {
   const DialogoUpdatePassword({super.key});
 
   @override
-  State<DialogoUpdatePassword> createState() => _DialogoUserSettingsState();
+  State<DialogoUpdatePassword> createState() => _DialogoUpdatePasswordState();
 }
 
-class _DialogoUserSettingsState extends State<DialogoUpdatePassword> {
+class _DialogoUpdatePasswordState extends State<DialogoUpdatePassword> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _oldPasswordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
@@ -52,7 +52,7 @@ class _DialogoUserSettingsState extends State<DialogoUpdatePassword> {
                 children: [
                   Text(
                     AppLocalizations.of(context)!.change_password,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                     ),
@@ -68,7 +68,10 @@ class _DialogoUserSettingsState extends State<DialogoUpdatePassword> {
                               AppLocalizations.of(context)!.current_password,
                           validator: (value) {
                             final errorMessage = validateCurrentPassword(
-                                value, context.read<LoginBloc>(), context);
+                              value,
+                              context.read<LoginBloc>(),
+                              context,
+                            );
                             if (errorMessage != null) {
                               return errorMessage;
                             }
@@ -88,16 +91,20 @@ class _DialogoUserSettingsState extends State<DialogoUpdatePassword> {
                           labelText: AppLocalizations.of(context)!
                               .confirmation_password,
                           validator: (value) => validateConfirmPassword(
-                              value, _newPasswordController, context),
+                            value,
+                            _newPasswordController,
+                            context,
+                          ),
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 24),
                   ButtonUpdate(
-                      formKey: _formKey,
-                      newPasswordController: _newPasswordController,
-                      oldPasswordController: _oldPasswordController),
+                    formKey: _formKey,
+                    newPasswordController: _newPasswordController,
+                    oldPasswordController: _oldPasswordController,
+                  ),
                 ],
               ),
             ),

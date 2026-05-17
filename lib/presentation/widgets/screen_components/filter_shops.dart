@@ -80,7 +80,7 @@ class _FilterShopsState extends State<FilterShops> {
               controller: _nombreTiendaController,
               decoration: InputDecoration(
                 labelText: AppLocalizations.of(context)!.shop_name_text,
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 16),
@@ -88,16 +88,19 @@ class _FilterShopsState extends State<FilterShops> {
               controller: _localidadTiendaController,
               decoration: InputDecoration(
                 labelText: AppLocalizations.of(context)!.shop_location,
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  widget.shopBloc.add(GetShopByFilterEvent(
+                  widget.shopBloc.add(
+                    GetShopByFilterEvent(
                       name: _nombreTiendaController.text,
-                      direction: _localidadTiendaController.text));
+                      direction: _localidadTiendaController.text,
+                    ),
+                  );
                   Navigator.of(context).pop();
                 }
               },

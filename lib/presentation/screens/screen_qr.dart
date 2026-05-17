@@ -21,12 +21,13 @@ class QRScannerScreen extends StatefulWidget {
   final int idShop;
 
   final PreferredSizeWidget appBar;
-  const QRScannerScreen(
-      {super.key,
-      required this.idTable,
-      required this.idReserve,
-      required this.idShop,
-      required this.appBar});
+  const QRScannerScreen({
+    super.key,
+    required this.idTable,
+    required this.idReserve,
+    required this.idShop,
+    required this.appBar,
+  });
 
   @override
   State<QRScannerScreen> createState() => _QRScannerScreenState();
@@ -122,53 +123,54 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
                                           final List<Barcode> barcodes =
                                               capture.barcodes;
                                           for (final barcode in barcodes) {
-                                            setState(() =>
-                                                scannedCode = barcode.rawValue);
+                                            setState(
+                                              () => scannedCode =
+                                                  barcode.rawValue,
+                                            );
 
                                             showDialog(
-                                                context: context,
-                                                barrierDismissible: false,
-                                                builder: (context) =>
-                                                    AlertDialog(
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(24),
-                                                      ),
-                                                      content: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(24),
-                                                        child: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            CircularProgressIndicator
-                                                                .adaptive(
-                                                              strokeWidth: 2,
-                                                              valueColor:
-                                                                  AlwaysStoppedAnimation(
-                                                                      colorScheme
-                                                                          .primary),
-                                                            ),
-                                                            const SizedBox(
-                                                                height: 24),
-                                                            Text(
-                                                              AppLocalizations.of(
-                                                                      context)!
-                                                                  .processing_code,
-                                                              style: textTheme
-                                                                  .bodyMedium
-                                                                  ?.copyWith(
-                                                                color: colorScheme
-                                                                    .onSurface,
-                                                              ),
-                                                            ),
-                                                          ],
+                                              context: context,
+                                              barrierDismissible: false,
+                                              builder: (context) => AlertDialog(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(24),
+                                                ),
+                                                content: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(24),
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      CircularProgressIndicator
+                                                          .adaptive(
+                                                        strokeWidth: 2,
+                                                        valueColor:
+                                                            AlwaysStoppedAnimation(
+                                                          colorScheme.primary,
                                                         ),
                                                       ),
-                                                    ));
+                                                      const SizedBox(
+                                                        height: 24,
+                                                      ),
+                                                      Text(
+                                                        AppLocalizations.of(
+                                                          context,
+                                                        )!
+                                                            .processing_code,
+                                                        style: textTheme
+                                                            .bodyMedium
+                                                            ?.copyWith(
+                                                          color: colorScheme
+                                                              .onSurface,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            );
 
                                             _handleScannedCode(context, state);
                                           }
@@ -184,22 +186,28 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
                                     child: Padding(
                                       padding: const EdgeInsets.all(16),
                                       child: FilledButton.icon(
-                                        icon: Icon(Icons.camera_alt_rounded,
-                                            size: 20,
-                                            color: colorScheme.onPrimary),
+                                        icon: Icon(
+                                          Icons.camera_alt_rounded,
+                                          size: 20,
+                                          color: colorScheme.onPrimary,
+                                        ),
                                         label: Text(
                                           AppLocalizations.of(context)!
                                               .scan_again,
                                           style: textTheme.labelLarge?.copyWith(
-                                              color: colorScheme.onPrimary),
+                                            color: colorScheme.onPrimary,
+                                          ),
                                         ),
                                         style: FilledButton.styleFrom(
                                           backgroundColor: colorScheme.primary,
                                           padding: const EdgeInsets.symmetric(
-                                              horizontal: 32, vertical: 16),
+                                            horizontal: 32,
+                                            vertical: 16,
+                                          ),
                                           shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(12)),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
                                         ),
                                         onPressed: () =>
                                             setState(() => scannedCode = null),
@@ -223,13 +231,17 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.camera_enhance_rounded,
-                        size: 64,
-                        color: colorScheme.onSurface.withOpacity(0.5)),
+                    Icon(
+                      Icons.camera_enhance_rounded,
+                      size: 64,
+                      color: colorScheme.onSurface.withValues(alpha: 0.5),
+                    ),
                     const SizedBox(height: 24),
                     FilledButton.icon(
-                      icon: Icon(Icons.camera_alt_rounded,
-                          color: colorScheme.onPrimary),
+                      icon: Icon(
+                        Icons.camera_alt_rounded,
+                        color: colorScheme.onPrimary,
+                      ),
                       label: Text(
                         AppLocalizations.of(context)!.grant_camera_permission,
                         style: textTheme.labelLarge
@@ -238,9 +250,12 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
                       style: FilledButton.styleFrom(
                         backgroundColor: colorScheme.primary,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 32, vertical: 16),
+                          horizontal: 32,
+                          vertical: 16,
+                        ),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                       onPressed: _requestCameraPermission,
                     ),
@@ -269,7 +284,7 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
           side: BorderSide(
-            color: colorScheme.primary.withOpacity(0.8),
+            color: colorScheme.primary.withValues(alpha: 0.8),
             width: 4,
             style: BorderStyle.solid,
           ),
@@ -341,20 +356,20 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
         );
       }
     } catch (e) {
-      if (!mounted) return;
+      if (!context.mounted) return;
       Navigator.of(context, rootNavigator: true).pop();
-      if (!mounted) return;
       confirmReserveDialog(
         context,
         '${loc.error_processing_code}: ${e.toString()}',
         true,
       );
-    } finally {
-      if (scannedCode == null ||
-          scannedCode !=
-              'rollandreserve://app/user/userReserves/${widget.idTable}') {
-        setState(() => scannedCode = null);
-      }
+    }
+
+    if (!context.mounted) return;
+    if (scannedCode == null ||
+        scannedCode !=
+            'rollandreserve://app/user/userReserves/${widget.idTable}') {
+      Navigator.of(context).pop();
     }
   }
 }

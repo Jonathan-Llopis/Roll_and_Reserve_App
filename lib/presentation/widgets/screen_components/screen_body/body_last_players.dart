@@ -51,10 +51,12 @@ class BodyLastPlayers extends StatelessWidget {
                   Text(
                     AppLocalizations.of(context)!.played_with,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold, color: Colors.black87),
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
                   ),
                   const SizedBox(height: 4),
-                  Text(
+                  const Text(
                     '',
                     style: TextStyle(fontSize: 14, color: Colors.grey),
                   ),

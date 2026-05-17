@@ -33,9 +33,10 @@ class _BodyMainState extends State<BodyMain> {
   /// shop's details when tapped, unless the user is an admin.
 
   Widget build(BuildContext context) {
-    return BlocBuilder<ShopBloc, ShopState>(builder: (context, state) {
-      final loginBloc = BlocProvider.of<LoginBloc>(context);
-      return buildContent<ShopState>(
+    return BlocBuilder<ShopBloc, ShopState>(
+      builder: (context, state) {
+        final loginBloc = BlocProvider.of<LoginBloc>(context);
+        return buildContent<ShopState>(
           state: state,
           isLoading: (state) => state.isLoading,
           errorMessage: (state) => state.errorMessage,
@@ -46,7 +47,9 @@ class _BodyMainState extends State<BodyMain> {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 12.0),
+                    horizontal: 16.0,
+                    vertical: 12.0,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -55,47 +58,56 @@ class _BodyMainState extends State<BodyMain> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            AppLocalizations.of(context)!.welcome_user(loginBloc
-                                        .state.user!.username.length >
-                                    15
-                                ? '${loginBloc.state.user!.username.substring(0, 15)}...'
-                                : loginBloc.state.user!.username),
+                            AppLocalizations.of(context)!.welcome_user(
+                              loginBloc.state.user!.username.length > 15
+                                  ? '${loginBloc.state.user!.username.substring(0, 15)}...'
+                                  : loginBloc.state.user!.username,
+                            ),
                             style: Theme.of(context)
                                 .textTheme
                                 .titleLarge
                                 ?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black87),
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             AppLocalizations.of(context)!.all_available_shops,
-                            style: TextStyle(fontSize: 14, color: Colors.grey),
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
+                            ),
                           ),
                         ],
-                      )
+                      ),
                     ],
                   ),
                 ),
                 const Divider(height: 1, thickness: 1),
                 Expanded(
-                    child: ListView.builder(
-                  itemCount: state.shops!.length,
-                  itemBuilder: (context, index) {
-                    final shop = state.shops![index];
-                    return Builder(
+                  child: ListView.builder(
+                    itemCount: state.shops!.length,
+                    itemBuilder: (context, index) {
+                      final shop = state.shops![index];
+                      return Builder(
                         builder: (context) => GestureDetector(
-                            onTap: () {
-                              loginBloc.state.user!.role == 1
-                                  ? null
-                                  : context.go('/user/shop/${shop.id}');
-                            },
-                            child: InformationShop(shop: shop)));
-                  },
-                )),
+                          onTap: () {
+                            loginBloc.state.user!.role == 1
+                                ? null
+                                : context.go('/user/shop/${shop.id}');
+                          },
+                          child: InformationShop(shop: shop),
+                        ),
+                      );
+                    },
+                  ),
+                ),
               ],
             );
-          });
-    });
+          },
+        );
+      },
+    );
   }
 }

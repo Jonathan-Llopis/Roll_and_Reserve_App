@@ -19,8 +19,11 @@ class ScreenTablesOfShop extends StatefulWidget {
   final int idShop;
 
   final PreferredSizeWidget appBar;
-  const ScreenTablesOfShop(
-      {super.key, required this.idShop, required this.appBar});
+  const ScreenTablesOfShop({
+    super.key,
+    required this.idShop,
+    required this.appBar,
+  });
 
   @override
   State<ScreenTablesOfShop> createState() => _ScreenTablesOfShopState();
@@ -30,6 +33,7 @@ class _ScreenTablesOfShopState extends State<ScreenTablesOfShop> {
   late ShopEntity currentShop;
 
   @override
+
   /// Called when the widget is inserted into the tree.
   ///
   /// This method is responsible for requesting the shop with the given idShop
@@ -43,6 +47,7 @@ class _ScreenTablesOfShopState extends State<ScreenTablesOfShop> {
   }
 
   @override
+
   /// Builds the screen with the tables of the shop.
   ///
   /// This screen is the default scaffold with the given [appBar] and a
@@ -84,10 +89,11 @@ class _ScreenTablesOfShopState extends State<ScreenTablesOfShop> {
                     contentBuilder: (state) {
                       currentShop = shopBloc.state.shop!;
                       return BodyTablesShop(
-                          currentShop: currentShop,
-                          widget: widget,
-                          loginBloc: loginBloc,
-                          tables: state.tablesFromShop!);
+                        currentShop: currentShop,
+                        widget: widget,
+                        loginBloc: loginBloc,
+                        tables: state.tablesFromShop!,
+                      );
                     },
                   );
                 },
@@ -135,7 +141,7 @@ class _ScreenTablesOfShopState extends State<ScreenTablesOfShop> {
                   tableBloc: context.read<TableBloc>(),
                 );
               } else {
-                return SizedBox.shrink();
+                return const SizedBox.shrink();
               }
             },
           );

@@ -14,8 +14,11 @@ class ScreenReviewShop extends StatefulWidget {
   final int idShop;
 
   final PreferredSizeWidget appBar;
-  const ScreenReviewShop(
-      {super.key, required this.idShop, required this.appBar});
+  const ScreenReviewShop({
+    super.key,
+    required this.idShop,
+    required this.appBar,
+  });
 
   @override
   State<ScreenReviewShop> createState() => _ScreenReviewShopState();
@@ -23,6 +26,7 @@ class ScreenReviewShop extends StatefulWidget {
 
 class _ScreenReviewShopState extends State<ScreenReviewShop> {
   @override
+
   /// Get reviews of the shop when the widget is initialized.
   ///
   /// Sends [GetReviewByShopEvent] to [ReviewBloc] to get reviews of the shop.
@@ -33,6 +37,7 @@ class _ScreenReviewShopState extends State<ScreenReviewShop> {
   }
 
   @override
+
   /// Builds the screen with the reviews of the shop.
   ///
   /// This screen is the default scaffold with the given [appBar] and a
@@ -53,48 +58,55 @@ class _ScreenReviewShopState extends State<ScreenReviewShop> {
     ShopBloc shopBloc = BlocProvider.of<ShopBloc>(context);
 
     return DefaultScaffold(
-        appBar: widget.appBar,
-        body: BlocBuilder<ReviewBloc, ReviewState>(
-          builder: (context, state) {
-            return buildContent<ReviewState>(
-              state: state,
-              isLoading: (state) => state.isLoading,
-              errorMessage: (state) => state.errorMessage,
-              hasData: (state) => state.reviews != null,
-              context: context,
-              contentBuilder: (state) {
-                return BodyReviewShop(
-                    shopBloc: shopBloc,
-                    idShop: widget.idShop,
-                    reviews: state.reviews!);
+      appBar: widget.appBar,
+      body: BlocBuilder<ReviewBloc, ReviewState>(
+        builder: (context, state) {
+          return buildContent<ReviewState>(
+            state: state,
+            isLoading: (state) => state.isLoading,
+            errorMessage: (state) => state.errorMessage,
+            hasData: (state) => state.reviews != null,
+            context: context,
+            contentBuilder: (state) {
+              return BodyReviewShop(
+                shopBloc: shopBloc,
+                idShop: widget.idShop,
+                reviews: state.reviews!,
+              );
+            },
+          );
+        },
+      ),
+      floatingActionButton: loginBloc.state.user!.role == 1
+          ? Container()
+          : BlocBuilder<ReviewBloc, ReviewState>(
+              builder: (context, state) {
+                return buildContent<ReviewState>(
+                  state: state,
+                  isLoading: (state) => state.isLoading,
+                  errorMessage: (state) => state.errorMessage,
+                  hasData: (state) => state.reviews != null,
+                  context: context,
+                  contentBuilder: (state) {
+                    return state.reviews!.any(
+                      (review) => review.writerId == loginBloc.state.user!.id,
+                    )
+                        ? Container()
+                        : FloatingActionButton(
+                            child: const Icon(Icons.add),
+                            onPressed: () {
+                              createReview(
+                                context,
+                                reviewBloc,
+                                widget.idShop,
+                                null,
+                              );
+                            },
+                          );
+                  },
+                );
               },
-            );
-          },
-        ),
-        floatingActionButton: loginBloc.state.user!.role == 1
-            ? Container()
-            :  BlocBuilder<ReviewBloc, ReviewState>(
-          builder: (context, state) {
-            return buildContent<ReviewState>(
-              state: state,
-              isLoading: (state) => state.isLoading,
-              errorMessage: (state) => state.errorMessage,
-              hasData: (state) => state.reviews != null,
-              context: context,
-              contentBuilder: (state) {
-                return  state.reviews!.any(
-                    (review) => review.writerId == loginBloc.state.user!.id)
-                ? Container()
-                : FloatingActionButton(
-                    child: const Icon(Icons.add),
-                    onPressed: () {
-                      createReview(
-                          context, reviewBloc, widget.idShop, null);
-                    },
-                  );
-              },
-            );
-          },
-        ));
+            ),
+    );
   }
 }

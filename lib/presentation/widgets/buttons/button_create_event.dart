@@ -60,23 +60,25 @@ class ButtonCreateEvent extends StatelessWidget {
           LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
           List<ReserveEntity> reserves = [];
           for (int table in _selectedTableIds) {
-            reserves.add(ReserveEntity(
-              id: 0,
-              freePlaces: int.parse(_freePlacesController.text),
-              dayDate: DateFormat('dd - MM - yyyy').format(widget.starteTime),
-              horaInicio: DateFormat('HH:mm').format(widget.starteTime),
-              horaFin: DateFormat('HH:mm').format(widget.endTime),
-              description: _descriptionController.text,
-              requiredMaterial: _requiredMaterialController.text,
-              difficultyId: _selectedDifficulty!.id,
-              gameId: _selectedGame!.id,
-              gameName: _selectedGame.description,
-              tableId: table,
-              usersInTables: 0,
-              isEvent: true,
-              shopId: widget.idShop,
-              userReserveId: loginBloc.state.user!.id,
-            ));
+            reserves.add(
+              ReserveEntity(
+                id: 0,
+                freePlaces: int.parse(_freePlacesController.text),
+                dayDate: DateFormat('dd - MM - yyyy').format(widget.starteTime),
+                horaInicio: DateFormat('HH:mm').format(widget.starteTime),
+                horaFin: DateFormat('HH:mm').format(widget.endTime),
+                description: _descriptionController.text,
+                requiredMaterial: _requiredMaterialController.text,
+                difficultyId: _selectedDifficulty!.id,
+                gameId: _selectedGame!.id,
+                gameName: _selectedGame.description,
+                tableId: table,
+                usersInTables: 0,
+                isEvent: true,
+                shopId: widget.idShop,
+                userReserveId: loginBloc.state.user!.id,
+              ),
+            );
           }
           widget.reserveBloc.add(CreateEventsEvent(reserves: reserves));
           context.go('/user/events/${widget.idShop}');

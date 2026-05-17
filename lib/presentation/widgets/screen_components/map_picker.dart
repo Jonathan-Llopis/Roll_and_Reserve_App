@@ -64,41 +64,50 @@ class _LocationPickerState extends State<LocationPicker> {
       return;
     }
 
-    if (widget.latitudeController.text != "0" &&
-        widget.longitudeController.text != "0") {
+    if (widget.latitudeController.text != '0' &&
+        widget.longitudeController.text != '0') {
       _currentLocation = coordinates.LatLng(
-          double.parse(widget.latitudeController.text),
-          double.parse(widget.longitudeController.text));
+        double.parse(widget.latitudeController.text),
+        double.parse(widget.longitudeController.text),
+      );
     }
 
-    // Verificar si los servicios de ubicación están habilitados
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!mounted) return;
     if (!serviceEnabled) {
       // Los servicios de ubicación no están habilitados, no se puede continuar
       return Future.error(
-          AppLocalizations.of(context)!.location_service_disabled);
+        AppLocalizations.of(context)!.location_service_disabled,
+      );
     }
 
     // Verificar los permisos de ubicación
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
+      if (!mounted) return;
       if (permission == LocationPermission.denied) {
         // Los permisos están denegados, no se puede continuar
         return Future.error(
-            AppLocalizations.of(context)!.location_permission_denied);
+          AppLocalizations.of(context)!.location_permission_denied,
+        );
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
       // Los permisos están denegados permanentemente, no se puede continuar
+      if (!mounted) return;
       return Future.error(
-          AppLocalizations.of(context)!.location_permission_denied_permanently);
+        AppLocalizations.of(context)!.location_permission_denied_permanently,
+      );
     }
 
     // Obtener la posición actual del usuario
     Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.high,
+      ),
+    );
 
     _currentLocation =
         coordinates.LatLng(position.latitude, position.longitude);
@@ -160,8 +169,8 @@ class _LocationPickerState extends State<LocationPicker> {
         }
 
         // Actualizar coordenadas si es necesario
-        if (widget.latitudeController.text == "0" &&
-            widget.longitudeController.text == "0") {
+        if (widget.latitudeController.text == '0' &&
+            widget.longitudeController.text == '0') {
           widget.latitudeController.text =
               _currentLocation!.latitude.toString();
           widget.longitudeController.text =
@@ -177,7 +186,9 @@ class _LocationPickerState extends State<LocationPicker> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(
-                          vertical: 16, horizontal: 8),
+                        vertical: 16,
+                        horizontal: 8,
+                      ),
                       child: Text(
                         AppLocalizations.of(context)!
                             .select_your_location_on_map,
@@ -200,7 +211,7 @@ class _LocationPickerState extends State<LocationPicker> {
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: colorScheme.shadow.withOpacity(0.1),
+                            color: colorScheme.shadow.withValues(alpha: 0.1),
                             blurRadius: 12,
                             spreadRadius: 2,
                             offset: const Offset(0, 4),
@@ -248,9 +259,11 @@ class _LocationPickerState extends State<LocationPicker> {
                                         height: 48.0,
                                         point: coordinates.LatLng(
                                           double.parse(
-                                              widget.latitudeController.text),
+                                            widget.latitudeController.text,
+                                          ),
                                           double.parse(
-                                              widget.longitudeController.text),
+                                            widget.longitudeController.text,
+                                          ),
                                         ),
                                         child: Icon(
                                           Icons.location_pin,
@@ -277,7 +290,7 @@ class _LocationPickerState extends State<LocationPicker> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     FloatingActionButton.small(
-                      heroTag: "zoomIn",
+                      heroTag: 'zoomIn',
                       onPressed: () => setState(() => currentZoomLevel += 1),
                       backgroundColor: colorScheme.primaryContainer,
                       foregroundColor: colorScheme.onPrimaryContainer,
@@ -285,7 +298,7 @@ class _LocationPickerState extends State<LocationPicker> {
                     ),
                     const SizedBox(height: 8),
                     FloatingActionButton.small(
-                      heroTag: "zoomOut",
+                      heroTag: 'zoomOut',
                       onPressed: () => setState(() => currentZoomLevel -= 1),
                       backgroundColor: colorScheme.primaryContainer,
                       foregroundColor: colorScheme.onPrimaryContainer,
@@ -293,7 +306,7 @@ class _LocationPickerState extends State<LocationPicker> {
                     ),
                     const SizedBox(height: 8),
                     FloatingActionButton.small(
-                      heroTag: "centerLocation",
+                      heroTag: 'centerLocation',
                       onPressed: () => _getCurrentLocation(true).then((_) {
                         setState(() {
                           _currentLocation = _currentLocation;
@@ -305,7 +318,7 @@ class _LocationPickerState extends State<LocationPicker> {
                       }),
                       backgroundColor: colorScheme.primaryContainer,
                       foregroundColor: colorScheme.onPrimaryContainer,
-                      child: Icon(Icons.my_location, size: 20),
+                      child: const Icon(Icons.my_location, size: 20),
                     ),
                   ],
                 ),

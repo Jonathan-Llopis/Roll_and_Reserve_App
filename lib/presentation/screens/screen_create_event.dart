@@ -10,8 +10,11 @@ import 'package:roll_and_reserve/presentation/widgets/screen_components/default_
 import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class ScreenCreateEvent extends StatefulWidget {
-  const ScreenCreateEvent(
-      {super.key, required this.idShop, required this.appBar});
+  const ScreenCreateEvent({
+    super.key,
+    required this.idShop,
+    required this.appBar,
+  });
   final int idShop;
   final PreferredSizeWidget appBar;
 
@@ -37,6 +40,7 @@ class _ScreenCreateEventState extends State<ScreenCreateEvent> {
         lastDate: DateTime(2101),
       );
 
+      if (!mounted) return;
       if (startDate == null) {
         throw Exception(AppLocalizations.of(context)!.start_date_not_selected);
       }
@@ -46,6 +50,7 @@ class _ScreenCreateEventState extends State<ScreenCreateEvent> {
         initialTime: TimeOfDay.now(),
       );
 
+      if (!mounted) return;
       if (startTime == null) {
         throw Exception(AppLocalizations.of(context)!.start_time_not_selected);
       }
@@ -58,13 +63,15 @@ class _ScreenCreateEventState extends State<ScreenCreateEvent> {
         lastDate: DateTime(2101),
       );
 
+      if (!mounted) return;
       if (endDate == null) {
         throw Exception(AppLocalizations.of(context)!.end_date_not_selected);
       }
 
       if (endDate.isBefore(startDate)) {
         throw Exception(
-            AppLocalizations.of(context)!.end_date_before_start_date);
+          AppLocalizations.of(context)!.end_date_before_start_date,
+        );
       }
 
       if (endDate.difference(startDate).inDays == -1) {
@@ -76,39 +83,54 @@ class _ScreenCreateEventState extends State<ScreenCreateEvent> {
         initialTime: startTime,
       );
 
+      if (!mounted) return;
       if (endTime == null) {
         throw Exception(AppLocalizations.of(context)!.end_time_not_selected);
       }
 
       if (endDate.isAtSameMomentAs(startDate) &&
-          DateTime(endDate.year, endDate.month, endDate.day, endTime.hour,
-                  endTime.minute)
-              .isBefore(DateTime(startDate.year, startDate.month, startDate.day,
-                  startTime.hour, startTime.minute))) {
+          DateTime(
+            endDate.year,
+            endDate.month,
+            endDate.day,
+            endTime.hour,
+            endTime.minute,
+          ).isBefore(
+            DateTime(
+              startDate.year,
+              startDate.month,
+              startDate.day,
+              startTime.hour,
+              startTime.minute,
+            ),
+          )) {
         throw Exception(
-            AppLocalizations.of(context)!.end_date_before_start_date);
+          AppLocalizations.of(context)!.end_date_before_start_date,
+        );
       }
 
       if (endTime.hour < startTime.hour) {
         throw Exception(
-            AppLocalizations.of(context)!.end_date_before_start_date);
+          AppLocalizations.of(context)!.end_date_before_start_date,
+        );
       }
 
       if (endTime.hour == startTime.hour && endTime.minute < startTime.minute) {
         throw Exception(
-            AppLocalizations.of(context)!.end_date_before_start_date);
+          AppLocalizations.of(context)!.end_date_before_start_date,
+        );
       }
 
       setState(() {
         _selectedDates = {
-          "startDateTime": DateTime(
+          'startDateTime': DateTime(
             startDate.year,
             startDate.month,
             startDate.day,
             startTime.hour,
             startTime.minute,
           ),
-          "endDateTime": DateTime(
+          'endDateTime': DateTime(
             endDate.year,
             endDate.month,
             endDate.day,

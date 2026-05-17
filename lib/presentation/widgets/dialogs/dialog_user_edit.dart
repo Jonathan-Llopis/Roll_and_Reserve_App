@@ -72,7 +72,7 @@ class _DialogoUserSettingsState extends State<DialogoUserSettings> {
                 children: [
                   Text(
                     AppLocalizations.of(context)!.user_settings,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                     ),
@@ -101,7 +101,7 @@ class _DialogoUserSettingsState extends State<DialogoUserSettings> {
                           },
                           child: Container(
                             padding: const EdgeInsets.all(6),
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               color: Colors.blueAccent,
                               shape: BoxShape.circle,
                             ),
@@ -189,40 +189,45 @@ class _DialogoUserSettingsState extends State<DialogoUserSettings> {
         horizontal: 20,
         vertical: 20,
       ),
-      child: Column(children: <Widget>[
-        Text(
-          AppLocalizations.of(context)!.add_profile_image,
-          style: TextStyle(
-            fontSize: 20.0,
-          ),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-          TextButton.icon(
-            icon: const Icon(Icons.camera),
-            onPressed: () {
-              takePhoto(ImageSource.camera);
-              Navigator.pop(context);
-            },
-            label: Text(AppLocalizations.of(context)!.camera),
+      child: Column(
+        children: <Widget>[
+          Text(
+            AppLocalizations.of(context)!.add_profile_image,
+            style: const TextStyle(
+              fontSize: 20.0,
+            ),
           ),
           const SizedBox(
-            width: 10,
+            height: 20,
           ),
-          TextButton.icon(
-            icon: const Icon(Icons.image),
-            onPressed: () {
-              takePhoto(ImageSource.gallery);
-              Navigator.pop(context);
-            },
-            label: Text(
-              AppLocalizations.of(context)!.gallery,
-            ),
-          )
-        ])
-      ]),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              TextButton.icon(
+                icon: const Icon(Icons.camera),
+                onPressed: () {
+                  takePhoto(ImageSource.camera);
+                  Navigator.pop(context);
+                },
+                label: Text(AppLocalizations.of(context)!.camera),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              TextButton.icon(
+                icon: const Icon(Icons.image),
+                onPressed: () {
+                  takePhoto(ImageSource.gallery);
+                  Navigator.pop(context);
+                },
+                label: Text(
+                  AppLocalizations.of(context)!.gallery,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 

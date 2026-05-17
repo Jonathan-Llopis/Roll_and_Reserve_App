@@ -73,7 +73,7 @@ class _DialogCreateUpdateTableState extends State<DialogCreateUpdateTable> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
         side: BorderSide(
-          color: theme.colorScheme.outline.withOpacity(0.1),
+          color: theme.colorScheme.outline.withValues(alpha: 0.1),
         ),
       ),
       child: Padding(
@@ -136,13 +136,17 @@ class _DialogCreateUpdateTableState extends State<DialogCreateUpdateTable> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        style: AppTheme.textButtonCancelStyle,
-                        child: Text(loc.cancel)),
+                      onPressed: () => Navigator.pop(context),
+                      style: AppTheme.textButtonCancelStyle,
+                      child: Text(loc.cancel),
+                    ),
                     const SizedBox(width: 12),
                     FilledButton.icon(
-                      icon: const Icon(Icons.save,
-                          size: 20, color: Color(0xFF00695C)),
+                      icon: const Icon(
+                        Icons.save,
+                        size: 20,
+                        color: Color(0xFF00695C),
+                      ),
                       label: Text(loc.save),
                       style: AppTheme.textButtonAcceptStyle,
                       onPressed: _submitForm,
@@ -157,27 +161,41 @@ class _DialogCreateUpdateTableState extends State<DialogCreateUpdateTable> {
                     icon: const Icon(Icons.calendar_month, size: 20),
                     label: Text(loc.manage_reservations),
                     style: FilledButton.styleFrom(
-                        backgroundColor: theme.colorScheme.secondary,
-                        foregroundColor: theme.colorScheme.onSecondary,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 24, vertical: 12)),
+                      backgroundColor: theme.colorScheme.secondary,
+                      foregroundColor: theme.colorScheme.onSecondary,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
+                    ),
                     onPressed: () => context.go(
-                        '/user/shop/${widget.currentShop.id}/table/${widget.table!.id}'),
+                      '/user/shop/${widget.currentShop.id}/table/${widget.table!.id}',
+                    ),
                   ),
                   const SizedBox(height: 16),
                   OutlinedButton.icon(
                     icon: Icon(Icons.delete, color: theme.colorScheme.error),
-                    label: Text(loc.delete_table,
-                        style: TextStyle(color: theme.colorScheme.error)),
+                    label: Text(
+                      loc.delete_table,
+                      style: TextStyle(color: theme.colorScheme.error),
+                    ),
                     style: OutlinedButton.styleFrom(
-                        side: BorderSide(
-                            color: theme.colorScheme.error.withOpacity(0.3)),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 12)),
-                    onPressed: () => deleteTable(context, widget.table!.id,
-                        widget.currentShop.id, widget.tableBloc),
-                  )
-                ]
+                      side: BorderSide(
+                        color: theme.colorScheme.error.withValues(alpha: 0.3),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 12,
+                      ),
+                    ),
+                    onPressed: () => deleteTable(
+                      context,
+                      widget.table!.id,
+                      widget.currentShop.id,
+                      widget.tableBloc,
+                    ),
+                  ),
+                ],
               ],
             ),
           ),
@@ -196,14 +214,16 @@ class _DialogCreateUpdateTableState extends State<DialogCreateUpdateTable> {
       final newTable = TableEntity(
         id: widget.table?.id ?? 0,
         numberTable: int.parse(_tableNameController.text),
-        stats: "",
+        stats: '',
         reserves: [],
         idShop: widget.currentShop.id,
       );
 
-      widget.tableBloc.add(widget.table == null
-          ? CreateTableEvent(table: newTable)
-          : UpdateTableEvent(table: newTable));
+      widget.tableBloc.add(
+        widget.table == null
+            ? CreateTableEvent(table: newTable)
+            : UpdateTableEvent(table: newTable),
+      );
       Navigator.pop(context);
     }
   }

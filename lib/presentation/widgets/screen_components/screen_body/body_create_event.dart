@@ -72,12 +72,15 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
   /// tables for the given shop.
 
   void initState() {
-    context.read<TableBloc>().add(GetAvailableTablesEvent(
-        dayDate: DateFormat('dd-MM-yyyy').format(widget.starteTime),
-        startTime: DateFormat('HH:mm').format(widget.starteTime),
-        reserves: widget.reserves,
-        endTime: DateFormat('HH:mm').format(widget.endTime),
-        shopId: widget.idShop));
+    context.read<TableBloc>().add(
+          GetAvailableTablesEvent(
+            dayDate: DateFormat('dd-MM-yyyy').format(widget.starteTime),
+            startTime: DateFormat('HH:mm').format(widget.starteTime),
+            reserves: widget.reserves,
+            endTime: DateFormat('HH:mm').format(widget.endTime),
+            shopId: widget.idShop,
+          ),
+        );
 
     super.initState();
   }
@@ -134,7 +137,7 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
                               fillColor: Theme.of(context)
                                   .colorScheme
                                   .surfaceContainerHighest
-                                  .withOpacity(0.3),
+                                  .withValues(alpha: 0.3),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
                                 borderSide: BorderSide.none,
@@ -142,26 +145,31 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
                                 borderSide: BorderSide(
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
-                                    width: 1.5),
+                                  color: Theme.of(context).colorScheme.primary,
+                                  width: 1.5,
+                                ),
                               ),
                               contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 16, horizontal: 20),
-                              prefixIcon: Icon(Icons.gamepad,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .primary
-                                      .withOpacity(0.8)),
+                                vertical: 16,
+                                horizontal: 20,
+                              ),
+                              prefixIcon: Icon(
+                                Icons.gamepad,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withValues(alpha: 0.8),
+                              ),
                               labelText: AppLocalizations.of(context)!.game,
                               labelStyle: Theme.of(context)
                                   .textTheme
                                   .bodyMedium
                                   ?.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface
-                                          .withOpacity(0.6)),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withValues(alpha: 0.6),
+                                  ),
                             ),
                             child: child,
                           ),
@@ -172,28 +180,37 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
                             return result.fold(
                               (failure) => [],
                               (games) => games
-                                  .map((game) => SearchableDropdownMenuItem(
-                                        value: game,
-                                        label: game.description,
-                                        child: ListTile(
-                                          contentPadding:
-                                              const EdgeInsets.symmetric(
-                                                  horizontal: 20),
-                                          leading: Icon(Icons.sports_esports,
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .primary),
-                                          title: Text(game.description,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyMedium),
+                                  .map(
+                                    (game) => SearchableDropdownMenuItem(
+                                      value: game,
+                                      label: game.description,
+                                      child: ListTile(
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                          horizontal: 20,
                                         ),
-                                      ))
+                                        leading: Icon(
+                                          Icons.sports_esports,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                        ),
+                                        title: Text(
+                                          game.description,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium,
+                                        ),
+                                      ),
+                                    ),
+                                  )
                                   .toList(),
                             );
                           },
                           validator: (value) => validateSelectedValue(
-                              value ?? _selectedGame, context),
+                            value ?? _selectedGame,
+                            context,
+                          ),
                           onChanged: (GameEntity? value) {
                             setState(() {
                               _selectedGame = value;
@@ -203,40 +220,44 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
                       ),
                     ),
                     buildInputField(
-                        controller: _freePlacesController,
-                        label:
-                            AppLocalizations.of(context)!.total_seats_at_table,
-                        icon: Icons.people,
-                        keyboardType: TextInputType.number,
-                        context: context,
-                        validator: (value) =>
-                            basicValidationWithNumber(value, context)),
+                      controller: _freePlacesController,
+                      label: AppLocalizations.of(context)!.total_seats_at_table,
+                      icon: Icons.people,
+                      keyboardType: TextInputType.number,
+                      context: context,
+                      validator: (value) =>
+                          basicValidationWithNumber(value, context),
+                    ),
                     buildInputField(
-                        controller: _descriptionController,
-                        label: AppLocalizations.of(context)!.description,
-                        icon: Icons.description,
-                        keyboardType: TextInputType.text,
-                        validator: (value) => basicValidation(value, context),
-                        context: context),
+                      controller: _descriptionController,
+                      label: AppLocalizations.of(context)!.description,
+                      icon: Icons.description,
+                      keyboardType: TextInputType.text,
+                      validator: (value) => basicValidation(value, context),
+                      context: context,
+                    ),
                     buildInputField(
-                        controller: _requiredMaterialController,
-                        label: AppLocalizations.of(context)!.required_material,
-                        icon: Icons.build,
-                        keyboardType: TextInputType.text,
-                        validator: (value) => basicValidation(value, context),
-                        context: context),
+                      controller: _requiredMaterialController,
+                      label: AppLocalizations.of(context)!.required_material,
+                      icon: Icons.build,
+                      keyboardType: TextInputType.text,
+                      validator: (value) => basicValidation(value, context),
+                      context: context,
+                    ),
                     SizedBox(
                       width: double.infinity * 0.8,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 2, horizontal: 20),
+                          vertical: 2,
+                          horizontal: 20,
+                        ),
                         child: DropdownButtonFormField<DifficultyEntity>(
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Theme.of(context)
                                 .colorScheme
                                 .surfaceContainerHighest
-                                .withOpacity(0.3),
+                                .withValues(alpha: 0.3),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8.0),
                               borderSide: BorderSide.none,
@@ -249,7 +270,9 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
                               ),
                             ),
                             contentPadding: const EdgeInsets.symmetric(
-                                vertical: 16, horizontal: 20),
+                              vertical: 16,
+                              horizontal: 20,
+                            ),
                             labelText: AppLocalizations.of(context)!.difficulty,
                             labelStyle: Theme.of(context)
                                 .textTheme
@@ -258,7 +281,7 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
                                   color: Theme.of(context)
                                       .colorScheme
                                       .onSurface
-                                      .withOpacity(0.6),
+                                      .withValues(alpha: 0.6),
                                 ),
                           ),
                           dropdownColor: Theme.of(context)
@@ -270,24 +293,27 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
                             color: Theme.of(context)
                                 .colorScheme
                                 .primary
-                                .withOpacity(0.8),
+                                .withValues(alpha: 0.8),
                           ),
                           borderRadius: BorderRadius.circular(8.0),
                           initialValue: _selectedDifficulty,
                           items: widget.reserveBloc.state.difficulties!
-                              .map((difficulty) => DropdownMenuItem(
-                                    value: difficulty,
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 16.0),
-                                      child: Text(
-                                        difficulty.description,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium,
-                                      ),
+                              .map(
+                                (difficulty) => DropdownMenuItem(
+                                  value: difficulty,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0,
                                     ),
-                                  ))
+                                    child: Text(
+                                      difficulty.description,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium,
+                                    ),
+                                  ),
+                                ),
+                              )
                               .toList(),
                           onChanged: (newValue) {
                             setState(() => _selectedDifficulty = newValue);
@@ -320,15 +346,16 @@ class _BodyCreateEventState extends State<BodyCreateEvent> {
                           ),
                           const SizedBox(width: 10.0),
                           ButtonCreateEvent(
-                              formKey: _formKey,
-                              selectedTableIds: _selectedTableIds,
-                              freePlacesController: _freePlacesController,
-                              widget: widget,
-                              descriptionController: _descriptionController,
-                              requiredMaterialController:
-                                  _requiredMaterialController,
-                              selectedDifficulty: _selectedDifficulty,
-                              selectedGame: _selectedGame)
+                            formKey: _formKey,
+                            selectedTableIds: _selectedTableIds,
+                            freePlacesController: _freePlacesController,
+                            widget: widget,
+                            descriptionController: _descriptionController,
+                            requiredMaterialController:
+                                _requiredMaterialController,
+                            selectedDifficulty: _selectedDifficulty,
+                            selectedGame: _selectedGame,
+                          ),
                         ],
                       ),
                     ),

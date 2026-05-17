@@ -57,7 +57,9 @@ class _BodyEventsState extends State<BodyEvents> {
                   Text(
                     AppLocalizations.of(context)!.store_events,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold, color: Colors.black87),
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
                   ),
                   const SizedBox(height: 4),
                 ],
@@ -77,7 +79,7 @@ class _BodyEventsState extends State<BodyEvents> {
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return CircularProgressIndicator();
+                            return const CircularProgressIndicator();
                           }
                           bool isSubscribed =
                               state.user!.notifications.contains(widget.idShop);
@@ -86,35 +88,45 @@ class _BodyEventsState extends State<BodyEvents> {
                               if (isSubscribed) {
                                 await NotificationService()
                                     .unsubscribeFromTopic(widget.idShop);
+                                if (!context.mounted) return;
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                      content: Text(
-                                          AppLocalizations.of(context)!
-                                              .unsubscribed)),
+                                    content: Text(
+                                      AppLocalizations.of(context)!
+                                          .unsubscribed,
+                                    ),
+                                  ),
                                 );
                                 state.user!.notifications.remove(widget.idShop);
                               } else {
                                 await NotificationService()
                                     .subscribeToTopic(widget.idShop);
+                                if (!context.mounted) return;
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                      content: Text(
-                                          AppLocalizations.of(context)!
-                                              .subscribed)),
+                                    content: Text(
+                                      AppLocalizations.of(context)!.subscribed,
+                                    ),
+                                  ),
                                 );
                                 state.user!.notifications.add(widget.idShop);
                               }
+                              if (!context.mounted) return;
                               context
                                   .read<LoginBloc>()
                                   .add(UpdateUserInfoEvent(user: state.user!));
                               setState(() {});
                             },
-                            icon: Icon(isSubscribed
-                                ? Icons.notifications_off
-                                : Icons.notifications),
-                            label: Text(isSubscribed
-                                ? AppLocalizations.of(context)!.unsubscribed
-                                : AppLocalizations.of(context)!.subscribed),
+                            icon: Icon(
+                              isSubscribed
+                                  ? Icons.notifications_off
+                                  : Icons.notifications,
+                            ),
+                            label: Text(
+                              isSubscribed
+                                  ? AppLocalizations.of(context)!.unsubscribed
+                                  : AppLocalizations.of(context)!.subscribed,
+                            ),
                           );
                         },
                       );
@@ -132,14 +144,15 @@ class _BodyEventsState extends State<BodyEvents> {
             child: SingleChildScrollView(
               child: ListView.builder(
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: widget.events?.length,
                 itemBuilder: (context, index) {
                   final reserve = widget.events![index];
                   return GestureDetector(
                     onTap: () {
                       context.go(
-                          '/user/events/${widget.idShop}/eventReserve/${reserve.id}');
+                        '/user/events/${widget.idShop}/eventReserve/${reserve.id}',
+                      );
                     },
                     child: CardReserve(
                       reserve: reserve,

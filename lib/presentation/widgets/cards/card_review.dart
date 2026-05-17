@@ -28,7 +28,7 @@ class CardReview extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.only(bottom: 8),
+      margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
         leading: ClipOval(
           child: Image(
@@ -39,13 +39,15 @@ class CardReview extends StatelessWidget {
                 ? MemoryImage(review.avatarWriter!)
                 : FileImage(File(review.avatarWriter!.path)) as ImageProvider,
             errorBuilder: (context, error, stackTrace) {
-              return Icon(Icons.error, color: Colors.red);
+              return const Icon(Icons.error, color: Colors.red);
             },
           ),
         ),
-        title: Text(review.userNameWriter == ""
-            ? AppLocalizations.of(context)!.anonymous
-            : review.userNameWriter),
+        title: Text(
+          review.userNameWriter == ''
+              ? AppLocalizations.of(context)!.anonymous
+              : review.userNameWriter,
+        ),
         subtitle: Column(
           children: [
             buildStars(

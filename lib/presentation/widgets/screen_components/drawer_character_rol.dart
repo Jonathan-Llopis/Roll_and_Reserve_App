@@ -44,7 +44,7 @@ class DrawerCharacterRol extends StatelessWidget {
       return Center(
         child: Text(
           AppLocalizations.of(context)!.error_character_data_incomplete_or_null,
-          style: TextStyle(color: Colors.red, fontSize: 16),
+          style: const TextStyle(color: Colors.red, fontSize: 16),
         ),
       );
     }
@@ -64,7 +64,8 @@ class DrawerCharacterRol extends StatelessWidget {
           if (spells != null && spells.isNotEmpty)
             _buildSpellSection(spells, context),
           _buildSectionTitle(
-              AppLocalizations.of(context)!.equipment_and_treasure),
+            AppLocalizations.of(context)!.equipment_and_treasure,
+          ),
           _buildEquipmentList(character),
           if (companion != null && companion.isNotEmpty)
             _buildSectionTitle(AppLocalizations.of(context)!.companion),
@@ -82,8 +83,9 @@ class DrawerCharacterRol extends StatelessWidget {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      content: Text(AppLocalizations.of(context)!
-                          .confirm_delete_adventure),
+                      content: Text(
+                        AppLocalizations.of(context)!.confirm_delete_adventure,
+                      ),
                       actions: [
                         TextButton(
                           onPressed: () {
@@ -93,7 +95,7 @@ class DrawerCharacterRol extends StatelessWidget {
                         ),
                         TextButton(
                           onPressed: () {
-                            context.read<ChatBloc>().add(CleanRolPlay());
+                            context.read<ChatBloc>().add(const CleanRolPlay());
                             Navigator.of(context).pop();
                             Navigator.of(context).pop();
                             showDialog(
@@ -109,7 +111,7 @@ class DrawerCharacterRol extends StatelessWidget {
                           },
                           child: Text(
                             AppLocalizations.of(context)!.accept,
-                            style: TextStyle(color: Colors.red),
+                            style: const TextStyle(color: Colors.red),
                           ),
                         ),
                       ],
@@ -245,7 +247,9 @@ class DrawerCharacterRol extends StatelessWidget {
   /// Returns a [GridView] widget displaying the character's attributes.
 
   Widget _buildAttributesGrid(
-      Map<String, dynamic> attributes, BuildContext context) {
+    Map<String, dynamic> attributes,
+    BuildContext context,
+  ) {
     final attributeNames = {
       'STR': AppLocalizations.of(context)!.strength,
       'DEX': AppLocalizations.of(context)!.dexterity,
@@ -305,7 +309,9 @@ class DrawerCharacterRol extends StatelessWidget {
   ///
   /// Returns a [Row] widget with three [CircleStat] widgets.
   Widget _buildCombatStats(
-      Map<String, dynamic> character, BuildContext context) {
+    Map<String, dynamic> character,
+    BuildContext context,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
@@ -313,9 +319,15 @@ class DrawerCharacterRol extends StatelessWidget {
         children: [
           _buildStatCircle('HP', character['hp'], Colors.red),
           _buildStatCircle(
-              'CA', character['armor_class'].toString(), Colors.blue),
-          _buildStatCircle(AppLocalizations.of(context)!.level,
-              character['level'].toString(), Colors.green),
+            'CA',
+            character['armor_class'].toString(),
+            Colors.blue,
+          ),
+          _buildStatCircle(
+            AppLocalizations.of(context)!.level,
+            character['level'].toString(),
+            Colors.green,
+          ),
         ],
       ),
     );
@@ -338,7 +350,7 @@ class DrawerCharacterRol extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.2),
+            color: color.withValues(alpha: 0.2),
             shape: BoxShape.circle,
             border: Border.all(color: color, width: 2),
           ),
@@ -390,10 +402,14 @@ class DrawerCharacterRol extends StatelessWidget {
         children: [
           _buildSpellSlotIndicator(spells['spell_slots']['level_1'], context),
           const SizedBox(height: 10),
-          _buildSpellList(AppLocalizations.of(context)!.known_spells,
-              spells['known_spells']),
           _buildSpellList(
-              AppLocalizations.of(context)!.cantrips, spells['cantrips']),
+            AppLocalizations.of(context)!.known_spells,
+            spells['known_spells'],
+          ),
+          _buildSpellList(
+            AppLocalizations.of(context)!.cantrips,
+            spells['cantrips'],
+          ),
         ],
       ),
     );
@@ -414,7 +430,9 @@ class DrawerCharacterRol extends StatelessWidget {
   /// Returns a [Row] widget with the spell slot label and count.
 
   Widget _buildSpellSlotIndicator(
-      Map<String, dynamic> spellSlots, BuildContext context) {
+    Map<String, dynamic> spellSlots,
+    BuildContext context,
+  ) {
     return Row(
       children: [
         Text(

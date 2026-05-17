@@ -58,17 +58,17 @@ class _BodyEditShopState extends State<BodyEditShop> {
       _titleController.text = shopEdit.name;
       _adressController.text = shopEdit.address;
       _latitudController.text =
-          shopEdit.latitude == 0 ? "0" : shopEdit.latitude.toString();
+          shopEdit.latitude == 0 ? '0' : shopEdit.latitude.toString();
       _longitudController.text =
-          shopEdit.longitude == 0 ? "0" : shopEdit.longitude.toString();
+          shopEdit.longitude == 0 ? '0' : shopEdit.longitude.toString();
       _imageFile = shopEdit.logo;
       _idUserController.text = shopEdit.ownerId;
     } else {
       _titleController.text = '';
       _adressController.text = '';
       _imageFile = null;
-      _latitudController.text = "0";
-      _longitudController.text = "0";
+      _latitudController.text = '0';
+      _longitudController.text = '0';
     }
     super.initState();
   }
@@ -124,7 +124,7 @@ class _BodyEditShopState extends State<BodyEditShop> {
                       },
                       child: Container(
                         padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: Colors.teal,
                           shape: BoxShape.circle,
                         ),
@@ -141,15 +141,16 @@ class _BodyEditShopState extends State<BodyEditShop> {
             ),
             const SizedBox(height: 24),
             TextFormField(
-                controller: _titleController,
-                decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context)!.shop_name_text,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  prefixIcon: Icon(Icons.title),
+              controller: _titleController,
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.shop_name_text,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                validator: (value) => basicValidation(value, context)),
+                prefixIcon: const Icon(Icons.title),
+              ),
+              validator: (value) => basicValidation(value, context),
+            ),
             const SizedBox(height: 16),
             if (loginBloc.state.user!.role == 0)
               DropdownButtonFormField<String>(
@@ -158,7 +159,7 @@ class _BodyEditShopState extends State<BodyEditShop> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  prefixIcon: Icon(Icons.person),
+                  prefixIcon: const Icon(Icons.person),
                 ),
                 items: loginBloc.state.users!
                     .where((user) => user.role == 1)
@@ -167,7 +168,9 @@ class _BodyEditShopState extends State<BodyEditShop> {
                     value: user.id,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                          vertical: 8.0, horizontal: 12.0),
+                        vertical: 8.0,
+                        horizontal: 12.0,
+                      ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -207,16 +210,17 @@ class _BodyEditShopState extends State<BodyEditShop> {
               ),
             const SizedBox(height: 16),
             TextFormField(
-                controller: _adressController,
-                maxLines: 2,
-                decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context)!.shop_direction,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  prefixIcon: Icon(Icons.location_on),
+              controller: _adressController,
+              maxLines: 2,
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.shop_direction,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                validator: (value) => basicValidation(value, context)),
+                prefixIcon: const Icon(Icons.location_on),
+              ),
+              validator: (value) => basicValidation(value, context),
+            ),
             const SizedBox(height: 16),
             LocationPicker(
               latitudeController: _latitudController,
@@ -253,9 +257,11 @@ class _BodyEditShopState extends State<BodyEditShop> {
                       onPressed: () {
                         deleteShop(context, widget.idShop!, shopBloc);
                       },
-                      icon: Icon(Icons.delete, color: Colors.red),
-                      label: Text(AppLocalizations.of(context)!.shop_delete,
-                          style: TextStyle(color: Colors.red)),
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      label: Text(
+                        AppLocalizations.of(context)!.shop_delete,
+                        style: const TextStyle(color: Colors.red),
+                      ),
                     ),
                   ),
           ],
@@ -276,40 +282,45 @@ class _BodyEditShopState extends State<BodyEditShop> {
         horizontal: 20,
         vertical: 20,
       ),
-      child: Column(children: <Widget>[
-        Text(
-          AppLocalizations.of(context)!.add_profile_image,
-          style: TextStyle(
-            fontSize: 20.0,
-          ),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-          TextButton.icon(
-            icon: const Icon(Icons.camera),
-            onPressed: () {
-              takePhoto(ImageSource.camera);
-              Navigator.pop(context);
-            },
-            label: Text(AppLocalizations.of(context)!.camera),
+      child: Column(
+        children: <Widget>[
+          Text(
+            AppLocalizations.of(context)!.add_profile_image,
+            style: const TextStyle(
+              fontSize: 20.0,
+            ),
           ),
           const SizedBox(
-            width: 10,
+            height: 20,
           ),
-          TextButton.icon(
-            icon: const Icon(Icons.image),
-            onPressed: () {
-              takePhoto(ImageSource.gallery);
-              Navigator.pop(context);
-            },
-            label: Text(
-              AppLocalizations.of(context)!.gallery,
-            ),
-          )
-        ])
-      ]),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              TextButton.icon(
+                icon: const Icon(Icons.camera),
+                onPressed: () {
+                  takePhoto(ImageSource.camera);
+                  Navigator.pop(context);
+                },
+                label: Text(AppLocalizations.of(context)!.camera),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              TextButton.icon(
+                icon: const Icon(Icons.image),
+                onPressed: () {
+                  takePhoto(ImageSource.gallery);
+                  Navigator.pop(context);
+                },
+                label: Text(
+                  AppLocalizations.of(context)!.gallery,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 

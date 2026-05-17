@@ -13,7 +13,6 @@ class PasswordInput extends StatefulWidget {
   });
 
   @override
- 
   State<PasswordInput> createState() => _PasswordInputState();
 }
 
@@ -22,6 +21,7 @@ class _PasswordInputState extends State<PasswordInput> {
   String? _errorText;
 
   @override
+
   /// Builds a TextFormField for entering a password.
   ///
   /// The form field is decorated with a label and a border. It also has

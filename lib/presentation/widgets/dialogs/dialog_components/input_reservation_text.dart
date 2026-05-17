@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 
 class InputReservationText extends StatelessWidget {
-  const InputReservationText(
-      {super.key,
-      required this.style,
-      required this.controller,
-      required this.icon,
-      this.keyboardType,
-      this.readOnly,
-      required this.validator,
-      this.onTap});
+  const InputReservationText({
+    super.key,
+    required this.style,
+    required this.controller,
+    required this.icon,
+    this.keyboardType,
+    this.readOnly,
+    required this.validator,
+    this.onTap,
+  });
 
   final TextEditingController controller;
   final IconData icon;
@@ -19,6 +20,7 @@ class InputReservationText extends StatelessWidget {
   final VoidCallback? onTap;
   final InputDecoration style;
   @override
+
   /// Build a TextFormField with the provided controller, style, and
   /// validator. The TextFormField is wrapped in a Padding widget with
   /// a vertical padding of 12.0. If the [readOnly] parameter is true,
@@ -29,14 +31,12 @@ class InputReservationText extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12.0),
       child: TextFormField(
-        
         controller: controller,
         readOnly: readOnly ?? false,
         decoration: style,
         keyboardType: keyboardType,
         validator: validator,
         onTap: onTap,
-      
       ),
     );
   }

@@ -52,8 +52,10 @@ class CardShopMap extends StatelessWidget {
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) {
                               return const Image(
-                                  image: AssetImage(
-                                      'assets/images/error-image.png'));
+                                image: AssetImage(
+                                  'assets/images/error-image.png',
+                                ),
+                              );
                             },
                           )
                         : const Icon(Icons.shop, color: Colors.white54))
@@ -64,8 +66,8 @@ class CardShopMap extends StatelessWidget {
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
                           return const Image(
-                              image:
-                                  AssetImage('assets/images/error-image.png'));
+                            image: AssetImage('assets/images/error-image.png'),
+                          );
                         },
                       ),
               ),
@@ -86,7 +88,7 @@ class CardShopMap extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          "${AppLocalizations.of(context)!.rating}: ",
+                          '${AppLocalizations.of(context)!.rating}: ',
                           style: const TextStyle(
                             fontSize: 14,
                           ),

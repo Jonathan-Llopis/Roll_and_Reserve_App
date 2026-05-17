@@ -16,11 +16,12 @@ class BodyReservesTable extends StatefulWidget {
   final TableEntity table;
   final DateTime selectedDate;
   final int idShop;
-  const BodyReservesTable(
-      {super.key,
-      required this.table,
-      required this.selectedDate,
-      required this.idShop});
+  const BodyReservesTable({
+    super.key,
+    required this.table,
+    required this.selectedDate,
+    required this.idShop,
+  });
 
   @override
   State<BodyReservesTable> createState() => _BodyReservesTableState();
@@ -60,12 +61,14 @@ class _BodyReservesTableState extends State<BodyReservesTable> {
                     AppLocalizations.of(context)!
                         .table_number(widget.table.numberTable),
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold, color: Colors.black87),
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     AppLocalizations.of(context)!.available_reservations,
-                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                    style: const TextStyle(fontSize: 14, color: Colors.grey),
                   ),
                 ],
               ),
@@ -90,8 +93,9 @@ class _BodyReservesTableState extends State<BodyReservesTable> {
                         // ignore: use_build_context_synchronously
                         context.read<ReserveBloc>().add(
                               GetReserveByDateEvent(
-                                  dateReserve: selectedDate!,
-                                  idTable: widget.table.id),
+                                dateReserve: selectedDate!,
+                                idTable: widget.table.id,
+                              ),
                             );
                       }
                     },
@@ -107,66 +111,75 @@ class _BodyReservesTableState extends State<BodyReservesTable> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    selectedDate =
-                        selectedDate!.subtract(const Duration(days: 1));
-                  });
-                  context.read<ReserveBloc>().add(
-                        GetReserveByDateEvent(
-                            dateReserve: selectedDate!,
-                            idTable: widget.table.id),
-                      );
-                },
-                child: const Icon(Icons.arrow_back)),
+              onPressed: () {
+                setState(() {
+                  selectedDate =
+                      selectedDate!.subtract(const Duration(days: 1));
+                });
+                context.read<ReserveBloc>().add(
+                      GetReserveByDateEvent(
+                        dateReserve: selectedDate!,
+                        idTable: widget.table.id,
+                      ),
+                    );
+              },
+              child: const Icon(Icons.arrow_back),
+            ),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
                   Text(
                     AppLocalizations.of(context)!
-                        .available_reservations_for_date(""),
+                        .available_reservations_for_date(''),
                     style: const TextStyle(
-                        fontSize: 15, fontWeight: FontWeight.bold),
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   Text(
                     getDate(selectedDate.toString()),
                     style: const TextStyle(
-                        fontSize: 15, fontWeight: FontWeight.bold),
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
             ),
             ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    selectedDate = selectedDate!.add(const Duration(days: 1));
-                  });
-                  context.read<ReserveBloc>().add(
-                        GetReserveByDateEvent(
-                            dateReserve: selectedDate!,
-                            idTable: widget.table.id),
-                      );
-                },
-                child: const Icon(Icons.arrow_forward)),
+              onPressed: () {
+                setState(() {
+                  selectedDate = selectedDate!.add(const Duration(days: 1));
+                });
+                context.read<ReserveBloc>().add(
+                      GetReserveByDateEvent(
+                        dateReserve: selectedDate!,
+                        idTable: widget.table.id,
+                      ),
+                    );
+              },
+              child: const Icon(Icons.arrow_forward),
+            ),
           ],
         ),
-        BlocBuilder<ReserveBloc, ReserveState>(builder: (context, state) {
-          return buildContent<ReserveState>(
-            state: state,
-            isLoading: (state) => state.isLoading,
-            errorMessage: (state) => state.errorMessage,
-            hasData: (state) => state.reserves != null,
-            context: context,
-            contentBuilder: (state) {
-              return Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                  child: ListView.builder(
-                    itemCount: state.reserves?.length,
-                    itemBuilder: (context, index) {
-                      final reserve = state.reserves![index];
-                      return GestureDetector(
+        BlocBuilder<ReserveBloc, ReserveState>(
+          builder: (context, state) {
+            return buildContent<ReserveState>(
+              state: state,
+              isLoading: (state) => state.isLoading,
+              errorMessage: (state) => state.errorMessage,
+              hasData: (state) => state.reserves != null,
+              context: context,
+              contentBuilder: (state) {
+                return Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    child: ListView.builder(
+                      itemCount: state.reserves?.length,
+                      itemBuilder: (context, index) {
+                        final reserve = state.reserves![index];
+                        return GestureDetector(
                           onTap: () {
                             Navigator.push(
                               context,
@@ -187,14 +200,16 @@ class _BodyReservesTableState extends State<BodyReservesTable> {
                           child: CardReserve(
                             reserve: reserve,
                             idShop: widget.idShop,
-                          ));
-                    },
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                ),
-              );
-            },
-          );
-        })
+                );
+              },
+            );
+          },
+        ),
       ],
     );
   }

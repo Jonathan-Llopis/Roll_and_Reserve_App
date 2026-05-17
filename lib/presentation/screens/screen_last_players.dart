@@ -8,12 +8,12 @@ import 'package:roll_and_reserve/presentation/functions/state_check.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/default_scaffold.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/screen_body/body_last_players.dart';
 
-
 class ScreenLastPlayers extends StatefulWidget {
-
   final PreferredSizeWidget appBar;
-  const ScreenLastPlayers(
-      {super.key, required this.appBar});
+  const ScreenLastPlayers({
+    super.key,
+    required this.appBar,
+  });
 
   @override
   State<ScreenLastPlayers> createState() => _ScreenLastPlayersState();
@@ -21,6 +21,7 @@ class ScreenLastPlayers extends StatefulWidget {
 
 class _ScreenLastPlayersState extends State<ScreenLastPlayers> {
   @override
+
   /// Called when the widget is inserted into the tree.
   ///
   /// This method is responsible for requesting the last 10 players
@@ -35,6 +36,7 @@ class _ScreenLastPlayersState extends State<ScreenLastPlayers> {
   }
 
   @override
+
   /// Builds the screen with the last 10 players.
   ///
   /// This screen is the default scaffold with the given [appBar] and a
@@ -42,7 +44,7 @@ class _ScreenLastPlayersState extends State<ScreenLastPlayers> {
   /// that have played in the game, with their respective user id, name,
   /// and date of the last time they played.
   Widget build(BuildContext context) {
- LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
+    LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
     return DefaultScaffold(
       appBar: widget.appBar,
       body: BlocBuilder<ReserveBloc, ReserveState>(
@@ -55,7 +57,9 @@ class _ScreenLastPlayersState extends State<ScreenLastPlayers> {
             context: context,
             contentBuilder: (state) {
               return BodyLastPlayers(
-                  idUser: loginBloc.state.user!.id, users: state.lastUsers ?? [],);
+                idUser: loginBloc.state.user!.id,
+                users: state.lastUsers ?? [],
+              );
             },
           );
         },

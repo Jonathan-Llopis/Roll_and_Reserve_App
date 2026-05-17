@@ -11,11 +11,12 @@ import 'package:roll_and_reserve/presentation/functions/functions_validation.dar
 import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class FilterTables extends StatefulWidget {
-  const FilterTables(
-      {super.key,
-      required this.currentShop,
-      required this.reserveBloc,
-      required this.tableBloc});
+  const FilterTables({
+    super.key,
+    required this.currentShop,
+    required this.reserveBloc,
+    required this.tableBloc,
+  });
   final ShopEntity currentShop;
   final ReserveBloc reserveBloc;
   final TableBloc tableBloc;
@@ -78,18 +79,23 @@ class _FilterTablesState extends State<FilterTables> {
     return BlocListener<ReserveBloc, ReserveState>(
       listener: (context, state) {
         if (state.reserves != null) {
-          widget.tableBloc.add(GetAvailableTablesEvent(
+          widget.tableBloc.add(
+            GetAvailableTablesEvent(
               dayDate: _dateController.text,
               startTime: _startTimeController.text,
               endTime: _endTimeController.text,
               reserves: state.reserves!,
-              shopId: widget.currentShop.id));
+              shopId: widget.currentShop.id,
+            ),
+          );
           Navigator.of(context).pop();
         } else if (state.errorMessage != null) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-                content: Text(
-                    AppLocalizations.of(context)!.error_loading_reservations)),
+              content: Text(
+                AppLocalizations.of(context)!.error_loading_reservations,
+              ),
+            ),
           );
         }
       },
@@ -105,7 +111,7 @@ class _FilterTablesState extends State<FilterTables> {
                 readOnly: true,
                 decoration: InputDecoration(
                   labelText: AppLocalizations.of(context)!.date,
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                 ),
                 onTap: () {
                   selectDate(context, _dateController);
@@ -119,7 +125,7 @@ class _FilterTablesState extends State<FilterTables> {
                 onTap: () => selectTime(context, _startTimeController),
                 decoration: InputDecoration(
                   labelText: AppLocalizations.of(context)!.start_time_hh_mm,
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                 ),
                 validator: (value) {
                   String? error = validateHour(value, context);
@@ -142,7 +148,7 @@ class _FilterTablesState extends State<FilterTables> {
                 onTap: () => selectTime(context, _endTimeController),
                 decoration: InputDecoration(
                   labelText: AppLocalizations.of(context)!.end_time_hh_mm,
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                 ),
                 validator: (value) {
                   String? error = validateHour(value, context);
@@ -162,12 +168,14 @@ class _FilterTablesState extends State<FilterTables> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    widget.reserveBloc.add(GetReservesByShopEvent(
-                      currentShop: widget.currentShop,
-                      dateReserve: _dateController.text,
-                      startTime: _startTimeController.text,
-                      endTime: _endTimeController.text,
-                    ));
+                    widget.reserveBloc.add(
+                      GetReservesByShopEvent(
+                        currentShop: widget.currentShop,
+                        dateReserve: _dateController.text,
+                        startTime: _startTimeController.text,
+                        endTime: _endTimeController.text,
+                      ),
+                    );
                   }
                 },
                 child: Text(AppLocalizations.of(context)!.filter),

@@ -63,8 +63,11 @@ class _BodyUsersAdminState extends State<BodyUsersAdmin> {
               onChanged: (value) {
                 setState(() {
                   users = loginBloc.state.users!
-                      .where((user) =>
-                          user.name.toLowerCase().contains(value.toLowerCase()))
+                      .where(
+                        (user) => user.name
+                            .toLowerCase()
+                            .contains(value.toLowerCase()),
+                      )
                       .toList();
                 });
               },
@@ -80,19 +83,20 @@ class _BodyUsersAdminState extends State<BodyUsersAdmin> {
           const Divider(height: 1, thickness: 1),
           Expanded(
             child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                child: ListView.builder(
-                  itemCount: users.isNotEmpty
-                      ? users.length
-                      : loginBloc.state.users!.length,
-                  itemBuilder: (context, index) {
-                    final user = users.isNotEmpty
-                        ? users[index]
-                        : loginBloc.state.users![index];
-                    return CardUser(user: user);
-                  },
-                )),
-          )
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: ListView.builder(
+                itemCount: users.isNotEmpty
+                    ? users.length
+                    : loginBloc.state.users!.length,
+                itemBuilder: (context, index) {
+                  final user = users.isNotEmpty
+                      ? users[index]
+                      : loginBloc.state.users![index];
+                  return CardUser(user: user);
+                },
+              ),
+            ),
+          ),
         ],
       ),
     );

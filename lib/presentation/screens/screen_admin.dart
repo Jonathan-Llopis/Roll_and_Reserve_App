@@ -18,10 +18,10 @@ class ScreenAdmin extends StatefulWidget {
   const ScreenAdmin({super.key, required this.appBar});
 
   @override
-  State<ScreenAdmin> createState() => _ScreenMainState();
+  State<ScreenAdmin> createState() => _ScreenAdminState();
 }
 
-class _ScreenMainState extends State<ScreenAdmin> {
+class _ScreenAdminState extends State<ScreenAdmin> {
   int currentIndex = 0;
 
   @override
@@ -56,8 +56,9 @@ class _ScreenMainState extends State<ScreenAdmin> {
   /// available.
 
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
-      return buildContent<LoginState>(
+    return BlocBuilder<LoginBloc, LoginState>(
+      builder: (context, state) {
+        return buildContent<LoginState>(
           state: state,
           isLoading: (state) => state.isLoading,
           errorMessage: (state) => state.errorMessage,
@@ -69,42 +70,45 @@ class _ScreenMainState extends State<ScreenAdmin> {
               body: currentIndex == 0
                   ? BlocBuilder<LoginBloc, LoginState>(
                       builder: (context, state) {
-                      return buildContent<LoginState>(
-                        state: state,
-                        isLoading: (state) => state.isLoading,
-                        errorMessage: (state) => state.errorMessage,
-                        hasData: (state) => state.users != null,
-                        context: context,
-                        contentBuilder: (state) {
-                          return Column(
-                            children: [
-                              BodyUsersAdmin(),
-                            ],
-                          );
-                        },
-                      );
-                    })
-                  : BlocBuilder<ShopBloc, ShopState>(builder: (context, state) {
-                      return buildContent<ShopState>(
-                        state: state,
-                        isLoading: (state) => state.isLoading,
-                        errorMessage: (state) => state.errorMessage,
-                        hasData: (state) => state.shops != null,
-                        context: context,
-                        contentBuilder: (state) {
-                          return BodyAdminShops();
-                        },
-                      );
-                    }),
+                        return buildContent<LoginState>(
+                          state: state,
+                          isLoading: (state) => state.isLoading,
+                          errorMessage: (state) => state.errorMessage,
+                          hasData: (state) => state.users != null,
+                          context: context,
+                          contentBuilder: (state) {
+                            return const Column(
+                              children: [
+                                BodyUsersAdmin(),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    )
+                  : BlocBuilder<ShopBloc, ShopState>(
+                      builder: (context, state) {
+                        return buildContent<ShopState>(
+                          state: state,
+                          isLoading: (state) => state.isLoading,
+                          errorMessage: (state) => state.errorMessage,
+                          hasData: (state) => state.shops != null,
+                          context: context,
+                          contentBuilder: (state) {
+                            return const BodyAdminShops();
+                          },
+                        );
+                      },
+                    ),
               floatingActionButton: Container(),
               bottomNavigationBar: BottomNavigationBar(
                 items: [
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.people),
+                    icon: const Icon(Icons.people),
                     label: AppLocalizations.of(context)!.username,
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.store),
+                    icon: const Icon(Icons.store),
                     label: AppLocalizations.of(context)!.edit_shop,
                   ),
                 ],
@@ -116,7 +120,9 @@ class _ScreenMainState extends State<ScreenAdmin> {
                 currentIndex: currentIndex,
               ),
             );
-          });
-    });
+          },
+        );
+      },
+    );
   }
 }

@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/l10n/app_localizations.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
-import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class DefaultAppBar extends StatefulWidget implements PreferredSizeWidget {
   const DefaultAppBar({
@@ -58,7 +57,7 @@ class _DefaultAppBarState extends State<DefaultAppBar> {
           return const Center(child: CircularProgressIndicator());
         } else {
           return AppBar(
-            iconTheme: IconThemeData(
+            iconTheme: const IconThemeData(
               color: Colors.white,
             ),
             backgroundColor: Colors.transparent,
@@ -77,13 +76,13 @@ class _DefaultAppBarState extends State<DefaultAppBar> {
                     Container(
                       width: logoSize,
                       height: logoSize,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black26,
                             blurRadius: 6,
-                            offset: const Offset(2, 2),
+                            offset: Offset(2, 2),
                           ),
                         ],
                       ),
@@ -92,8 +91,11 @@ class _DefaultAppBarState extends State<DefaultAppBar> {
                           'assets/icon/logo.png',
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
-                            return Icon(Icons.error,
-                                color: Colors.red, size: logoSize * 0.5);
+                            return Icon(
+                              Icons.error,
+                              color: Colors.red,
+                              size: logoSize * 0.5,
+                            );
                           },
                         ),
                       ),
@@ -135,13 +137,13 @@ class _DefaultAppBarState extends State<DefaultAppBar> {
                   child: Container(
                     width: 50,
                     height: 50,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black38,
                           blurRadius: 6,
-                          offset: const Offset(2, 2),
+                          offset: Offset(2, 2),
                         ),
                       ],
                     ),
@@ -153,7 +155,10 @@ class _DefaultAppBarState extends State<DefaultAppBar> {
                             : FileImage(File(state.user!.avatar.path))
                                 as ImageProvider,
                         errorBuilder: (context, error, stackTrace) {
-                          return Icon(Icons.person, color: Colors.white54);
+                          return const Icon(
+                            Icons.person,
+                            color: Colors.white54,
+                          );
                         },
                       ),
                     ),
@@ -189,7 +194,7 @@ class _DefaultAppBarState extends State<DefaultAppBar> {
                   filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
                   child: Container(
                     alignment: Alignment.center,
-                    color: Colors.black.withOpacity(0.2),
+                    color: Colors.black.withValues(alpha: 0.2),
                   ),
                 ),
               ),

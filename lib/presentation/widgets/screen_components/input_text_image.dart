@@ -14,8 +14,11 @@ import 'package:speech_to_text/speech_to_text.dart';
 import 'package:roll_and_reserve/l10n/app_localizations.dart';
 
 class InputTextImage extends StatefulWidget {
-  const InputTextImage(
-      {super.key, required this.focusNode, required this.isAssitant});
+  const InputTextImage({
+    super.key,
+    required this.focusNode,
+    required this.isAssitant,
+  });
 
   final bool isAssitant;
   final FocusNode focusNode;
@@ -118,7 +121,9 @@ class _InputTextState extends State<InputTextImage> {
       onResult: _onSpeechResult,
       localeId: 'es_ES',
       listenFor: const Duration(seconds: 30),
-      partialResults: true,
+      listenOptions: SpeechListenOptions(
+        partialResults: true,
+      ),
     );
     setState(() {});
   }
@@ -181,7 +186,7 @@ class _InputTextState extends State<InputTextImage> {
               children: [
                 Expanded(
                   child: ConstrainedBox(
-                    constraints: BoxConstraints(
+                    constraints: const BoxConstraints(
                       maxHeight: 150,
                     ),
                     child: TextField(
@@ -192,14 +197,17 @@ class _InputTextState extends State<InputTextImage> {
                       decoration: InputDecoration(
                         hintText: AppLocalizations.of(context)!.send_message,
                         hintStyle: theme.textTheme.bodyLarge?.copyWith(
-                          color: theme.colorScheme.onSurface.withOpacity(0.4),
+                          color: theme.colorScheme.onSurface
+                              .withValues(alpha: 0.4),
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(50),
                           borderSide: BorderSide.none,
                         ),
                         contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 14),
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
                         fillColor: Colors.grey[200],
                         filled: true,
                       ),
@@ -228,7 +236,8 @@ class _InputTextState extends State<InputTextImage> {
                                   builder: (context) => bottomSheet(),
                                 );
                               },
-                              icon: Icon(Icons.image, color: Colors.white),
+                              icon:
+                                  const Icon(Icons.image, color: Colors.white),
                               style: IconButton.styleFrom(
                                 backgroundColor: theme.colorScheme.primary,
                                 shape: const CircleBorder(),
@@ -242,7 +251,7 @@ class _InputTextState extends State<InputTextImage> {
                                 child: Container(
                                   width: 8,
                                   height: 8,
-                                  decoration: BoxDecoration(
+                                  decoration: const BoxDecoration(
                                     color: Colors.red,
                                     shape: BoxShape.circle,
                                   ),
@@ -274,15 +283,16 @@ class _InputTextState extends State<InputTextImage> {
                           style: IconButton.styleFrom(
                             backgroundColor: _speechEnabled
                                 ? theme.colorScheme.primary
-                                : theme.colorScheme.surface.withOpacity(0.5),
+                                : theme.colorScheme.surface
+                                    .withValues(alpha: 0.5),
                             shape: const CircleBorder(),
                             padding: const EdgeInsets.all(16),
                           ),
                         ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 state.isLoading
-                    ? CircularProgressIndicator()
+                    ? const CircularProgressIndicator()
                     : AnimatedSwitcher(
                         duration: const Duration(milliseconds: 200),
                         child: state.isLoading
@@ -291,12 +301,13 @@ class _InputTextState extends State<InputTextImage> {
                                 onPressed: () async {
                                   List<ByteData>? imageBytes;
                                   if (_image != null) {
+                                    final bytes = await _image!.readAsBytes();
+                                    if (!context.mounted) return;
                                     imageBytes = [
-                                      (await _image!.readAsBytes())
-                                          .buffer
-                                          .asByteData()
+                                      bytes.buffer.asByteData(),
                                     ];
                                   }
+                                  if (!context.mounted) return;
                                   widget.isAssitant
                                       ? context.read<ChatBloc>().add(
                                             OnChatAssistantSendMessage(
@@ -313,7 +324,7 @@ class _InputTextState extends State<InputTextImage> {
                                   textController.clear();
                                   _image = null;
                                 },
-                                icon: Icon(
+                                icon: const Icon(
                                   Icons.send,
                                   color: Colors.white,
                                 ),
@@ -345,40 +356,45 @@ class _InputTextState extends State<InputTextImage> {
         horizontal: 20,
         vertical: 20,
       ),
-      child: Column(children: <Widget>[
-        Text(
-          AppLocalizations.of(context)!.add_profile_image,
-          style: TextStyle(
-            fontSize: 20.0,
-          ),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-          TextButton.icon(
-            icon: const Icon(Icons.camera),
-            onPressed: () {
-              takePhoto(ImageSource.camera);
-              Navigator.pop(context);
-            },
-            label: Text(AppLocalizations.of(context)!.camera),
+      child: Column(
+        children: <Widget>[
+          Text(
+            AppLocalizations.of(context)!.add_profile_image,
+            style: const TextStyle(
+              fontSize: 20.0,
+            ),
           ),
           const SizedBox(
-            width: 10,
+            height: 20,
           ),
-          TextButton.icon(
-            icon: const Icon(Icons.image),
-            onPressed: () {
-              takePhoto(ImageSource.gallery);
-              Navigator.pop(context);
-            },
-            label: Text(
-              AppLocalizations.of(context)!.gallery,
-            ),
-          )
-        ])
-      ]),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              TextButton.icon(
+                icon: const Icon(Icons.camera),
+                onPressed: () {
+                  takePhoto(ImageSource.camera);
+                  Navigator.pop(context);
+                },
+                label: Text(AppLocalizations.of(context)!.camera),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              TextButton.icon(
+                icon: const Icon(Icons.image),
+                onPressed: () {
+                  takePhoto(ImageSource.gallery);
+                  Navigator.pop(context);
+                },
+                label: Text(
+                  AppLocalizations.of(context)!.gallery,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 

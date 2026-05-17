@@ -19,38 +19,42 @@ class DialogLogOut extends StatelessWidget {
   /// If the user accepts, the user is logged out and the dialog is closed.
   /// The user is returned to the login screen.
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
-      return AlertDialog(
-        title: Text(AppLocalizations.of(context)!.user_logout,
-            style: TextStyle(
+    return BlocBuilder<LoginBloc, LoginState>(
+      builder: (context, state) {
+        return AlertDialog(
+          title: Text(
+            AppLocalizations.of(context)!.user_logout,
+            style: const TextStyle(
               color: Color.fromARGB(255, 0, 0, 0),
               fontSize: 30,
-            )),
-        content: Text(
-          AppLocalizations.of(context)!.confirm_logout,
-          style: TextStyle(
-            fontSize: 18,
-            color: Color.fromARGB(255, 0, 0, 0),
+            ),
           ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            style: AppTheme.textButtonCancelStyle,
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text(AppLocalizations.of(context)!.cancel),
+          content: Text(
+            AppLocalizations.of(context)!.confirm_logout,
+            style: const TextStyle(
+              fontSize: 18,
+              color: Color.fromARGB(255, 0, 0, 0),
+            ),
           ),
-          TextButton(
-            style: AppTheme.textButtonAcceptStyle,
-            onPressed: () {
-              context.read<LoginBloc>().add(LogoutButtonPressed());
-              context.go('/login');
-            },
-            child: Text(AppLocalizations.of(context)!.accept),
-          ),
-        ],
-      );
-    });
+          actions: <Widget>[
+            TextButton(
+              style: AppTheme.textButtonCancelStyle,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text(AppLocalizations.of(context)!.cancel),
+            ),
+            TextButton(
+              style: AppTheme.textButtonAcceptStyle,
+              onPressed: () {
+                context.read<LoginBloc>().add(LogoutButtonPressed());
+                context.go('/login');
+              },
+              child: Text(AppLocalizations.of(context)!.accept),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

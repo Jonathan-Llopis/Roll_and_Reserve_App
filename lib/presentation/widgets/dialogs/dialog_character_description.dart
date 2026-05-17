@@ -42,8 +42,11 @@ class DialogCharacterDescription extends StatelessWidget {
   ///
   Widget build(BuildContext context) {
     return AlertDialog(
-      icon: Icon(Icons.person_4_rounded,
-          size: 32, color: Theme.of(context).colorScheme.primary),
+      icon: Icon(
+        Icons.person_4_rounded,
+        size: 32,
+        color: Theme.of(context).colorScheme.primary,
+      ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       scrollable: true,
       title: Column(
@@ -81,8 +84,10 @@ class DialogCharacterDescription extends StatelessWidget {
                 labelText:
                     AppLocalizations.of(context)!.adventurers_description,
                 alignLabelWithHint: true,
-                prefixIcon: Icon(Icons.edit_note_rounded,
-                    color: Theme.of(context).colorScheme.outline),
+                prefixIcon: Icon(
+                  Icons.edit_note_rounded,
+                  color: Theme.of(context).colorScheme.outline,
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide:
@@ -92,7 +97,7 @@ class DialogCharacterDescription extends StatelessWidget {
                 fillColor: Theme.of(context)
                     .colorScheme
                     .surfaceContainerHighest
-                    .withOpacity(0.4),
+                    .withValues(alpha: 0.4),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(
@@ -112,8 +117,10 @@ class DialogCharacterDescription extends StatelessWidget {
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 labelText: AppLocalizations.of(context)!.setting_description,
                 alignLabelWithHint: true,
-                prefixIcon: Icon(Icons.landscape_rounded,
-                    color: Theme.of(context).colorScheme.outline),
+                prefixIcon: Icon(
+                  Icons.landscape_rounded,
+                  color: Theme.of(context).colorScheme.outline,
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide:
@@ -123,7 +130,7 @@ class DialogCharacterDescription extends StatelessWidget {
                 fillColor: Theme.of(context)
                     .colorScheme
                     .surfaceContainerHighest
-                    .withOpacity(0.4),
+                    .withValues(alpha: 0.4),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(
@@ -142,14 +149,14 @@ class DialogCharacterDescription extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: ElevatedButton.icon(
-            icon: Icon(
+            icon: const Icon(
               Icons.sports_esports_rounded,
               size: 20,
               color: Colors.white,
             ),
             label: Text(
               AppLocalizations.of(context)!.start_game.toUpperCase(),
-              style: TextStyle(
+              style: const TextStyle(
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.5,
               ),
@@ -157,10 +164,13 @@ class DialogCharacterDescription extends StatelessWidget {
             onPressed: () {
               if (controllerDescription.text.isNotEmpty &&
                   controllerTheme.text.isNotEmpty) {
-                context.read<ChatBloc>().add(OnRolPlayStart(
-                    context: context,
-                    character: controllerDescription.text,
-                    theme: controllerTheme.text));
+                context.read<ChatBloc>().add(
+                      OnRolPlayStart(
+                        context: context,
+                        character: controllerDescription.text,
+                        theme: controllerTheme.text,
+                      ),
+                    );
                 Navigator.of(context).pop();
               }
             },

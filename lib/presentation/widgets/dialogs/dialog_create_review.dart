@@ -144,7 +144,7 @@ class _DialogCreateReviewState extends State<DialogCreateReview> {
     final loc = AppLocalizations.of(context)!;
     return ElevatedButton.icon(
       icon: _isSubmitting
-          ? SizedBox(
+          ? const SizedBox(
               width: 20,
               height: 20,
               child: CircularProgressIndicator(
@@ -152,9 +152,9 @@ class _DialogCreateReviewState extends State<DialogCreateReview> {
               ),
             )
           : const Icon(Icons.reviews_outlined, size: 20),
-      label: Text(_isSubmitting
-          ? AppLocalizations.of(context)!.loading
-          : loc.add_review),
+      label: Text(
+        _isSubmitting ? AppLocalizations.of(context)!.loading : loc.add_review,
+      ),
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 16),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

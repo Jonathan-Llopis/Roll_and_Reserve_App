@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -15,6 +14,7 @@ class UserAvatar extends StatelessWidget {
   final UserEntity user;
 
   @override
+
   /// Builds a [CircleAvatar] with the user's avatar or a default image.
   ///
   /// If the user's avatar is not null, it is displayed in a [ClipOval] to make

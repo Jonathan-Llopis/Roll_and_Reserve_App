@@ -14,7 +14,7 @@ class OnboardingDuenioScreen extends StatefulWidget {
   const OnboardingDuenioScreen({super.key});
 
   @override
-  _OnboardingDuenioScreenState createState() => _OnboardingDuenioScreenState();
+  State<OnboardingDuenioScreen> createState() => _OnboardingDuenioScreenState();
 }
 
 class _OnboardingDuenioScreenState extends State<OnboardingDuenioScreen> {
@@ -46,7 +46,7 @@ class _OnboardingDuenioScreenState extends State<OnboardingDuenioScreen> {
   /// the 'isFirstTime' field of the user in the SharedPreferences to
   /// false. It also saves the user in the repository as having finished
   /// the onboarding. Finally, it navigates to the user home page.
-  void _onIntroEnd(context) async {
+  void _onIntroEnd(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isFirstTime', false);
     await di.sl<UserRespository>().saveUserField(user.id, 'isFirstTime', false);
@@ -67,10 +67,10 @@ class _OnboardingDuenioScreenState extends State<OnboardingDuenioScreen> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black.withValues(alpha: 0.2),
             blurRadius: 10,
             spreadRadius: 2,
-          )
+          ),
         ],
       ),
       child: ClipRRect(
@@ -155,12 +155,18 @@ class _OnboardingDuenioScreenState extends State<OnboardingDuenioScreen> {
       onDone: () => _onIntroEnd(context),
       onSkip: () => _onIntroEnd(context),
       showSkipButton: true,
-      skip: Text(AppLocalizations.of(context)!.skip,
-          style: const TextStyle(color: Colors.grey)),
+      skip: Text(
+        AppLocalizations.of(context)!.skip,
+        style: const TextStyle(color: Colors.grey),
+      ),
       next: const Icon(Icons.arrow_forward, color: Color(0xFF00FF88)),
-      done: Text(AppLocalizations.of(context)!.get_started,
-          style:
-              TextStyle(fontWeight: FontWeight.w600, color: Color(0xFF00FF88))),
+      done: Text(
+        AppLocalizations.of(context)!.get_started,
+        style: const TextStyle(
+          fontWeight: FontWeight.w600,
+          color: Color(0xFF00FF88),
+        ),
+      ),
       dotsDecorator: DotsDecorator(
         size: const Size.square(10.0),
         activeSize: const Size(20.0, 10.0),

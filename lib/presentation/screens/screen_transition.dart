@@ -4,6 +4,7 @@ class ScreenTransition extends StatelessWidget {
   const ScreenTransition({super.key});
 
   @override
+
   /// Builds the screen transition widget.
   ///
   /// This is a basic Scaffold with an AppBar and a Center widget with
@@ -14,9 +15,9 @@ class ScreenTransition extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Screen Transition'),
+        title: const Text('Screen Transition'),
       ),
-      body: Center(
+      body: const Center(
         child: Text('Welcome to Screen Transition!'),
       ),
     );

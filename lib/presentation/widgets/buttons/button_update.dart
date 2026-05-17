@@ -48,9 +48,12 @@ class ButtonUpdate extends StatelessWidget {
           listener: (context, state) {
             if (state.validatePassword != null) {
               if (_formKey.currentState!.validate()) {
-                context.read<LoginBloc>().add(UpdatePasswordEvent(
-                    password: _newPasswordController.text,
-                    oldPassword: _oldPasswordController.text));
+                context.read<LoginBloc>().add(
+                      UpdatePasswordEvent(
+                        password: _newPasswordController.text,
+                        oldPassword: _oldPasswordController.text,
+                      ),
+                    );
                 context.go('/login');
               }
             }

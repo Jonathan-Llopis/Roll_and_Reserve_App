@@ -236,7 +236,7 @@ class DrawerMain extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           UserAccountsDrawerHeader(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('assets/images/appbar_back.jpg'),
                 fit: BoxFit.cover,
@@ -244,7 +244,7 @@ class DrawerMain extends StatelessWidget {
             ),
             accountName: Text(
               user?.username ?? AppLocalizations.of(context)!.username,
-              style: TextStyle(fontSize: 20),
+              style: const TextStyle(fontSize: 20),
             ),
             accountEmail: Text(user?.email ?? 'email@example.com'),
             currentAccountPicture: CircleAvatar(
@@ -258,8 +258,10 @@ class DrawerMain extends StatelessWidget {
               children: [
                 user.role == 0
                     ? ListTile(
-                        leading: Icon(Icons.admin_panel_settings,
-                            color: theme.colorScheme.primary),
+                        leading: Icon(
+                          Icons.admin_panel_settings,
+                          color: theme.colorScheme.primary,
+                        ),
                         title: Text(AppLocalizations.of(context)!.role_admin),
                         onTap: () => _navigateTo(context, '/user'),
                       )
@@ -287,14 +289,16 @@ class DrawerMain extends StatelessWidget {
               ],
             ),
           ),
-          Divider(),
+          const Divider(),
           ListTile(
-            leading: Icon(Icons.exit_to_app, color: Colors.red),
-            title: Text(AppLocalizations.of(context)!.logout,
-                style: TextStyle(color: Colors.red)),
+            leading: const Icon(Icons.exit_to_app, color: Colors.red),
+            title: Text(
+              AppLocalizations.of(context)!.logout,
+              style: const TextStyle(color: Colors.red),
+            ),
             onTap: () => mostrarLogOut(context),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
         ],
       ),
     );

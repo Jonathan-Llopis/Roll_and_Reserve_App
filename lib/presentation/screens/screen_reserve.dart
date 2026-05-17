@@ -75,70 +75,102 @@ class _ScreenReserveState extends State<ScreenReserve> {
     table = tableBloc.state.tables!
         .firstWhere((table) => table.id == widget.idTable);
     return DefaultScaffold(
-        appBar: widget.appBar,
-        body: BlocBuilder<ReserveBloc, ReserveState>(
-          builder: (context, state) {
-            if (state.reserve == null) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            return buildContent<ReserveState>(
-              state: state,
-              isLoading: (state) => state.isLoading,
-              errorMessage: (state) => state.errorMessage,
-              hasData: (state) => state.reserve != null,
-              context: context,
-              contentBuilder: (state) {
-                if (state.reserve!.id != widget.idReserve) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                return InformationReserve(
-                  reserve: state.reserve!,
-                  loginBloc: loginBloc,
-                  dateReserve: DateFormat('dd - MM - yyyy')
-                      .parse(state.reserve!.dayDate),
-                  idShop: table.idShop,
-                );
-              },
+      appBar: widget.appBar,
+      body: BlocBuilder<ReserveBloc, ReserveState>(
+        builder: (context, state) {
+          if (state.reserve == null) {
+            return const Center(
+              child: CircularProgressIndicator(),
             );
-          },
-        ),
-        floatingActionButton: BlocBuilder<ReserveBloc, ReserveState>(
-          builder: (context, state) {
-            if (state.reserve == null) {
-              return Center(
-                child: CircularProgressIndicator(),
+          }
+          return buildContent<ReserveState>(
+            state: state,
+            isLoading: (state) => state.isLoading,
+            errorMessage: (state) => state.errorMessage,
+            hasData: (state) => state.reserve != null,
+            context: context,
+            contentBuilder: (state) {
+              if (state.reserve!.id != widget.idReserve) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              return InformationReserve(
+                reserve: state.reserve!,
+                loginBloc: loginBloc,
+                dateReserve:
+                    DateFormat('dd - MM - yyyy').parse(state.reserve!.dayDate),
+                idShop: table.idShop,
               );
-            }
-            return buildContent<ReserveState>(
-                state: state,
-                isLoading: (state) => state.isLoading,
-                errorMessage: (state) => state.errorMessage,
-                hasData: (state) => state.reserve != null,
-                context: context,
-                contentBuilder: (state) {
-                  UserEntity? userReserve;
-                  if (state.reserve!.users!
-                      .any((user) => user.id == loginBloc.state.user!.id)) {
-                    userReserve = state.reserve!.users!.firstWhere(
-                        (user) => user.id == loginBloc.state.user!.id);
-                  }
-                  return loginBloc.state.user!.role == 2 &&
-                          !state.reserve!.isEvent &&
-                          DateFormat('dd - MM - yyyy HH:mm')
-                              .parse(
-                                  '${state.reserve!.dayDate} ${state.reserve!.horaInicio}')
-                              .subtract(Duration(minutes: 5))
-                              .isBefore(DateTime.now()) &&
-                          DateFormat('dd - MM - yyyy HH:mm')
-                              .parse(
-                                  '${state.reserve!.dayDate} ${state.reserve!.horaFin}')
-                              .subtract(Duration(minutes: 0))
-                              .isAfter(DateTime.now()) &&
-                          (userReserve?.reserveConfirmation ?? true) == false
+            },
+          );
+        },
+      ),
+      floatingActionButton: BlocBuilder<ReserveBloc, ReserveState>(
+        builder: (context, state) {
+          if (state.reserve == null) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          return buildContent<ReserveState>(
+            state: state,
+            isLoading: (state) => state.isLoading,
+            errorMessage: (state) => state.errorMessage,
+            hasData: (state) => state.reserve != null,
+            context: context,
+            contentBuilder: (state) {
+              UserEntity? userReserve;
+              if (state.reserve!.users!
+                  .any((user) => user.id == loginBloc.state.user!.id)) {
+                userReserve = state.reserve!.users!.firstWhere(
+                  (user) => user.id == loginBloc.state.user!.id,
+                );
+              }
+              return loginBloc.state.user!.role == 2 &&
+                      !state.reserve!.isEvent &&
+                      DateFormat('dd - MM - yyyy HH:mm')
+                          .parse(
+                            '${state.reserve!.dayDate} ${state.reserve!.horaInicio}',
+                          )
+                          .subtract(const Duration(minutes: 5))
+                          .isBefore(DateTime.now()) &&
+                      DateFormat('dd - MM - yyyy HH:mm')
+                          .parse(
+                            '${state.reserve!.dayDate} ${state.reserve!.horaFin}',
+                          )
+                          .subtract(const Duration(minutes: 0))
+                          .isAfter(DateTime.now()) &&
+                      (userReserve?.reserveConfirmation ?? true) == false
+                  ? FloatingActionButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          PageRouteBuilder(
+                            pageBuilder: (context, animation1, animation2) =>
+                                QRScannerScreen(
+                              idReserve: widget.idReserve,
+                              idTable: widget.idTable!,
+                              idShop: table.idShop,
+                              appBar: widget.appBar,
+                            ),
+                            transitionDuration: Duration.zero,
+                            reverseTransitionDuration: Duration.zero,
+                          ),
+                        );
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.qr_code),
+                          Text(
+                            AppLocalizations.of(context)!.confirm,
+                            style: const TextStyle(fontSize: 10),
+                          ),
+                        ],
+                      ),
+                    )
+                  : state.reserve!.userReserveId == loginBloc.state.user!.id
                       ? FloatingActionButton(
                           onPressed: () {
                             Navigator.push(
@@ -146,52 +178,26 @@ class _ScreenReserveState extends State<ScreenReserve> {
                               PageRouteBuilder(
                                 pageBuilder:
                                     (context, animation1, animation2) =>
-                                        QRScannerScreen(
-                                  idReserve: widget.idReserve,
-                                  idTable: widget.idTable!,
+                                        ScreenCreateReserve(
                                   idShop: table.idShop,
+                                  idTable: widget.idTable!,
                                   appBar: widget.appBar,
+                                  searchDateTimeString:
+                                      '${state.reserve!.dayDate} ${state.reserve!.horaInicio}',
+                                  reserve: state.reserve,
                                 ),
                                 transitionDuration: Duration.zero,
                                 reverseTransitionDuration: Duration.zero,
                               ),
                             );
                           },
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.qr_code),
-                              Text(AppLocalizations.of(context)!.confirm,
-                                  style: TextStyle(fontSize: 10)),
-                            ],
-                          ),
+                          child: const Icon(Icons.edit),
                         )
-                      : state.reserve!.userReserveId == loginBloc.state.user!.id
-                          ? FloatingActionButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  PageRouteBuilder(
-                                    pageBuilder:
-                                        (context, animation1, animation2) =>
-                                            ScreenCreateReserve(
-                                      idShop: table.idShop,
-                                      idTable: widget.idTable!,
-                                      appBar: widget.appBar,
-                                      searchDateTimeString:
-                                          '${state.reserve!.dayDate} ${state.reserve!.horaInicio}',
-                                      reserve: state.reserve,
-                                    ),
-                                    transitionDuration: Duration.zero,
-                                    reverseTransitionDuration: Duration.zero,
-                                  ),
-                                );
-                              },
-                              child: Icon(Icons.edit),
-                            )
-                          : SizedBox.shrink();
-                });
-          },
-        ));
+                      : const SizedBox.shrink();
+            },
+          );
+        },
+      ),
+    );
   }
 }

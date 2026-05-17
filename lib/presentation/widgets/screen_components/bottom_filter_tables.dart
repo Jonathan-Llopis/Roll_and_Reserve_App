@@ -60,7 +60,7 @@ class _BottomFilterTablesState extends State<BottomFilterTables> {
     return BottomNavigationBar(
       items: [
         BottomNavigationBarItem(
-          icon: Icon(Icons.delete_outline),
+          icon: const Icon(Icons.delete_outline),
           label: AppLocalizations.of(context)!.remove_filters,
         ),
         BottomNavigationBarItem(
@@ -74,9 +74,11 @@ class _BottomFilterTablesState extends State<BottomFilterTables> {
       onTap: (index) {
         if (index == 0) {
           context.read<ReserveBloc>().add(ClearFilterEvent());
-          widget.tableBloc.add(GetTablesByShopEvent(
-            idShop: widget.currentShop.id,
-          ));
+          widget.tableBloc.add(
+            GetTablesByShopEvent(
+              idShop: widget.currentShop.id,
+            ),
+          );
           _isFilterApplied = false;
         } else if (index == 1) {
           showModalBottomSheet(

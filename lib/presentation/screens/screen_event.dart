@@ -80,47 +80,51 @@ class _ScreenEventState extends State<ScreenEvent> {
                   .firstWhere((user) => user.id == loginBloc.state.user!.id);
             }
             return DefaultScaffold(
-                appBar: widget.appBar,
-                body: InformationEvent(
-                  reserve: state.reserve!,
-                  loginBloc: loginBloc,
-                  dateReserve: DateFormat('dd - MM - yyyy')
-                      .parse(state.reserve!.dayDate),
-                ),
-                floatingActionButton: loginBloc.state.user!.role == 2 &&
-                        DateFormat('dd - MM - yyyy HH:mm')
-                            .parse(
-                                '${state.reserve!.dayDate} ${state.reserve!.horaInicio}')
-                            .subtract(Duration(minutes: 5))
-                            .isBefore(DateTime.now()) &&
-                        (userReserve?.reserveConfirmation ?? true) == false
-                    ? FloatingActionButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder: (context, animation1, animation2) =>
-                                  QRScannerScreen(
-                                idReserve: widget.idReserve,
-                                idShop: widget.idShop ?? 0,
-                                idTable: state.reserve!.tableId,
-                                appBar: widget.appBar,
-                              ),
-                              transitionDuration: Duration.zero,
-                              reverseTransitionDuration: Duration.zero,
+              appBar: widget.appBar,
+              body: InformationEvent(
+                reserve: state.reserve!,
+                loginBloc: loginBloc,
+                dateReserve:
+                    DateFormat('dd - MM - yyyy').parse(state.reserve!.dayDate),
+              ),
+              floatingActionButton: loginBloc.state.user!.role == 2 &&
+                      DateFormat('dd - MM - yyyy HH:mm')
+                          .parse(
+                            '${state.reserve!.dayDate} ${state.reserve!.horaInicio}',
+                          )
+                          .subtract(const Duration(minutes: 5))
+                          .isBefore(DateTime.now()) &&
+                      (userReserve?.reserveConfirmation ?? true) == false
+                  ? FloatingActionButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          PageRouteBuilder(
+                            pageBuilder: (context, animation1, animation2) =>
+                                QRScannerScreen(
+                              idReserve: widget.idReserve,
+                              idShop: widget.idShop ?? 0,
+                              idTable: state.reserve!.tableId,
+                              appBar: widget.appBar,
                             ),
-                          );
-                        },
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.qr_code),
-                            Text(AppLocalizations.of(context)!.confirm,
-                                style: TextStyle(fontSize: 10)),
-                          ],
-                        ),
-                      )
-                    : null);
+                            transitionDuration: Duration.zero,
+                            reverseTransitionDuration: Duration.zero,
+                          ),
+                        );
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.qr_code),
+                          Text(
+                            AppLocalizations.of(context)!.confirm,
+                            style: const TextStyle(fontSize: 10),
+                          ),
+                        ],
+                      ),
+                    )
+                  : null,
+            );
           },
         );
       },

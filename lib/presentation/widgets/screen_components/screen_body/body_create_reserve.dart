@@ -64,9 +64,10 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
   void initState() {
     if (widget.reserve != null) {
       ReserveBloc reserveBloc = widget.reserveBloc;
-      DifficultyEntity difficultyEntity = reserveBloc.state.difficulties!
-          .firstWhere(
-              (difficulty) => difficulty.id == widget.reserve!.difficultyId);
+      DifficultyEntity difficultyEntity =
+          reserveBloc.state.difficulties!.firstWhere(
+        (difficulty) => difficulty.id == widget.reserve!.difficultyId,
+      );
       GameEntity gameEntity = reserveBloc.state.games!
           .firstWhere((game) => game.id == widget.reserve!.gameId);
 
@@ -132,7 +133,7 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
                       fillColor: Theme.of(context)
                           .colorScheme
                           .surfaceContainerHighest
-                          .withOpacity(0.3),
+                          .withValues(alpha: 0.3),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide: BorderSide.none,
@@ -140,25 +141,29 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.primary,
-                            width: 1.5),
+                          color: Theme.of(context).colorScheme.primary,
+                          width: 1.5,
+                        ),
                       ),
                       contentPadding: const EdgeInsets.symmetric(
-                          vertical: 16, horizontal: 20),
-                      prefixIcon: Icon(Icons.gamepad,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .primary
-                              .withOpacity(0.8)),
+                        vertical: 16,
+                        horizontal: 20,
+                      ),
+                      prefixIcon: Icon(
+                        Icons.gamepad,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withValues(alpha: 0.8),
+                      ),
                       labelText: AppLocalizations.of(context)!.game,
-                      labelStyle: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurface
-                                  .withOpacity(0.6)),
+                      labelStyle:
+                          Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurface
+                                    .withValues(alpha: 0.6),
+                              ),
                     ),
                     child: child,
                   ),
@@ -168,22 +173,25 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
                     return result.fold(
                       (failure) => [],
                       (games) => games
-                          .map((game) => SearchableDropdownMenuItem(
-                                value: game,
-                                label: game.description,
-                                child: ListTile(
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 20),
-                                  leading: Icon(Icons.sports_esports,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary),
-                                  title: Text(game.description,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium),
+                          .map(
+                            (game) => SearchableDropdownMenuItem(
+                              value: game,
+                              label: game.description,
+                              child: ListTile(
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
                                 ),
-                              ))
+                                leading: Icon(
+                                  Icons.sports_esports,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                                title: Text(
+                                  game.description,
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                              ),
+                            ),
+                          )
                           .toList(),
                     );
                   },
@@ -198,78 +206,85 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
               ),
             ),
             buildInputField(
-                controller: _dayReservationController,
-                label: AppLocalizations.of(context)!.reserve_day(''),
-                icon: Icons.calendar_today,
-                onTap: () async {
-                  selectDate(context, _dayReservationController);
-                },
-                validator: (value) => basicValidation(value, context),
-                context: context),
+              controller: _dayReservationController,
+              label: AppLocalizations.of(context)!.reserve_day(''),
+              icon: Icons.calendar_today,
+              onTap: () async {
+                selectDate(context, _dayReservationController);
+              },
+              validator: (value) => basicValidation(value, context),
+              context: context,
+            ),
             buildInputField(
-                controller: _freePlacesController,
-                label: AppLocalizations.of(context)!.total_seats_at_table,
-                icon: Icons.people,
-                keyboardType: TextInputType.number,
-                validator: (value) => basicValidationWithNumber(value, context),
-                context: context),
+              controller: _freePlacesController,
+              label: AppLocalizations.of(context)!.total_seats_at_table,
+              icon: Icons.people,
+              keyboardType: TextInputType.number,
+              validator: (value) => basicValidationWithNumber(value, context),
+              context: context,
+            ),
             buildInputField(
-                controller: _hourStartController,
-                label: AppLocalizations.of(context)!.start_time_hh_mm,
-                icon: Icons.access_time,
-                onTap: () => selectTime(context, _hourStartController),
-                validator: (value) => validateTime(
-                    context,
-                    value,
-                    widget.reserveBloc,
-                    _dayReservationController.text == ""
-                        ? DateTime.now()
-                        : widget.reserve == null
-                            ? DateFormat("dd-MM-yyyy")
-                                .parse(_dayReservationController.text)
-                            : DateFormat("dd - MM - yyyy")
-                                .parse(_dayReservationController.text),
-                    _hourStartController,
-                    _hourEndController,
-                    widget.reserve == null
-                        ? false
-                        : _hourStartController.text
-                                .compareTo(widget.reserve!.horaInicio) >=
-                            0,
-                    false),
-                context: context),
+              controller: _hourStartController,
+              label: AppLocalizations.of(context)!.start_time_hh_mm,
+              icon: Icons.access_time,
+              onTap: () => selectTime(context, _hourStartController),
+              validator: (value) => validateTime(
+                context,
+                value,
+                widget.reserveBloc,
+                _dayReservationController.text == ''
+                    ? DateTime.now()
+                    : widget.reserve == null
+                        ? DateFormat('dd-MM-yyyy')
+                            .parse(_dayReservationController.text)
+                        : DateFormat('dd - MM - yyyy')
+                            .parse(_dayReservationController.text),
+                _hourStartController,
+                _hourEndController,
+                widget.reserve == null
+                    ? false
+                    : _hourStartController.text
+                            .compareTo(widget.reserve!.horaInicio) >=
+                        0,
+                false,
+              ),
+              context: context,
+            ),
             buildInputField(
-                controller: _hourEndController,
-                label: AppLocalizations.of(context)!.end_time_hh_mm,
-                icon: Icons.access_time_filled,
-                onTap: () => selectTime(context, _hourEndController),
-                validator: (value) => validateTime(
-                    context,
-                    value,
-                    widget.reserveBloc,
-                    _dayReservationController.text == ""
-                        ? DateTime.now()
-                        : widget.reserve == null
-                            ? DateFormat("dd-MM-yyyy")
-                                .parse(_dayReservationController.text)
-                            : DateFormat("dd - MM - yyyy")
-                                .parse(_dayReservationController.text),
-                    _hourEndController,
-                    _hourStartController,
-                    widget.reserve == null
-                        ? false
-                        : _hourEndController.text
-                                .compareTo(widget.reserve!.horaFin) <=
-                            0,
-                    true),
-                context: context),
+              controller: _hourEndController,
+              label: AppLocalizations.of(context)!.end_time_hh_mm,
+              icon: Icons.access_time_filled,
+              onTap: () => selectTime(context, _hourEndController),
+              validator: (value) => validateTime(
+                context,
+                value,
+                widget.reserveBloc,
+                _dayReservationController.text == ''
+                    ? DateTime.now()
+                    : widget.reserve == null
+                        ? DateFormat('dd-MM-yyyy')
+                            .parse(_dayReservationController.text)
+                        : DateFormat('dd - MM - yyyy')
+                            .parse(_dayReservationController.text),
+                _hourEndController,
+                _hourStartController,
+                widget.reserve == null
+                    ? false
+                    : _hourEndController.text
+                            .compareTo(widget.reserve!.horaFin) <=
+                        0,
+                true,
+              ),
+              context: context,
+            ),
             buildInputField(
-                controller: _descriptionController,
-                label: AppLocalizations.of(context)!.description,
-                icon: Icons.description,
-                keyboardType: TextInputType.text,
-                validator: (value) => basicValidation(value, context),
-                context: context),
+              controller: _descriptionController,
+              label: AppLocalizations.of(context)!.description,
+              icon: Icons.description,
+              keyboardType: TextInputType.text,
+              validator: (value) => basicValidation(value, context),
+              context: context,
+            ),
             buildInputField(
               controller: _requiredMaterialController,
               label: AppLocalizations.of(context)!.required_material,
@@ -290,7 +305,7 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
                     fillColor: Theme.of(context)
                         .colorScheme
                         .surfaceContainerHighest
-                        .withOpacity(0.3),
+                        .withValues(alpha: 0.3),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                       borderSide: BorderSide.none,
@@ -303,14 +318,16 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
                       ),
                     ),
                     contentPadding: const EdgeInsets.symmetric(
-                        vertical: 16, horizontal: 20),
+                      vertical: 16,
+                      horizontal: 20,
+                    ),
                     labelText: AppLocalizations.of(context)!.difficulty,
                     labelStyle:
                         Theme.of(context).textTheme.bodyMedium?.copyWith(
                               color: Theme.of(context)
                                   .colorScheme
                                   .onSurface
-                                  .withOpacity(0.6),
+                                  .withValues(alpha: 0.6),
                             ),
                   ),
                   dropdownColor:
@@ -318,23 +335,27 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
                   style: Theme.of(context).textTheme.bodyMedium,
                   icon: Icon(
                     Icons.arrow_drop_down_rounded,
-                    color:
-                        Theme.of(context).colorScheme.primary.withOpacity(0.8),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.8),
                   ),
                   borderRadius: BorderRadius.circular(8.0),
                   initialValue: _selectedDifficulty,
                   items: widget.reserveBloc.state.difficulties!
-                      .map((difficulty) => DropdownMenuItem(
-                            value: difficulty,
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16.0),
-                              child: Text(
-                                difficulty.description,
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
+                      .map(
+                        (difficulty) => DropdownMenuItem(
+                          value: difficulty,
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Text(
+                              difficulty.description,
+                              style: Theme.of(context).textTheme.bodyMedium,
                             ),
-                          ))
+                          ),
+                        ),
+                      )
                       .toList(),
                   onChanged: (newValue) {
                     setState(() => _selectedDifficulty = newValue);
@@ -370,12 +391,12 @@ class _BodyCreateReserveState extends State<BodyCreateReserve> {
                     selectedGame: _selectedGame,
                     idTable: widget.idTable,
                     idShop: widget.idShop,
-                    selectedDate: _dayReservationController.text == ""
+                    selectedDate: _dayReservationController.text == ''
                         ? DateTime.now()
                         : widget.reserve == null
-                            ? DateFormat("dd-MM-yyyy")
+                            ? DateFormat('dd-MM-yyyy')
                                 .parse(_dayReservationController.text)
-                            : DateFormat("dd - MM - yyyy")
+                            : DateFormat('dd - MM - yyyy')
                                 .parse(_dayReservationController.text),
                     reserveBloc: widget.reserveBloc,
                     searchDateTime: widget.searchDateTime,

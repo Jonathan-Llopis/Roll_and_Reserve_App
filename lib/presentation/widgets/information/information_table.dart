@@ -42,15 +42,15 @@ class InformationTable extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
           ),
-          SizedBox(height: 8.0),
+          const SizedBox(height: 8.0),
           Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.people,
                 color: Colors.blueAccent,
                 size: 20.0,
               ),
-              SizedBox(width: 6.0),
+              const SizedBox(width: 6.0),
               Text(
                 AppLocalizations.of(context)!
                     .reservations(table.reserves.length),
@@ -60,7 +60,7 @@ class InformationTable extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 16.0),
+          const SizedBox(height: 16.0),
           Wrap(
             spacing: 8.0,
             runSpacing: 8.0,
@@ -71,7 +71,7 @@ class InformationTable extends StatelessWidget {
                       .reservations(table.reserves.length),
                 ),
                 backgroundColor: Colors.green.shade100,
-                labelStyle: TextStyle(color: Colors.green),
+                labelStyle: const TextStyle(color: Colors.green),
               ),
             ],
           ),

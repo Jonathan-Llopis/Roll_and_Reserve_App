@@ -9,8 +9,11 @@ import 'package:roll_and_reserve/l10n/app_localizations.dart';
 class DialogErrorDatepicker extends StatelessWidget {
   final String mensaje;
   final int idShop;
-  const DialogErrorDatepicker(
-      {super.key, required this.mensaje, required this.idShop});
+  const DialogErrorDatepicker({
+    super.key,
+    required this.mensaje,
+    required this.idShop,
+  });
 
   @override
 
@@ -24,30 +27,34 @@ class DialogErrorDatepicker extends StatelessWidget {
   /// [LoginBloc] state.
 
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
-      return AlertDialog(
-        title: Text(AppLocalizations.of(context)!.error,
-            style: TextStyle(
+    return BlocBuilder<LoginBloc, LoginState>(
+      builder: (context, state) {
+        return AlertDialog(
+          title: Text(
+            AppLocalizations.of(context)!.error,
+            style: const TextStyle(
               color: Colors.red,
               fontSize: 30,
-            )),
-        content: Text(
-          mensaje,
-          style: TextStyle(
-            fontSize: 18,
-            color: Color.fromARGB(255, 0, 0, 0),
+            ),
           ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            style: AppTheme.textButtonAcceptStyle,
-            onPressed: () {
-              context.go('/user/events/$idShop');
-            },
-            child: Text(AppLocalizations.of(context)!.accept),
+          content: Text(
+            mensaje,
+            style: const TextStyle(
+              fontSize: 18,
+              color: Color.fromARGB(255, 0, 0, 0),
+            ),
           ),
-        ],
-      );
-    });
+          actions: <Widget>[
+            TextButton(
+              style: AppTheme.textButtonAcceptStyle,
+              onPressed: () {
+                context.go('/user/events/$idShop');
+              },
+              child: Text(AppLocalizations.of(context)!.accept),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

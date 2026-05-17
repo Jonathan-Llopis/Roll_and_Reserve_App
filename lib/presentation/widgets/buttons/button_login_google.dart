@@ -42,10 +42,16 @@ class ButtonLoginGoogle extends StatelessWidget {
           );
         }
       },
-      icon: Image.asset('assets/images/google.png',
-          height: 20, width: 20, fit: BoxFit.cover),
-      label: Text(AppLocalizations.of(context)!.google_login,
-          style: AppTheme.googleStyle),
+      icon: Image.asset(
+        'assets/images/google.png',
+        height: 20,
+        width: 20,
+        fit: BoxFit.cover,
+      ),
+      label: Text(
+        AppLocalizations.of(context)!.google_login,
+        style: AppTheme.googleStyle,
+      ),
     );
   }
 }
