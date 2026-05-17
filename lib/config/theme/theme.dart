@@ -39,7 +39,7 @@ class AppTheme {
     ],
   );
 
-  static BoxDecoration backgroundDecoration = BoxDecoration(
+  static BoxDecoration backgroundDecoration = const BoxDecoration(
     gradient: LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
@@ -67,48 +67,49 @@ class AppTheme {
     ),
     padding: const EdgeInsets.symmetric(vertical: 16),
   );
-  
- static ButtonStyle textButtonCancelStyle = TextButton.styleFrom(
-  backgroundColor: Colors.red.withOpacity(0.1),
-  foregroundColor: Colors.red,
-  shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(20), // Borde más redondeado
-  ),
-  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8), // Más compacto
-  minimumSize: const Size(0, 36), // Altura fija más pequeña
-).copyWith(
-  overlayColor: WidgetStateProperty.resolveWith<Color>(
-    (states) {
-      if (states.contains(WidgetState.pressed)) {
-        return Colors.red.withOpacity(0.2);
-      }
-      if (states.contains(WidgetState.hovered)) {
-        return Colors.red.withOpacity(0.15);
-      }
-      return Colors.transparent;
-    },
-  ),
-);
 
-static ButtonStyle textButtonAcceptStyle = TextButton.styleFrom(
-  backgroundColor: const Color(0xFF00695C).withOpacity(0.1),
-  foregroundColor: const Color(0xFF00695C),
-  shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(20), // Mismo radio que cancelar
-  ),
-  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-  minimumSize: const Size(0, 36), // Misma altura
-).copyWith(
-  overlayColor: WidgetStateProperty.resolveWith<Color>(
-    (states) {
-      if (states.contains(WidgetState.pressed)) {
-        return const Color(0xFF00695C).withOpacity(0.2);
-      }
-      if (states.contains(WidgetState.hovered)) {
-        return const Color(0xFF00695C).withOpacity(0.15);
-      }
-      return Colors.transparent;
-    },
-  ),
-);
+  static ButtonStyle textButtonCancelStyle = TextButton.styleFrom(
+    backgroundColor: Colors.red.withValues(alpha: 0.1),
+    foregroundColor: Colors.red,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(20), // Borde más redondeado
+    ),
+    padding:
+        const EdgeInsets.symmetric(horizontal: 20, vertical: 8), // Más compacto
+    minimumSize: const Size(0, 36), // Altura fija más pequeña
+  ).copyWith(
+    overlayColor: WidgetStateProperty.resolveWith<Color>(
+      (states) {
+        if (states.contains(WidgetState.pressed)) {
+          return Colors.red.withValues(alpha: 0.2);
+        }
+        if (states.contains(WidgetState.hovered)) {
+          return Colors.red.withValues(alpha: 0.15);
+        }
+        return Colors.transparent;
+      },
+    ),
+  );
+
+  static ButtonStyle textButtonAcceptStyle = TextButton.styleFrom(
+    backgroundColor: const Color(0xFF00695C).withValues(alpha: 0.1),
+    foregroundColor: const Color(0xFF00695C),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(20), // Mismo radio que cancelar
+    ),
+    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+    minimumSize: const Size(0, 36), // Misma altura
+  ).copyWith(
+    overlayColor: WidgetStateProperty.resolveWith<Color>(
+      (states) {
+        if (states.contains(WidgetState.pressed)) {
+          return const Color(0xFF00695C).withValues(alpha: 0.2);
+        }
+        if (states.contains(WidgetState.hovered)) {
+          return const Color(0xFF00695C).withValues(alpha: 0.15);
+        }
+        return Colors.transparent;
+      },
+    ),
+  );
 }

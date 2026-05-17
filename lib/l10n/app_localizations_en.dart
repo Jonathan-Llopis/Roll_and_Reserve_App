@@ -18,11 +18,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get edit_shop => 'Edit Shop';
 
   @override
-  String shop_name(String shopName) {
-    return 'Shop $shopName';
-  }
-
-  @override
   String get shop_direction => 'Shop Address';
 
   @override
@@ -88,16 +83,21 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String shop_name(String shopName) {
+    return 'Shop $shopName';
+  }
+
+  @override
   String get shop_reviews => 'Shop Reviews';
 
   @override
-  String get rating => 'Rating';
+  String get rating_with_colon => 'Rating:';
 
   @override
   String get all_reviews => 'All Reviews';
 
   @override
-  String get available_tables => 'Available Tables:';
+  String get available_tables => 'Available Tables';
 
   @override
   String get save => 'Save';
@@ -171,6 +171,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get please_write_a_description => 'Please write a description';
+
+  @override
+  String get rating => 'Rating';
 
   @override
   String get create_new_table => 'Create New Table';
@@ -810,4 +813,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get describe_your_move => 'Describe your move';
+
+  @override
+  String get already_have_account => 'Already have an account?';
+
+  @override
+  String get or_continue_with => 'Or continue with';
+
+  @override
+  String get fill_details => 'Fill in the details to get started';
+
+  @override
+  String get create_account => 'Create Account';
+
+  @override
+  String get full_name => 'Full Name';
+
+  @override
+  String get forgot_password => 'Forgot Password?';
+
+  @override
+  String get confirm_password => 'Confirm Password';
+
+  @override
+  String get dont_have_account => 'Don\'t have an account?';
 }

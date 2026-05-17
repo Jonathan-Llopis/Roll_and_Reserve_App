@@ -115,7 +115,10 @@ bool isEmailValid(String value) {
 /// already in use, otherwise returns null.
 
 String? validateUserName(
-    String? value, LoginBloc loginBloc, BuildContext context) {
+  String? value,
+  LoginBloc loginBloc,
+  BuildContext context,
+) {
   if (value == null || value.isEmpty) {
     return AppLocalizations.of(context)!.required_field;
   }
@@ -159,7 +162,10 @@ String? validateName(String? value, BuildContext context) {
 /// Returns a localized error message if the email is invalid or already in use,
 /// otherwise returns null.
 String? validateEmail(
-    String? value, LoginBloc loginBloc, BuildContext context) {
+  String? value,
+  LoginBloc loginBloc,
+  BuildContext context,
+) {
   if (value == null || value.isEmpty) {
     return AppLocalizations.of(context)!.required_field;
   }
@@ -228,8 +234,11 @@ String? validatePassword(String? value, BuildContext context) {
 /// Returns a localized error message if the confirmation password is invalid
 /// or does not match the original password, otherwise returns null.
 
-String? validateConfirmPassword(String? value,
-    TextEditingController passwordController, BuildContext context) {
+String? validateConfirmPassword(
+  String? value,
+  TextEditingController passwordController,
+  BuildContext context,
+) {
   if (value == null || value.isEmpty) {
     return AppLocalizations.of(context)!.required_field;
   }
@@ -271,7 +280,10 @@ String? validateConfirmPassword(String? value,
 /// Returns a localized error message if the current password is invalid,
 /// otherwise returns null.
 String? validateCurrentPassword(
-    String? value, LoginBloc loginBloc, BuildContext context) {
+  String? value,
+  LoginBloc loginBloc,
+  BuildContext context,
+) {
   if (value == null || value.isEmpty) {
     return AppLocalizations.of(context)!.required_field;
   } else {
@@ -293,7 +305,7 @@ String? validateCurrentPassword(
 ///
 /// Returns the time in minutes.
 int horaAMinutos(String hora) {
-  final partes = hora.split(":");
+  final partes = hora.split(':');
   final horas = int.parse(partes[0]);
   final minutos = int.parse(partes[1]);
   return horas * 60 + minutos;
@@ -342,7 +354,10 @@ bool isHourTaken(
 /// already exists, otherwise returns null.
 
 String? basicValidationTable(
-    String? value, ShopEntity currentShop, BuildContext context) {
+  String? value,
+  ShopEntity currentShop,
+  BuildContext context,
+) {
   if (value == null || value.isEmpty) {
     return AppLocalizations.of(context)!.required_field;
   }

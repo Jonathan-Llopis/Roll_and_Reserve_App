@@ -24,18 +24,17 @@ Row buildStars(double rating) {
   int fullStars = rating.floor();
   for (int i = 0; i < 5; i++) {
     if (i < fullStars) {
-      stars.add(Icon(Icons.star, color: Colors.amber, size: 16));
+      stars.add(const Icon(Icons.star, color: Colors.amber, size: 16));
     } else if (i == fullStars && rating - fullStars >= 0.5) {
-      stars.add(Icon(Icons.star_half, color: Colors.amber, size: 16));
+      stars.add(const Icon(Icons.star_half, color: Colors.amber, size: 16));
     } else {
-      stars.add(Icon(Icons.star, color: Colors.grey, size: 16));
+      stars.add(const Icon(Icons.star, color: Colors.grey, size: 16));
     }
   }
-  stars.add(SizedBox(width: 4.0));
+  stars.add(const SizedBox(width: 4.0));
   stars.add(Text('(${rating.toStringAsFixed(2)})'));
   return Row(children: stars);
 }
-
 
 /// Shows a material design date picker to the user and updates the [controller]
 /// with the selected date in the format 'dd-MM-yyyy'.
@@ -53,17 +52,20 @@ Row buildStars(double rating) {
 /// If the user selects a date, the [controller] is updated with the selected
 /// date in the format 'dd-MM-yyyy'.
 Future<void> selectDate(
-    BuildContext context, TextEditingController controller) async {
+  BuildContext context,
+  TextEditingController controller,
+) async {
   LanguageBloc languageBloc = BlocProvider.of<LanguageBloc>(context);
   final DateTime? picked = await showDatePicker(
     locale: languageBloc.state.locale,
     context: context,
-    initialDate: controller.text == ""
+    initialDate: controller.text == ''
         ? DateTime.now()
         : DateFormat('dd-MM-yyyy').parse(controller.text),
     firstDate: DateTime.now(),
-    lastDate: DateTime.now().add(Duration(days: 365)),
+    lastDate: DateTime.now().add(const Duration(days: 365)),
   );
+  if (!context.mounted) return;
   if (picked != null) {
     controller.text = DateFormat('dd-MM-yyyy').format(picked);
   }
@@ -84,10 +86,12 @@ Future<void> selectDate(
 /// time formatted according to the current localization.
 
 Future<void> selectTime(
-    BuildContext context, TextEditingController controller) async {
+  BuildContext context,
+  TextEditingController controller,
+) async {
   final TimeOfDay? pickedTime = await showTimePicker(
     context: context,
-    initialTime: controller.text != ""
+    initialTime: controller.text != ''
         ? TimeOfDay.fromDateTime(DateFormat('HH:mm').parse(controller.text))
         : TimeOfDay.now(),
     builder: (BuildContext context, Widget? child) {
@@ -97,6 +101,7 @@ Future<void> selectTime(
       );
     },
   );
+  if (!context.mounted) return;
   if (pickedTime != null) {
     final localizations = MaterialLocalizations.of(context);
     final formattedTime =
@@ -128,19 +133,23 @@ Future<void> selectTime(
 /// The function returns a string with the error message if the time is not
 /// valid, otherwise it returns null.
 String? validateTime(
-    BuildContext context,
-    String? value,
-    ReserveBloc reserveBloc,
-    DateTime dateReserve,
-    TextEditingController reservaHora,
-    TextEditingController otraHora,
-    bool update,
-    bool endTime) {
+  BuildContext context,
+  String? value,
+  ReserveBloc reserveBloc,
+  DateTime dateReserve,
+  TextEditingController reservaHora,
+  TextEditingController otraHora,
+  bool update,
+  bool endTime,
+) {
   String? error = validateHour(value, context);
   if (error != null) return error;
   if (!update &&
-      isHourTaken(reserveBloc.state.reserves!, dateReserve, reservaHora.text,
-        )) {
+      isHourTaken(
+        reserveBloc.state.reserves!,
+        dateReserve,
+        reservaHora.text,
+      )) {
     return AppLocalizations.of(context)!.time_already_taken_that_day;
   }
   if (reservaHora.text.compareTo(otraHora.text) >= 0 && !endTime) {
@@ -166,24 +175,34 @@ Future<void> checkUserLocation(BuildContext context, int idReserve) async {
   LocationPermission permission;
 
   serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!context.mounted) return;
   if (!serviceEnabled) {
     return Future.error(AppLocalizations.of(context)!.grant_camera_permission);
   }
   permission = await Geolocator.checkPermission();
   if (permission == LocationPermission.denied) {
     permission = await Geolocator.requestPermission();
+    if (!context.mounted) return Future.error('Context lost');
     if (permission == LocationPermission.denied) {
       return Future.error(
-          AppLocalizations.of(context)!.location_service_disabled);
+        AppLocalizations.of(context)!.location_service_disabled,
+      );
     }
   }
 
+  if (!context.mounted) return Future.error('Context lost');
   if (permission == LocationPermission.deniedForever) {
     return Future.error(
-        AppLocalizations.of(context)!.location_permission_denied);
+      AppLocalizations.of(context)!.location_permission_denied,
+    );
   }
   Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high);
+    locationSettings: const LocationSettings(
+      accuracy: LocationAccuracy.high,
+    ),
+  );
+
+  if (!context.mounted) return;
 
   final double distanceInMeters = Geolocator.distanceBetween(
     position.latitude,
@@ -192,27 +211,39 @@ Future<void> checkUserLocation(BuildContext context, int idReserve) async {
     shopBloc.state.shop!.longitude,
   );
 
+  if (!context.mounted) return;
+
   if (distanceInMeters <= 100) {
     Navigator.of(context).pop();
     confirmReserveDialog(
-        context, AppLocalizations.of(context)!.reservation_confirmed, false);
-    context.read<ReserveBloc>().add(ConfirmReserveEvent(
-        idReserve: idReserve, idUser: loginBloc.state.user!.id));
+      context,
+      AppLocalizations.of(context)!.reservation_confirmed,
+      false,
+    );
+    context.read<ReserveBloc>().add(
+          ConfirmReserveEvent(
+            idReserve: idReserve,
+            idUser: loginBloc.state.user!.id,
+          ),
+        );
   } else {
     Navigator.of(context).pop();
     confirmReserveDialog(
-        context, AppLocalizations.of(context)!.not_in_shop_location, true);
+      context,
+      AppLocalizations.of(context)!.not_in_shop_location,
+      true,
+    );
   }
 }
+
 /// Converts a date string with a numeric month to a string with the month's name.
-/// 
+///
 /// The [date] should be in the format 'dd/MM', where 'MM' is the numeric representation of the month.
 /// The [monthNames] list contains the names of the months, indexed from 0 to 11.
-/// 
+///
 /// Returns a string with the day and the month's name in the format 'dd/MonthName'.
 
 String monthStadistics(String date, List<String> monthNames) {
-
   List<String> dateParts = date.split('/');
   int day = int.parse(dateParts[0]);
   int month = int.parse(dateParts[1]);
@@ -222,10 +253,10 @@ String monthStadistics(String date, List<String> monthNames) {
 }
 
 /// Converts a date range with numeric months to a text representation with month names.
-/// 
+///
 /// The [dateRange] should be in the format 'dd/MM al dd/MM', where 'MM' is the numeric representation of the month.
 /// The [monthNames] list contains the names of the months, indexed from 0 to 11.
-/// 
+///
 /// Returns a string with the day and the month's name for both start and end dates in the format 'dd/MonthName al dd/MonthName'.
 
 String convertMonthRangeToText(String dateRange, List<String> monthNames) {
@@ -246,4 +277,3 @@ String convertMonthRangeToText(String dateRange, List<String> monthNames) {
 
   return '$startDay/$startMonthName al $endDay/$endMonthName';
 }
-

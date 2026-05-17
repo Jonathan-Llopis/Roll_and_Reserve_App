@@ -18,11 +18,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get edit_shop => 'Editar Tienda';
 
   @override
-  String shop_name(String shopName) {
-    return 'Tienda $shopName';
-  }
-
-  @override
   String get shop_direction => 'Dirección de la Tienda';
 
   @override
@@ -88,16 +83,21 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String shop_name(String shopName) {
+    return 'Tienda $shopName';
+  }
+
+  @override
   String get shop_reviews => 'Reseñas de la Tienda';
 
   @override
-  String get rating => 'Calificación';
+  String get rating_with_colon => 'Calificación:';
 
   @override
   String get all_reviews => 'Todas las Reseñas';
 
   @override
-  String get available_tables => 'Mesas disponibles:';
+  String get available_tables => 'Mesas Disponibles';
 
   @override
   String get save => 'Guardar';
@@ -116,7 +116,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get register => 'Registrarse';
 
   @override
-  String get update => 'Actualitzar';
+  String get update => 'Actualizar';
 
   @override
   String reserve_day(String dayDate) {
@@ -171,6 +171,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get please_write_a_description => 'Por favor, escribe una descripción';
+
+  @override
+  String get rating => 'Calificación';
 
   @override
   String get create_new_table => 'Crear Nueva Mesa';
@@ -459,7 +462,7 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get reserva_confirmada => 'Reserva Confirmada';
+  String get reserva_confirmada => 'Reserva Confirmed';
 
   @override
   String get select_your_location_on_map =>
@@ -777,7 +780,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get wisdom => 'Sabiduría';
 
   @override
-  String get charisma => 'Carisma';
+  String get charisma => 'Charisma';
 
   @override
   String get level => 'Nivel';
@@ -817,4 +820,28 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get describe_your_move => 'Describe tu jugada';
+
+  @override
+  String get already_have_account => '¿Ya tienes una cuenta?';
+
+  @override
+  String get or_continue_with => 'O continúa con';
+
+  @override
+  String get fill_details => 'Completa los detalles para comenzar';
+
+  @override
+  String get create_account => 'Crear Cuenta';
+
+  @override
+  String get full_name => 'Nombre Completo';
+
+  @override
+  String get forgot_password => '¿Olvidaste tu contraseña?';
+
+  @override
+  String get confirm_password => 'Confirmar Contraseña';
+
+  @override
+  String get dont_have_account => '¿No tienes una cuenta?';
 }

@@ -22,14 +22,14 @@ Widget buildContentSkeleton<T>({
   required BuildContext context,
 }) {
   if (isLoading(state)) {
-    return Skeletonizer.zone(
+    return const Skeletonizer.zone(
       child: Card(
-      child: ListTile(
-        leading: Bone.circle(size: 48),
-        title: Bone.text(words: 2),
-        subtitle: Bone.text(),
-        trailing: Bone.icon(),
-      ),
+        child: ListTile(
+          leading: Bone.circle(size: 48),
+          title: Bone.text(words: 2),
+          subtitle: Bone.text(),
+          trailing: Bone.icon(),
+        ),
       ),
     );
   }
@@ -37,17 +37,18 @@ Widget buildContentSkeleton<T>({
   final error = errorMessage(state);
   if (error != null) {
     return Center(
-        child: Column(
-      children: [
-        Text(error),
-        ElevatedButton(
+      child: Column(
+        children: [
+          Text(error),
+          ElevatedButton(
             onPressed: () {
               context.go('/user');
             },
-          child: const Text('Recargar página'),
-        ),
-      ],
-    ));
+            child: const Text('Recargar página'),
+          ),
+        ],
+      ),
+    );
   }
 
   if (hasData(state)) {

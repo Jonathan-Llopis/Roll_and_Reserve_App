@@ -108,28 +108,46 @@ final GetIt sl = GetIt.instance;
 void configureDependencies() async {
   // BLocs
   sl.registerFactory<LoginBloc>(
-    () => LoginBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(),
-        sl(), sl(), sl()),
+    () => LoginBloc(
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+    ),
   );
-  sl.registerFactory<ShopBloc>(() => ShopBloc(
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-        sl(),
-      ));
+  sl.registerFactory<ShopBloc>(
+    () => ShopBloc(
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+    ),
+  );
   sl.registerFactory<TableBloc>(() => TableBloc(sl(), sl(), sl(), sl(), sl()));
-  sl.registerFactory<ReviewBloc>(() => ReviewBloc(
-        sl(),
-        sl(),
-        sl(),
-      ));
-  sl.registerFactory<ReserveBloc>(() => ReserveBloc(
+  sl.registerFactory<ReviewBloc>(
+    () => ReviewBloc(
+      sl(),
+      sl(),
+      sl(),
+    ),
+  );
+  sl.registerFactory<ReserveBloc>(
+    () => ReserveBloc(
       sl(),
       sl(),
       sl(),
@@ -146,10 +164,13 @@ void configureDependencies() async {
       sl(),
       sl(),
       sl(),
-      sl()));
+      sl(),
+    ),
+  );
   sl.registerFactory<LanguageBloc>(() => LanguageBloc(sl()));
   sl.registerFactory<ChatBloc>(
-      () => ChatBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+    () => ChatBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()),
+  );
   // Instancia de Firebase Auth
   sl.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
 

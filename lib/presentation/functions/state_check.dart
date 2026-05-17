@@ -30,17 +30,18 @@ Widget buildContent<T>({
   final error = errorMessage(state);
   if (error != null) {
     return Center(
-        child: Column(
-      children: [
-        Text(error),
-        ElevatedButton(
-          onPressed: () {
-            context.go('/user');
-          },
-          child: Text(AppLocalizations.of(context)!.go_to_home),
-        ),
-      ],
-    ));
+      child: Column(
+        children: [
+          Text(error),
+          ElevatedButton(
+            onPressed: () {
+              context.go('/user');
+            },
+            child: Text(AppLocalizations.of(context)!.go_to_home),
+          ),
+        ],
+      ),
+    );
   }
 
   if (hasData(state)) {

@@ -11,7 +11,7 @@ import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_create_revi
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_create_update_table.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_delete_shop.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_email_sent.dart';
-import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_error_datePicker.dart';
+import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_error_datepicker.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_logout.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_reset_password.dart';
 import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_update_password.dart';
@@ -21,66 +21,75 @@ import 'package:roll_and_reserve/presentation/widgets/dialogs/dialog_delete_tabl
 
 Future<void> mostrarResetPassword(BuildContext context) {
   return showDialog(
-      context: context,
-      builder: (context) {
-        return const DialogResetPassword();
-      });
+    context: context,
+    builder: (context) {
+      return const DialogResetPassword();
+    },
+  );
 }
 
 Future<void> mostrarResetEmail(BuildContext context) {
   return showDialog(
-      context: context,
-      builder: (context) {
-        return const DialogEmailSent();
-      });
+    context: context,
+    builder: (context) {
+      return const DialogEmailSent();
+    },
+  );
 }
 
 Future<void> mostrarLogOut(BuildContext context) {
   return showDialog(
-      context: context,
-      builder: (context) {
-        return const DialogLogOut();
-      });
+    context: context,
+    builder: (context) {
+      return const DialogLogOut();
+    },
+  );
 }
 
 Future<void> mostrarUserEdit(BuildContext context) {
   return showDialog(
-      context: context,
-      builder: (context) {
-        return const DialogoUserSettings();
-      });
+    context: context,
+    builder: (context) {
+      return const DialogoUserSettings();
+    },
+  );
 }
-
 
 Future<void> mostrarUserAdminEdit(BuildContext context, String idUser) {
   return showDialog(
-      context: context,
-      builder: (context) {
-        return  DialogoUserAdminSettings(idUser: idUser);
-      });
+    context: context,
+    builder: (context) {
+      return DialogoUserAdminSettings(idUser: idUser);
+    },
+  );
 }
 
 Future<void> updatePassword(BuildContext context) {
   return showDialog(
-      context: context,
-      builder: (context) {
-        return const DialogoUpdatePassword();
-      });
+    context: context,
+    builder: (context) {
+      return const DialogoUpdatePassword();
+    },
+  );
 }
 
 Future<void> deleteShop(BuildContext context, int idShop, ShopBloc shopBloc) {
   return showDialog(
-      context: context,
-      builder: (context) {
-        return DialogDeleteShop(
-          idShop: idShop,
-          shopBloc: shopBloc,
-        );
-      });
+    context: context,
+    builder: (context) {
+      return DialogDeleteShop(
+        idShop: idShop,
+        shopBloc: shopBloc,
+      );
+    },
+  );
 }
 
 Future<void> showUpdateCreateTableDialog(
-    BuildContext context, ShopEntity currentShop, TableEntity? table) {
+  BuildContext context,
+  ShopEntity currentShop,
+  TableEntity? table,
+) {
   return showDialog(
     context: context,
     builder: (context) {
@@ -93,54 +102,73 @@ Future<void> showUpdateCreateTableDialog(
   );
 }
 
-Future<void> createReview(BuildContext context, ReviewBloc reviewBloc,
- int? idShop, String? idUser) {
+Future<void> createReview(
+  BuildContext context,
+  ReviewBloc reviewBloc,
+  int? idShop,
+  String? idUser,
+) {
   return showDialog(
-      context: context,
-      builder: (context) {
-        return DialogCreateReview(
-          idShop: idShop ?? 0,
-          reviewBloc: reviewBloc,
-          idUser: idUser ?? "",
-        );
-      });
+    context: context,
+    builder: (context) {
+      return DialogCreateReview(
+        idShop: idShop ?? 0,
+        reviewBloc: reviewBloc,
+        idUser: idUser ?? '',
+      );
+    },
+  );
 }
 
 Future<void> deleteTable(
-    BuildContext context, int idTable, int idShop, TableBloc tableBloc) {
+  BuildContext context,
+  int idTable,
+  int idShop,
+  TableBloc tableBloc,
+) {
   return showDialog(
-      context: context,
-      builder: (context) {
-        return DialogoDeleteTable(
-          idTable: idTable,
-          idShop: idShop,
-          tableBloc: tableBloc,
-        );
-      });
+    context: context,
+    builder: (context) {
+      return DialogoDeleteTable(
+        idTable: idTable,
+        idShop: idShop,
+        tableBloc: tableBloc,
+      );
+    },
+  );
 }
 
 Future<void> changeLanguage(BuildContext context) {
   return showDialog(
-      context: context,
-      builder: (context) {
-        return ChangeLanguageDialog();
-      });
+    context: context,
+    builder: (context) {
+      return const ChangeLanguageDialog();
+    },
+  );
 }
 
 Future<void> confirmReserveDialog(
-    BuildContext context, String mensaje, bool error,) {
+  BuildContext context,
+  String mensaje,
+  bool error,
+) {
   return showDialog(
-      context: context,
-      builder: (context) {
-        return DialogConfirmReserve(mensaje: mensaje, error: error);
-      });
+    context: context,
+    builder: (context) {
+      return DialogConfirmReserve(mensaje: mensaje, error: error);
+    },
+  );
 }
 
 Future<void> errorDatePicker(
-    BuildContext context, String mensaje, int idShop) {
+  BuildContext context,
+  String mensaje,
+  int idShop,
+) {
   return showDialog(
-      context: context,
-      builder: (context) {
-        return DialogErrorDatepicker(mensaje: mensaje, idShop: idShop);
-      });
+    context: context,
+    builder: (context) {
+      return DialogErrorDatepicker(mensaje: mensaje, idShop: idShop);
+    },
+  );
 }

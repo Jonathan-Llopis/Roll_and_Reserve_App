@@ -120,12 +120,6 @@ abstract class AppLocalizations {
   /// **'Edit Shop'**
   String get edit_shop;
 
-  /// Label for shop name
-  ///
-  /// In en, this message translates to:
-  /// **'Shop {shopName}'**
-  String shop_name(String shopName);
-
   /// Label for shop address
   ///
   /// In en, this message translates to:
@@ -246,17 +240,23 @@ abstract class AppLocalizations {
   /// **'Available Reservations for: {date}'**
   String available_reservations_for_date(String date);
 
+  /// Label for shop name
+  ///
+  /// In en, this message translates to:
+  /// **'Shop {shopName}'**
+  String shop_name(String shopName);
+
   /// Label for shop reviews
   ///
   /// In en, this message translates to:
   /// **'Shop Reviews'**
   String get shop_reviews;
 
-  /// Label for rating input
+  /// Label for rating
   ///
   /// In en, this message translates to:
-  /// **'Rating'**
-  String get rating;
+  /// **'Rating:'**
+  String get rating_with_colon;
 
   /// Label for all reviews
   ///
@@ -267,7 +267,7 @@ abstract class AppLocalizations {
   /// Label for available tables
   ///
   /// In en, this message translates to:
-  /// **'Available Tables:'**
+  /// **'Available Tables'**
   String get available_tables;
 
   /// Label for save button
@@ -401,6 +401,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please write a description'**
   String get please_write_a_description;
+
+  /// Label for rating input
+  ///
+  /// In en, this message translates to:
+  /// **'Rating'**
+  String get rating;
 
   /// Label for creating a new table
   ///
@@ -1577,6 +1583,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Describe your move'**
   String get describe_your_move;
+
+  /// Label for already have an account
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account?'**
+  String get already_have_account;
+
+  /// Label for or continue with
+  ///
+  /// In en, this message translates to:
+  /// **'Or continue with'**
+  String get or_continue_with;
+
+  /// Label for fill details
+  ///
+  /// In en, this message translates to:
+  /// **'Fill in the details to get started'**
+  String get fill_details;
+
+  /// Label for create account
+  ///
+  /// In en, this message translates to:
+  /// **'Create Account'**
+  String get create_account;
+
+  /// Label for full name
+  ///
+  /// In en, this message translates to:
+  /// **'Full Name'**
+  String get full_name;
+
+  /// Label for forgot password
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot Password?'**
+  String get forgot_password;
+
+  /// Label for confirm password
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Password'**
+  String get confirm_password;
+
+  /// Label for don't have account
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t have an account?'**
+  String get dont_have_account;
 }
 
 class _AppLocalizationsDelegate

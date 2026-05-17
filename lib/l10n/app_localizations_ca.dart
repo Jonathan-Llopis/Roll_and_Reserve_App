@@ -18,11 +18,6 @@ class AppLocalizationsCa extends AppLocalizations {
   String get edit_shop => 'Editar Botiga';
 
   @override
-  String shop_name(String shopName) {
-    return 'Botiga $shopName';
-  }
-
-  @override
   String get shop_direction => 'Adreça de la Botiga';
 
   @override
@@ -89,10 +84,15 @@ class AppLocalizationsCa extends AppLocalizations {
   }
 
   @override
+  String shop_name(String shopName) {
+    return 'Botiga $shopName';
+  }
+
+  @override
   String get shop_reviews => 'Resenyes de la Botiga';
 
   @override
-  String get rating => 'Valoració';
+  String get rating_with_colon => 'Rating:';
 
   @override
   String get all_reviews => 'Totes les Resenyes';
@@ -172,6 +172,9 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get please_write_a_description => 'Si us plau, escriu una descripció';
+
+  @override
+  String get rating => 'Valoració';
 
   @override
   String get create_new_table => 'Crear Nova Taula';
@@ -818,4 +821,28 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get describe_your_move => 'Descriu la teua jugada';
+
+  @override
+  String get already_have_account => 'Already have an account?';
+
+  @override
+  String get or_continue_with => 'Or continue with';
+
+  @override
+  String get fill_details => 'Fill in the details to get started';
+
+  @override
+  String get create_account => 'Create Account';
+
+  @override
+  String get full_name => 'Full Name';
+
+  @override
+  String get forgot_password => 'Forgot Password?';
+
+  @override
+  String get confirm_password => 'Confirm Password';
+
+  @override
+  String get dont_have_account => 'Don\'t have an account?';
 }

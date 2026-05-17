@@ -1,30 +1,30 @@
-import 'package:rive/rive.dart' as rive;
+import 'package:rive/rive.dart';
 
-class RiveAnimationController {
-  late final rive.StateMachineController? controller;
+class DragonRiveController {
+  late final StateMachineController? controller;
 
   // Inputs de la animación
-  late final rive.SMIInput<bool>? coverEyes;
-  late final rive.SMIInput<double>? lookNumber;
-  late final rive.SMIInput<bool>? unHide;
-  late final rive.SMIInput<bool>? check;
-  late final rive.SMIInput<bool>? trigger;
+  late final SMIBool? coverEyes;
+  late final SMINumber? lookNumber;
+  late final SMIBool? unHide;
+  late final SMIBool? check;
+  late final SMIBool? trigger;
 
-  RiveAnimationController(rive.Artboard artboard) {
-    controller = rive.StateMachineController.fromArtboard(
+  DragonRiveController(Artboard artboard) {
+    controller = StateMachineController.fromArtboard(
       artboard,
-      "State Machine 1",
+      'State Machine 1',
     );
 
     if (controller == null) return;
 
     artboard.addController(controller!);
 
-    coverEyes = controller?.findInput<bool>("Cover Eyes");
-    lookNumber = controller?.findInput<double>("Number 1");
-    unHide = controller?.findInput<bool>("Unhide");
-    check = controller?.findInput<bool>("Check");
-    trigger = controller?.findInput<bool>("Trigger 1");
+    coverEyes = controller?.findInput<bool>('Cover Eyes') as SMIBool?;
+    lookNumber = controller?.findInput<double>('Number 1') as SMINumber?;
+    unHide = controller?.findInput<bool>('Unhide') as SMIBool?;
+    check = controller?.findInput<bool>('Check') as SMIBool?;
+    trigger = controller?.findInput<bool>('Trigger 1') as SMIBool?;
   }
 
   void emailFocus(bool hasFocus) {
@@ -56,7 +56,7 @@ class RiveAnimationController {
     }
   }
 
-   void confirmationPasswordFocused(bool hasFocus, bool isPasswordVisible) {
+  void confirmationPasswordFocused(bool hasFocus, bool isPasswordVisible) {
     if (hasFocus && !isPasswordVisible) {
       trigger?.change(true);
       check?.change(true);

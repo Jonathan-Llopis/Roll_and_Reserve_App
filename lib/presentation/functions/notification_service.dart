@@ -69,14 +69,14 @@ class NotificationService {
         final updateToken =
             await di.sl<UserRespository>().updateTokenNotification(id!, token);
         updateToken.fold(
-          (failure) => debugPrint("Error al actualizar el token: $failure"),
-          (success) => debugPrint("Token de FCM: $token"),
+          (failure) => debugPrint('Error al actualizar el token: $failure'),
+          (success) => debugPrint('Token de FCM: $token'),
         );
       } else {
-        debugPrint("No se pudo obtener el token.");
+        debugPrint('No se pudo obtener el token.');
       }
     } catch (e) {
-      debugPrint("Error al obtener el token: $e");
+      debugPrint('Error al obtener el token: $e');
     }
   }
 
@@ -90,7 +90,8 @@ class NotificationService {
   void _configureForegroundNotifications() {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       debugPrint(
-          "Mensaje recibido en primer plano: ${message.notification?.title}");
+        'Mensaje recibido en primer plano: ${message.notification?.title}',
+      );
       _showNotificationBanner(message);
     });
   }
@@ -103,7 +104,8 @@ class NotificationService {
   void _configureOpenedAppNotifications() {
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       debugPrint(
-          "La app se abrió desde la notificación: ${message.notification?.title}");
+        'La app se abrió desde la notificación: ${message.notification?.title}',
+      );
 
       if (message.data.containsKey('ruta')) {
         String ruta = message.data['ruta'];
@@ -111,7 +113,8 @@ class NotificationService {
       }
     });
   }
-/// Handles messages that are received while the app is in the background.
+
+  /// Handles messages that are received while the app is in the background.
   ///
   /// Prints a debug message with the title of the message, or "Sin título" if
   /// the title is null.
@@ -119,12 +122,12 @@ class NotificationService {
   /// This method is called when [FirebaseMessaging.onBackgroundMessage] is
   /// triggered.
   static Future<void> _firebaseMessagingBackgroundHandler(
-      RemoteMessage message) async {
-  
+    RemoteMessage message,
+  ) async {
     debugPrint(
-        "Mensaje recibido en segundo plano: ${message.notification?.title}");
+      'Mensaje recibido en segundo plano: ${message.notification?.title}',
+    );
   }
-
 
   /// Shows a notification banner with the title and body of the given message.
   ///
@@ -141,12 +144,12 @@ class NotificationService {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text(message.notification?.title ?? "Notificación"),
-            content: Text(message.notification?.body ?? "Sin contenido"),
+            title: Text(message.notification?.title ?? 'Notificación'),
+            content: Text(message.notification?.body ?? 'Sin contenido'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: Text("Cerrar"),
+                child: const Text('Cerrar'),
               ),
             ],
           );
@@ -203,7 +206,7 @@ class NotificationService {
   ///
   /// This method retrieves the current FCM topic subscriptions and checks if
   /// the device is currently subscribed to the topic with the name
-  /// "shop_<idShop>".
+  /// "shop_`<idShop>`".
   ///
   /// [idShop]: The ID of the shop whose topic subscription should be checked.
   ///

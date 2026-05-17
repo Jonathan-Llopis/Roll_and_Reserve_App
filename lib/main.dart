@@ -28,7 +28,7 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 /// service and runs the app.
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: ".env");
+  await dotenv.load(fileName: '.env');
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   Future.delayed(const Duration(seconds: 2), () {
     FlutterNativeSplash.remove();
@@ -39,7 +39,7 @@ void main() async {
   );
   configureDependencies();
   await NotificationService().initialize();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -122,13 +122,13 @@ class MyAppState extends State<MyApp> {
             debugShowCheckedModeBanner: false,
             title: 'Roll and Reserve',
             theme: ThemeData(primarySwatch: Colors.blue),
-            localizationsDelegates: [
+            localizationsDelegates: const [
               AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            supportedLocales: [
+            supportedLocales: const [
               Locale('en'),
               Locale('es'),
               Locale('fr'),

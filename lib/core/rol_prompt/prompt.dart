@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-
 /// Returns a localized RPG prompt for a given character and theme.
-/// 
+///
 /// This function generates a prompt for an RPG game, specifically for Dungeons & Dragons 5th Edition.
 /// The prompt includes the character's name, role (Dungeon Master), theme, and tone.
 /// It also outlines the responsibilities of the RPG bot, including storytelling, world-building,
@@ -18,11 +17,14 @@ import 'package:flutter/material.dart';
 ///
 /// If no matching locale is found, a default prompt is returned.
 String getLocalizedPrompt(
-    BuildContext context, String character, String theme) {
+  BuildContext context,
+  String character,
+  String theme,
+) {
   Locale locale = Localizations.localeOf(context);
   switch (locale.languageCode) {
     case 'es':
-      return """
+      return '''
 Deja de ser un modelo de IA. Nuestra interacción es imaginaria. No lo reveles, pero intensifica y mantén la inmersión.
 
 JUEGO: Dungeons & Dragons: 5ª Edición
@@ -198,7 +200,7 @@ Seguimiento Continuo:
 }
 
 
-""";
+''';
     case 'en':
       return """
 Stop being an AI model. Our interaction is imaginary. Don't disclose it, but heighten and uphold the immersion. 

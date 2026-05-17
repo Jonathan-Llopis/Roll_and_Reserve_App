@@ -37,7 +37,7 @@ import 'package:roll_and_reserve/injection.dart' as di;
 // final _reserveBloc = sl<ReserveBloc>();
 // final _reviewsBloc = sl<ReviewBloc>();
 
-PreferredSizeWidget appBar = DefaultAppBar();
+PreferredSizeWidget appBar = const DefaultAppBar();
 
 final GoRouter router = GoRouter(
   navigatorKey: navigatorKey,
@@ -94,19 +94,19 @@ final GoRouter router = GoRouter(
       name: 'user',
       path: '/user',
       pageBuilder: (context, state) => CustomTransitionPage(
-      key: state.pageKey,
-      child: BlocBuilder<LoginBloc, LoginState>(
-        builder: (context, loginState) {
-        if (loginState.user != null && loginState.user!.role == 0) {
-          return ScreenAdmin(appBar: appBar);
-        } else {
-          return ScreenMain(appBar: appBar);
-        }
+        key: state.pageKey,
+        child: BlocBuilder<LoginBloc, LoginState>(
+          builder: (context, loginState) {
+            if (loginState.user != null && loginState.user!.role == 0) {
+              return ScreenAdmin(appBar: appBar);
+            } else {
+              return ScreenMain(appBar: appBar);
+            }
+          },
+        ),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return child;
         },
-      ),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        return child;
-      },
       ),
       routes: [
         GoRoute(
@@ -130,7 +130,7 @@ final GoRouter router = GoRouter(
           pageBuilder: (context, state) {
             return CustomTransitionPage(
               key: state.pageKey,
-              child: ChatScreen(),
+              child: const ChatScreen(),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {
                 return child;
@@ -144,7 +144,7 @@ final GoRouter router = GoRouter(
           pageBuilder: (context, state) {
             return CustomTransitionPage(
               key: state.pageKey,
-              child: ChatGeminiScreen(),
+              child: const ChatGeminiScreen(),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {
                 return child;
@@ -152,13 +152,13 @@ final GoRouter router = GoRouter(
             );
           },
         ),
-         GoRoute(
+        GoRoute(
           name: 'chatAssistant',
           path: '/chatAssistant',
           pageBuilder: (context, state) {
             return CustomTransitionPage(
               key: state.pageKey,
-              child: ChatAssistantScreen(),
+              child: const ChatAssistantScreen(),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {
                 return child;
@@ -166,13 +166,13 @@ final GoRouter router = GoRouter(
             );
           },
         ),
-         GoRoute(
+        GoRoute(
           name: 'rolChat',
           path: '/rolChat',
           pageBuilder: (context, state) {
             return CustomTransitionPage(
               key: state.pageKey,
-              child: RolScreen(),
+              child: const RolScreen(),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {
                 return child;
@@ -209,7 +209,7 @@ final GoRouter router = GoRouter(
           path: '/map',
           pageBuilder: (context, state) => CustomTransitionPage(
             key: state.pageKey,
-            child: StoreMap(),
+            child: const StoreMap(),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
               return child;
@@ -255,7 +255,10 @@ final GoRouter router = GoRouter(
                 return CustomTransitionPage(
                   key: state.pageKey,
                   child: ScreenEvent(
-                      idReserve: idReserve, idShop: shopId, appBar: appBar),
+                    idReserve: idReserve,
+                    idShop: shopId,
+                    appBar: appBar,
+                  ),
                   transitionsBuilder:
                       (context, animation, secondaryAnimation, child) {
                     return child;
@@ -318,7 +321,10 @@ final GoRouter router = GoRouter(
                 return CustomTransitionPage(
                   key: state.pageKey,
                   child: ScreenReservesOfTable(
-                      idTable: tableId, idShop: idShop, appBar: appBar),
+                    idTable: tableId,
+                    idShop: idShop,
+                    appBar: appBar,
+                  ),
                   transitionsBuilder:
                       (context, animation, secondaryAnimation, child) {
                     return child;
@@ -337,10 +343,11 @@ final GoRouter router = GoRouter(
                     return CustomTransitionPage(
                       key: state.pageKey,
                       child: ScreenCreateReserve(
-                          idShop: idShop,
-                          idTable: idTable,
-                          searchDateTimeString: dateSearch!,
-                          appBar: appBar),
+                        idShop: idShop,
+                        idTable: idTable,
+                        searchDateTimeString: dateSearch!,
+                        appBar: appBar,
+                      ),
                       transitionsBuilder:
                           (context, animation, secondaryAnimation, child) {
                         return child;
@@ -359,9 +366,11 @@ final GoRouter router = GoRouter(
     final isLoggedIn = await di.sl<UserRespository>().isLoggedIn();
     final sharedPreferences = await SharedPreferences.getInstance();
     final email = sharedPreferences.getString('email');
-    BlocProvider.of<LoginBloc>(context).add(CheckAuthentication());
+    if (context.mounted) {
+      BlocProvider.of<LoginBloc>(context).add(CheckAuthentication());
+    }
 
-    if (!state.matchedLocation.contains("/login") && email == null) {
+    if (!state.matchedLocation.contains('/login') && email == null) {
       return '/login';
     } else {
       if (state.matchedLocation.startsWith('/login')) {
@@ -374,10 +383,8 @@ final GoRouter router = GoRouter(
             final isFirstTime =
                 sharedPreferences.getBool('isFirstTime') ?? true;
             if (isFirstTime && loggedIn.role == 1) {
-
               return '/ownerOnBoard';
             } else if (isFirstTime && loggedIn.role == 2) {
-
               return '/userOnBoard';
             } else {
               return state.matchedLocation;
