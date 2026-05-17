@@ -1,50 +1,58 @@
+import 'package:equatable/equatable.dart';
 import 'package:roll_and_reserve/domain/entities/review_entity.dart';
 
-class ReviewState {
-  final bool isLoading;
+sealed class ReviewState extends Equatable {
   final int? idReview;
-  final String? errorMessage;
   final List<ReviewEntity>? reviews;
   final ReviewEntity? review;
 
-  const ReviewState(
-      {this.isLoading = false,
-      this.idReview,
-      this.errorMessage,
-      this.reviews,
-      this.review});
+  const ReviewState({
+    this.idReview,
+    this.reviews,
+    this.review,
+  });
 
-  ReviewState copyWith(
-      {bool? isLoading,
-      int? idReview,
-      String? errorMessage,
-      List<ReviewEntity>? reviews,
-      ReviewEntity? review}) {
-    return ReviewState(
-        isLoading: isLoading ?? this.isLoading,
-        idReview: idReview ?? this.idReview,
-        errorMessage: errorMessage,
-        reviews: reviews ?? this.reviews,
-        review: review ?? this.review);
-  }
+  bool get isLoading => this is ReviewLoading;
+  String? get errorMessage =>
+      this is ReviewFailure ? (this as ReviewFailure).message : null;
 
-  factory ReviewState.initial(ReviewState state) => state.copyWith();
+  @override
+  List<Object?> get props => [
+        idReview,
+        reviews,
+        review,
+      ];
+}
 
-  factory ReviewState.loading(ReviewState state) =>
-      state.copyWith(isLoading: true,errorMessage: null);
+class ReviewInitial extends ReviewState {
+  const ReviewInitial() : super();
+}
 
-  factory ReviewState.success(ReviewState state) =>
-      state.copyWith(isLoading: false, errorMessage: null);
+class ReviewLoading extends ReviewState {
+  const ReviewLoading({
+    super.idReview,
+    super.reviews,
+    super.review,
+  });
+}
 
-  factory ReviewState.getReview(
-          ReviewState state, List<ReviewEntity> reviews) =>
-      state.copyWith(reviews: reviews, isLoading: false, errorMessage: null);
+class ReviewSuccess extends ReviewState {
+  const ReviewSuccess({
+    super.idReview,
+    super.reviews,
+    super.review,
+  });
+}
 
-  factory ReviewState.selectedReview(
-          ReviewState state, ReviewEntity reviewSelected) =>
-      state.copyWith(
-          review: reviewSelected, isLoading: false, errorMessage: null);
+class ReviewFailure extends ReviewState {
+  final String message;
+  const ReviewFailure(
+    this.message, {
+    super.idReview,
+    super.reviews,
+    super.review,
+  });
 
-  factory ReviewState.failure(ReviewState state, String errorMessage) =>
-      state.copyWith(errorMessage: errorMessage, isLoading: false);
+  @override
+  List<Object?> get props => [super.props, message];
 }

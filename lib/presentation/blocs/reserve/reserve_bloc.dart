@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:roll_and_reserve/core/failure.dart';
 import 'package:roll_and_reserve/core/use_case.dart';
 import 'package:roll_and_reserve/domain/entities/category_game_entity.dart';
 import 'package:roll_and_reserve/domain/entities/difficulty_entity.dart';
@@ -47,25 +47,40 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
   final UpdateReserveUseCase updateReserveUseCase;
 
   ReserveBloc(
-      this.createReserveUseCase,
-      this.getReserveUseCase,
-      this.deleteReserveUseCase,
-      this.getAllDifficultyUseCase,
-      this.getAllGameUseCase,
-      this.getAllCategoryGamesUseCase,
-      this.addUserToReserveUseCase,
-      this.deleteUserToReserveUseCase,
-      this.getAllReservesByDateUseCase,
-      this.getReserveWithuserUsecase,
-      this.getReservesOfUserUseCase,
-      this.confirmateReserveUsecase,
-      this.getEventsShopUsecase,
-      this.createEventsUsecase,
-      this.searchGamesUseCase,
-      this.getLastTenPlayersUseCase,
-      this.updateReserveUseCase)
-      : super(const ReserveState()) {
+    this.createReserveUseCase,
+    this.getReserveUseCase,
+    this.deleteReserveUseCase,
+    this.getAllDifficultyUseCase,
+    this.getAllGameUseCase,
+    this.getAllCategoryGamesUseCase,
+    this.addUserToReserveUseCase,
+    this.deleteUserToReserveUseCase,
+    this.getAllReservesByDateUseCase,
+    this.getReserveWithuserUsecase,
+    this.getReservesOfUserUseCase,
+    this.confirmateReserveUsecase,
+    this.getEventsShopUsecase,
+    this.createEventsUsecase,
+    this.searchGamesUseCase,
+    this.getLastTenPlayersUseCase,
+    this.updateReserveUseCase,
+  ) : super(const ReserveInitial()) {
     on<GetReservesEvent>((event, emit) async {
+      emit(
+        ReserveLoading(
+          idReserve: state.idReserve,
+          reserves: state.reserves,
+          reserve: state.reserve,
+          difficulties: state.difficulties,
+          games: state.games,
+          searchedGames: state.searchedGames,
+          gameCategories: state.gameCategories,
+          reservesOfUser: state.reservesOfUser,
+          eventsShop: state.eventsShop,
+          lastUsers: state.lastUsers,
+          filterTables: state.filterTables,
+        ),
+      );
       try {
         final reservesFuture = getReserveUseCase(NoParams());
         final categoriesFuture = getAllCategoryGamesUseCase(NoParams());
@@ -79,36 +94,100 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
           difficultiesFuture,
         ]);
         final reservesResult =
-            results[0] as Either<Exception, List<ReserveEntity>>;
+            results[0] as Either<Failure, List<ReserveEntity>>;
         final categoriesResult =
-            results[1] as Either<Exception, List<GameCategoryEntity>>;
-        final gamesResult = results[2] as Either<Exception, List<GameEntity>>;
+            results[1] as Either<Failure, List<GameCategoryEntity>>;
+        final gamesResult = results[2] as Either<Failure, List<GameEntity>>;
         final difficultiesResult =
-            results[3] as Either<Exception, List<DifficultyEntity>>;
+            results[3] as Either<Failure, List<DifficultyEntity>>;
 
         reservesResult.fold(
-          (failure) =>
-              emit(ReserveState.failure(state, "Error al cargar reservas")),
+          (failure) => emit(
+            ReserveFailure(
+              'Error al cargar reservas',
+              idReserve: state.idReserve,
+              reserves: state.reserves,
+              reserve: state.reserve,
+              difficulties: state.difficulties,
+              games: state.games,
+              searchedGames: state.searchedGames,
+              gameCategories: state.gameCategories,
+              reservesOfUser: state.reservesOfUser,
+              eventsShop: state.eventsShop,
+              lastUsers: state.lastUsers,
+              filterTables: state.filterTables,
+            ),
+          ),
           (reserves) {
             categoriesResult.fold(
-              (failure) => emit(ReserveState.failure(
-                  state, "Error al cargar categorías de juegos")),
+              (failure) => emit(
+                ReserveFailure(
+                  'Error al cargar categorías de juegos',
+                  idReserve: state.idReserve,
+                  reserves: reserves,
+                  reserve: state.reserve,
+                  difficulties: state.difficulties,
+                  games: state.games,
+                  searchedGames: state.searchedGames,
+                  gameCategories: state.gameCategories,
+                  reservesOfUser: state.reservesOfUser,
+                  eventsShop: state.eventsShop,
+                  lastUsers: state.lastUsers,
+                  filterTables: state.filterTables,
+                ),
+              ),
               (categories) {
                 gamesResult.fold(
                   (failure) => emit(
-                      ReserveState.failure(state, "Error al cargar juegos")),
+                    ReserveFailure(
+                      'Error al cargar juegos',
+                      idReserve: state.idReserve,
+                      reserves: reserves,
+                      reserve: state.reserve,
+                      difficulties: state.difficulties,
+                      games: state.games,
+                      searchedGames: state.searchedGames,
+                      gameCategories: categories,
+                      reservesOfUser: state.reservesOfUser,
+                      eventsShop: state.eventsShop,
+                      lastUsers: state.lastUsers,
+                      filterTables: state.filterTables,
+                    ),
+                  ),
                   (games) {
                     difficultiesResult.fold(
-                      (failure) => emit(ReserveState.failure(
-                          state, "Error al cargar dificultades")),
-                      (difficulties) {
-                        emit(ReserveState.getAllData(
+                      (failure) => emit(
+                        ReserveFailure(
+                          'Error al cargar dificultades',
+                          idReserve: state.idReserve,
                           reserves: reserves,
+                          reserve: state.reserve,
+                          difficulties: state.difficulties,
                           games: games,
+                          searchedGames: state.searchedGames,
                           gameCategories: categories,
-                          difficulties: difficulties,
-                          state: state,
-                        ));
+                          reservesOfUser: state.reservesOfUser,
+                          eventsShop: state.eventsShop,
+                          lastUsers: state.lastUsers,
+                          filterTables: state.filterTables,
+                        ),
+                      ),
+                      (difficulties) {
+                        emit(
+                          ReserveSuccess(
+                            reserves: reserves,
+                            games: games,
+                            gameCategories: categories,
+                            difficulties: difficulties,
+                            idReserve: state.idReserve,
+                            reserve: state.reserve,
+                            searchedGames: state.searchedGames,
+                            reservesOfUser: state.reservesOfUser,
+                            eventsShop: state.eventsShop,
+                            lastUsers: state.lastUsers,
+                            filterTables: state.filterTables,
+                          ),
+                        );
                       },
                     );
                   },
@@ -118,163 +197,517 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
           },
         );
       } catch (e) {
-        emit(ReserveState.failure(state, "Error inesperado: $e"));
+        emit(
+          ReserveFailure(
+            'Error inesperado: $e',
+            idReserve: state.idReserve,
+            reserves: state.reserves,
+            reserve: state.reserve,
+            difficulties: state.difficulties,
+            games: state.games,
+            searchedGames: state.searchedGames,
+            gameCategories: state.gameCategories,
+            reservesOfUser: state.reservesOfUser,
+            eventsShop: state.eventsShop,
+            lastUsers: state.lastUsers,
+            filterTables: state.filterTables,
+          ),
+        );
       }
     });
 
     on<GetReserveEvent>((event, emit) async {
-      emit(ReserveState.loading(
-        state,
-      ));
+      emit(
+        ReserveLoading(
+          idReserve: state.idReserve,
+          reserves: state.reserves,
+          reserve: state.reserve,
+          difficulties: state.difficulties,
+          games: state.games,
+          searchedGames: state.searchedGames,
+          gameCategories: state.gameCategories,
+          reservesOfUser: state.reservesOfUser,
+          eventsShop: state.eventsShop,
+          lastUsers: state.lastUsers,
+          filterTables: state.filterTables,
+        ),
+      );
       final result = await getReserveUseCase(NoParams());
       result.fold(
         (failure) => emit(
-            ReserveState.failure(state, "Fallo al realizar la recuperacion")),
+          ReserveFailure(
+            'Fallo al realizar la recuperación',
+            idReserve: state.idReserve,
+            reserves: state.reserves,
+            reserve: state.reserve,
+            difficulties: state.difficulties,
+            games: state.games,
+            searchedGames: state.searchedGames,
+            gameCategories: state.gameCategories,
+            reservesOfUser: state.reservesOfUser,
+            eventsShop: state.eventsShop,
+            lastUsers: state.lastUsers,
+            filterTables: state.filterTables,
+          ),
+        ),
         (reservess) {
           final reserves = reservess
               .firstWhere((reserves) => reserves.id == event.idReserve);
-          emit(ReserveState.selectedReserve(state, reserves));
+          emit(
+            ReserveSuccess(
+              idReserve: state.idReserve,
+              reserves: state.reserves,
+              reserve: reserves,
+              difficulties: state.difficulties,
+              games: state.games,
+              searchedGames: state.searchedGames,
+              gameCategories: state.gameCategories,
+              reservesOfUser: state.reservesOfUser,
+              eventsShop: state.eventsShop,
+              lastUsers: state.lastUsers,
+              filterTables: state.filterTables,
+            ),
+          );
           add(GetAllCategoryGameEvent());
           add(GetAllGameEvent());
           add(GetAllDifficultyEvent());
         },
       );
     });
+
     on<CreateReserveEvent>((event, emit) async {
-      debugPrint('CreateReserveEvent, event: $event');
-      emit(ReserveState.loading(
-        state,
-      ));
+      emit(
+        ReserveLoading(
+          idReserve: state.idReserve,
+          reserves: state.reserves,
+          reserve: state.reserve,
+          difficulties: state.difficulties,
+          games: state.games,
+          searchedGames: state.searchedGames,
+          gameCategories: state.gameCategories,
+          reservesOfUser: state.reservesOfUser,
+          eventsShop: state.eventsShop,
+          lastUsers: state.lastUsers,
+          filterTables: state.filterTables,
+        ),
+      );
       final result = await createReserveUseCase(event.reserve);
       result.fold(
-        (failure) =>
-            emit(ReserveState.failure(state, "Fallo al crear reserva")),
+        (failure) => emit(
+          ReserveFailure(
+            'Fallo al crear reserva',
+            idReserve: state.idReserve,
+            reserves: state.reserves,
+            reserve: state.reserve,
+            difficulties: state.difficulties,
+            games: state.games,
+            searchedGames: state.searchedGames,
+            gameCategories: state.gameCategories,
+            reservesOfUser: state.reservesOfUser,
+            eventsShop: state.eventsShop,
+            lastUsers: state.lastUsers,
+            filterTables: state.filterTables,
+          ),
+        ),
         (id) {
           if (event.idUser != '') {
-            add(AddUserToReserveEvent(
+            add(
+              AddUserToReserveEvent(
                 idReserve: id,
                 idUser: event.idUser,
                 idTable: event.reserve.tableId,
                 dateReserve: event.dateReserve,
-                searchDateTime: event.dateReserve));
+                searchDateTime: event.dateReserve,
+              ),
+            );
           }
           emit(
-            ReserveState.success(
-              state,
+            ReserveSuccess(
+              idReserve: state.idReserve,
+              reserves: state.reserves,
+              reserve: state.reserve,
+              difficulties: state.difficulties,
+              games: state.games,
+              searchedGames: state.searchedGames,
+              gameCategories: state.gameCategories,
+              reservesOfUser: state.reservesOfUser,
+              eventsShop: state.eventsShop,
+              lastUsers: state.lastUsers,
+              filterTables: state.filterTables,
             ),
           );
         },
       );
     });
+
     on<DeleteReserveEvent>((event, emit) async {
-      emit(ReserveState.loading(
-        state,
-      ));
+      emit(
+        ReserveLoading(
+          idReserve: state.idReserve,
+          reserves: state.reserves,
+          reserve: state.reserve,
+          difficulties: state.difficulties,
+          games: state.games,
+          searchedGames: state.searchedGames,
+          gameCategories: state.gameCategories,
+          reservesOfUser: state.reservesOfUser,
+          eventsShop: state.eventsShop,
+          lastUsers: state.lastUsers,
+          filterTables: state.filterTables,
+        ),
+      );
       final result = await deleteReserveUseCase(event.idReserve);
       result.fold(
-        (failure) =>
-            emit(ReserveState.failure(state, "Fallo al eliminar tienda")),
+        (failure) => emit(
+          ReserveFailure(
+            'Fallo al eliminar tienda',
+            idReserve: state.idReserve,
+            reserves: state.reserves,
+            reserve: state.reserve,
+            difficulties: state.difficulties,
+            games: state.games,
+            searchedGames: state.searchedGames,
+            gameCategories: state.gameCategories,
+            reservesOfUser: state.reservesOfUser,
+            eventsShop: state.eventsShop,
+            lastUsers: state.lastUsers,
+            filterTables: state.filterTables,
+          ),
+        ),
         (_) {
           emit(
-            ReserveState.success(
-              state,
+            ReserveSuccess(
+              idReserve: state.idReserve,
+              reserves: state.reserves,
+              reserve: state.reserve,
+              difficulties: state.difficulties,
+              games: state.games,
+              searchedGames: state.searchedGames,
+              gameCategories: state.gameCategories,
+              reservesOfUser: state.reservesOfUser,
+              eventsShop: state.eventsShop,
+              lastUsers: state.lastUsers,
+              filterTables: state.filterTables,
             ),
           );
           add(GetReservesEvent());
         },
       );
     });
+
     on<GetAllDifficultyEvent>((event, emit) async {
-      emit(ReserveState.loading(
-        state,
-      ));
+      emit(
+        ReserveLoading(
+          idReserve: state.idReserve,
+          reserves: state.reserves,
+          reserve: state.reserve,
+          difficulties: state.difficulties,
+          games: state.games,
+          searchedGames: state.searchedGames,
+          gameCategories: state.gameCategories,
+          reservesOfUser: state.reservesOfUser,
+          eventsShop: state.eventsShop,
+          lastUsers: state.lastUsers,
+          filterTables: state.filterTables,
+        ),
+      );
       final result = await getAllDifficultyUseCase(NoParams());
       result.fold(
         (failure) => emit(
-            ReserveState.failure(state, "Fallo al realizar la recuperacion")),
-        (dificulties) => emit(ReserveState.getDifficulties(state, dificulties)),
+          ReserveFailure(
+            'Fallo al realizar la recuperación',
+            idReserve: state.idReserve,
+            reserves: state.reserves,
+            reserve: state.reserve,
+            difficulties: state.difficulties,
+            games: state.games,
+            searchedGames: state.searchedGames,
+            gameCategories: state.gameCategories,
+            reservesOfUser: state.reservesOfUser,
+            eventsShop: state.eventsShop,
+            lastUsers: state.lastUsers,
+            filterTables: state.filterTables,
+          ),
+        ),
+        (dificulties) => emit(
+          ReserveSuccess(
+            idReserve: state.idReserve,
+            reserves: state.reserves,
+            reserve: state.reserve,
+            difficulties: dificulties,
+            games: state.games,
+            searchedGames: state.searchedGames,
+            gameCategories: state.gameCategories,
+            reservesOfUser: state.reservesOfUser,
+            eventsShop: state.eventsShop,
+            lastUsers: state.lastUsers,
+            filterTables: state.filterTables,
+          ),
+        ),
       );
     });
+
     on<GetAllGameEvent>((event, emit) async {
-      emit(ReserveState.loading(
-        state,
-      ));
+      emit(
+        ReserveLoading(
+          idReserve: state.idReserve,
+          reserves: state.reserves,
+          reserve: state.reserve,
+          difficulties: state.difficulties,
+          games: state.games,
+          searchedGames: state.searchedGames,
+          gameCategories: state.gameCategories,
+          reservesOfUser: state.reservesOfUser,
+          eventsShop: state.eventsShop,
+          lastUsers: state.lastUsers,
+          filterTables: state.filterTables,
+        ),
+      );
       final result = await getAllGameUseCase(NoParams());
       result.fold(
         (failure) => emit(
-            ReserveState.failure(state, "Fallo al realizar la recuperacion")),
-        (games) => emit(ReserveState.getGames(state, games)),
+          ReserveFailure(
+            'Fallo al realizar la recuperación',
+            idReserve: state.idReserve,
+            reserves: state.reserves,
+            reserve: state.reserve,
+            difficulties: state.difficulties,
+            games: state.games,
+            searchedGames: state.searchedGames,
+            gameCategories: state.gameCategories,
+            reservesOfUser: state.reservesOfUser,
+            eventsShop: state.eventsShop,
+            lastUsers: state.lastUsers,
+            filterTables: state.filterTables,
+          ),
+        ),
+        (games) => emit(
+          ReserveSuccess(
+            idReserve: state.idReserve,
+            reserves: state.reserves,
+            reserve: state.reserve,
+            difficulties: state.difficulties,
+            games: games,
+            searchedGames: state.searchedGames,
+            gameCategories: state.gameCategories,
+            reservesOfUser: state.reservesOfUser,
+            eventsShop: state.eventsShop,
+            lastUsers: state.lastUsers,
+            filterTables: state.filterTables,
+          ),
+        ),
       );
     });
+
     on<GetAllCategoryGameEvent>((event, emit) async {
-      emit(ReserveState.loading(
-        state,
-      ));
+      emit(
+        ReserveLoading(
+          idReserve: state.idReserve,
+          reserves: state.reserves,
+          reserve: state.reserve,
+          difficulties: state.difficulties,
+          games: state.games,
+          searchedGames: state.searchedGames,
+          gameCategories: state.gameCategories,
+          reservesOfUser: state.reservesOfUser,
+          eventsShop: state.eventsShop,
+          lastUsers: state.lastUsers,
+          filterTables: state.filterTables,
+        ),
+      );
       final result = await getAllCategoryGamesUseCase(NoParams());
       result.fold(
         (failure) => emit(
-            ReserveState.failure(state, "Fallo al realizar la recuperacion")),
-        (categorygames) =>
-            emit(ReserveState.getGameCategories(state, categorygames)),
+          ReserveFailure(
+            'Fallo al realizar la recuperación',
+            idReserve: state.idReserve,
+            reserves: state.reserves,
+            reserve: state.reserve,
+            difficulties: state.difficulties,
+            games: state.games,
+            searchedGames: state.searchedGames,
+            gameCategories: state.gameCategories,
+            reservesOfUser: state.reservesOfUser,
+            eventsShop: state.eventsShop,
+            lastUsers: state.lastUsers,
+            filterTables: state.filterTables,
+          ),
+        ),
+        (categorygames) => emit(
+          ReserveSuccess(
+            idReserve: state.idReserve,
+            reserves: state.reserves,
+            reserve: state.reserve,
+            difficulties: state.difficulties,
+            games: state.games,
+            searchedGames: state.searchedGames,
+            gameCategories: categorygames,
+            reservesOfUser: state.reservesOfUser,
+            eventsShop: state.eventsShop,
+            lastUsers: state.lastUsers,
+            filterTables: state.filterTables,
+          ),
+        ),
       );
     });
 
     on<AddUserToReserveEvent>((event, emit) async {
-      emit(ReserveState.loading(
-        state,
-      ));
+      emit(
+        ReserveLoading(
+          idReserve: state.idReserve,
+          reserves: state.reserves,
+          reserve: state.reserve,
+          difficulties: state.difficulties,
+          games: state.games,
+          searchedGames: state.searchedGames,
+          gameCategories: state.gameCategories,
+          reservesOfUser: state.reservesOfUser,
+          eventsShop: state.eventsShop,
+          lastUsers: state.lastUsers,
+          filterTables: state.filterTables,
+        ),
+      );
       final params = UserToReserveUseCaseParams(
-          idReserve: event.idReserve, idUser: event.idUser);
+        idReserve: event.idReserve,
+        idUser: event.idUser,
+      );
       final result = await addUserToReserveUseCase(params);
       result.fold(
         (failure) => emit(
-          
-            ReserveState.failure(state, "Fallo al agregar usuario a la mesa")),
+          ReserveFailure(
+            'Fallo al agregar usuario a la mesa',
+            idReserve: state.idReserve,
+            reserves: state.reserves,
+            reserve: state.reserve,
+            difficulties: state.difficulties,
+            games: state.games,
+            searchedGames: state.searchedGames,
+            gameCategories: state.gameCategories,
+            reservesOfUser: state.reservesOfUser,
+            eventsShop: state.eventsShop,
+            lastUsers: state.lastUsers,
+            filterTables: state.filterTables,
+          ),
+        ),
         (_) {
-           add(GetReserveByDateEvent(
-              dateReserve: event.searchDateTime, idTable: event.idTable));
-          add(GetReservesByUserEvent(idUser: event.idUser)); 
-          add(GetReserveWithUsers(
-            idReserve: event.idReserve,
-          ));
-         
+          add(
+            GetReserveByDateEvent(
+              dateReserve: event.searchDateTime,
+              idTable: event.idTable,
+            ),
+          );
+          add(GetReservesByUserEvent(idUser: event.idUser));
+          add(
+            GetReserveWithUsers(
+              idReserve: event.idReserve,
+            ),
+          );
+
           emit(
-            ReserveState.success(
-              state,
+            ReserveSuccess(
+              idReserve: state.idReserve,
+              reserves: state.reserves,
+              reserve: state.reserve,
+              difficulties: state.difficulties,
+              games: state.games,
+              searchedGames: state.searchedGames,
+              gameCategories: state.gameCategories,
+              reservesOfUser: state.reservesOfUser,
+              eventsShop: state.eventsShop,
+              lastUsers: state.lastUsers,
+              filterTables: state.filterTables,
             ),
           );
         },
       );
     });
+
     on<DeleteUserOfReserveEvent>((event, emit) async {
-      emit(ReserveState.loading(
-        state,
-      ));
+      emit(
+        ReserveLoading(
+          idReserve: state.idReserve,
+          reserves: state.reserves,
+          reserve: state.reserve,
+          difficulties: state.difficulties,
+          games: state.games,
+          searchedGames: state.searchedGames,
+          gameCategories: state.gameCategories,
+          reservesOfUser: state.reservesOfUser,
+          eventsShop: state.eventsShop,
+          lastUsers: state.lastUsers,
+          filterTables: state.filterTables,
+        ),
+      );
       final params = UserToReserveUseCaseParams(
-          idReserve: event.idReserve, idUser: event.idUser);
+        idReserve: event.idReserve,
+        idUser: event.idUser,
+      );
       final result = await deleteUserToReserveUseCase(params);
       result.fold(
-        (failure) => emit(ReserveState.failure(
-            state, "Fallo al eliminar usuario de la mesa")),
+        (failure) => emit(
+          ReserveFailure(
+            'Fallo al eliminar usuario de la mesa',
+            idReserve: state.idReserve,
+            reserves: state.reserves,
+            reserve: state.reserve,
+            difficulties: state.difficulties,
+            games: state.games,
+            searchedGames: state.searchedGames,
+            gameCategories: state.gameCategories,
+            reservesOfUser: state.reservesOfUser,
+            eventsShop: state.eventsShop,
+            lastUsers: state.lastUsers,
+            filterTables: state.filterTables,
+          ),
+        ),
         (_) {
           add(GetReservesByUserEvent(idUser: event.idUser));
-          add(GetReserveByDateEvent(
-              dateReserve: event.dateReserve, idTable: event.idTable));
-          add(GetReserveWithUsers(
-            idReserve: event.idReserve,
-          ));
+          add(
+            GetReserveByDateEvent(
+              dateReserve: event.dateReserve,
+              idTable: event.idTable,
+            ),
+          );
+          add(
+            GetReserveWithUsers(
+              idReserve: event.idReserve,
+            ),
+          );
           emit(
-            ReserveState.success(
-              state,
+            ReserveSuccess(
+              idReserve: state.idReserve,
+              reserves: state.reserves,
+              reserve: state.reserve,
+              difficulties: state.difficulties,
+              games: state.games,
+              searchedGames: state.searchedGames,
+              gameCategories: state.gameCategories,
+              reservesOfUser: state.reservesOfUser,
+              eventsShop: state.eventsShop,
+              lastUsers: state.lastUsers,
+              filterTables: state.filterTables,
             ),
           );
         },
       );
     });
+
     on<GetReserveByTableEvent>((event, emit) async {
-      emit(ReserveState.loading(
-        state,
-      ));
+      emit(
+        ReserveLoading(
+          idReserve: state.idReserve,
+          reserves: state.reserves,
+          reserve: state.reserve,
+          difficulties: state.difficulties,
+          games: state.games,
+          searchedGames: state.searchedGames,
+          gameCategories: state.gameCategories,
+          reservesOfUser: state.reservesOfUser,
+          eventsShop: state.eventsShop,
+          lastUsers: state.lastUsers,
+          filterTables: state.filterTables,
+        ),
+      );
 
       try {
         final reservesFuture = getReserveUseCase(NoParams());
@@ -289,41 +722,106 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
           difficultiesFuture,
         ]);
         final reservesResult =
-            results[0] as Either<Exception, List<ReserveEntity>>;
+            results[0] as Either<Failure, List<ReserveEntity>>;
         final categoriesResult =
-            results[1] as Either<Exception, List<GameCategoryEntity>>;
-        final gamesResult = results[2] as Either<Exception, List<GameEntity>>;
+            results[1] as Either<Failure, List<GameCategoryEntity>>;
+        final gamesResult = results[2] as Either<Failure, List<GameEntity>>;
         final difficultiesResult =
-            results[3] as Either<Exception, List<DifficultyEntity>>;
+            results[3] as Either<Failure, List<DifficultyEntity>>;
 
         reservesResult.fold(
-          (failure) =>
-              emit(ReserveState.failure(state, "Error al cargar reservas")),
+          (failure) => emit(
+            ReserveFailure(
+              'Error al cargar reservas',
+              idReserve: state.idReserve,
+              reserves: state.reserves,
+              reserve: state.reserve,
+              difficulties: state.difficulties,
+              games: state.games,
+              searchedGames: state.searchedGames,
+              gameCategories: state.gameCategories,
+              reservesOfUser: state.reservesOfUser,
+              eventsShop: state.eventsShop,
+              lastUsers: state.lastUsers,
+              filterTables: state.filterTables,
+            ),
+          ),
           (reserves) {
             categoriesResult.fold(
-              (failure) => emit(ReserveState.failure(
-                  state, "Error al cargar categorías de juegos")),
+              (failure) => emit(
+                ReserveFailure(
+                  'Error al cargar categorías de juegos',
+                  idReserve: state.idReserve,
+                  reserves: reserves,
+                  reserve: state.reserve,
+                  difficulties: state.difficulties,
+                  games: state.games,
+                  searchedGames: state.searchedGames,
+                  gameCategories: state.gameCategories,
+                  reservesOfUser: state.reservesOfUser,
+                  eventsShop: state.eventsShop,
+                  lastUsers: state.lastUsers,
+                  filterTables: state.filterTables,
+                ),
+              ),
               (categories) {
                 gamesResult.fold(
                   (failure) => emit(
-                      ReserveState.failure(state, "Error al cargar juegos")),
+                    ReserveFailure(
+                      'Error al cargar juegos',
+                      idReserve: state.idReserve,
+                      reserves: reserves,
+                      reserve: state.reserve,
+                      difficulties: state.difficulties,
+                      games: state.games,
+                      searchedGames: state.searchedGames,
+                      gameCategories: categories,
+                      reservesOfUser: state.reservesOfUser,
+                      eventsShop: state.eventsShop,
+                      lastUsers: state.lastUsers,
+                      filterTables: state.filterTables,
+                    ),
+                  ),
                   (games) {
                     difficultiesResult.fold(
-                      (failure) => emit(ReserveState.failure(
-                          state, "Error al cargar dificultades")),
+                      (failure) => emit(
+                        ReserveFailure(
+                          'Error al cargar dificultades',
+                          idReserve: state.idReserve,
+                          reserves: reserves,
+                          reserve: state.reserve,
+                          difficulties: state.difficulties,
+                          games: games,
+                          searchedGames: state.searchedGames,
+                          gameCategories: categories,
+                          reservesOfUser: state.reservesOfUser,
+                          eventsShop: state.eventsShop,
+                          lastUsers: state.lastUsers,
+                          filterTables: state.filterTables,
+                        ),
+                      ),
                       (difficulties) {
                         final reservesByTable = reserves
                             .where(
-                                (reserve) => reserve.tableId == event.idTable)
+                              (reserve) => reserve.tableId == event.idTable,
+                            )
                             .toList();
 
-                        emit(ReserveState.getAllData(
-                          state: state,
-                          reserves: reservesByTable,
-                          games: games,
-                          gameCategories: categories,
-                          difficulties: difficulties,
-                        ));
+                        emit(
+                          ReserveSuccess(
+                            reserves: reservesByTable,
+                            games: games,
+                            gameCategories: categories,
+                            difficulties: difficulties,
+                            idReserve: state.idReserve,
+                            reserve: state.reserve,
+                            searchedGames: state.searchedGames,
+                            reservesOfUser: state.reservesOfUser,
+                            eventsShop: state.eventsShop,
+                            lastUsers: state.lastUsers,
+                            filterTables: state.filterTables,
+                          ),
+                        );
                       },
                     );
                   },
@@ -333,20 +831,48 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
           },
         );
       } catch (e) {
-        emit(ReserveState.failure(state, "Error inesperado: $e"));
+        emit(
+          ReserveFailure(
+            'Error inesperado: $e',
+            idReserve: state.idReserve,
+            reserves: state.reserves,
+            reserve: state.reserve,
+            difficulties: state.difficulties,
+            games: state.games,
+            searchedGames: state.searchedGames,
+            gameCategories: state.gameCategories,
+            reservesOfUser: state.reservesOfUser,
+            eventsShop: state.eventsShop,
+            lastUsers: state.lastUsers,
+            filterTables: state.filterTables,
+          ),
+        );
       }
     });
+
     on<GetReserveByDateEvent>((event, emit) async {
       try {
-        debugPrint('GetReserveByDateEvent, date: ${event.dateReserve},');
-        emit(ReserveState.loading(
-          state,
-        ));
-        final reservesFuture =
-            getAllReservesByDateUseCase(GetReservesByDateUseCaseParams(
-          date: event.dateReserve,
-          idTable: event.idTable,
-        ));
+        emit(
+          ReserveLoading(
+            idReserve: state.idReserve,
+            reserves: state.reserves,
+            reserve: state.reserve,
+            difficulties: state.difficulties,
+            games: state.games,
+            searchedGames: state.searchedGames,
+            gameCategories: state.gameCategories,
+            reservesOfUser: state.reservesOfUser,
+            eventsShop: state.eventsShop,
+            lastUsers: state.lastUsers,
+            filterTables: state.filterTables,
+          ),
+        );
+        final reservesFuture = getAllReservesByDateUseCase(
+          GetReservesByDateUseCaseParams(
+            date: event.dateReserve,
+            idTable: event.idTable,
+          ),
+        );
         final categoriesFuture = getAllCategoryGamesUseCase(NoParams());
         final gamesFuture = getAllGameUseCase(NoParams());
         final difficultiesFuture = getAllDifficultyUseCase(NoParams());
@@ -358,44 +884,110 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
           difficultiesFuture,
         ]);
         final reservesResult =
-            results[0] as Either<Exception, List<ReserveEntity>>;
+            results[0] as Either<Failure, List<ReserveEntity>>;
         final categoriesResult =
-            results[1] as Either<Exception, List<GameCategoryEntity>>;
-        final gamesResult = results[2] as Either<Exception, List<GameEntity>>;
+            results[1] as Either<Failure, List<GameCategoryEntity>>;
+        final gamesResult = results[2] as Either<Failure, List<GameEntity>>;
         final difficultiesResult =
-            results[3] as Either<Exception, List<DifficultyEntity>>;
+            results[3] as Either<Failure, List<DifficultyEntity>>;
 
         reservesResult.fold(
-          (failure) =>
-              emit(ReserveState.failure(state, "Error al cargar reservas")),
+          (failure) => emit(
+            ReserveFailure(
+              'Error al cargar reservas',
+              idReserve: state.idReserve,
+              reserves: state.reserves,
+              reserve: state.reserve,
+              difficulties: state.difficulties,
+              games: state.games,
+              searchedGames: state.searchedGames,
+              gameCategories: state.gameCategories,
+              reservesOfUser: state.reservesOfUser,
+              eventsShop: state.eventsShop,
+              lastUsers: state.lastUsers,
+              filterTables: state.filterTables,
+            ),
+          ),
           (reserves) {
             final filteredReserves = reserves
-                .where((reserve) =>
-                    reserve.dayDate ==
-                        DateFormat('dd - MM - yyyy')
-                            .format(event.dateReserve) &&
-                    reserve.tableId == event.idTable)
+                .where(
+                  (reserve) =>
+                      reserve.dayDate ==
+                          DateFormat('dd - MM - yyyy')
+                              .format(event.dateReserve) &&
+                      reserve.tableId == event.idTable,
+                )
                 .toList();
 
             categoriesResult.fold(
-              (failure) => emit(ReserveState.failure(
-                  state, "Error al cargar categorías de juegos")),
+              (failure) => emit(
+                ReserveFailure(
+                  'Error al cargar categorías de juegos',
+                  idReserve: state.idReserve,
+                  reserves: reserves,
+                  reserve: state.reserve,
+                  difficulties: state.difficulties,
+                  games: state.games,
+                  searchedGames: state.searchedGames,
+                  gameCategories: state.gameCategories,
+                  reservesOfUser: state.reservesOfUser,
+                  eventsShop: state.eventsShop,
+                  lastUsers: state.lastUsers,
+                  filterTables: state.filterTables,
+                ),
+              ),
               (categories) {
                 gamesResult.fold(
                   (failure) => emit(
-                      ReserveState.failure(state, "Error al cargar juegos")),
+                    ReserveFailure(
+                      'Error al cargar juegos',
+                      idReserve: state.idReserve,
+                      reserves: reserves,
+                      reserve: state.reserve,
+                      difficulties: state.difficulties,
+                      games: state.games,
+                      searchedGames: state.searchedGames,
+                      gameCategories: categories,
+                      reservesOfUser: state.reservesOfUser,
+                      eventsShop: state.eventsShop,
+                      lastUsers: state.lastUsers,
+                      filterTables: state.filterTables,
+                    ),
+                  ),
                   (games) {
                     difficultiesResult.fold(
-                      (failure) => emit(ReserveState.failure(
-                          state, "Error al cargar dificultades")),
-                      (difficulties) {
-                        emit(ReserveState.getAllData(
-                          state: state,
-                          reserves: filteredReserves,
+                      (failure) => emit(
+                        ReserveFailure(
+                          'Error al cargar dificultades',
+                          idReserve: state.idReserve,
+                          reserves: reserves,
+                          reserve: state.reserve,
+                          difficulties: state.difficulties,
                           games: games,
+                          searchedGames: state.searchedGames,
                           gameCategories: categories,
-                          difficulties: difficulties,
-                        ));
+                          reservesOfUser: state.reservesOfUser,
+                          eventsShop: state.eventsShop,
+                          lastUsers: state.lastUsers,
+                          filterTables: state.filterTables,
+                        ),
+                      ),
+                      (difficulties) {
+                        emit(
+                          ReserveSuccess(
+                            reserves: filteredReserves,
+                            games: games,
+                            gameCategories: categories,
+                            difficulties: difficulties,
+                            idReserve: state.idReserve,
+                            reserve: state.reserve,
+                            searchedGames: state.searchedGames,
+                            reservesOfUser: state.reservesOfUser,
+                            eventsShop: state.eventsShop,
+                            lastUsers: state.lastUsers,
+                            filterTables: state.filterTables,
+                          ),
+                        );
                       },
                     );
                   },
@@ -405,27 +997,69 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
           },
         );
       } catch (e) {
-        emit(ReserveState.failure(state, "Error inesperado: $e"));
+        emit(
+          ReserveFailure(
+            'Error inesperado: $e',
+            idReserve: state.idReserve,
+            reserves: state.reserves,
+            reserve: state.reserve,
+            difficulties: state.difficulties,
+            games: state.games,
+            searchedGames: state.searchedGames,
+            gameCategories: state.gameCategories,
+            reservesOfUser: state.reservesOfUser,
+            eventsShop: state.eventsShop,
+            lastUsers: state.lastUsers,
+            filterTables: state.filterTables,
+          ),
+        );
       }
     });
 
     on<GetReservesByShopEvent>((event, emit) async {
-      emit(ReserveState.loading(
-        state,
-      ));
+      emit(
+        ReserveLoading(
+          idReserve: state.idReserve,
+          reserves: state.reserves,
+          reserve: state.reserve,
+          difficulties: state.difficulties,
+          games: state.games,
+          searchedGames: state.searchedGames,
+          gameCategories: state.gameCategories,
+          reservesOfUser: state.reservesOfUser,
+          eventsShop: state.eventsShop,
+          lastUsers: state.lastUsers,
+          filterTables: state.filterTables,
+        ),
+      );
 
       try {
         final reservesFuture = getReserveUseCase(NoParams());
         final results = await reservesFuture;
-        final reservesResult = results;
 
-        reservesResult.fold(
-          (failure) =>
-              emit(ReserveState.failure(state, "Error al cargar reservas")),
+        results.fold(
+          (failure) => emit(
+            ReserveFailure(
+              'Error al cargar reservas',
+              idReserve: state.idReserve,
+              reserves: state.reserves,
+              reserve: state.reserve,
+              difficulties: state.difficulties,
+              games: state.games,
+              searchedGames: state.searchedGames,
+              gameCategories: state.gameCategories,
+              reservesOfUser: state.reservesOfUser,
+              eventsShop: state.eventsShop,
+              lastUsers: state.lastUsers,
+              filterTables: state.filterTables,
+            ),
+          ),
           (reserves) {
             final reservesByShop = reserves
-                .where((reserve) =>
-                    event.currentShop.tablesShop.contains(reserve.tableId))
+                .where(
+                  (reserve) =>
+                      event.currentShop.tablesShop.contains(reserve.tableId),
+                )
                 .toList();
             final filteredReserves = reservesByShop.where((reserve) {
               final isSameDate =
@@ -452,31 +1086,116 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
               'dateReserve': event.dateReserve,
             };
 
-            emit(ReserveState.getReserves(state, filteredReserves, filterTables));
+            emit(
+              ReserveSuccess(
+                reserves: filteredReserves,
+                filterTables: filterTables,
+                idReserve: state.idReserve,
+                reserve: state.reserve,
+                difficulties: state.difficulties,
+                games: state.games,
+                searchedGames: state.searchedGames,
+                gameCategories: state.gameCategories,
+                reservesOfUser: state.reservesOfUser,
+                eventsShop: state.eventsShop,
+                lastUsers: state.lastUsers,
+              ),
+            );
           },
         );
       } catch (e) {
-        emit(ReserveState.failure(state, "Error inesperado: $e"));
+        emit(
+          ReserveFailure(
+            'Error inesperado: $e',
+            idReserve: state.idReserve,
+            reserves: state.reserves,
+            reserve: state.reserve,
+            difficulties: state.difficulties,
+            games: state.games,
+            searchedGames: state.searchedGames,
+            gameCategories: state.gameCategories,
+            reservesOfUser: state.reservesOfUser,
+            eventsShop: state.eventsShop,
+            lastUsers: state.lastUsers,
+            filterTables: state.filterTables,
+          ),
+        );
       }
     });
+
     on<GetReserveWithUsers>((event, emit) async {
-      emit(ReserveState.loading(
-        state,
-      ));
+      emit(
+        ReserveLoading(
+          idReserve: state.idReserve,
+          reserves: state.reserves,
+          reserve: state.reserve,
+          difficulties: state.difficulties,
+          games: state.games,
+          searchedGames: state.searchedGames,
+          gameCategories: state.gameCategories,
+          reservesOfUser: state.reservesOfUser,
+          eventsShop: state.eventsShop,
+          lastUsers: state.lastUsers,
+          filterTables: state.filterTables,
+        ),
+      );
       final result = await getReserveWithuserUsecase(
-          IdReserveParams(idReserve: event.idReserve));
+        IdReserveParams(idReserve: event.idReserve),
+      );
       result.fold(
-        (failure) => emit(ReserveState.failure(
-            state, "Fallo al obtener reservas del usuario")),
-        (reserves) => emit(ReserveState.getReserve(state, reserves)),
+        (failure) => emit(
+          ReserveFailure(
+            'Fallo al obtener reservas del usuario',
+            idReserve: state.idReserve,
+            reserves: state.reserves,
+            reserve: state.reserve,
+            difficulties: state.difficulties,
+            games: state.games,
+            searchedGames: state.searchedGames,
+            gameCategories: state.gameCategories,
+            reservesOfUser: state.reservesOfUser,
+            eventsShop: state.eventsShop,
+            lastUsers: state.lastUsers,
+            filterTables: state.filterTables,
+          ),
+        ),
+        (reserves) => emit(
+          ReserveSuccess(
+            idReserve: state.idReserve,
+            reserves: state.reserves,
+            reserve: reserves,
+            difficulties: state.difficulties,
+            games: state.games,
+            searchedGames: state.searchedGames,
+            gameCategories: state.gameCategories,
+            reservesOfUser: state.reservesOfUser,
+            eventsShop: state.eventsShop,
+            lastUsers: state.lastUsers,
+            filterTables: state.filterTables,
+          ),
+        ),
       );
     });
+
     on<GetReservesByUserEvent>((event, emit) async {
-      emit(ReserveState.loading(
-        state,
-      ));
+      emit(
+        ReserveLoading(
+          idReserve: state.idReserve,
+          reserves: state.reserves,
+          reserve: state.reserve,
+          difficulties: state.difficulties,
+          games: state.games,
+          searchedGames: state.searchedGames,
+          gameCategories: state.gameCategories,
+          reservesOfUser: state.reservesOfUser,
+          eventsShop: state.eventsShop,
+          lastUsers: state.lastUsers,
+          filterTables: state.filterTables,
+        ),
+      );
       final reservesFuture = getReservesOfUserUseCase(
-          GetReserveFromUsersUseCaseParams(idUser: event.idUser));
+        GetReserveFromUsersUseCaseParams(idUser: event.idUser),
+      );
       final gamesFuture = getAllGameUseCase(NoParams());
 
       final results = await Future.wait([
@@ -484,45 +1203,143 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
         gamesFuture,
       ]);
 
-      final reservesResult =
-          results[0] as Either<Exception, List<ReserveEntity>>;
-      final gamesResult = results[1] as Either<Exception, List<GameEntity>>;
+      final reservesResult = results[0] as Either<Failure, List<ReserveEntity>>;
+      final gamesResult = results[1] as Either<Failure, List<GameEntity>>;
 
       reservesResult.fold(
-        (failure) => emit(ReserveState.failure(
-            state, "Fallo al obtener reservas del usuario")),
+        (failure) => emit(
+          ReserveFailure(
+            'Fallo al obtener reservas del usuario',
+            idReserve: state.idReserve,
+            reserves: state.reserves,
+            reserve: state.reserve,
+            difficulties: state.difficulties,
+            games: state.games,
+            searchedGames: state.searchedGames,
+            gameCategories: state.gameCategories,
+            reservesOfUser: state.reservesOfUser,
+            eventsShop: state.eventsShop,
+            lastUsers: state.lastUsers,
+            filterTables: state.filterTables,
+          ),
+        ),
         (reserves) {
           gamesResult.fold(
-            (failure) =>
-                emit(ReserveState.failure(state, "Error al cargar juegos")),
+            (failure) => emit(
+              ReserveFailure(
+                'Error al cargar juegos',
+                idReserve: state.idReserve,
+                reserves: state.reserves,
+                reserve: state.reserve,
+                difficulties: state.difficulties,
+                games: state.games,
+                searchedGames: state.searchedGames,
+                gameCategories: state.gameCategories,
+                reservesOfUser: reserves,
+                eventsShop: state.eventsShop,
+                lastUsers: state.lastUsers,
+                filterTables: state.filterTables,
+              ),
+            ),
             (games) {
-              emit(ReserveState.getReservesOfUser(state, reserves, games));
+              emit(
+                ReserveSuccess(
+                  reservesOfUser: reserves,
+                  games: games,
+                  idReserve: state.idReserve,
+                  reserves: state.reserves,
+                  reserve: state.reserve,
+                  difficulties: state.difficulties,
+                  searchedGames: state.searchedGames,
+                  gameCategories: state.gameCategories,
+                  eventsShop: state.eventsShop,
+                  lastUsers: state.lastUsers,
+                  filterTables: state.filterTables,
+                ),
+              );
             },
           );
         },
       );
     });
+
     on<ConfirmReserveEvent>((event, emit) async {
-      emit(ReserveState.loading(
-        state,
-      ));
+      emit(
+        ReserveLoading(
+          idReserve: state.idReserve,
+          reserves: state.reserves,
+          reserve: state.reserve,
+          difficulties: state.difficulties,
+          games: state.games,
+          searchedGames: state.searchedGames,
+          gameCategories: state.gameCategories,
+          reservesOfUser: state.reservesOfUser,
+          eventsShop: state.eventsShop,
+          lastUsers: state.lastUsers,
+          filterTables: state.filterTables,
+        ),
+      );
       final result = await confirmateReserveUsecase(
-          IdReserveParams(idReserve: event.idReserve));
+        IdReserveParams(idReserve: event.idReserve),
+      );
       result.fold(
-        (failure) =>
-            emit(ReserveState.failure(state, "Fallo al confirmar reserva")),
+        (failure) => emit(
+          ReserveFailure(
+            'Fallo al confirmar reserva',
+            idReserve: state.idReserve,
+            reserves: state.reserves,
+            reserve: state.reserve,
+            difficulties: state.difficulties,
+            games: state.games,
+            searchedGames: state.searchedGames,
+            gameCategories: state.gameCategories,
+            reservesOfUser: state.reservesOfUser,
+            eventsShop: state.eventsShop,
+            lastUsers: state.lastUsers,
+            filterTables: state.filterTables,
+          ),
+        ),
         (_) {
-          emit(ReserveState.success(state));
-          add(GetReserveWithUsers(
-            idReserve: event.idReserve,
-          ));
+          emit(
+            ReserveSuccess(
+              idReserve: state.idReserve,
+              reserves: state.reserves,
+              reserve: state.reserve,
+              difficulties: state.difficulties,
+              games: state.games,
+              searchedGames: state.searchedGames,
+              gameCategories: state.gameCategories,
+              reservesOfUser: state.reservesOfUser,
+              eventsShop: state.eventsShop,
+              lastUsers: state.lastUsers,
+              filterTables: state.filterTables,
+            ),
+          );
+          add(
+            GetReserveWithUsers(
+              idReserve: event.idReserve,
+            ),
+          );
         },
       );
     });
+
     on<GetEventsEvent>((event, emit) async {
-      emit(ReserveState.loading(
-        state,
-      ));
+      emit(
+        ReserveLoading(
+          idReserve: state.idReserve,
+          reserves: state.reserves,
+          reserve: state.reserve,
+          difficulties: state.difficulties,
+          games: state.games,
+          searchedGames: state.searchedGames,
+          gameCategories: state.gameCategories,
+          reservesOfUser: state.reservesOfUser,
+          eventsShop: state.eventsShop,
+          lastUsers: state.lastUsers,
+          filterTables: state.filterTables,
+        ),
+      );
       final eventsFuture =
           getEventsShopUsecase(GetEventsParams(idShop: event.idShop));
       final gamesFuture = getAllGameUseCase(NoParams());
@@ -532,18 +1349,60 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
         gamesFuture,
       ]);
 
-      final eventsResult = results[0] as Either<Exception, List<ReserveEntity>>;
-      final gamesResult = results[1] as Either<Exception, List<GameEntity>>;
+      final eventsResult = results[0] as Either<Failure, List<ReserveEntity>>;
+      final gamesResult = results[1] as Either<Failure, List<GameEntity>>;
 
       eventsResult.fold(
-        (failure) =>
-            emit(ReserveState.failure(state, "Fallo al obtener eventos")),
+        (failure) => emit(
+          ReserveFailure(
+            'Fallo al obtener eventos',
+            idReserve: state.idReserve,
+            reserves: state.reserves,
+            reserve: state.reserve,
+            difficulties: state.difficulties,
+            games: state.games,
+            searchedGames: state.searchedGames,
+            gameCategories: state.gameCategories,
+            reservesOfUser: state.reservesOfUser,
+            eventsShop: state.eventsShop,
+            lastUsers: state.lastUsers,
+            filterTables: state.filterTables,
+          ),
+        ),
         (events) {
           gamesResult.fold(
-            (failure) =>
-                emit(ReserveState.failure(state, "Error al cargar juegos")),
+            (failure) => emit(
+              ReserveFailure(
+                'Error al cargar juegos',
+                idReserve: state.idReserve,
+                reserves: state.reserves,
+                reserve: state.reserve,
+                difficulties: state.difficulties,
+                games: state.games,
+                searchedGames: state.searchedGames,
+                gameCategories: state.gameCategories,
+                reservesOfUser: state.reservesOfUser,
+                eventsShop: events,
+                lastUsers: state.lastUsers,
+                filterTables: state.filterTables,
+              ),
+            ),
             (games) {
-              emit(ReserveState.getEvents(state, events, games));
+              emit(
+                ReserveSuccess(
+                  eventsShop: events,
+                  games: games,
+                  idReserve: state.idReserve,
+                  reserves: state.reserves,
+                  reserve: state.reserve,
+                  difficulties: state.difficulties,
+                  searchedGames: state.searchedGames,
+                  gameCategories: state.gameCategories,
+                  reservesOfUser: state.reservesOfUser,
+                  lastUsers: state.lastUsers,
+                  filterTables: state.filterTables,
+                ),
+              );
             },
           );
         },
@@ -551,71 +1410,252 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
     });
 
     on<CreateEventsEvent>((event, emit) async {
-      emit(ReserveState.loading(
-        state,
-      ));
+      emit(
+        ReserveLoading(
+          idReserve: state.idReserve,
+          reserves: state.reserves,
+          reserve: state.reserve,
+          difficulties: state.difficulties,
+          games: state.games,
+          searchedGames: state.searchedGames,
+          gameCategories: state.gameCategories,
+          reservesOfUser: state.reservesOfUser,
+          eventsShop: state.eventsShop,
+          lastUsers: state.lastUsers,
+          filterTables: state.filterTables,
+        ),
+      );
       final result = await createEventsUsecase(event.reserves);
       result.fold(
-        (failure) =>
-            emit(ReserveState.failure(state, "Fallo al crear eventos")),
+        (failure) => emit(
+          ReserveFailure(
+            'Fallo al crear eventos',
+            idReserve: state.idReserve,
+            reserves: state.reserves,
+            reserve: state.reserve,
+            difficulties: state.difficulties,
+            games: state.games,
+            searchedGames: state.searchedGames,
+            gameCategories: state.gameCategories,
+            reservesOfUser: state.reservesOfUser,
+            eventsShop: state.eventsShop,
+            lastUsers: state.lastUsers,
+            filterTables: state.filterTables,
+          ),
+        ),
         (ids) {
           add(GetEventsEvent(idShop: event.reserves.first.shopId!));
-          emit(ReserveState.success(state));
-        },
-      );
-    });
-    on<SearchGameByNameEvent>((event, emit) async {
-      emit(ReserveState.loading(
-      state,
-      ));
-      final result = await searchGamesUseCase(event.gameName);
-      result.fold(
-      (failure) => emit(
-        ReserveState.failure(state, "Fallo al realizar la búsqueda")),
-      (games) {
-        emit(ReserveState.searchGames(state, games));
-      },
-      );
-    });
-    on<GetLastTenPlayersEvent>((event, emit) async {
-    emit(ReserveState.loading(
-      state,
-    ));
-    final result = await getLastTenPlayersUseCase(IdGoogleParams(googleId: event.idGoogle));
-    result.fold(
-      (failure) => emit(
-          ReserveState.failure(state, "Fallo al obtener los últimos diez jugadores")),
-      (players) {
-        emit(ReserveState.getLastUsers(state, players));
-      },
-    );
-  });
-  on<UpdateReserveEvent>((event, emit) async {
-    emit(ReserveState.loading(
-      state,
-    ));
-    final result = await updateReserveUseCase(event.reserve);
-    result.fold(
-      (failure) => emit(ReserveState.failure(state, "Fallo al actualizar reserva")),
-     (_) {
-          add(GetReservesByUserEvent(idUser: event.idUser));
-          add(GetReserveByDateEvent(
-              dateReserve: event.searchDateTime, idTable: event.reserve.tableId));
-          add(GetReserveWithUsers(
-            idReserve: event.reserve.id,
-          ));
           emit(
-            ReserveState.success(
-              state,
+            ReserveSuccess(
+              idReserve: state.idReserve,
+              reserves: state.reserves,
+              reserve: state.reserve,
+              difficulties: state.difficulties,
+              games: state.games,
+              searchedGames: state.searchedGames,
+              gameCategories: state.gameCategories,
+              reservesOfUser: state.reservesOfUser,
+              eventsShop: state.eventsShop,
+              lastUsers: state.lastUsers,
+              filterTables: state.filterTables,
             ),
           );
         },
-    );
-  });
-  on<ClearFilterEvent>((event, emit) async {
-    emit(ReserveState.clearFilter(
-      state,
-    ));
-  });
+      );
+    });
+
+    on<SearchGameByNameEvent>((event, emit) async {
+      emit(
+        ReserveLoading(
+          idReserve: state.idReserve,
+          reserves: state.reserves,
+          reserve: state.reserve,
+          difficulties: state.difficulties,
+          games: state.games,
+          searchedGames: state.searchedGames,
+          gameCategories: state.gameCategories,
+          reservesOfUser: state.reservesOfUser,
+          eventsShop: state.eventsShop,
+          lastUsers: state.lastUsers,
+          filterTables: state.filterTables,
+        ),
+      );
+      final result = await searchGamesUseCase(event.gameName);
+      result.fold(
+        (failure) => emit(
+          ReserveFailure(
+            'Fallo al realizar la búsqueda',
+            idReserve: state.idReserve,
+            reserves: state.reserves,
+            reserve: state.reserve,
+            difficulties: state.difficulties,
+            games: state.games,
+            searchedGames: state.searchedGames,
+            gameCategories: state.gameCategories,
+            reservesOfUser: state.reservesOfUser,
+            eventsShop: state.eventsShop,
+            lastUsers: state.lastUsers,
+            filterTables: state.filterTables,
+          ),
+        ),
+        (games) {
+          emit(
+            ReserveSuccess(
+              searchedGames: games,
+              idReserve: state.idReserve,
+              reserves: state.reserves,
+              reserve: state.reserve,
+              difficulties: state.difficulties,
+              games: state.games,
+              gameCategories: state.gameCategories,
+              reservesOfUser: state.reservesOfUser,
+              eventsShop: state.eventsShop,
+              lastUsers: state.lastUsers,
+              filterTables: state.filterTables,
+            ),
+          );
+        },
+      );
+    });
+
+    on<GetLastTenPlayersEvent>((event, emit) async {
+      emit(
+        ReserveLoading(
+          idReserve: state.idReserve,
+          reserves: state.reserves,
+          reserve: state.reserve,
+          difficulties: state.difficulties,
+          games: state.games,
+          searchedGames: state.searchedGames,
+          gameCategories: state.gameCategories,
+          reservesOfUser: state.reservesOfUser,
+          eventsShop: state.eventsShop,
+          lastUsers: state.lastUsers,
+          filterTables: state.filterTables,
+        ),
+      );
+      final result = await getLastTenPlayersUseCase(
+        IdGoogleParams(googleId: event.idGoogle),
+      );
+      result.fold(
+        (failure) => emit(
+          ReserveFailure(
+            'Fallo al obtener los últimos diez jugadores',
+            idReserve: state.idReserve,
+            reserves: state.reserves,
+            reserve: state.reserve,
+            difficulties: state.difficulties,
+            games: state.games,
+            searchedGames: state.searchedGames,
+            gameCategories: state.gameCategories,
+            reservesOfUser: state.reservesOfUser,
+            eventsShop: state.eventsShop,
+            lastUsers: state.lastUsers,
+            filterTables: state.filterTables,
+          ),
+        ),
+        (players) {
+          emit(
+            ReserveSuccess(
+              lastUsers: players,
+              idReserve: state.idReserve,
+              reserves: state.reserves,
+              reserve: state.reserve,
+              difficulties: state.difficulties,
+              games: state.games,
+              searchedGames: state.searchedGames,
+              gameCategories: state.gameCategories,
+              reservesOfUser: state.reservesOfUser,
+              eventsShop: state.eventsShop,
+              filterTables: state.filterTables,
+            ),
+          );
+        },
+      );
+    });
+
+    on<UpdateReserveEvent>((event, emit) async {
+      emit(
+        ReserveLoading(
+          idReserve: state.idReserve,
+          reserves: state.reserves,
+          reserve: state.reserve,
+          difficulties: state.difficulties,
+          games: state.games,
+          searchedGames: state.searchedGames,
+          gameCategories: state.gameCategories,
+          reservesOfUser: state.reservesOfUser,
+          eventsShop: state.eventsShop,
+          lastUsers: state.lastUsers,
+          filterTables: state.filterTables,
+        ),
+      );
+      final result = await updateReserveUseCase(event.reserve);
+      result.fold(
+        (failure) => emit(
+          ReserveFailure(
+            'Fallo al actualizar reserva',
+            idReserve: state.idReserve,
+            reserves: state.reserves,
+            reserve: state.reserve,
+            difficulties: state.difficulties,
+            games: state.games,
+            searchedGames: state.searchedGames,
+            gameCategories: state.gameCategories,
+            reservesOfUser: state.reservesOfUser,
+            eventsShop: state.eventsShop,
+            lastUsers: state.lastUsers,
+            filterTables: state.filterTables,
+          ),
+        ),
+        (_) {
+          add(GetReservesByUserEvent(idUser: event.idUser));
+          add(
+            GetReserveByDateEvent(
+              dateReserve: event.searchDateTime,
+              idTable: event.reserve.tableId,
+            ),
+          );
+          add(
+            GetReserveWithUsers(
+              idReserve: event.reserve.id,
+            ),
+          );
+          emit(
+            ReserveSuccess(
+              idReserve: state.idReserve,
+              reserves: state.reserves,
+              reserve: state.reserve,
+              difficulties: state.difficulties,
+              games: state.games,
+              searchedGames: state.searchedGames,
+              gameCategories: state.gameCategories,
+              reservesOfUser: state.reservesOfUser,
+              eventsShop: state.eventsShop,
+              lastUsers: state.lastUsers,
+              filterTables: state.filterTables,
+            ),
+          );
+        },
+      );
+    });
+
+    on<ClearFilterEvent>((event, emit) async {
+      emit(
+        ReserveSuccess(
+          idReserve: state.idReserve,
+          reserves: state.reserves,
+          reserve: state.reserve,
+          difficulties: state.difficulties,
+          games: state.games,
+          searchedGames: state.searchedGames,
+          gameCategories: state.gameCategories,
+          reservesOfUser: state.reservesOfUser,
+          eventsShop: state.eventsShop,
+          lastUsers: state.lastUsers,
+          filterTables: const {},
+        ),
+      );
+    });
   }
 }

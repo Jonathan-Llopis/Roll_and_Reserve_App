@@ -22,11 +22,12 @@ class ButtonRegisterPressed extends LoginEvent {
   final String name;
   final String username;
 
-  ButtonRegisterPressed(
-      {required this.email,
-      required this.password,
-      required this.name,
-      required this.username});
+  ButtonRegisterPressed({
+    required this.email,
+    required this.password,
+    required this.name,
+    required this.username,
+  });
 
   @override
   List<Object?> get props => [email, password];

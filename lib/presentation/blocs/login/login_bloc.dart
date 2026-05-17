@@ -33,48 +33,109 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final GetAllUsersUseCase getAllUsersUseCase;
 
   LoginBloc(
-      this.signInUserUseCase,
-      this.signOutUserUseCase,
-      this.getCurrentUserUseCase,
-      this.signInUserGoogleUseCase,
-      this.signUpUserUseCase,
-      this.restorPasswordUseCase,
-      this.isEmailUsedUseCase,
-      this.isNameUsedUseCase,
-      this.updateUserInfoUseCase,
-      this.updatePasswordUsecase,
-      this.validatePasswordUsecase,
-      this.getUserInfoUseCase,
-      this.getAllUsersUseCase)
-      : super(LoginState.initial()) {
+    this.signInUserUseCase,
+    this.signOutUserUseCase,
+    this.getCurrentUserUseCase,
+    this.signInUserGoogleUseCase,
+    this.signUpUserUseCase,
+    this.restorPasswordUseCase,
+    this.isEmailUsedUseCase,
+    this.isNameUsedUseCase,
+    this.updateUserInfoUseCase,
+    this.updatePasswordUsecase,
+    this.validatePasswordUsecase,
+    this.getUserInfoUseCase,
+    this.getAllUsersUseCase,
+  ) : super(const LoginInitial()) {
     on<ButtonLoginPressed>((event, emit) async {
-      emit(LoginState.loading(
-        state,
-      ));
-      final result = await signInUserUseCase(LoginParams(
-        email: event.email,
-        password: event.password,
-      ));
+      emit(
+        LoginLoading(
+          email: state.email,
+          isEmailUsed: state.isEmailUsed,
+          isNameUsed: state.isNameUsed,
+          validatePassword: state.validatePassword,
+          id: state.id,
+          user: state.user,
+          users: state.users,
+        ),
+      );
+      final result = await signInUserUseCase(
+        LoginParams(
+          email: event.email,
+          password: event.password,
+        ),
+      );
       result.fold(
-        (failure) =>
-            emit(LoginState.failure(state, "Fallo al realizar el login")),
-        (_) => emit(LoginState.success(state, event.email)),
+        (failure) => emit(
+          LoginFailure(
+            'Fallo al realizar el login',
+            email: state.email,
+            isEmailUsed: state.isEmailUsed,
+            isNameUsed: state.isNameUsed,
+            validatePassword: state.validatePassword,
+            id: state.id,
+            user: state.user,
+            users: state.users,
+          ),
+        ),
+        (_) => emit(
+          LoginSuccess(
+            email: event.email,
+            isEmailUsed: state.isEmailUsed,
+            isNameUsed: state.isNameUsed,
+            validatePassword: state.validatePassword,
+            id: state.id,
+            user: state.user,
+            users: state.users,
+          ),
+        ),
       );
     });
 
     on<ButtonRegisterPressed>((event, emit) async {
-      emit(LoginState.loading(
-        state,
-      ));
-      final result = await signUpUserUseCase(RegisterParams(
+      emit(
+        LoginLoading(
+          email: state.email,
+          isEmailUsed: state.isEmailUsed,
+          isNameUsed: state.isNameUsed,
+          validatePassword: state.validatePassword,
+          id: state.id,
+          user: state.user,
+          users: state.users,
+        ),
+      );
+      final result = await signUpUserUseCase(
+        RegisterParams(
           email: event.email,
           password: event.password,
           name: event.name,
-          username: event.username));
+          username: event.username,
+        ),
+      );
       result.fold(
-        (failure) =>
-            emit(LoginState.failure(state, "Fallo al realizar el registro")),
-        (_) => emit(LoginState.success(state, event.email)),
+        (failure) => emit(
+          LoginFailure(
+            'Fallo al realizar el registro',
+            email: state.email,
+            isEmailUsed: state.isEmailUsed,
+            isNameUsed: state.isNameUsed,
+            validatePassword: state.validatePassword,
+            id: state.id,
+            user: state.user,
+            users: state.users,
+          ),
+        ),
+        (_) => emit(
+          LoginSuccess(
+            email: event.email,
+            isEmailUsed: state.isEmailUsed,
+            isNameUsed: state.isNameUsed,
+            validatePassword: state.validatePassword,
+            id: state.id,
+            user: state.user,
+            users: state.users,
+          ),
+        ),
       );
     });
 
@@ -82,121 +143,356 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       final result = await getCurrentUserUseCase(NoParams());
       result.fold(
         (failure) => emit(
-            LoginState.failure(state, "Fallo al verificar la autenticación")),
-        (user) => emit(LoginState.isLogedIn(state, user)),
+          LoginFailure(
+            'Fallo al verificar la autenticación',
+            email: state.email,
+            isEmailUsed: state.isEmailUsed,
+            isNameUsed: state.isNameUsed,
+            validatePassword: state.validatePassword,
+            id: state.id,
+            user: state.user,
+            users: state.users,
+          ),
+        ),
+        (user) => emit(
+          LoginSuccess(
+            email: state.email,
+            isEmailUsed: state.isEmailUsed,
+            isNameUsed: state.isNameUsed,
+            validatePassword: state.validatePassword,
+            id: state.id,
+            user: user,
+            users: state.users,
+          ),
+        ),
       );
     });
 
     on<LogoutButtonPressed>((event, emit) async {
       final result = await signOutUserUseCase(NoParams());
       result.fold(
-          (failure) =>
-              emit(LoginState.failure(state, "Fallo al realizar el logout")),
-          (_) => emit(LoginState.initial()));
+        (failure) => emit(
+          LoginFailure(
+            'Fallo al realizar el logout',
+            email: state.email,
+            isEmailUsed: state.isEmailUsed,
+            isNameUsed: state.isNameUsed,
+            validatePassword: state.validatePassword,
+            id: state.id,
+            user: state.user,
+            users: state.users,
+          ),
+        ),
+        (_) => emit(const LoginInitial()),
+      );
     });
 
     on<LoginGoogle>((event, emit) async {
-      emit(LoginState.loading(
-        state,
-      ));
+      emit(
+        LoginLoading(
+          email: state.email,
+          isEmailUsed: state.isEmailUsed,
+          isNameUsed: state.isNameUsed,
+          validatePassword: state.validatePassword,
+          id: state.id,
+          user: state.user,
+          users: state.users,
+        ),
+      );
       final result = await signInUserGoogleUseCase(LoginParamsGoogle());
       await result.fold(
-        (failure) async =>
-            emit(LoginState.failure(state, "Fallo al realizar el login")),
+        (failure) async => emit(
+          LoginFailure(
+            'Fallo al realizar el login',
+            email: state.email,
+            isEmailUsed: state.isEmailUsed,
+            isNameUsed: state.isNameUsed,
+            validatePassword: state.validatePassword,
+            id: state.id,
+            user: state.user,
+            users: state.users,
+          ),
+        ),
         (_) async {
           final prefs = await SharedPreferences.getInstance();
           final email = prefs.getString('email') ?? '';
-          emit(LoginState.success(state, email));
+          emit(
+            LoginSuccess(
+              email: email,
+              isEmailUsed: state.isEmailUsed,
+              isNameUsed: state.isNameUsed,
+              validatePassword: state.validatePassword,
+              id: state.id,
+              user: state.user,
+              users: state.users,
+            ),
+          );
         },
       );
     });
     on<ResetPassword>((event, emit) async {
-      emit(LoginState.loading(
-        state,
-      ));
+      emit(
+        LoginLoading(
+          email: state.email,
+          isEmailUsed: state.isEmailUsed,
+          isNameUsed: state.isNameUsed,
+          validatePassword: state.validatePassword,
+          id: state.id,
+          user: state.user,
+          users: state.users,
+        ),
+      );
       final result = await restorPasswordUseCase(event.email);
       result.fold(
         (failure) => emit(
-            LoginState.failure(state, "Fallo al realizar la recuperacion")),
-        (_) => emit(LoginState.success(state, '')),
+          LoginFailure(
+            'Fallo al realizar la recuperación',
+            email: state.email,
+            isEmailUsed: state.isEmailUsed,
+            isNameUsed: state.isNameUsed,
+            validatePassword: state.validatePassword,
+            id: state.id,
+            user: state.user,
+            users: state.users,
+          ),
+        ),
+        (_) => emit(
+          LoginSuccess(
+            email: '',
+            isEmailUsed: state.isEmailUsed,
+            isNameUsed: state.isNameUsed,
+            validatePassword: state.validatePassword,
+            id: state.id,
+            user: state.user,
+            users: state.users,
+          ),
+        ),
       );
     });
     on<IsEmailUserUsed>((event, emit) async {
-      emit(LoginState(isLoading: true));
+      emit(
+        LoginLoading(
+          email: state.email,
+          isEmailUsed: state.isEmailUsed,
+          isNameUsed: state.isNameUsed,
+          validatePassword: state.validatePassword,
+          id: state.id,
+          user: state.user,
+          users: state.users,
+        ),
+      );
       final emailResult = await isEmailUsedUseCase(event.email);
       final nameResult = await isNameUsedUseCase(event.name);
-      emit(LoginState(
-        isLoading: false,
-        isEmailUsed: emailResult.fold((_) => null, (isUsed) => isUsed),
-        isNameUsed: nameResult.fold((_) => null, (isUsed) => isUsed),
-      ));
+      emit(
+        LoginSuccess(
+          email: state.email,
+          isEmailUsed: emailResult.fold((_) => null, (isUsed) => isUsed),
+          isNameUsed: nameResult.fold((_) => null, (isUsed) => isUsed),
+          validatePassword: state.validatePassword,
+          id: state.id,
+          user: state.user,
+          users: state.users,
+        ),
+      );
     });
 
     on<UpdateUserInfoEvent>((event, emit) async {
-      emit(LoginState.loading(
-        state,
-      ));
+      emit(
+        LoginLoading(
+          email: state.email,
+          isEmailUsed: state.isEmailUsed,
+          isNameUsed: state.isNameUsed,
+          validatePassword: state.validatePassword,
+          id: state.id,
+          user: state.user,
+          users: state.users,
+        ),
+      );
       final result = await updateUserInfoUseCase(event.user);
       result.fold(
         (failure) => emit(
-            LoginState.failure(state, "Fallo al realizar la actualización")),
+          LoginFailure(
+            'Fallo al realizar la actualización',
+            email: state.email,
+            isEmailUsed: state.isEmailUsed,
+            isNameUsed: state.isNameUsed,
+            validatePassword: state.validatePassword,
+            id: state.id,
+            user: state.user,
+            users: state.users,
+          ),
+        ),
         (_) async {
           if (state.user?.role == 0) {
             await Future.delayed(Duration.zero, () => add(GetAllUsersEvent()));
           } else {
             await Future.delayed(
-                Duration.zero, () => add(CheckAuthentication()));
+              Duration.zero,
+              () => add(CheckAuthentication()),
+            );
           }
         },
       );
     });
 
     on<UpdatePasswordEvent>((event, emit) async {
-      emit(LoginState.loading(
-        state,
-      ));
+      emit(
+        LoginLoading(
+          email: state.email,
+          isEmailUsed: state.isEmailUsed,
+          isNameUsed: state.isNameUsed,
+          validatePassword: state.validatePassword,
+          id: state.id,
+          user: state.user,
+          users: state.users,
+        ),
+      );
       final result =
           await updatePasswordUsecase(event.password, event.oldPassword);
       result.fold(
         (failure) => emit(
-            LoginState.failure(state, "Fallo al realizar la recuperacion")),
-        (_) => emit(LoginState.success(state, '')),
+          LoginFailure(
+            'Fallo al realizar la recuperación',
+            email: state.email,
+            isEmailUsed: state.isEmailUsed,
+            isNameUsed: state.isNameUsed,
+            validatePassword: state.validatePassword,
+            id: state.id,
+            user: state.user,
+            users: state.users,
+          ),
+        ),
+        (_) => emit(
+          LoginSuccess(
+            email: '',
+            isEmailUsed: state.isEmailUsed,
+            isNameUsed: state.isNameUsed,
+            validatePassword: state.validatePassword,
+            id: state.id,
+            user: state.user,
+            users: state.users,
+          ),
+        ),
       );
     });
 
     on<ValidatePasswordEvent>((event, emit) async {
-      emit(LoginState.loading(
-        state,
-      ));
+      emit(
+        LoginLoading(
+          email: state.email,
+          isEmailUsed: state.isEmailUsed,
+          isNameUsed: state.isNameUsed,
+          validatePassword: state.validatePassword,
+          id: state.id,
+          user: state.user,
+          users: state.users,
+        ),
+      );
       final result = await validatePasswordUsecase(event.password);
       result.fold(
-        (failure) =>
-            emit(LoginState.failure(state, "Fallo al validar la contraseña")),
-        (isValid) => emit(LoginState.success(state, isValid.toString())),
+        (failure) => emit(
+          LoginFailure(
+            'Fallo al validar la contraseña',
+            email: state.email,
+            isEmailUsed: state.isEmailUsed,
+            isNameUsed: state.isNameUsed,
+            validatePassword: state.validatePassword,
+            id: state.id,
+            user: state.user,
+            users: state.users,
+          ),
+        ),
+        (isValid) => emit(
+          LoginSuccess(
+            email: isValid.toString(),
+            isEmailUsed: state.isEmailUsed,
+            isNameUsed: state.isNameUsed,
+            validatePassword: state.validatePassword,
+            id: state.id,
+            user: state.user,
+            users: state.users,
+          ),
+        ),
       );
     });
 
     on<GetUserInfoEvent>((event, emit) async {
-      emit(LoginState.loading(
-        state,
-      ));
+      emit(
+        LoginLoading(
+          email: state.email,
+          isEmailUsed: state.isEmailUsed,
+          isNameUsed: state.isNameUsed,
+          validatePassword: state.validatePassword,
+          id: state.id,
+          user: state.user,
+          users: state.users,
+        ),
+      );
       final result = await getUserInfoUseCase(event.idGoogle);
       result.fold(
-        (failure) => emit(LoginState.failure(
-            state, "Fallo al obtener la información del usuario")),
-        (user) => emit(LoginState.success(state, user.toString())),
+        (failure) => emit(
+          LoginFailure(
+            'Fallo al obtener la información del usuario',
+            email: state.email,
+            isEmailUsed: state.isEmailUsed,
+            isNameUsed: state.isNameUsed,
+            validatePassword: state.validatePassword,
+            id: state.id,
+            user: state.user,
+            users: state.users,
+          ),
+        ),
+        (user) => emit(
+          LoginSuccess(
+            email: user.toString(),
+            isEmailUsed: state.isEmailUsed,
+            isNameUsed: state.isNameUsed,
+            validatePassword: state.validatePassword,
+            id: state.id,
+            user: state.user,
+            users: state.users,
+          ),
+        ),
       );
     });
 
     on<GetAllUsersEvent>((event, emit) async {
-      emit(LoginState.loading(
-        state,
-      ));
+      emit(
+        LoginLoading(
+          email: state.email,
+          isEmailUsed: state.isEmailUsed,
+          isNameUsed: state.isNameUsed,
+          validatePassword: state.validatePassword,
+          id: state.id,
+          user: state.user,
+          users: state.users,
+        ),
+      );
       final result = await getAllUsersUseCase(NoParams());
       result.fold(
         (failure) => emit(
-            LoginState.failure(state, "Fallo al obtener la lista de usuarios")),
-        (users) => emit(LoginState.users(state, users)),
+          LoginFailure(
+            'Fallo al obtener la lista de usuarios',
+            email: state.email,
+            isEmailUsed: state.isEmailUsed,
+            isNameUsed: state.isNameUsed,
+            validatePassword: state.validatePassword,
+            id: state.id,
+            user: state.user,
+            users: state.users,
+          ),
+        ),
+        (users) => emit(
+          LoginSuccess(
+            email: state.email,
+            isEmailUsed: state.isEmailUsed,
+            isNameUsed: state.isNameUsed,
+            validatePassword: state.validatePassword,
+            id: state.id,
+            user: state.user,
+            users: users,
+          ),
+        ),
       );
     });
   }

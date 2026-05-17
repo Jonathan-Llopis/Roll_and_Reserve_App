@@ -22,85 +22,244 @@ class TableBloc extends Bloc<TableEvent, TableState> {
     this.getTablesUseCase,
     this.updateTablesUseCase,
     this.deleteTablesUseCase,
-    this.getAllTablesByShopUseCase
-  ) : super(const TableState()) {
+    this.getAllTablesByShopUseCase,
+  ) : super(const TableInitial()) {
     on<GetTablesEvent>((event, emit) async {
-      emit(TableState.loading(state));
+      emit(
+        TableLoading(
+          idTable: state.idTable,
+          tables: state.tables,
+          tablesFromShop: state.tablesFromShop,
+          table: state.table,
+          filterTables: state.filterTables,
+        ),
+      );
       final result = await getTablesUseCase(NoParams());
       result.fold(
-        (failure) =>
-            emit(TableState.failure(state,"Fallo al realizar la recuperacion")),
-        (tables) => emit(TableState.getTables(state,tables)),
+        (failure) => emit(
+          TableFailure(
+            'Fallo al realizar la recuperación',
+            idTable: state.idTable,
+            tables: state.tables,
+            tablesFromShop: state.tablesFromShop,
+            table: state.table,
+            filterTables: state.filterTables,
+          ),
+        ),
+        (tables) => emit(
+          TableSuccess(
+            idTable: state.idTable,
+            tables: tables,
+            tablesFromShop: state.tablesFromShop,
+            table: state.table,
+            filterTables: state.filterTables,
+          ),
+        ),
       );
     });
     on<GetTableEvent>((event, emit) async {
-      emit(TableState.loading(state));
+      emit(
+        TableLoading(
+          idTable: state.idTable,
+          tables: state.tables,
+          tablesFromShop: state.tablesFromShop,
+          table: state.table,
+          filterTables: state.filterTables,
+        ),
+      );
       final result = await getTablesUseCase(NoParams());
       result.fold(
-        (failure) =>
-            emit(TableState.failure(state,"Fallo al realizar la recuperacion")),
+        (failure) => emit(
+          TableFailure(
+            'Fallo al realizar la recuperación',
+            idTable: state.idTable,
+            tables: state.tables,
+            tablesFromShop: state.tablesFromShop,
+            table: state.table,
+            filterTables: state.filterTables,
+          ),
+        ),
         (tables) {
           final table = tables.firstWhere((table) => table.id == event.idTable);
-          emit(TableState.selectedTable(state,table));
+          emit(
+            TableSuccess(
+              idTable: state.idTable,
+              tables: tables,
+              tablesFromShop: state.tablesFromShop,
+              table: table,
+              filterTables: state.filterTables,
+            ),
+          );
         },
       );
     });
     on<CreateTableEvent>((event, emit) async {
-      emit(TableState.loading(state));
+      emit(
+        TableLoading(
+          idTable: state.idTable,
+          tables: state.tables,
+          tablesFromShop: state.tablesFromShop,
+          table: state.table,
+          filterTables: state.filterTables,
+        ),
+      );
       final result = await createTablesUseCase(event.table);
       result.fold(
-        (failure) => emit(TableState.failure(state,"Fallo al crear tienda")),
+        (failure) => emit(
+          TableFailure(
+            'Fallo al crear mesa',
+            idTable: state.idTable,
+            tables: state.tables,
+            tablesFromShop: state.tablesFromShop,
+            table: state.table,
+            filterTables: state.filterTables,
+          ),
+        ),
         (_) {
           emit(
-            TableState.success(state),
+            TableSuccess(
+              idTable: state.idTable,
+              tables: state.tables,
+              tablesFromShop: state.tablesFromShop,
+              table: state.table,
+              filterTables: state.filterTables,
+            ),
           );
           add(GetTablesByShopEvent(idShop: event.table.idShop));
         },
       );
     });
     on<UpdateTableEvent>((event, emit) async {
-      emit(TableState.loading(state));
+      emit(
+        TableLoading(
+          idTable: state.idTable,
+          tables: state.tables,
+          tablesFromShop: state.tablesFromShop,
+          table: state.table,
+          filterTables: state.filterTables,
+        ),
+      );
       final result = await updateTablesUseCase(event.table);
       result.fold(
-        (failure) => emit(TableState.failure(state,"Fallo al actualizar tienda")),
+        (failure) => emit(
+          TableFailure(
+            'Fallo al actualizar mesa',
+            idTable: state.idTable,
+            tables: state.tables,
+            tablesFromShop: state.tablesFromShop,
+            table: state.table,
+            filterTables: state.filterTables,
+          ),
+        ),
         (_) {
           emit(
-            TableState.success(state),
+            TableSuccess(
+              idTable: state.idTable,
+              tables: state.tables,
+              tablesFromShop: state.tablesFromShop,
+              table: state.table,
+              filterTables: state.filterTables,
+            ),
           );
           add(GetTablesByShopEvent(idShop: event.table.idShop));
         },
       );
     });
     on<DeleteTableEvent>((event, emit) async {
-      emit(TableState.loading(state));
+      emit(
+        TableLoading(
+          idTable: state.idTable,
+          tables: state.tables,
+          tablesFromShop: state.tablesFromShop,
+          table: state.table,
+          filterTables: state.filterTables,
+        ),
+      );
       final result = await deleteTablesUseCase(event.idTable);
       result.fold(
-        (failure) => emit(TableState.failure(state,"Fallo al eliminar tienda")),
+        (failure) => emit(
+          TableFailure(
+            'Fallo al eliminar mesa',
+            idTable: state.idTable,
+            tables: state.tables,
+            tablesFromShop: state.tablesFromShop,
+            table: state.table,
+            filterTables: state.filterTables,
+          ),
+        ),
         (_) {
           emit(
-            TableState.success(state),
+            TableSuccess(
+              idTable: state.idTable,
+              tables: state.tables,
+              tablesFromShop: state.tablesFromShop,
+              table: state.table,
+              filterTables: state.filterTables,
+            ),
           );
           add(GetTablesByShopEvent(idShop: event.idShop));
         },
       );
     });
     on<GetTablesByShopEvent>((event, emit) async {
-      emit(TableState.loading(state));
-      final result = await getAllTablesByShopUseCase(GetTablesByShopUseCaseParams(idShop:event.idShop));
+      emit(
+        TableLoading(
+          idTable: state.idTable,
+          tables: state.tables,
+          tablesFromShop: state.tablesFromShop,
+          table: state.table,
+          filterTables: state.filterTables,
+        ),
+      );
+      final result = await getAllTablesByShopUseCase(
+        GetTablesByShopUseCaseParams(idShop: event.idShop),
+      );
       result.fold(
-        (failure) =>
-            emit(TableState.failure(state,"Fallo al realizar la recuperacion")),
+        (failure) => emit(
+          TableFailure(
+            'Fallo al realizar la recuperación',
+            idTable: state.idTable,
+            tables: state.tables,
+            tablesFromShop: state.tablesFromShop,
+            table: state.table,
+            filterTables: state.filterTables,
+          ),
+        ),
         (tablesByShop) {
-          emit(TableState.getTablesShop(state,tablesByShop));
+          emit(
+            TableSuccess(
+              idTable: state.idTable,
+              tables: state.tables,
+              tablesFromShop: tablesByShop,
+              table: state.table,
+              filterTables: state.filterTables,
+            ),
+          );
         },
       );
     });
     on<GetAvailableTablesEvent>((event, emit) async {
-      emit(TableState.loading(state));
+      emit(
+        TableLoading(
+          idTable: state.idTable,
+          tables: state.tables,
+          tablesFromShop: state.tablesFromShop,
+          table: state.table,
+          filterTables: state.filterTables,
+        ),
+      );
       final result = await getTablesUseCase(NoParams());
       result.fold(
-        (failure) =>
-            emit(TableState.failure(state,"Falló al realizar la recuperación")),
+        (failure) => emit(
+          TableFailure(
+            'Falló al realizar la recuperación',
+            idTable: state.idTable,
+            tables: state.tables,
+            tablesFromShop: state.tablesFromShop,
+            table: state.table,
+            filterTables: state.filterTables,
+          ),
+        ),
         (tables) async {
           final availableTables = tables.where((table) {
             final tableOccupied = table.reserves.any((reserveId) {
@@ -109,15 +268,18 @@ class TableBloc extends Bloc<TableEvent, TableState> {
               if (reserveEntity == null) {
                 return false;
               } else {
-                final reserveStartDate = DateFormat('dd - MM - yyyy HH:mm')
-                    .parse(
-                        '${reserveEntity.dayDate} ${reserveEntity.horaInicio}');
+                final reserveStartDate =
+                    DateFormat('dd - MM - yyyy HH:mm').parse(
+                  '${reserveEntity.dayDate} ${reserveEntity.horaInicio}',
+                );
                 final reserveEndDate = DateFormat('dd - MM - yyyy HH:mm')
                     .parse('${reserveEntity.dayDate} ${reserveEntity.horaFin}');
                 final eventStartDate = DateFormat('dd-MM-yyyy HH:mm').parse(
-                    '${event.dayDate} ${event.startTime == '' ? '00:00' : event.startTime}');
+                  '${event.dayDate} ${event.startTime == '' ? '00:00' : event.startTime}',
+                );
                 final eventEndDate = DateFormat('dd-MM-yyyy HH:mm').parse(
-                    '${event.dayDate} ${event.endTime == '' ? '23:59' : event.endTime}');
+                  '${event.dayDate} ${event.endTime == '' ? '23:59' : event.endTime}',
+                );
 
                 return !(reserveEndDate.isBefore(eventStartDate) ||
                     reserveStartDate.isAtSameMomentAs(eventEndDate) ||
@@ -132,7 +294,15 @@ class TableBloc extends Bloc<TableEvent, TableState> {
               .where((table) => table.idShop == event.shopId)
               .toList();
 
-           emit(TableState.getTablesShop(state,shopTables));
+          emit(
+            TableSuccess(
+              idTable: state.idTable,
+              tables: state.tables,
+              tablesFromShop: shopTables,
+              table: state.table,
+              filterTables: state.filterTables,
+            ),
+          );
         },
       );
     });

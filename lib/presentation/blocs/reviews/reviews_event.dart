@@ -9,7 +9,7 @@ abstract class ReviewEvent extends Equatable {
 class GetReviewsEvent extends ReviewEvent {}
 
 class GetReviewEvent extends ReviewEvent {
-  final int idReview;  
+  final int idReview;
   GetReviewEvent({required this.idReview});
 
   @override
@@ -40,6 +40,7 @@ class GetReviewByShopEvent extends ReviewEvent {
   @override
   List<Object?> get props => [idShop];
 }
+
 class GetReviewByUserEvent extends ReviewEvent {
   final String idUser;
   GetReviewByUserEvent({required this.idUser});
@@ -47,6 +48,7 @@ class GetReviewByUserEvent extends ReviewEvent {
   @override
   List<Object?> get props => [idUser];
 }
+
 class GetReviewByWritterEvent extends ReviewEvent {
   final String idWritter;
   GetReviewByWritterEvent({required this.idWritter});

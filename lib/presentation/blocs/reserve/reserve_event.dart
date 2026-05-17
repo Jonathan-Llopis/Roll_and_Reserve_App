@@ -27,7 +27,7 @@ class GetReserveByDateEvent extends ReserveEvent {
   final DateTime dateReserve;
   final int idTable;
   GetReserveByDateEvent({required this.dateReserve, required this.idTable});
-  
+
   @override
   List<Object?> get props => [dateReserve, idTable];
 }
@@ -37,11 +37,12 @@ class CreateReserveEvent extends ReserveEvent {
   final String idUser;
   final DateTime dateReserve;
   final DateTime searchDateTime;
-  CreateReserveEvent(
-      {required this.reserve,
-      required this.idUser,
-      required this.dateReserve,
-      required this.searchDateTime});
+  CreateReserveEvent({
+    required this.reserve,
+    required this.idUser,
+    required this.dateReserve,
+    required this.searchDateTime,
+  });
 
   @override
   List<Object?> get props => [reserve, idUser, dateReserve, searchDateTime];
@@ -70,12 +71,13 @@ class AddUserToReserveEvent extends ReserveEvent {
   final int idTable;
   final DateTime dateReserve;
   final DateTime searchDateTime;
-  AddUserToReserveEvent(
-      {required this.idReserve,
-      required this.idUser,
-      required this.idTable,
-      required this.dateReserve,
-      required this.searchDateTime});
+  AddUserToReserveEvent({
+    required this.idReserve,
+    required this.idUser,
+    required this.idTable,
+    required this.dateReserve,
+    required this.searchDateTime,
+  });
 
   @override
   List<Object?> get props =>
@@ -87,11 +89,12 @@ class DeleteUserOfReserveEvent extends ReserveEvent {
   final String idUser;
   final int idTable;
   final DateTime dateReserve;
-  DeleteUserOfReserveEvent(
-      {required this.idReserve,
-      required this.idUser,
-      required this.idTable,
-      required this.dateReserve});
+  DeleteUserOfReserveEvent({
+    required this.idReserve,
+    required this.idUser,
+    required this.idTable,
+    required this.dateReserve,
+  });
 
   @override
   List<Object?> get props => [idReserve, idUser, idTable, dateReserve];
@@ -102,12 +105,12 @@ class GetReservesByShopEvent extends ReserveEvent {
   final String dateReserve;
   final String startTime;
   final String endTime;
-  GetReservesByShopEvent(
-      {required this.currentShop,
-      required this.dateReserve,
-      required this.startTime,
-      required this.endTime,
-    });
+  GetReservesByShopEvent({
+    required this.currentShop,
+    required this.dateReserve,
+    required this.startTime,
+    required this.endTime,
+  });
 
   @override
   List<Object?> get props => [currentShop, dateReserve, startTime, endTime];
@@ -175,9 +178,15 @@ class UpdateReserveEvent extends ReserveEvent {
   final String idUser;
   final DateTime dateReserve;
   final DateTime searchDateTime;
-  UpdateReserveEvent({required this.reserve, required this.idUser, required this.dateReserve, required this.searchDateTime});
+  UpdateReserveEvent({
+    required this.reserve,
+    required this.idUser,
+    required this.dateReserve,
+    required this.searchDateTime,
+  });
 
   @override
   List<Object?> get props => [reserve, idUser, dateReserve, searchDateTime];
 }
+
 class ClearFilterEvent extends ReserveEvent {}

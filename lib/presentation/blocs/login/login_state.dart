@@ -1,9 +1,8 @@
+import 'package:equatable/equatable.dart';
 import 'package:roll_and_reserve/domain/entities/user_entity.dart';
 
-class LoginState {
-  final bool isLoading;
+sealed class LoginState extends Equatable {
   final String? email;
-  final String? errorMessage;
   final bool? isEmailUsed;
   final bool? isNameUsed;
   final bool? validatePassword;
@@ -11,57 +10,73 @@ class LoginState {
   final UserEntity? user;
   final List<UserEntity>? users;
 
+  const LoginState({
+    this.email,
+    this.isEmailUsed,
+    this.isNameUsed,
+    this.validatePassword,
+    this.id,
+    this.user,
+    this.users,
+  });
 
-  const LoginState(
-      {this.isLoading = false,
-      this.email,
-      this.errorMessage,
-      this.isEmailUsed,
-      this.isNameUsed,
-      this.id,
-      this.user,
-      this.validatePassword,
-      this.users,
-     });
+  bool get isLoading => this is LoginLoading;
+  String? get errorMessage =>
+      this is LoginFailure ? (this as LoginFailure).message : null;
 
-  LoginState copyWith(
-      {bool? isLoading,
-      String? email,
-      String? errorMessage,
-      bool? isEmailUsed,
-      bool? isNameUsed,
-      String? id,
-      UserEntity? user,
-      bool? validatePassword,
-      List<UserEntity>? users,
-      }) {
-    return LoginState(
-        isLoading: isLoading ?? this.isLoading,
-        email: email ?? this.email,
-        errorMessage: errorMessage,
-        isEmailUsed: isEmailUsed ?? this.isEmailUsed,
-        isNameUsed: isNameUsed ?? this.isNameUsed,
-        id: id ?? this.id,
-        user: user ?? this.user,
-        validatePassword: validatePassword ?? this.validatePassword,
-        users: users ?? this.users,
-        );
-  }
+  @override
+  List<Object?> get props => [
+        email,
+        isEmailUsed,
+        isNameUsed,
+        validatePassword,
+        id,
+        user,
+        users,
+      ];
+}
 
-  factory LoginState.initial() => const LoginState();
+class LoginInitial extends LoginState {
+  const LoginInitial() : super();
+}
 
-  factory LoginState.loading(LoginState state) =>
-      state.copyWith(isLoading: true, errorMessage: null);
+class LoginLoading extends LoginState {
+  const LoginLoading({
+    super.email,
+    super.isEmailUsed,
+    super.isNameUsed,
+    super.validatePassword,
+    super.id,
+    super.user,
+    super.users,
+  });
+}
 
-  factory LoginState.success(LoginState state, String email) =>
-      state.copyWith(email: email, errorMessage: null, isLoading: false);
+class LoginSuccess extends LoginState {
+  const LoginSuccess({
+    super.email,
+    super.isEmailUsed,
+    super.isNameUsed,
+    super.validatePassword,
+    super.id,
+    super.user,
+    super.users,
+  });
+}
 
-  factory LoginState.isLogedIn(LoginState state, UserEntity user) =>
-      state.copyWith(user: user, errorMessage: null, isLoading: false);
+class LoginFailure extends LoginState {
+  final String message;
+  const LoginFailure(
+    this.message, {
+    super.email,
+    super.isEmailUsed,
+    super.isNameUsed,
+    super.validatePassword,
+    super.id,
+    super.user,
+    super.users,
+  });
 
-  factory LoginState.failure(LoginState state, String errorMessage) =>
-      state.copyWith(errorMessage: errorMessage, isLoading: false);
-
-  factory LoginState.users(LoginState state, List<UserEntity> users) =>
-      state.copyWith(users: users, isLoading: false, errorMessage: null);
+  @override
+  List<Object?> get props => [super.props, message];
 }

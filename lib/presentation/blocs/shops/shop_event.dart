@@ -9,7 +9,7 @@ abstract class ShopEvent extends Equatable {
 class GetShopsEvent extends ShopEvent {}
 
 class GetShopEvent extends ShopEvent {
-  final int idShop;  
+  final int idShop;
   GetShopEvent({required this.idShop});
 
   @override
@@ -55,7 +55,7 @@ class GetShopByFilterEvent extends ShopEvent {
 
   GetShopByFilterEvent({this.name, this.direction});
 
-   @override
+  @override
   List<Object?> get props => [name, direction];
 }
 

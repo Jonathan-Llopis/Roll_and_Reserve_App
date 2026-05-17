@@ -98,6 +98,7 @@ final class CleanChatGemini extends ChatEvent {
   @override
   List<Object?> get props => [];
 }
+
 final class OnChatAssistantStart extends ChatEvent {
   const OnChatAssistantStart({
     required this.context,
@@ -108,6 +109,7 @@ final class OnChatAssistantStart extends ChatEvent {
   @override
   List<Object?> get props => [context];
 }
+
 final class OnChatAssistantSendMessage extends ChatEvent {
   const OnChatAssistantSendMessage({
     required this.message,
@@ -119,6 +121,7 @@ final class OnChatAssistantSendMessage extends ChatEvent {
   @override
   List<Object?> get props => [message, imageBytes];
 }
+
 final class CleanChatAssistant extends ChatEvent {
   const CleanChatAssistant();
 

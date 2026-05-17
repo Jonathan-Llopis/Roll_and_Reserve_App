@@ -4,13 +4,16 @@ import 'package:roll_and_reserve/presentation/blocs/language/language_event.dart
 import 'package:roll_and_reserve/presentation/blocs/language/language_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
   final SharedPreferences sharedPreferences;
 
-  LanguageBloc(this.sharedPreferences) : super(LanguageState(Locale('es'))) {
+  LanguageBloc(this.sharedPreferences)
+      : super(LanguageState(const Locale('es'))) {
     on<ChangeLanguageEvent>((event, emit) async {
-      await sharedPreferences.setString('locale', '${event.locale.languageCode}_${event.locale.countryCode}');
+      await sharedPreferences.setString(
+        'locale',
+        '${event.locale.languageCode}_${event.locale.countryCode}',
+      );
       emit(LanguageState(event.locale));
     });
 
@@ -20,7 +23,7 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
         final parts = localeString.split('_');
         emit(LanguageState(Locale(parts[0], parts[1])));
       } else {
-        emit(LanguageState(Locale('es')));
+        emit(LanguageState(const Locale('es')));
       }
     });
   }
