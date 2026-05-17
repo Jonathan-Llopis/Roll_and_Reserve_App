@@ -7,8 +7,6 @@ class StartChatUseCase implements UseCase<String, StartChatParams> {
 
   @override
   Future<String> call(StartChatParams params) async {
-   
-      return await repository.startChat(params.context, params.message);
-    
+    return await repository.startChat(params.context, params.message);
   }
 }

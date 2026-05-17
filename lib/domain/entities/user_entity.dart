@@ -11,27 +11,29 @@ class UserEntity {
   final bool? reserveConfirmation;
   final List<int> notifications;
 
-  UserEntity(
-      {required this.email,
-      required this.avatar,
-      required this.averageRaiting,
-      required this.id,
-      required this.name,
-      required this.username,
-      required this.role,
-      this.reserveConfirmation,
-      required this.notifications});
+  UserEntity({
+    required this.email,
+    required this.avatar,
+    required this.averageRaiting,
+    required this.id,
+    required this.name,
+    required this.username,
+    required this.role,
+    this.reserveConfirmation,
+    required this.notifications,
+  });
 
   UserModel toUserModel(String? avatarIdUpdate) {
     return UserModel(
-        id: id,
-        email: email,
-        name: name,
-        username: username,
-        role: role,
-        avatarId: avatarIdUpdate ?? "",
-        avatar: avatar,
-        averageRaiting: averageRaiting,
-        notifications: notifications,);
+      id: id,
+      email: email,
+      name: name,
+      username: username,
+      role: role,
+      avatarId: avatarIdUpdate ?? '',
+      avatar: avatar,
+      averageRaiting: averageRaiting,
+      notifications: notifications,
+    );
   }
 }

@@ -1,14 +1,14 @@
 import 'package:dartz/dartz.dart';
+import 'package:roll_and_reserve/core/failure.dart';
 import 'package:roll_and_reserve/core/use_case.dart';
 import 'package:roll_and_reserve/domain/repositories/review_repository.dart';
 
-
-class DeleteReviewUseCase implements UseCase<Either<Exception, bool>, int> {
+class DeleteReviewUseCase implements UseCase<Either<Failure, bool>, int> {
   final ReviewRepository repository;
   DeleteReviewUseCase(this.repository);
 
   @override
-  Future<Either<Exception, bool>> call(int idReview) async {
+  Future<Either<Failure, bool>> call(int idReview) async {
     return repository.deleteReview(idReview);
   }
 }

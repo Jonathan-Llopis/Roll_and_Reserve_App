@@ -1,4 +1,3 @@
-
 class DifficultyEntity {
   final int id;
   final String description;

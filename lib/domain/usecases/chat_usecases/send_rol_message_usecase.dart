@@ -10,4 +10,3 @@ class SendRolMessageUseCase implements UseCase<String, SendMessageParams> {
     return repository.sendRolPlay(params.message);
   }
 }
-

@@ -10,4 +10,3 @@ class SendMessageUseCase implements UseCase<String, SendMessageParams> {
     return repository.sendMessage(params.message);
   }
 }
-

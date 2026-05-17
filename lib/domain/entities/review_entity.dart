@@ -11,27 +11,29 @@ class ReviewEntity {
   final String avatarIdWriter;
   final dynamic avatarWriter;
 
-  ReviewEntity(
-      {required this.id,
-      required this.raiting,
-      required this.review,
-      required this.writerId,
-      required this.reviewedId,
-      required this.shopReview,
-      required this.userNameWriter,
-      required this.avatarIdWriter,
-      required this.avatarWriter});
+  ReviewEntity({
+    required this.id,
+    required this.raiting,
+    required this.review,
+    required this.writerId,
+    required this.reviewedId,
+    required this.shopReview,
+    required this.userNameWriter,
+    required this.avatarIdWriter,
+    required this.avatarWriter,
+  });
 
   ReviewModel toReviewModel() {
     return ReviewModel(
-        id: id,
-        raiting: raiting,
-        review: review,
-        writerId: writerId,
-        reviewedId: reviewedId,
-        shopReview: shopReview == 0 ? null : shopReview,
-        avatarWriter: avatarWriter,
-        avatarIdWriter:  "",
-        userNameWriter: userNameWriter);
+      id: id,
+      raiting: raiting,
+      review: review,
+      writerId: writerId,
+      reviewedId: reviewedId,
+      shopReview: shopReview == 0 ? null : shopReview,
+      avatarWriter: avatarWriter,
+      avatarIdWriter: '',
+      userNameWriter: userNameWriter,
+    );
   }
 }

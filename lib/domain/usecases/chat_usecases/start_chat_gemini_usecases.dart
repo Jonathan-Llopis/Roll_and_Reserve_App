@@ -7,8 +7,6 @@ class StartChatGeminiUsecases implements UseCase<String, Context> {
 
   @override
   Future<String> call(Context params) async {
-   
-      return await repository.startChatGemini(params.context);
-    
+    return await repository.startChatGemini(params.context);
   }
 }

@@ -10,7 +10,11 @@ class SignUpUserUseCase implements UseCase<void, RegisterParams> {
   @override
   Future<Either<Failure, void>> call(RegisterParams params) async {
     return repository.signUp(
-        params.email, params.password, params.name, params.username);
+      params.email,
+      params.password,
+      params.name,
+      params.username,
+    );
   }
 }
 
@@ -19,9 +23,10 @@ class RegisterParams {
   final String password;
   final String name;
   final String username;
-  RegisterParams(
-      {required this.email,
-      required this.password,
-      required this.name,
-      required this.username});
+  RegisterParams({
+    required this.email,
+    required this.password,
+    required this.name,
+    required this.username,
+  });
 }
