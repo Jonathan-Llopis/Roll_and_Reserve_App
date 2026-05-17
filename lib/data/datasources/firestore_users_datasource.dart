@@ -9,18 +9,31 @@ class FirestoreUsersDatasource {
   Future<void> registerUser(String email, String nombre, String id) async {
     DocumentReference users =
         FirebaseFirestore.instance.collection('Users').doc(id);
-    await users.set({'email': email, 'name': nombre, 'rol': 2, 'id': id,  'notifications': [], 'isFirstTime': true});
+    await users.set({
+      'email': email,
+      'name': nombre,
+      'rol': 2,
+      'id': id,
+      'notifications': [],
+      'isFirstTime': true,
+    });
   }
+
   /// Updates the information of a user in the Firestore database.
   ///
   /// The user is identified by its [id].
   /// The user is updated with the given [nombre], [role] and [notifications].
   /// The 'isFirstTime' field is not touched.
-  Future<void> updateUserInfo(String nombre, String id, int role, List<int> notifications) async {
+  Future<void> updateUserInfo(
+    String nombre,
+    String id,
+    int role,
+    List<int> notifications,
+  ) async {
     DocumentReference users =
-
         FirebaseFirestore.instance.collection('Users').doc(id);
-    await users.update({'name': nombre, 'rol': role, 'notifications': notifications });
+    await users
+        .update({'name': nombre, 'rol': role, 'notifications': notifications});
   }
 
   /// Retrieves the list of notifications for a user from the Firestore database.
@@ -56,7 +69,6 @@ class FirestoreUsersDatasource {
     }
   }
 
-
   /// Updates a field in a user document in the Firestore database.
   ///
   /// The user is identified by its [id].
@@ -64,11 +76,9 @@ class FirestoreUsersDatasource {
   /// The value of the field is set to [value].
   Future<void> saveUserField(String id, String fieldName, dynamic value) async {
     DocumentReference users =
-
         FirebaseFirestore.instance.collection('Users').doc(id);
     await users.update({fieldName: value});
   }
-
 
   /// Checks if an email is already used in the Firestore database.
   ///

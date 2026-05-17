@@ -16,9 +16,14 @@ class UserRespositoryImpl implements UserRespository {
   final FirestoreUsersDatasource firebaseUserDataSource;
   final UserDatasource userDatasource;
 
-  UserRespositoryImpl(this.dataSource, this.sharedPreferences,
-      this.firebaseUserDataSource, this.userDatasource);
+  UserRespositoryImpl(
+    this.dataSource,
+    this.sharedPreferences,
+    this.firebaseUserDataSource,
+    this.userDatasource,
+  );
   @override
+
   /// Signs in a user with Google authentication.
   ///
   /// If the user is not registered in the app, it registers the user.
@@ -49,42 +54,47 @@ class UserRespositoryImpl implements UserRespository {
           username: user.username,
           role: 2,
           avatarId: user.avatarId,
-          avatar: File(""),
+          avatar: File(''),
           averageRaiting: 0,
           notifications: [],
         );
-        await userDatasource.createUser(usuarioRegistro, "1");
+        await userDatasource.createUser(usuarioRegistro, '1');
       }
 
       await sharedPreferences.setString('email', user.email);
       await sharedPreferences.setString('id', user.id);
 
       String tokenGenerado =
-          await userDatasource.getValidToken(user.email, "1");
+          await userDatasource.getValidToken(user.email, '1');
       await sharedPreferences.setString('token', tokenGenerado);
 
       UserModel usuerDataBase =
           await userDatasource.getValidUser(user.id, tokenGenerado);
       dynamic avatarFile = await userDatasource.getUserAvatar(
-          usuerDataBase.avatarId, tokenGenerado);
+        usuerDataBase.avatarId,
+        tokenGenerado,
+      );
 
       bool isFirstTime = await firebaseUserDataSource.isFirstTime(user.id);
       await sharedPreferences.setBool('isFirstTime', isFirstTime);
 
       return Right(usuerDataBase.toUserEntity(avatarFile, null));
     } catch (e) {
-      return Left(AuthFailure());
+      return const Left(AuthFailure());
     }
   }
 
   @override
+
   /// Signs in a user with the given email and password.
   ///
   /// Returns a [Future] that resolves to an [Either] containing a [UserEntity] with the signed in user's data, or an [AuthFailure].
   ///
   /// The [Future] will throw an [Exception] if there is an error during the sign in process.
   Future<Either<Failure, UserEntity>> signIn(
-      String email, String password) async {
+    String email,
+    String password,
+  ) async {
     try {
       String tokenGenerado =
           await userDatasource.getValidToken(email, password);
@@ -102,11 +112,12 @@ class UserRespositoryImpl implements UserRespository {
       await sharedPreferences.setBool('isFirstTime', isFirstTime);
       return Right(usuerDataBase.toUserEntity(avatarFile, null));
     } catch (e) {
-      return Left(AuthFailure());
+      return const Left(AuthFailure());
     }
   }
 
   @override
+
   /// Signs up a new user with the given email, password, name, and username.
   ///
   /// Registers the user in the Firebase authentication and the Firestore database,
@@ -117,9 +128,13 @@ class UserRespositoryImpl implements UserRespository {
   /// the signed-up user's data, or an [AuthFailure] if the sign-up process fails.
 
   Future<Either<Failure, UserEntity>> signUp(
-      String email, String password, String name, String username) async {
+    String email,
+    String password,
+    String name,
+    String username,
+  ) async {
     try {
-      UserModel user = await dataSource.signUp(email, password);
+      UserModel user = await dataSource.signUp(name, username, email, password);
       firebaseUserDataSource.registerUser(
         user.email,
         name,
@@ -135,7 +150,7 @@ class UserRespositoryImpl implements UserRespository {
         username: username,
         role: 2,
         avatarId: user.avatarId,
-        avatar: File(""),
+        avatar: File(''),
         averageRaiting: 0,
         notifications: [],
       );
@@ -149,11 +164,12 @@ class UserRespositoryImpl implements UserRespository {
 
       return Right(usuarioRegistro.toUserEntity(File(''), null));
     } catch (e) {
-      return Left(AuthFailure());
+      return const Left(AuthFailure());
     }
   }
 
   @override
+
   /// Checks if a user is currently logged in by verifying the presence of a stored user ID
   /// and token in shared preferences.
   ///
@@ -168,7 +184,7 @@ class UserRespositoryImpl implements UserRespository {
     try {
       final id = sharedPreferences.getString('id');
       if (id == null) {
-        return Left(AuthFailure());
+        return const Left(AuthFailure());
       } else {
         final token = sharedPreferences.getString('token');
         final id = sharedPreferences.getString('id');
@@ -181,11 +197,12 @@ class UserRespositoryImpl implements UserRespository {
         return Right(usuerDataBase.toUserEntity(avatarFile, null));
       }
     } catch (e) {
-      return Left(AuthFailure());
+      return const Left(AuthFailure());
     }
   }
 
   @override
+
   /// Retrieves the information of a user by their ID.
   ///
   /// The [idUser] parameter is the ID of the user to be retrieved.
@@ -200,11 +217,12 @@ class UserRespositoryImpl implements UserRespository {
           await userDatasource.getUserAvatar(usuerDataBase.avatarId, token);
       return Right(usuerDataBase.toUserEntity(avatarFile, null));
     } catch (e) {
-      return Left(AuthFailure());
+      return const Left(AuthFailure());
     }
   }
 
   @override
+
   /// Logs out the current user by removing the stored user ID, email, and token,
   /// and updating the user's token notification on the backend.
   ///
@@ -215,19 +233,20 @@ class UserRespositoryImpl implements UserRespository {
     try {
       final token = sharedPreferences.getString('token');
       final id = sharedPreferences.getString('id');
-      await userDatasource.updateTokenNotification(id!, " ", token!);
-      await dataSource.logout();
+      await userDatasource.updateTokenNotification(id!, ' ', token!);
+      await dataSource.signOut();
       await sharedPreferences.remove('id');
       await sharedPreferences.remove('email');
       await sharedPreferences.remove('token');
       await sharedPreferences.remove('isFirstTime');
       return const Right(null);
     } catch (e) {
-      return Left(AuthFailure());
+      return const Left(AuthFailure());
     }
   }
 
   @override
+
   /// Sends a password reset email to the given email address.
   ///
   /// This method will attempt to send an email to the user with a link to reset their
@@ -239,13 +258,14 @@ class UserRespositoryImpl implements UserRespository {
   Future<Either<Failure, void>> resetPassword(String email) async {
     try {
       await dataSource.resetPassword(email);
-      return Right(null);
+      return const Right(null);
     } catch (e) {
-      return Left(AuthFailure());
+      return const Left(AuthFailure());
     }
   }
 
   @override
+
   /// Checks if the given email address is already used in the system.
   ///
   /// Queries the Firestore data source to determine if a user with the given
@@ -259,11 +279,12 @@ class UserRespositoryImpl implements UserRespository {
       bool isUsed = await firebaseUserDataSource.isEmailUsed(email);
       return Right(isUsed);
     } catch (e) {
-      return Left(AuthFailure());
+      return const Left(AuthFailure());
     }
   }
 
   @override
+
   /// Checks if a username is already used in the system.
   ///
   /// Queries the backend data source to determine if a user with the given
@@ -278,11 +299,12 @@ class UserRespositoryImpl implements UserRespository {
       bool isUsed = await firebaseUserDataSource.isNameUsed(name);
       return Right(isUsed);
     } catch (e) {
-      return Left(AuthFailure());
+      return const Left(AuthFailure());
     }
   }
 
   @override
+
   /// Updates the information of a user.
   ///
   /// This method updates the user's information in both the Firestore database
@@ -300,7 +322,11 @@ class UserRespositoryImpl implements UserRespository {
       late UserModel userModel;
       final token = sharedPreferences.getString('token');
       await firebaseUserDataSource.updateUserInfo(
-          user.name, user.id, user.role, user.notifications);
+        user.name,
+        user.id,
+        user.role,
+        user.notifications,
+      );
       if (user.avatar != null) {
         String avatarId =
             await userDatasource.updateAvatar(user.toUserModel(null), token!);
@@ -309,13 +335,14 @@ class UserRespositoryImpl implements UserRespository {
         userModel = user.toUserModel(null);
       }
       await userDatasource.updateUserInfo(userModel, token!);
-      return Right(true);
+      return const Right(true);
     } catch (e) {
-      return Left(AuthFailure());
+      return const Left(AuthFailure());
     }
   }
 
   @override
+
   /// Updates the password of the currently signed in user.
   ///
   /// The [password] parameter is the new password of the user.
@@ -328,19 +355,26 @@ class UserRespositoryImpl implements UserRespository {
   /// Returns a [Future] that resolves to an [Either] containing `true` if the
   /// update is successful, or an [AuthFailure] if an error occurs.
   Future<Either<Failure, bool>> updatePassword(
-      String password, String oldPassword) async {
+    String password,
+    String oldPassword,
+  ) async {
     try {
       final token = sharedPreferences.getString('token');
       await dataSource.updatePassword(password);
       await userDatasource.updatePassword(
-          sharedPreferences.getString('id')!, oldPassword, password, token!);
-      return Right(true);
+        sharedPreferences.getString('id')!,
+        oldPassword,
+        password,
+        token!,
+      );
+      return const Right(true);
     } catch (e) {
-      return Left(AuthFailure());
+      return const Left(AuthFailure());
     }
   }
 
   @override
+
   /// Validates the provided password for the currently signed-in user.
   ///
   /// This method retrieves the user's email from shared preferences and uses
@@ -357,11 +391,12 @@ class UserRespositoryImpl implements UserRespository {
       bool isValid = await dataSource.validatePassword(password, email!);
       return Right(isValid);
     } catch (e) {
-      return Left(AuthFailure());
+      return const Left(AuthFailure());
     }
   }
 
   @override
+
   /// Gets a list of all users from the remote server.
   ///
   /// The function first calls the [UserDatasource.getUsers] method to retrieve a list of [UserModel] from the backend.
@@ -383,11 +418,12 @@ class UserRespositoryImpl implements UserRespository {
       }).toList();
       return Right(usersEntity);
     } catch (e) {
-      return Left(AuthFailure());
+      return const Left(AuthFailure());
     }
   }
 
   @override
+
   /// Updates the token notification for the user in the backend.
   ///
   /// The [id] parameter is the ID of the user whose token notification is being updated.
@@ -401,21 +437,28 @@ class UserRespositoryImpl implements UserRespository {
   /// update is successful, or an [AuthFailure] if an error occurs during the process.
 
   Future<Either<Failure, bool>> updateTokenNotification(
-      String id, String tokenNotification) async {
+    String id,
+    String tokenNotification,
+  ) async {
     try {
       final token = sharedPreferences.getString('token');
       final id = sharedPreferences.getString('id');
       if (id == null) {
-        return Left(AuthFailure());
+        return const Left(AuthFailure());
       }
       await userDatasource.updateTokenNotification(
-          id, tokenNotification, token!);
-      return Right(true);
+        id,
+        tokenNotification,
+        token!,
+      );
+      return const Right(true);
     } catch (e) {
-      return Left(AuthFailure());
+      return const Left(AuthFailure());
     }
   }
+
   @override
+
   /// Updates a field in a user document in the Firestore database.
   ///
   /// The user is identified by its [id].
@@ -428,16 +471,20 @@ class UserRespositoryImpl implements UserRespository {
   ///
   /// Returns a [Future] that resolves to an [Either] containing `true` if the
   /// update is successful, or an [AuthFailure] if an error occurs during the process.
-  Future<Either<Failure, bool>> saveUserField(String id, String field, dynamic value) async {
+  Future<Either<Failure, bool>> saveUserField(
+    String id,
+    String field,
+    dynamic value,
+  ) async {
     try {
       final token = sharedPreferences.getString('token');
       if (token == null) {
-        return Left(AuthFailure());
+        return const Left(AuthFailure());
       }
       await firebaseUserDataSource.saveUserField(id, field, value);
-      return Right(true);
+      return const Right(true);
     } catch (e) {
-      return Left(AuthFailure());
+      return const Left(AuthFailure());
     }
   }
 }

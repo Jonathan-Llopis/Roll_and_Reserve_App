@@ -16,11 +16,17 @@ abstract class UserDatasource {
   Future<bool> updateUserInfo(UserModel user, String token);
   Future<String> updateAvatar(UserModel user, String token);
   Future<bool> updateTokenNotification(
-      String id, String tokenNotificacion, String token);
-  Future <bool> updatePassword(String id, String oldPassword, String newPassword, String token);
+    String id,
+    String tokenNotificacion,
+    String token,
+  );
+  Future<bool> updatePassword(
+    String id,
+    String oldPassword,
+    String newPassword,
+    String token,
+  );
   Future<List<UserModel>> getAllUsers(String token);
-
-  
 }
 
 class UserDatasourceImpl implements UserDatasource {
@@ -29,6 +35,7 @@ class UserDatasourceImpl implements UserDatasource {
   List<UserModel> usuarios = [];
 
   @override
+
   /// Fetches a list of all users from the backend.
   ///
   /// The [token] parameter is the access token of the user, used to authorize the request.
@@ -53,6 +60,7 @@ class UserDatasourceImpl implements UserDatasource {
   }
 
   @override
+
   /// Fetches a valid user from the backend using their Google ID.
   ///
   /// The [id] parameter is the Google ID of the user to be fetched.
@@ -82,6 +90,7 @@ class UserDatasourceImpl implements UserDatasource {
   }
 
   @override
+
   /// Authenticates a user and retrieves a valid token from the backend.
   ///
   /// The [email] parameter is the user's email address used for authentication.
@@ -112,6 +121,7 @@ class UserDatasourceImpl implements UserDatasource {
   }
 
   @override
+
   /// Creates a user on the backend.
   ///
   /// The [user] parameter is the user's data, including the user's email address, name, username, and role.
@@ -136,6 +146,7 @@ class UserDatasourceImpl implements UserDatasource {
   }
 
   @override
+
   /// Downloads the avatar image of a user from the backend.
   ///
   /// The [fileId] parameter is the id of the avatar image to be downloaded.
@@ -145,14 +156,15 @@ class UserDatasourceImpl implements UserDatasource {
   /// If the status code is 200, returns the avatar image as a [Uint8List] if the platform is web or a [File] object if the platform is not web.
   /// Throws an [Exception] if there is an error during the download process.
   Future<dynamic> getUserAvatar(String fileId, String token) async {
-    if (fileId == "") {
-      fileId = "67c4bf09ae01906bd75ace8d";
+    if (fileId == '') {
+      fileId = '67c4bf09ae01906bd75ace8d';
     }
     final response = await http.get(
-        Uri.parse('${dotenv.env['BACKEND']}/files/download/$fileId'),
-        headers: {
-          'authorization': 'Bearer $token',
-        });
+      Uri.parse('${dotenv.env['BACKEND']}/files/download/$fileId'),
+      headers: {
+        'authorization': 'Bearer $token',
+      },
+    );
     if (response.statusCode == 200) {
       Uint8List bytes = response.bodyBytes;
       if (kIsWeb) {
@@ -170,6 +182,7 @@ class UserDatasourceImpl implements UserDatasource {
   }
 
   @override
+
   /// Updates the user information on the backend.
   ///
   /// The [user] parameter contains the user data to be updated.
@@ -195,6 +208,7 @@ class UserDatasourceImpl implements UserDatasource {
   }
 
   @override
+
   /// Updates the avatar of a user on the backend.
   ///
   /// The [user] parameter contains the new avatar information.
@@ -232,11 +246,13 @@ class UserDatasourceImpl implements UserDatasource {
       }
     } else {
       throw Exception(
-          'Error al actualizar el avatar del usuario: ${response.statusCode}, Body: ${response.body}');
+        'Error al actualizar el avatar del usuario: ${response.statusCode}, Body: ${response.body}',
+      );
     }
   }
 
   @override
+
   /// Updates the token notification of a user on the backend.
   ///
   /// The [id] parameter is the id of the user whose token is being updated.
@@ -246,7 +262,10 @@ class UserDatasourceImpl implements UserDatasource {
   /// Returns a [Future] that resolves to true if the update is successful (HTTP status code 200).
   /// Throws an [Exception] if there is an error during the update process.
   Future<bool> updateTokenNotification(
-      String id, String tokenNotificacion, String token) async {
+    String id,
+    String tokenNotificacion,
+    String token,
+  ) async {
     final response = await client.put(
       Uri.parse('${dotenv.env['BACKEND']}/users/$id/token'),
       headers: {
@@ -260,10 +279,13 @@ class UserDatasourceImpl implements UserDatasource {
       return true;
     } else {
       throw Exception(
-          'Error al actualizar el token de notificación: ${response.body}');
+        'Error al actualizar el token de notificación: ${response.body}',
+      );
     }
   }
+
   @override
+
   /// Updates the password of a user on the backend.
   ///
   /// The [id] parameter is the id of the user whose password is being updated.
@@ -273,7 +295,12 @@ class UserDatasourceImpl implements UserDatasource {
   ///
   /// Returns a [Future] that resolves to true if the update is successful (HTTP status code 200).
   /// Throws an [Exception] if there is an error during the update process.
-  Future<bool> updatePassword(String id, String oldPassword, String newPassword, String token) async {
+  Future<bool> updatePassword(
+    String id,
+    String oldPassword,
+    String newPassword,
+    String token,
+  ) async {
     final response = await client.put(
       Uri.parse('${dotenv.env['BACKEND']}/users/$id/password'),
       headers: {
@@ -294,6 +321,7 @@ class UserDatasourceImpl implements UserDatasource {
   }
 
   @override
+
   /// Gets all users from the backend.
   ///
   /// The [token] parameter is the access token of the user, used to authorize the request.

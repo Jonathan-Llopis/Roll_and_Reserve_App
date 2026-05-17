@@ -17,13 +17,29 @@ abstract class ShopRemoteDataSource {
   Future<ShopModel> getShop(int id, String token);
   Future<List<ShopModel>> getShopsByOwner(String ownerId, String token);
   Future<List<dynamic>> getMostPlayedGames(
-      int idShop, String startTime, String endTime, String token);
+    int idShop,
+    String startTime,
+    String endTime,
+    String token,
+  );
   Future<int> getTotalReservations(
-      int idShop, String startTime, String endTime, String token);
+    int idShop,
+    String startTime,
+    String endTime,
+    String token,
+  );
   Future<int> getPlayerCount(
-      int idShop, String startTime, String endTime, String token);
+    int idShop,
+    String startTime,
+    String endTime,
+    String token,
+  );
   Future<List<dynamic>> getPeakReservationHours(
-      int idShop, String startTime, String endTime, String token);
+    int idShop,
+    String startTime,
+    String endTime,
+    String token,
+  );
 }
 
 class ShopsRemoteDataSourceImpl implements ShopRemoteDataSource {
@@ -32,15 +48,16 @@ class ShopsRemoteDataSourceImpl implements ShopRemoteDataSource {
   ShopsRemoteDataSourceImpl(this.client);
 
   @override
-/// Fetches all shops from the backend.
-///
-/// The [token] is the access token required for authorization.
-///
-/// Returns a [Future] that resolves to a list of [ShopModel] if the request
-/// is successful (HTTP status code 200).
-///
-/// Throws an [Exception] if there is an error during the request or if the
-/// response status code is not 200.
+
+  /// Fetches all shops from the backend.
+  ///
+  /// The [token] is the access token required for authorization.
+  ///
+  /// Returns a [Future] that resolves to a list of [ShopModel] if the request
+  /// is successful (HTTP status code 200).
+  ///
+  /// Throws an [Exception] if there is an error during the request or if the
+  /// response status code is not 200.
 
   Future<List<ShopModel>> getAllShops(String token) async {
     final response = await client.get(
@@ -59,6 +76,7 @@ class ShopsRemoteDataSourceImpl implements ShopRemoteDataSource {
   }
 
   @override
+
   /// Fetches a shop from the backend.
   ///
   /// The [id] is the identifier of the shop to be fetched.
@@ -87,6 +105,7 @@ class ShopsRemoteDataSourceImpl implements ShopRemoteDataSource {
   }
 
   @override
+
   /// Fetches the shops owned by [ownerId] from the backend.
   ///
   /// The [token] is the access token required for authorization.
@@ -115,6 +134,7 @@ class ShopsRemoteDataSourceImpl implements ShopRemoteDataSource {
   }
 
   @override
+
   /// Deletes the shop with the specified [idShops] from the backend.
   ///
   /// The [token] is the access token required for authorization.
@@ -139,6 +159,7 @@ class ShopsRemoteDataSourceImpl implements ShopRemoteDataSource {
   }
 
   @override
+
   /// Updates the shop with the given [shops] model on the backend.
   ///
   /// The [token] is the access token required for authorization.
@@ -172,6 +193,7 @@ class ShopsRemoteDataSourceImpl implements ShopRemoteDataSource {
   }
 
   @override
+
   /// Creates a new shop on the backend.
   ///
   /// The [shops] parameter is the shop to be created.
@@ -204,6 +226,7 @@ class ShopsRemoteDataSourceImpl implements ShopRemoteDataSource {
   }
 
   @override
+
   /// Updates the logo of a shop on the backend.
   ///
   /// The [shop] parameter is a [ShopModel] containing the shop details, including
@@ -247,11 +270,13 @@ class ShopsRemoteDataSourceImpl implements ShopRemoteDataSource {
       }
     } else {
       throw Exception(
-          'Error al actualizar el logo de la tienda: ${response.statusCode}, Body: ${response.body}');
+        'Error al actualizar el logo de la tienda: ${response.statusCode}, Body: ${response.body}',
+      );
     }
   }
 
   @override
+
   /// Fetches the logo of a shop from the backend.
   ///
   /// The [fileId] is the identifier of the logo file to be fetched. If an empty
@@ -269,35 +294,41 @@ class ShopsRemoteDataSourceImpl implements ShopRemoteDataSource {
   /// response status code is not 200 or 404.
 
   Future<dynamic> getShopLogo(String fileId, String token) async {
-    if (fileId == "") {
-      fileId = "67c4bf45ae01906bd75ace8f";
+    if (fileId == '') {
+      fileId = '67c4bf45ae01906bd75ace8f';
     }
+
+    final directory = await getTemporaryDirectory();
+    final filePath = '${directory.path}/$fileId.png';
+    final file = File(filePath);
+
+    if (await file.exists() && !kIsWeb) {
+      return file;
+    }
+
     final response = await http.get(
-        Uri.parse('${dotenv.env['BACKEND']}/files/download/$fileId'),
-        headers: {
-          'authorization': 'Bearer $token',
-        });
+      Uri.parse('${dotenv.env['BACKEND']}/files/download/$fileId'),
+      headers: {
+        'authorization': 'Bearer $token',
+      },
+    );
     if (response.statusCode == 200) {
       Uint8List bytes = response.bodyBytes;
       if (kIsWeb) {
         return bytes;
       } else {
-        final directory = await getTemporaryDirectory();
-        final filePath = '${directory.path}/$fileId.png';
-        final file = File(filePath);
         await file.writeAsBytes(bytes);
         return file;
       }
     } else if (response.statusCode == 404) {
       return null;
-
-    } 
-    else {
+    } else {
       throw Exception('Error al cargar la imagen');
     }
   }
 
   @override
+
   /// Fetches the most played games for a given shop and time period.
   ///
   /// The [idShop] parameter is the identifier of the shop for which to fetch the
@@ -315,10 +346,15 @@ class ShopsRemoteDataSourceImpl implements ShopRemoteDataSource {
   /// Throws an [Exception] if there is an error during the request or if the
   /// response status code is not 201.
   Future<List<dynamic>> getMostPlayedGames(
-      int idShop, String startTime, String endTime, String token) async {
+    int idShop,
+    String startTime,
+    String endTime,
+    String token,
+  ) async {
     final response = await client.post(
       Uri.parse(
-          '${dotenv.env['BACKEND']}/shops/shop/$idShop/stats/most-played-games'),
+        '${dotenv.env['BACKEND']}/shops/shop/$idShop/stats/most-played-games',
+      ),
       headers: {
         'authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -332,11 +368,13 @@ class ShopsRemoteDataSourceImpl implements ShopRemoteDataSource {
     if (response.statusCode == 201) {
       final List<dynamic> gamesJson = json.decode(response.body);
       return gamesJson
-          .map((json) => {
-                'id_game': json['id_game'],
-                'name': json['name'],
-                'play_count': int.parse(json['play_count'])
-              })
+          .map(
+            (json) => {
+              'id_game': json['id_game'],
+              'name': json['name'],
+              'play_count': int.parse(json['play_count']),
+            },
+          )
           .toList();
     } else {
       throw Exception('Error al obtener los juegos más jugados.');
@@ -344,6 +382,7 @@ class ShopsRemoteDataSourceImpl implements ShopRemoteDataSource {
   }
 
   @override
+
   /// Gets the total number of reservations for a given shop and time period.
   ///
   /// The [idShop] parameter is the identifier of the shop for which to fetch the
@@ -359,10 +398,15 @@ class ShopsRemoteDataSourceImpl implements ShopRemoteDataSource {
   /// Throws an [Exception] if there is an error during the request or if the
   /// response status code is not 201.
   Future<int> getTotalReservations(
-      int idShop, String startTime, String endTime, String token) async {
+    int idShop,
+    String startTime,
+    String endTime,
+    String token,
+  ) async {
     final response = await client.post(
       Uri.parse(
-          '${dotenv.env['BACKEND']}/shops/shop/$idShop/stats/total-reservations'),
+        '${dotenv.env['BACKEND']}/shops/shop/$idShop/stats/total-reservations',
+      ),
       headers: {
         'authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -382,6 +426,7 @@ class ShopsRemoteDataSourceImpl implements ShopRemoteDataSource {
   }
 
   @override
+
   /// Retrieves the player count for a specific shop and time period.
   ///
   /// The [idShop] parameter represents the identifier of the shop for which to
@@ -397,9 +442,15 @@ class ShopsRemoteDataSourceImpl implements ShopRemoteDataSource {
   /// response status code is not 201.
 
   Future<int> getPlayerCount(
-      int idShop, String startTime, String endTime, String token) async {
+    int idShop,
+    String startTime,
+    String endTime,
+    String token,
+  ) async {
     final response = await client.post(
-      Uri.parse('${dotenv.env['BACKEND']}/shops/shop/$idShop/stats/player-count'),
+      Uri.parse(
+        '${dotenv.env['BACKEND']}/shops/shop/$idShop/stats/player-count',
+      ),
       headers: {
         'authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -419,6 +470,7 @@ class ShopsRemoteDataSourceImpl implements ShopRemoteDataSource {
   }
 
   @override
+
   /// Retrieves the peak reservation hours for a specific shop and time period.
   ///
   /// The [idShop] parameter represents the identifier of the shop for which to
@@ -434,10 +486,15 @@ class ShopsRemoteDataSourceImpl implements ShopRemoteDataSource {
   /// response status code is not 201.
 
   Future<List<dynamic>> getPeakReservationHours(
-      int idShop, String startTime, String endTime, String token) async {
+    int idShop,
+    String startTime,
+    String endTime,
+    String token,
+  ) async {
     final response = await client.post(
       Uri.parse(
-          '${dotenv.env['BACKEND']}/shops/shop/$idShop/stats/peak-reservation-hours'),
+        '${dotenv.env['BACKEND']}/shops/shop/$idShop/stats/peak-reservation-hours',
+      ),
       headers: {
         'authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -451,10 +508,12 @@ class ShopsRemoteDataSourceImpl implements ShopRemoteDataSource {
     if (response.statusCode == 201) {
       final List<dynamic> hoursJson = json.decode(response.body);
       return hoursJson
-          .map((json) => {
-                'hour': json['hour'],
-                'reservation_count': int.parse(json['reservation_count'])
-              })
+          .map(
+            (json) => {
+              'hour': json['hour'],
+              'reservation_count': int.parse(json['reservation_count']),
+            },
+          )
           .toList();
     } else {
       throw Exception('Error al obtener las horas pico de reservas.');

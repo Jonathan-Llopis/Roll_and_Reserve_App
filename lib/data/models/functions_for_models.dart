@@ -72,15 +72,17 @@ List<int> crearListaJuegos(List<dynamic> reserves) {
 }
 
 String getDate(String fecha) {
-  return "${fecha.substring(8, 10)} - ${fecha.substring(5, 7)} - ${fecha.substring(0, 4)}";
+  return '${fecha.substring(8, 10)} - ${fecha.substring(5, 7)} - ${fecha.substring(0, 4)}';
 }
 
 String getHour(String fecha) {
-  return "${fecha.substring(11, 13)}:${fecha.substring(14, 16)}";
+  return '${fecha.substring(11, 13)}:${fecha.substring(14, 16)}';
 }
+
 String getIsoDate(String fecha, String hora) {
-  List<String> fechaParts = fecha.split(" - ");
-  String isoDate = "${fechaParts[2]}-${fechaParts[1]}-${fechaParts[0]}T$hora:00Z";
+  List<String> fechaParts = fecha.split(' - ');
+  String isoDate =
+      '${fechaParts[2]}-${fechaParts[1]}-${fechaParts[0]}T$hora:00Z';
   return isoDate;
 }
 

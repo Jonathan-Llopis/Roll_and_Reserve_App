@@ -15,58 +15,63 @@ class UserModel {
   final bool? reserveConfirmation;
   List<int> notifications;
 
-  UserModel(
-      {required this.id,
-      required this.email,
-      required this.role,
-      required this.name,
-      required this.username,
-      required this.avatar,
-      required this.avatarId,
-      required this.averageRaiting,
-      required this.notifications,
-      this.reserveConfirmation});
+  UserModel({
+    required this.id,
+    required this.email,
+    required this.role,
+    required this.name,
+    required this.username,
+    required this.avatar,
+    required this.avatarId,
+    required this.averageRaiting,
+    required this.notifications,
+    this.reserveConfirmation,
+  });
 
   static UserModel fromUserCredential(UserCredential userCredentials) {
     return UserModel(
-        id: userCredentials.user?.uid ?? "NO_ID",
-        email: userCredentials.user?.email ?? "NO_EMAIL",
-        name: userCredentials.user?.displayName ?? "NO_NAME",
-        username: userCredentials.user?.displayName ?? "NO_NAME",
-        role: 2,
-        avatarId: "",
-        avatar: File(""),
-        averageRaiting: 0,
-        notifications: [],);
+      id: userCredentials.user?.uid ?? 'NO_ID',
+      email: userCredentials.user?.email ?? 'NO_EMAIL',
+      name: userCredentials.user?.displayName ?? 'NO_NAME',
+      username: userCredentials.user?.displayName ?? 'NO_NAME',
+      role: 2,
+      avatarId: '',
+      avatar: File(''),
+      averageRaiting: 0,
+      notifications: [],
+    );
   }
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-        id: json['id_google'] ?? "",
-        email: json['email'] ?? "",
-        role: json['role'] ?? 2,
-        name: json['name'] ?? "",
-        username: json['username'] ?? "",
-        avatarId: json['avatar'] ?? "67c4bf09ae01906bd75ace8d",
-        avatar: File(""),
-        notifications: json['notifications'] ?? [],
-        averageRaiting: (json["average_raiting"] as num?)?.toDouble()  ?? 0.0,
-        );
+      id: json['id_google'] ?? '',
+      email: json['email'] ?? '',
+      role: json['role'] ?? 2,
+      name: json['name'] ?? '',
+      username: json['username'] ?? '',
+      avatarId: json['avatar'] ?? '67c4bf09ae01906bd75ace8d',
+      avatar: File(''),
+      notifications: json['notifications'] ?? [],
+      averageRaiting: (json['average_raiting'] as num?)?.toDouble() ?? 0.0,
+    );
   }
 
   factory UserModel.fromJsonReserve(
-      Map<String, dynamic> json, bool? reserveConfirmation) {
+    Map<String, dynamic> json,
+    bool? reserveConfirmation,
+  ) {
     return UserModel(
-        id: json['id_google'] ?? "",
-        email: json['email'] ?? "",
-        role: json['role'] ?? 2,
-        name: json['name'] ?? "",
-        username: json['username'] ?? "",
-        avatarId: json['avatar'] ?? "67c4bf09ae01906bd75ace8d",
-        avatar: File(""),
-        averageRaiting: (json["average_raiting"] as num?)?.toDouble() ?? 0.0,
-        reserveConfirmation: reserveConfirmation,
-        notifications: json['notifications'] ?? []);
+      id: json['id_google'] ?? '',
+      email: json['email'] ?? '',
+      role: json['role'] ?? 2,
+      name: json['name'] ?? '',
+      username: json['username'] ?? '',
+      avatarId: json['avatar'] ?? '67c4bf09ae01906bd75ace8d',
+      avatar: File(''),
+      averageRaiting: (json['average_raiting'] as num?)?.toDouble() ?? 0.0,
+      reserveConfirmation: reserveConfirmation,
+      notifications: json['notifications'] ?? [],
+    );
   }
 
   Map<String, dynamic> crateToJson(String password) {
@@ -94,14 +99,15 @@ class UserModel {
 
   UserEntity toUserEntity(dynamic avatarFile, bool? reserveConfirmation) {
     return UserEntity(
-        id: id,
-        email: email,
-        role: role,
-        name: name,
-        username: username,
-        avatar: avatarFile,
-        averageRaiting: averageRaiting,
-        reserveConfirmation: reserveConfirmation ?? false,
-        notifications: notifications);
+      id: id,
+      email: email,
+      role: role,
+      name: name,
+      username: username,
+      avatar: avatarFile,
+      averageRaiting: averageRaiting,
+      reserveConfirmation: reserveConfirmation ?? false,
+      notifications: notifications,
+    );
   }
 }

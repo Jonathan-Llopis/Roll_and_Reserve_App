@@ -17,6 +17,7 @@ class TablesRemoteDataSourceImpl implements TableRemoteDataSource {
   TablesRemoteDataSourceImpl(this.client);
 
   @override
+
   /// Gets all the tables from the backend.
   ///
   /// The [token] parameter is the access token of the user, used to authorize the request.
@@ -41,6 +42,7 @@ class TablesRemoteDataSourceImpl implements TableRemoteDataSource {
   }
 
   @override
+
   /// Deletes the table with the specified [idTables] from the backend.
   ///
   /// The [token] parameter is the access token required for authorization.
@@ -65,6 +67,7 @@ class TablesRemoteDataSourceImpl implements TableRemoteDataSource {
   }
 
   @override
+
   /// Updates the table with the specified [idTables] in the backend.
   ///
   /// The [table] parameter is the table to be updated.
@@ -93,6 +96,7 @@ class TablesRemoteDataSourceImpl implements TableRemoteDataSource {
   }
 
   @override
+
   /// Creates a new table on the backend.
   ///
   /// The [table] parameter is the table to be created.
@@ -120,7 +124,9 @@ class TablesRemoteDataSourceImpl implements TableRemoteDataSource {
       throw Exception('Error al crear el mesa: ${response.body}');
     }
   }
+
   @override
+
   /// Fetches all tables from the backend that belong to the shop with the
   /// specified [shopId].
   ///

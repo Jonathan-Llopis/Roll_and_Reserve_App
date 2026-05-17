@@ -1,4 +1,3 @@
-
 import 'package:roll_and_reserve/domain/entities/difficulty_entity.dart';
 
 class DifficultyModel {

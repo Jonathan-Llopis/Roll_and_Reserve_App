@@ -13,7 +13,10 @@ abstract class ChatRemoteDataSource {
   Future<String> startChatGemini(String prompt);
   Future<String> sendMessageGemini(String message, List<ByteData>? imageBytes);
   Future<String> startChatAssistant(String prompt);
-  Future<String> sendMessageAssitant(String message, List<ByteData>? imageBytes);
+  Future<String> sendMessageAssitant(
+    String message,
+    List<ByteData>? imageBytes,
+  );
 }
 
 class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
@@ -34,7 +37,8 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     final apiKey = dotenv.env['DEEP_SEEK_API_KEY'];
     if (apiKey == null || apiKey.isEmpty) {
       throw Exception(
-          'DEEP_SEEK_API_KEY is not set in the environment variables.');
+        'DEEP_SEEK_API_KEY is not set in the environment variables.',
+      );
     }
     deepSeek = DeepSeek(apiKey);
     chatHistory = [];
@@ -42,6 +46,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   }
 
   @override
+
   /// Initiates a chat session by sending a user message to the DeepSeek AI service.
   ///
   /// Clears the chat history and adds the user's message to it. Sends the message
@@ -54,22 +59,25 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
 
   Future<String> startChat(String message) async {
     chatHistory.clear();
-    chatHistory.add(Message(role: "user", content: message));
+    chatHistory.add(Message(role: 'user', content: message));
 
     try {
       final response = await deepSeek.createChat(
         messages: chatHistory,
         model: Models.reasoner.name,
         options: {
-          "temperature": 1.0,
-          "max_tokens": 4096,
+          'temperature': 1.0,
+          'max_tokens': 4096,
         },
       );
 
       if (response.text.isNotEmpty) {
-        chatHistory.add(Message(
-            role: "assistant",
-            content: utf8.decode(latin1.encode(response.text))));
+        chatHistory.add(
+          Message(
+            role: 'assistant',
+            content: utf8.decode(latin1.encode(response.text)),
+          ),
+        );
         return utf8.decode(latin1.encode(response.text));
       } else {
         throw Exception('Failed to start chat.');
@@ -82,6 +90,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   }
 
   @override
+
   /// Sends a message to the DeepSeek AI service to continue a chat session.
   ///
   /// Before calling this method, the chat session must be initialized by calling
@@ -99,22 +108,25 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
       throw Exception('Chat session not initialized. Call startChat first.');
     }
 
-    chatHistory.add(Message(role: "user", content: message));
+    chatHistory.add(Message(role: 'user', content: message));
 
     try {
       final response = await deepSeek.createChat(
         messages: chatHistory,
         model: Models.reasoner.name,
         options: {
-          "temperature": 1.0,
-          "max_tokens": 4096,
+          'temperature': 1.0,
+          'max_tokens': 4096,
         },
       );
 
       if (response.text.isNotEmpty) {
-        chatHistory.add(Message(
-            role: "assistant",
-            content: utf8.decode(latin1.encode(response.text))));
+        chatHistory.add(
+          Message(
+            role: 'assistant',
+            content: utf8.decode(latin1.encode(response.text)),
+          ),
+        );
         return utf8.decode(latin1.encode(response.text));
       } else {
         throw Exception('Failed to send message.');
@@ -127,6 +139,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   }
 
   @override
+
   /// Starts a role play chat session with the DeepSeek AI service.
   ///
   /// A role play chat session is a special type of chat session where the AI
@@ -143,22 +156,25 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   /// interacting with the DeepSeek service.
   Future<String> startRolPlay(String prompt) async {
     rolePlayHistory.clear();
-    rolePlayHistory.add(Message(role: "user", content: prompt));
+    rolePlayHistory.add(Message(role: 'user', content: prompt));
 
     try {
       final response = await deepSeek.createChat(
         messages: rolePlayHistory,
         model: Models.chat.name,
         options: {
-          "temperature": 1.0,
-          "max_tokens": 4096,
+          'temperature': 1.0,
+          'max_tokens': 4096,
         },
       );
 
       if (response.text.isNotEmpty) {
-        rolePlayHistory.add(Message(
-            role: "assistant",
-            content: utf8.decode(latin1.encode(response.text))));
+        rolePlayHistory.add(
+          Message(
+            role: 'assistant',
+            content: utf8.decode(latin1.encode(response.text)),
+          ),
+        );
         return utf8.decode(latin1.encode(response.text));
       } else {
         throw Exception('Failed to start role play.');
@@ -171,6 +187,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   }
 
   @override
+
   /// Sends a message to the DeepSeek AI service as part of a role play session.
   ///
   /// A role play session is a special type of chat session where the AI service
@@ -190,25 +207,29 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   Future<String> sendRolPlay(String message) async {
     if (rolePlayHistory.isEmpty) {
       throw Exception(
-          'Role play session not initialized. Call startRolePlay first.');
+        'Role play session not initialized. Call startRolePlay first.',
+      );
     }
 
-    rolePlayHistory.add(Message(role: "user", content: message));
+    rolePlayHistory.add(Message(role: 'user', content: message));
 
     try {
       final response = await deepSeek.createChat(
         messages: rolePlayHistory,
         model: Models.chat.name,
         options: {
-          "temperature": 1.0,
-          "max_tokens": 4096,
+          'temperature': 1.0,
+          'max_tokens': 4096,
         },
       );
 
       if (response.text.isNotEmpty) {
-        rolePlayHistory.add(Message(
-            role: "assistant",
-            content: utf8.decode(latin1.encode(response.text))));
+        rolePlayHistory.add(
+          Message(
+            role: 'assistant',
+            content: utf8.decode(latin1.encode(response.text)),
+          ),
+        );
         return utf8.decode(latin1.encode(response.text));
       } else {
         throw Exception('Failed to send role play message.');
@@ -228,6 +249,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   late dynamic chat;
 
   @override
+
   /// Starts a chat session with the AI service using the Gemini model.
   ///
   /// The [prompt] parameter is the initial message to be sent to the AI service.
@@ -247,7 +269,9 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
       throw Exception('Error al iniciar el Chat.');
     }
   }
+
   @override
+
   /// Sends a message to the AI service using the Gemini model.
   ///
   /// The [message] parameter is the text message to be sent to the AI service.
@@ -263,14 +287,19 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   ///
   /// Before calling this method, you must call [startChatGemini] to start the
   /// chat session.
-  Future<String> sendMessageGemini(String message, List<ByteData>? imageBytes) async {
+  Future<String> sendMessageGemini(
+    String message,
+    List<ByteData>? imageBytes,
+  ) async {
     List<Content> content = [Content.text(message)];
 
     if (imageBytes != null && imageBytes.isNotEmpty) {
       List<DataPart> dataParts = imageBytes.map((byteData) {
         return DataPart('image/jpeg', byteData.buffer.asUint8List());
       }).toList();
-      content = [Content.multi([TextPart(message), ...dataParts])];
+      content = [
+        Content.multi([TextPart(message), ...dataParts]),
+      ];
     }
 
     final response = await chat.sendMessage(content.first);
@@ -283,6 +312,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   }
 
   @override
+
   /// Starts a chat session with the AI service using the assistant model.
   ///
   /// The [prompt] parameter is the initial message to be sent to the AI service.
@@ -302,7 +332,9 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
       throw Exception('Error al iniciar el Chat.');
     }
   }
+
   @override
+
   /// Sends a message to the AI service using the assistant model.
   ///
   /// The [message] parameter is the text message to be sent to the AI service.
@@ -316,14 +348,19 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   /// Throws an exception if the response is empty or if there is an error while
   /// interacting with the AI service.
 
-  Future<String> sendMessageAssitant(String message, List<ByteData>? imageBytes) async {
+  Future<String> sendMessageAssitant(
+    String message,
+    List<ByteData>? imageBytes,
+  ) async {
     List<Content> content = [Content.text(message)];
 
     if (imageBytes != null && imageBytes.isNotEmpty) {
       List<DataPart> dataParts = imageBytes.map((byteData) {
         return DataPart('image/jpeg', byteData.buffer.asUint8List());
       }).toList();
-      content = [Content.multi([TextPart(message), ...dataParts])];
+      content = [
+        Content.multi([TextPart(message), ...dataParts]),
+      ];
     }
 
     final response = await chat.sendMessage(content.first);
@@ -334,5 +371,4 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
       throw Exception('Error al enviar el mensaje.');
     }
   }
-  
 }

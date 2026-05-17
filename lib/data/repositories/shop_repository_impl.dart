@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:roll_and_reserve/core/failure.dart';
 import 'package:roll_and_reserve/data/datasources/shop_datasoruce.dart';
 import 'package:roll_and_reserve/data/models/shop_model.dart';
 import 'package:roll_and_reserve/domain/entities/shop_entity.dart';
@@ -13,6 +14,7 @@ class ShopRepositoryImpl implements ShopsRepository {
   ShopRepositoryImpl(this.remoteDataSource, this.sharedPreferences);
 
   @override
+
   /// Fetches all shops from the backend and returns them as a list of [ShopEntity].
   ///
   /// Retrieves a list of all shops and their associated logos from the backend.
@@ -20,13 +22,14 @@ class ShopRepositoryImpl implements ShopsRepository {
   /// [ShopModel]s to [ShopEntity]s including the shop logos.
   ///
   /// Returns a [Future] that resolves to a [Right] containing a list of [ShopEntity]
-  /// if the operation is successful, or a [Left] containing an [Exception] if an
+  /// if the operation is successful, or a [Left] containing an [Failure] if an
   /// error occurs.
 
-  Future<Either<Exception, List<ShopEntity>>> getAllShops() async {
+  Future<Either<Failure, List<ShopEntity>>> getAllShops() async {
     try {
       final token = sharedPreferences.getString('token');
-      final shopsModels = await remoteDataSource.getAllShops(token!);
+      if (token == null) return const Left(AuthFailure('No token found'));
+      final shopsModels = await remoteDataSource.getAllShops(token);
       final shopsWithLogo = await Future.wait(
         shopsModels.map((model) async {
           final logo = await remoteDataSource.getShopLogo(model.logoId, token);
@@ -35,11 +38,12 @@ class ShopRepositoryImpl implements ShopsRepository {
       );
       return Right(shopsWithLogo);
     } catch (e) {
-      return Left(Exception('Error al cargar tiendas'));
+      return Left(ServerFailure('Error al cargar tiendas: ${e.toString()}'));
     }
   }
 
   @override
+
   /// Fetches a shop from the backend with the given [idShop].
   ///
   /// Retrieves the shop with the given [idShop] and its associated logo from the
@@ -47,21 +51,23 @@ class ShopRepositoryImpl implements ShopsRepository {
   /// resulting [ShopModel] to a [ShopEntity] including the shop logo.
   ///
   /// Returns a [Future] that resolves to a [Right] containing a [ShopEntity]
-  /// if the operation is successful, or a [Left] containing an [Exception] if an
+  /// if the operation is successful, or a [Left] containing an [Failure] if an
   /// error occurs.
-  Future<Either<Exception, ShopEntity>> getShop(int idShop) async {
+  Future<Either<Failure, ShopEntity>> getShop(int idShop) async {
     try {
       final token = sharedPreferences.getString('token');
-      final shopModel = await remoteDataSource.getShop(idShop, token!);
+      if (token == null) return const Left(AuthFailure('No token found'));
+      final shopModel = await remoteDataSource.getShop(idShop, token);
       final logo = await remoteDataSource.getShopLogo(shopModel.logoId, token);
       final shopEntity = shopModel.toShopEntity(logo);
       return Right(shopEntity);
     } catch (e) {
-      return Left(Exception('Error al obtener la tienda'));
+      return Left(ServerFailure('Error al obtener la tienda: ${e.toString()}'));
     }
   }
 
   @override
+
   /// Fetches a list of shops owned by the user with the given [ownerId]
   /// from the backend.
   ///
@@ -72,13 +78,15 @@ class ShopRepositoryImpl implements ShopsRepository {
   ///
   /// Returns a [Future] that resolves to a [Right] containing a [List] of
   /// [ShopEntity] if the operation is successful, or a [Left] containing an
-  /// [Exception] if an error occurs.
-  Future<Either<Exception, List<ShopEntity>>> getShopByOwner(
-      String ownerId) async {
+  /// [Failure] if an error occurs.
+  Future<Either<Failure, List<ShopEntity>>> getShopByOwner(
+    String ownerId,
+  ) async {
     try {
       final token = sharedPreferences.getString('token');
+      if (token == null) return const Left(AuthFailure('No token found'));
       final shopsModels =
-          await remoteDataSource.getShopsByOwner(ownerId, token!);
+          await remoteDataSource.getShopsByOwner(ownerId, token);
       final shopsWithLogo = await Future.wait(
         shopsModels.map((model) async {
           final logo = await remoteDataSource.getShopLogo(model.logoId, token);
@@ -87,51 +95,62 @@ class ShopRepositoryImpl implements ShopsRepository {
       );
       return Right(shopsWithLogo);
     } catch (e) {
-      return Left(Exception('Error al obtener las tiendas del propietario'));
+      return Left(
+        ServerFailure('Error al obtener las tiendas: ${e.toString()}'),
+      );
     }
   }
 
   @override
+
   /// Deletes the shop with the specified [idShops] from the backend.
   ///
   /// Uses a stored token for authorization to delete the shop.
   ///
   /// Returns a [Future] that resolves to a [Right] containing `true` if the
-  /// deletion is successful, or a [Left] containing an [Exception] if an
+  /// deletion is successful, or a [Left] containing an [Failure] if an
   /// error occurs during the operation.
 
-  Future<Either<Exception, bool>> deleteShops(int idShops) async {
+  Future<Either<Failure, bool>> deleteShops(int idShops) async {
     try {
       final token = sharedPreferences.getString('token');
-      await remoteDataSource.deleteShops(idShops, token!);
+      if (token == null) return const Left(AuthFailure('No token found'));
+      await remoteDataSource.deleteShops(idShops, token);
       return const Right(true);
     } catch (e) {
-      return Left(Exception('Error al eliminar la tienda'));
+      return Left(
+        ServerFailure('Error al eliminar la tienda: ${e.toString()}'),
+      );
     }
   }
 
   @override
+
   /// Updates a shop on the backend.
   ///
   /// Uses a stored token for authorization to update the shop.
   ///
   /// Returns a [Future] that resolves to a [Right] containing `true` if the
-  /// update is successful, or a [Left] containing an [Exception] if an
+  /// update is successful, or a [Left] containing an [Failure] if an
   /// error occurs during the operation.
-  Future<Either<Exception, bool>> updateShops(ShopEntity shops) async {
+  Future<Either<Failure, bool>> updateShops(ShopEntity shops) async {
     try {
       final token = sharedPreferences.getString('token');
+      if (token == null) return const Left(AuthFailure('No token found'));
       String logoId =
-          await remoteDataSource.updateLogo(shops.toShopModel(null), token!);
+          await remoteDataSource.updateLogo(shops.toShopModel(null), token);
       ShopModel shopModel = shops.toShopModel(logoId);
       await remoteDataSource.updateShops(shopModel, token);
-      return Right(true);
+      return const Right(true);
     } catch (e) {
-      return Left(Exception('Error al actualizar la tienda: ${e.toString()}'));
+      return Left(
+        ServerFailure('Error al actualizar la tienda: ${e.toString()}'),
+      );
     }
   }
 
   @override
+
   /// Creates a new shop on the backend.
   ///
   /// Converts the given [ShopEntity] to a [ShopModel] and uses a stored token
@@ -139,32 +158,34 @@ class ShopRepositoryImpl implements ShopsRepository {
   /// with a logo if provided.
   ///
   /// Returns a [Future] that resolves to a [Right] containing `true` if the
-  /// creation is successful, or a [Left] containing an [Exception] if an
+  /// creation is successful, or a [Left] containing an [Failure] if an
   /// error occurs during the operation.
 
-  Future<Either<Exception, bool>> createShops(ShopEntity shops) async {
+  Future<Either<Failure, bool>> createShops(ShopEntity shops) async {
     try {
       String logoId;
       final token = sharedPreferences.getString('token');
+      if (token == null) return const Left(AuthFailure('No token found'));
       ShopModel shopModel = shops.toShopModel(null);
       final shopModelCreated =
-          await remoteDataSource.createShops(shopModel, token!);
+          await remoteDataSource.createShops(shopModel, token);
       ShopModel avatarShop =
-          shopModel.addInfo("67c4bf45ae01906bd75ace8f  ", shopModelCreated.id);
+          shopModel.addInfo('67c4bf45ae01906bd75ace8f  ', shopModelCreated.id);
       if (avatarShop.logo == null) {
-        logoId = "67c4bf45ae01906bd75ace8f";
+        logoId = '67c4bf45ae01906bd75ace8f';
       } else {
         logoId = await remoteDataSource.updateLogo(avatarShop, token);
       }
       ShopModel updateShop = shopModel.addInfo(logoId, shopModelCreated.id);
       await remoteDataSource.updateShops(updateShop, token);
-      return Right(true);
+      return const Right(true);
     } catch (e) {
-      return Left(Exception('Error al crear la tienda: ${e.toString()}'));
+      return Left(ServerFailure('Error al crear la tienda: ${e.toString()}'));
     }
   }
 
   @override
+
   /// Fetches the most played games for a given shop and time period from the
   /// backend.
   ///
@@ -176,21 +197,34 @@ class ShopRepositoryImpl implements ShopsRepository {
   ///
   /// Returns a [Future] that resolves to a [Right] containing a list of
   /// objects containing the game identifiers, names and play counts if the
-  /// request is successful, or a [Left] containing an [Exception] if an error
+  /// request is successful, or a [Left] containing an [Failure] if an error
   /// occurs during the operation.
-  Future<Either<Exception, List<dynamic>>> getMostPlayedGames(
-      int idShop, String startTime, String endTime) async {
+  Future<Either<Failure, List<dynamic>>> getMostPlayedGames(
+    int idShop,
+    String startTime,
+    String endTime,
+  ) async {
     try {
       final token = sharedPreferences.getString('token');
+      if (token == null) return const Left(AuthFailure('No token found'));
       final games = await remoteDataSource.getMostPlayedGames(
-          idShop, startTime, endTime, token!);
+        idShop,
+        startTime,
+        endTime,
+        token,
+      );
       return Right(games);
     } catch (e) {
-      return Left(Exception('Error al obtener los juegos más jugados.'));
+      return Left(
+        ServerFailure(
+          'Error al obtener los juegos más jugados: ${e.toString()}',
+        ),
+      );
     }
   }
 
   @override
+
   /// Fetches the total number of reservations for a given shop and time period
   /// from the backend.
   ///
@@ -202,20 +236,33 @@ class ShopRepositoryImpl implements ShopsRepository {
   ///
   /// Returns a [Future] that resolves to a [Right] containing the total number
   /// of reservations if the request is successful, or a [Left] containing an
-  /// [Exception] if an error occurs during the operation.
-  Future<Either<Exception, int>> getTotalReservations(
-      int idShop, String startTime, String endTime) async {
+  /// [Failure] if an error occurs during the operation.
+  Future<Either<Failure, int>> getTotalReservations(
+    int idShop,
+    String startTime,
+    String endTime,
+  ) async {
     try {
       final token = sharedPreferences.getString('token');
+      if (token == null) return const Left(AuthFailure('No token found'));
       final totalReservations = await remoteDataSource.getTotalReservations(
-          idShop, startTime, endTime, token!);
+        idShop,
+        startTime,
+        endTime,
+        token,
+      );
       return Right(totalReservations);
     } catch (e) {
-      return Left(Exception('Error al obtener el total de reservas.'));
+      return Left(
+        ServerFailure(
+          'Error al obtener el total de reservas: ${e.toString()}',
+        ),
+      );
     }
   }
 
   @override
+
   /// Fetches the player count for a given shop and time period from the
   /// backend.
   ///
@@ -226,21 +273,34 @@ class ShopRepositoryImpl implements ShopsRepository {
   /// time period for which to fetch the player count.
   ///
   /// Returns a [Future] that resolves to a [Right] containing the player count
-  /// if the request is successful, or a [Left] containing an [Exception] if an
+  /// if the request is successful, or a [Left] containing an [Failure] if an
   /// error occurs during the operation.
-  Future<Either<Exception, int>> getPlayerCount(
-      int idShop, String startTime, String endTime) async {
+  Future<Either<Failure, int>> getPlayerCount(
+    int idShop,
+    String startTime,
+    String endTime,
+  ) async {
     try {
       final token = sharedPreferences.getString('token');
+      if (token == null) return const Left(AuthFailure('No token found'));
       final playerCount = await remoteDataSource.getPlayerCount(
-          idShop, startTime, endTime, token!);
+        idShop,
+        startTime,
+        endTime,
+        token,
+      );
       return Right(playerCount);
     } catch (e) {
-      return Left(Exception('Error al obtener el conteo de jugadores.'));
+      return Left(
+        ServerFailure(
+          'Error al obtener el conteo de jugadores: ${e.toString()}',
+        ),
+      );
     }
   }
 
   @override
+
   /// Fetches the peak reservation hours for a given shop and time period
   /// from the backend.
   ///
@@ -251,19 +311,31 @@ class ShopRepositoryImpl implements ShopsRepository {
   /// the time period for which to fetch the peak reservation hours.
   ///
   /// Returns a [Future] that resolves to a [Right] containing a list of
-  /// objects with hour and reservation count if the request is successful, 
-  /// or a [Left] containing an [Exception] if an error occurs during the
+  /// objects with hour and reservation count if the request is successful,
+  /// or a [Left] containing an [Failure] if an error occurs during the
   /// operation.
 
-  Future<Either<Exception, List<dynamic>>> getPeakReservationHours(
-      int idShop, String startTime, String endTime) async {
+  Future<Either<Failure, List<dynamic>>> getPeakReservationHours(
+    int idShop,
+    String startTime,
+    String endTime,
+  ) async {
     try {
       final token = sharedPreferences.getString('token');
+      if (token == null) return const Left(AuthFailure('No token found'));
       final peakHours = await remoteDataSource.getPeakReservationHours(
-          idShop, startTime, endTime, token!);
+        idShop,
+        startTime,
+        endTime,
+        token,
+      );
       return Right(peakHours);
     } catch (e) {
-      return Left(Exception('Error al obtener las horas pico de reservas.'));
+      return Left(
+        ServerFailure(
+          'Error al obtener las horas pico de reservas: ${e.toString()}',
+        ),
+      );
     }
   }
 }

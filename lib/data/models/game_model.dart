@@ -12,7 +12,7 @@ class GameModel {
   factory GameModel.fromJson(Map<String, dynamic> json) {
     return GameModel(
       id: json['id_game'],
-      description: json['name']??"",
+      description: json['name'] ?? '',
     );
   }
   GameEntity toGameEntity() {

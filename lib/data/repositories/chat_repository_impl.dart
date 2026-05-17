@@ -9,11 +9,11 @@ import 'package:roll_and_reserve/domain/repositories/chat_repository.dart';
 
 class ChatRepositoryImpl implements ChatRepository {
   final ChatRemoteDataSource remoteDataSource;
-  
 
   ChatRepositoryImpl(this.remoteDataSource);
 
   @override
+
   /// Starts a chat session with the AI service.
   ///
   /// The [message] parameter is the initial message to be sent to the AI
@@ -32,6 +32,7 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
+
   /// Sends a message to the AI service to continue a chat session.
   ///
   /// The [message] parameter is the text message to be sent to the AI service.
@@ -49,6 +50,7 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
+
   /// Starts a role play chat session with the AI service.
   ///
   /// The [character] parameter is the character the AI service should act as.
@@ -59,7 +61,11 @@ class ChatRepositoryImpl implements ChatRepository {
   ///
   /// Throws an exception if the response is empty or if there is an error while
   /// interacting with the AI service.
-  Future<String> startRolPlay(BuildContext context, String character, String theme) async {
+  Future<String> startRolPlay(
+    BuildContext context,
+    String character,
+    String theme,
+  ) async {
     try {
       String prompt = getLocalizedPrompt(context, character, theme);
       return await remoteDataSource.startRolPlay(prompt);
@@ -69,6 +75,7 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
+
   /// Sends a message to the AI service to continue a role play chat session.
   ///
   /// The [message] parameter is the text message to be sent to the AI service.
@@ -84,6 +91,7 @@ class ChatRepositoryImpl implements ChatRepository {
       throw Exception('Error sending rol play: $e');
     }
   }
+
   @override
 
   /// Starts a chat session with the AI service using the Gemini model.
@@ -103,7 +111,9 @@ class ChatRepositoryImpl implements ChatRepository {
       throw Exception('Error starting chat gemini: $e');
     }
   }
+
   @override
+
   /// Sends a message to the AI service using the Gemini model.
   ///
   /// The [message] parameter is the text message to be sent to the AI service.
@@ -116,14 +126,19 @@ class ChatRepositoryImpl implements ChatRepository {
   ///
   /// Throws an exception if there is an error while interacting with the AI service.
 
-  Future<String> sendMessageGemini(String message, {List<ByteData>? imageBytes}) async {
+  Future<String> sendMessageGemini(
+    String message, {
+    List<ByteData>? imageBytes,
+  }) async {
     try {
       return await remoteDataSource.sendMessageGemini(message, imageBytes);
     } catch (e) {
       throw Exception('Error sending message gemini: $e');
     }
   }
+
   @override
+
   /// Starts a chat session with the AI service using the Assistant model.
   ///
   /// The AI service will generate a response based on the prompt from the
@@ -141,7 +156,9 @@ class ChatRepositoryImpl implements ChatRepository {
       throw Exception('Error starting chat assistant: $e');
     }
   }
+
   @override
+
   /// Sends a message to the AI service using the Assistant model.
   ///
   /// The [message] parameter is the text message to be sent to the AI service.
@@ -153,7 +170,10 @@ class ChatRepositoryImpl implements ChatRepository {
   /// Returns the AI service response as a string if successful.
   ///
   /// Throws an exception if there is an error while interacting with the AI service.
-  Future<String> sendMessageAssitant(String message, {List<ByteData>? imageBytes}) async {
+  Future<String> sendMessageAssitant(
+    String message, {
+    List<ByteData>? imageBytes,
+  }) async {
     try {
       return await remoteDataSource.sendMessageAssitant(message, imageBytes);
     } catch (e) {

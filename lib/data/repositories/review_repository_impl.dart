@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:roll_and_reserve/core/failure.dart';
 import 'package:roll_and_reserve/data/datasources/review_datasource.dart';
 import 'package:roll_and_reserve/data/datasources/user_datasource.dart';
 import 'package:roll_and_reserve/data/models/review_model.dart';
@@ -12,65 +13,77 @@ class ReviewRepositoryImpl implements ReviewRepository {
   final SharedPreferences sharedPreferences;
   final UserDatasource userDatasource;
 
-  ReviewRepositoryImpl(this.remoteDataSource, this.sharedPreferences, this.userDatasource);
+  ReviewRepositoryImpl(
+    this.remoteDataSource,
+    this.sharedPreferences,
+    this.userDatasource,
+  );
 
   @override
+
   /// Gets all reviews from the remote server.
   ///
   /// Returns a [Future] that resolves to a [Right] containing a [List] of [ReviewEntity] if the request is successful.
-  /// If the request fails, returns a [Left] containing an [Exception].
-  Future<Either<Exception, List<ReviewEntity>>> getAllReviews() async {
+  /// If the request fails, returns a [Left] containing an [Failure].
+  Future<Either<Failure, List<ReviewEntity>>> getAllReviews() async {
     try {
       final token = sharedPreferences.getString('token');
-      final reviewModels = await remoteDataSource.getAllReviews(token!);
+      if (token == null) return const Left(AuthFailure('No token found'));
+      final reviewModels = await remoteDataSource.getAllReviews(token);
       List<Future<dynamic>> avatarFiles = reviewModels.map((review) async {
         return await userDatasource.getUserAvatar(review.avatarIdWriter, token);
       }).toList();
       List<dynamic> avatars = await Future.wait(avatarFiles);
-      List<ReviewEntity> reviewEntities = reviewModels.asMap().entries.map((entry) {
+      List<ReviewEntity> reviewEntities =
+          reviewModels.asMap().entries.map((entry) {
         return entry.value.toReviewEntity(avatars[entry.key]);
       }).toList();
       return Right(reviewEntities);
     } catch (e) {
-      return Left(Exception('Error al cargar reseñas'));
+      return Left(ServerFailure('Error al cargar reseñas: ${e.toString()}'));
     }
   }
 
   @override
+
   /// Deletes a review from the remote server.
   ///
   /// The [idReview] is the id of the review to delete.
   ///
   /// Returns a [Future] that resolves to a [Right] containing a boolean if the request is successful.
   /// If the status code is 200, returns true indicating the review was deleted.
-  /// Throws an [Exception] if there is an error during the deletion process.
-  Future<Either<Exception, bool>> deleteReview(int idReview) async {
+  /// Returns a [Left] containing a [Failure] if there is an error during the deletion process.
+  Future<Either<Failure, bool>> deleteReview(int idReview) async {
     try {
       final token = sharedPreferences.getString('token');
-      await remoteDataSource.deleteReviews(idReview, token!);
+      if (token == null) return const Left(AuthFailure('No token found'));
+      await remoteDataSource.deleteReviews(idReview, token);
       return const Right(true);
     } catch (e) {
-      return Left(Exception('Error al eliminar el reseña'));
+      return Left(
+        ServerFailure('Error al eliminar la reseña: ${e.toString()}'),
+      );
     }
   }
 
   @override
+
   /// Creates a new review in the remote server.
   ///
   /// The [review] is the [ReviewEntity] to create.
   ///
   /// Returns a [Future] that resolves to a [Right] containing a boolean if the request is successful.
   /// If the status code is 201, returns true indicating the review was created.
-  /// Throws an [Exception] if there is an error during the creation process.
-  Future<Either<Exception, bool>> createReview(ReviewEntity review) async {
+  /// Returns a [Left] containing a [Failure] if there is an error during the creation process.
+  Future<Either<Failure, bool>> createReview(ReviewEntity review) async {
     try {
       final token = sharedPreferences.getString('token');
+      if (token == null) return const Left(AuthFailure('No token found'));
       ReviewModel shopModel = review.toReviewModel();
-      await remoteDataSource.createReviews(shopModel, token!);
-      return Right(true);
+      await remoteDataSource.createReviews(shopModel, token);
+      return const Right(true);
     } catch (e) {
-      return Left(Exception('Error al crear el reseña: ${e.toString()}'));
+      return Left(ServerFailure('Error al crear la reseña: ${e.toString()}'));
     }
   }
-  
 }

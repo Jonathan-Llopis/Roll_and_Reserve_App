@@ -14,6 +14,7 @@ class GameRemoteDataSourceImpl implements GameRemoteDataSource {
   GameRemoteDataSourceImpl(this.client);
 
   @override
+
   /// Gets all the games.
   ///
   /// The [token] is the access token of the user.
@@ -34,7 +35,9 @@ class GameRemoteDataSourceImpl implements GameRemoteDataSource {
       throw Exception('Error al cargar los juegos.');
     }
   }
+
   @override
+
   /// Searches a game by name.
   ///
   /// The [token] is the access token of the user.

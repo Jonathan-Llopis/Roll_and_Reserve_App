@@ -3,10 +3,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:roll_and_reserve/data/models/category_game_model.dart';
 
-
 abstract class CategoryGameRemoteDataSource {
   Future<List<GameCategoryModel>> getAllCategoryGame(String token);
-
 }
 
 class CategoryGameRemoteDataSourceImpl implements CategoryGameRemoteDataSource {

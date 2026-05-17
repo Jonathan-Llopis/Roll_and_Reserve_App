@@ -15,6 +15,7 @@ class ReviewsRemoteDataSourceImpl implements ReviewRemoteDataSource {
   ReviewsRemoteDataSourceImpl(this.client);
 
   @override
+
   /// Fetches all reviews from the remote server.
   ///
   /// The [token] is the access token for authorization.
@@ -41,6 +42,7 @@ class ReviewsRemoteDataSourceImpl implements ReviewRemoteDataSource {
   }
 
   @override
+
   /// Deletes a review from the remote server.
   ///
   /// The [idReviews] is the id of the review to delete.
@@ -64,6 +66,7 @@ class ReviewsRemoteDataSourceImpl implements ReviewRemoteDataSource {
   }
 
   @override
+
   /// Creates a review on the remote server.
   ///
   /// The [review] parameter is a [ReviewModel] object containing the data of the review to be created.

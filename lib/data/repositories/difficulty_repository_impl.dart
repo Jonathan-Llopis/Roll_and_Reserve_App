@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:roll_and_reserve/core/failure.dart';
 import 'package:roll_and_reserve/data/datasources/difficulty_datasource.dart';
 import 'package:roll_and_reserve/domain/entities/difficulty_entity.dart';
 import 'package:roll_and_reserve/domain/repositories/difficulty_repository.dart';
@@ -11,6 +12,7 @@ class DifficultyRepositoryImpl implements DifficultyRepository {
   DifficultyRepositoryImpl(this.remoteDataSource, this.sharedPreferences);
 
   @override
+
   /// Gets all difficulties from the backend.
   ///
   /// Returns a [Future] that resolves to an [Either].
@@ -18,13 +20,15 @@ class DifficultyRepositoryImpl implements DifficultyRepository {
   /// If the request fails, the [Either] is a [Left] containing an [Exception].
   ///
   /// The [Exception] is thrown if there is an error during the retrieval process.
-  Future<Either<Exception, List<DifficultyEntity>>> getAllDifficultys() async {
+  Future<Either<Failure, List<DifficultyEntity>>> getAllDifficultys() async {
     try {
       final token = sharedPreferences.getString('token');
       final difficultyModels = await remoteDataSource.getAllDifficulty(token!);
-      return Right(difficultyModels.map((model) => model.toDifficultyEntity()).toList());
+      return Right(
+        difficultyModels.map((model) => model.toDifficultyEntity()).toList(),
+      );
     } catch (e) {
-      return Left(Exception('Error al cargar dificultades'));
+      return const Left(ServerFailure('Error al cargar dificultades'));
     }
   }
 }

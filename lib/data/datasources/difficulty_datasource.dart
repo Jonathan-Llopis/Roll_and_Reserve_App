@@ -13,6 +13,7 @@ class DifficultyRemoteDataSourceImpl implements DifficultyRemoteDataSource {
   DifficultyRemoteDataSourceImpl(this.client);
 
   @override
+
   /// Gets all the difficulties.
   ///
   /// The [token] is the access token of the user.

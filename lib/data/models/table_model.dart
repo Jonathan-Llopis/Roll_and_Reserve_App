@@ -8,20 +8,25 @@ class TableModel {
   final int idShop;
   final List<int> reserves;
 
-  TableModel(
-      {required this.id,
-      required this.numberTable,
-      required this.stats,
-      required this.reserves,
-      required this.idShop});
+  TableModel({
+    required this.id,
+    required this.numberTable,
+    required this.stats,
+    required this.reserves,
+    required this.idShop,
+  });
 
   factory TableModel.fromJson(Map<String, dynamic> json) {
     return TableModel(
       id: json['id_table'],
       numberTable: json['number_table'],
-      stats: json['stats_of_table']==null ? "" : json['stats_of_table']['description'] ?? "",
+      stats: json['stats_of_table'] == null
+          ? ''
+          : json['stats_of_table']['description'] ?? '',
       reserves: crearListaReservas(json['reserves_of_table'] ?? <String>[]),
-      idShop: json['tables_of_shop'] == null ? 0 : json['tables_of_shop']['id_shop'] ?? 0,
+      idShop: json['tables_of_shop'] == null
+          ? 0
+          : json['tables_of_shop']['id_shop'] ?? 0,
     );
   }
   Map<String, dynamic> toJson() {
@@ -30,16 +35,17 @@ class TableModel {
       'number_table': numberTable,
       'stats_of_table': {'description': stats},
       'reserves_of_table': reserves,
-      'tables_of_shop': idShop
+      'tables_of_shop': idShop,
     };
   }
 
   TableEntity toTableEntity() {
     return TableEntity(
-        id: id,
-        numberTable: numberTable,
-        stats: stats,
-        reserves: reserves,
-        idShop: idShop);
+      id: id,
+      numberTable: numberTable,
+      stats: stats,
+      reserves: reserves,
+      idShop: idShop,
+    );
   }
 }
