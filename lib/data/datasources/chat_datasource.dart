@@ -20,29 +20,22 @@ abstract class ChatRemoteDataSource {
 }
 
 class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
-  ChatRemoteDataSourceImpl() {
-    _initializeDeepSeek();
-  }
+  ChatRemoteDataSourceImpl();
 
-  late final DeepSeek deepSeek;
-  late List<Message> chatHistory;
-  late List<Message> rolePlayHistory;
+  DeepSeek? _deepSeek;
+  List<Message> chatHistory = [];
+  List<Message> rolePlayHistory = [];
 
-  /// Initializes the DeepSeek AI service with the API key found in the environment variables.
-  ///
-  /// If the API key is not found, throws an exception.
-  ///
-  /// Also, initializes the chat history and role play history to empty lists.
-  void _initializeDeepSeek() {
+  DeepSeek _getDeepSeek() {
+    if (_deepSeek != null) return _deepSeek!;
     final apiKey = dotenv.env['DEEP_SEEK_API_KEY'];
     if (apiKey == null || apiKey.isEmpty) {
       throw Exception(
         'DEEP_SEEK_API_KEY is not set in the environment variables.',
       );
     }
-    deepSeek = DeepSeek(apiKey);
-    chatHistory = [];
-    rolePlayHistory = [];
+    _deepSeek = DeepSeek(apiKey);
+    return _deepSeek!;
   }
 
   @override
@@ -62,7 +55,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     chatHistory.add(Message(role: 'user', content: message));
 
     try {
-      final response = await deepSeek.createChat(
+      final response = await _getDeepSeek().createChat(
         messages: chatHistory,
         model: Models.reasoner.name,
         options: {
@@ -111,7 +104,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     chatHistory.add(Message(role: 'user', content: message));
 
     try {
-      final response = await deepSeek.createChat(
+      final response = await _getDeepSeek().createChat(
         messages: chatHistory,
         model: Models.reasoner.name,
         options: {
@@ -159,7 +152,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     rolePlayHistory.add(Message(role: 'user', content: prompt));
 
     try {
-      final response = await deepSeek.createChat(
+      final response = await _getDeepSeek().createChat(
         messages: rolePlayHistory,
         model: Models.chat.name,
         options: {
@@ -214,7 +207,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     rolePlayHistory.add(Message(role: 'user', content: message));
 
     try {
-      final response = await deepSeek.createChat(
+      final response = await _getDeepSeek().createChat(
         messages: rolePlayHistory,
         model: Models.chat.name,
         options: {
@@ -241,12 +234,26 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     }
   }
 
-  final model = GenerativeModel(
-    model: 'gemini-2.0-flash',
-    apiKey: dotenv.env['OPENAI_API_KEY']!,
-  );
+  GenerativeModel? _generativeModel;
+  ChatSession? _geminiChat;
+  ChatSession? _assistantChat;
 
-  late dynamic chat;
+  GenerativeModel get _model {
+    if (_generativeModel != null) return _generativeModel!;
+    final apiKey = dotenv.env['GEMINI_API_KEY'] ??
+        dotenv.env['GOOGLE_API_KEY'] ??
+        dotenv.env['OPENAI_API_KEY'];
+    if (apiKey == null || apiKey.isEmpty) {
+      throw Exception(
+        'GEMINI_API_KEY is not set in the environment variables.',
+      );
+    }
+    _generativeModel = GenerativeModel(
+      model: 'gemini-2.0-flash',
+      apiKey: apiKey,
+    );
+    return _generativeModel!;
+  }
 
   @override
 
@@ -259,11 +266,11 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   /// Throws an exception if the response is empty or if there is an error while
   /// interacting with the AI service.
   Future<String> startChatGemini(String prompt) async {
-    chat = model.startChat();
+    _geminiChat = _model.startChat();
     final content = [Content.text(prompt)];
-    final response = await chat.sendMessage(content.first);
+    final response = await _geminiChat!.sendMessage(content.first);
 
-    if (response.text != '') {
+    if (response.text != null && response.text!.isNotEmpty) {
       return response.text.toString();
     } else {
       throw Exception('Error al iniciar el Chat.');
@@ -291,6 +298,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     String message,
     List<ByteData>? imageBytes,
   ) async {
+    _geminiChat ??= _model.startChat();
     List<Content> content = [Content.text(message)];
 
     if (imageBytes != null && imageBytes.isNotEmpty) {
@@ -302,9 +310,9 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
       ];
     }
 
-    final response = await chat.sendMessage(content.first);
+    final response = await _geminiChat!.sendMessage(content.first);
 
-    if (response.text.isNotEmpty) {
+    if (response.text != null && response.text!.isNotEmpty) {
       return response.text.toString();
     } else {
       throw Exception('Error al enviar el mensaje.');
@@ -322,11 +330,11 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   /// Throws an exception if the response is empty or if there is an error while
   /// interacting with the AI service.
   Future<String> startChatAssistant(String prompt) async {
-    chat = model.startChat();
+    _assistantChat = _model.startChat();
     final content = [Content.text(prompt)];
-    final response = await chat.sendMessage(content.first);
+    final response = await _assistantChat!.sendMessage(content.first);
 
-    if (response.text != '') {
+    if (response.text != null && response.text!.isNotEmpty) {
       return response.text.toString();
     } else {
       throw Exception('Error al iniciar el Chat.');
@@ -352,6 +360,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     String message,
     List<ByteData>? imageBytes,
   ) async {
+    _assistantChat ??= _model.startChat();
     List<Content> content = [Content.text(message)];
 
     if (imageBytes != null && imageBytes.isNotEmpty) {
@@ -363,9 +372,9 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
       ];
     }
 
-    final response = await chat.sendMessage(content.first);
+    final response = await _assistantChat!.sendMessage(content.first);
 
-    if (response.text.isNotEmpty) {
+    if (response.text != null && response.text!.isNotEmpty) {
       return response.text.toString();
     } else {
       throw Exception('Error al enviar el mensaje.');
