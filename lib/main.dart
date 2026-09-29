@@ -18,6 +18,7 @@ import 'package:roll_and_reserve/l10n/app_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:roll_and_reserve/presentation/functions/notification_service.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -116,24 +117,31 @@ class MyAppState extends State<MyApp> {
       ],
       child: BlocBuilder<LanguageBloc, LanguageState>(
         builder: (context, state) {
-          return MaterialApp.router(
-            routerConfig: router,
-            debugShowCheckedModeBanner: false,
-            title: 'Roll and Reserve',
-            theme: ThemeData(primarySwatch: Colors.blue),
-            localizationsDelegates: const [
-              AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: const [
-              Locale('en'),
-              Locale('es'),
-              Locale('fr'),
-              Locale('ca'),
-            ],
-            locale: state.locale,
+          return ScreenUtilInit(
+            designSize: const Size(375, 812),
+            minTextAdapt: true,
+            splitScreenMode: true,
+            builder: (context, child) {
+              return MaterialApp.router(
+                routerConfig: router,
+                debugShowCheckedModeBanner: false,
+                title: 'Roll and Reserve',
+                theme: ThemeData(primarySwatch: Colors.blue),
+                localizationsDelegates: const [
+                  AppLocalizations.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                supportedLocales: const [
+                  Locale('en'),
+                  Locale('es'),
+                  Locale('fr'),
+                  Locale('ca'),
+                ],
+                locale: state.locale,
+              );
+            },
           );
         },
       ),
