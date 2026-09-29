@@ -1,22 +1,5 @@
-import 'package:flutter/material.dart';
-
-/// Returns a prompt for the AI assistant for a given locale.
-///
-/// The AI assistant prompt is a structured text used to guide the AI's
-/// conversation with the user. It provides instructions for the AI
-/// on how to analyze the user's request and generate a response.
-///
-/// The prompt is localized for the following languages:
-///
-/// * Spanish (es)
-/// * English (en)
-/// * French (fr)
-/// * Catalan (ca)
-///
-/// If no matching locale is found, a default prompt is returned.
-String getAssistantPrompt(BuildContext context) {
-  Locale locale = Localizations.localeOf(context);
-  switch (locale.languageCode) {
+String getAssistantPrompt([String languageCode = 'es']) {
+  switch (languageCode) {
     case 'es':
       return '''
     Eres un experto asistente de estrategia para juegos. Cuando el usuario envíe una imagen de su partida actual, analiza detalladamente: 

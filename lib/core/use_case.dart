@@ -1,7 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:flutter/material.dart';
-
 abstract class UseCase<T, Params> {
   Future<T> call(Params params);
 }
@@ -89,28 +87,22 @@ class SendMessageGeminiParams {
 }
 
 class StartChatParams {
-  final BuildContext context;
   final String message;
-  StartChatParams(this.context, {required this.message});
-
-  static void go(String s) {}
+  StartChatParams({required this.message});
 }
 
 class StartRolPlayParams {
-  final BuildContext context;
   final String character;
   final String theme;
-  StartRolPlayParams(
-    this.context, {
+  final String languageCode;
+  StartRolPlayParams({
     required this.character,
     required this.theme,
+    this.languageCode = 'es',
   });
-
-  static void go(String s) {}
 }
 
-class Context {
-  final BuildContext context;
-  Context(this.context);
-  static void go(String s) {}
+class ChatPromptParams {
+  final String languageCode;
+  ChatPromptParams({this.languageCode = 'es'});
 }

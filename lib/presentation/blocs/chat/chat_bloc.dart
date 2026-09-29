@@ -69,7 +69,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           ),
         );
         final responseIA = await startChatUseCase(
-          StartChatParams(event.context, message: event.message),
+          StartChatParams(message: event.message),
         );
         final List<Map<String, String>> finalMessages =
             List.from(state.messages)..add({'role': 'IA', 'text': responseIA});
@@ -188,9 +188,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       try {
         final responseIA = await startChatRolUseCase(
           StartRolPlayParams(
-            event.context,
             character: event.character,
             theme: event.theme,
+            languageCode: event.effectiveLanguageCode,
           ),
         );
         final jsonStart = responseIA.indexOf('```json');
@@ -329,7 +329,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         ),
       );
       try {
-        final responseIA = await startChatGeminiUseCase(Context(event.context));
+        final responseIA = await startChatGeminiUseCase(
+          ChatPromptParams(languageCode: event.effectiveLanguageCode),
+        );
         final List<Map<String, String>> messagesUpdate = [
           {'role': 'IA', 'text': responseIA},
         ];
@@ -449,8 +451,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         ),
       );
       try {
-        final responseIA =
-            await startChatAssistantUsecases(Context(event.context));
+        final responseIA = await startChatAssistantUsecases(
+          ChatPromptParams(languageCode: event.effectiveLanguageCode),
+        );
         final List<Map<String, String>> messagesUpdate = [
           {'role': 'IA', 'text': responseIA},
         ];

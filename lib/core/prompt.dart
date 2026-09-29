@@ -1,22 +1,5 @@
-import 'package:flutter/material.dart';
-
-/// Returns a Gemini prompt for a given locale.
-///
-/// The Gemini prompt is a structured text used to guide the AI's
-/// conversation with the user. It provides instructions for the AI
-/// on how to analyze the user's request and generate a response.
-///
-/// The prompt is localized for the following languages:
-///
-/// * Spanish (es)
-/// * English (en)
-/// * French (fr)
-/// * Catalan (ca)
-///
-/// If no matching locale is found, a default prompt is returned.
-String getGeminiPrompt(BuildContext context) {
-  Locale locale = Localizations.localeOf(context);
-  switch (locale.languageCode) {
+String getGeminiPrompt([String languageCode = 'es']) {
+  switch (languageCode) {
     case 'es':
       return '''
     Eres un experto en identificación de juegos de mesa mediante análisis visual. Tu función es analizar imágenes proporcionadas por usuarios para determinar a qué juego de mesa corresponden, basándote en componentes, arte gráfico, diseños de tablero y elementos característicos.
