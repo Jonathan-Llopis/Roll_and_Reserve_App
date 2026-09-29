@@ -66,12 +66,16 @@ class NotificationService {
       if (token != null) {
         final sharedPreferences = await SharedPreferences.getInstance();
         final id = sharedPreferences.getString('id');
-        final updateToken =
-            await di.sl<UserRespository>().updateTokenNotification(id!, token);
-        updateToken.fold(
-          (failure) => debugPrint('Error al actualizar el token: $failure'),
-          (success) => debugPrint('Token de FCM: $token'),
-        );
+        if (id != null && id.isNotEmpty) {
+          final updateToken =
+              await di.sl<UserRespository>().updateTokenNotification(id, token);
+          updateToken.fold(
+            (failure) => debugPrint('Error al actualizar el token: $failure'),
+            (success) => debugPrint('Token de FCM: $token'),
+          );
+        } else {
+          debugPrint('Token de FCM: $token (usuario aún no autenticado)');
+        }
       } else {
         debugPrint('No se pudo obtener el token.');
       }
