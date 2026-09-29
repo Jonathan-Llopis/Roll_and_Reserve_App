@@ -138,8 +138,8 @@ class ShopRepositoryImpl implements ShopsRepository {
       final token = sharedPreferences.getString('token');
       if (token == null) return const Left(AuthFailure('No token found'));
       String logoId =
-          await remoteDataSource.updateLogo(shops.toShopModel(null), token);
-      ShopModel shopModel = shops.toShopModel(logoId);
+          await remoteDataSource.updateLogo(ShopModel.fromEntity(shops), token);
+      ShopModel shopModel = ShopModel.fromEntity(shops, logoId);
       await remoteDataSource.updateShops(shopModel, token);
       return const Right(true);
     } catch (e) {
@@ -166,7 +166,7 @@ class ShopRepositoryImpl implements ShopsRepository {
       String logoId;
       final token = sharedPreferences.getString('token');
       if (token == null) return const Left(AuthFailure('No token found'));
-      ShopModel shopModel = shops.toShopModel(null);
+      ShopModel shopModel = ShopModel.fromEntity(shops);
       final shopModelCreated =
           await remoteDataSource.createShops(shopModel, token);
       ShopModel avatarShop =

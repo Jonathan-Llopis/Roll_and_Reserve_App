@@ -1,5 +1,3 @@
-import 'package:roll_and_reserve/data/models/user_model.dart';
-
 class UserEntity {
   final String id;
   final String email;
@@ -22,18 +20,4 @@ class UserEntity {
     this.reserveConfirmation,
     required this.notifications,
   });
-
-  UserModel toUserModel(String? avatarIdUpdate) {
-    return UserModel(
-      id: id,
-      email: email,
-      name: name,
-      username: username,
-      role: role,
-      avatarId: avatarIdUpdate ?? '',
-      avatar: avatar,
-      averageRaiting: averageRaiting,
-      notifications: notifications,
-    );
-  }
 }

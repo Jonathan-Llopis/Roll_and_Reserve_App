@@ -64,4 +64,18 @@ class ReviewModel {
       userNameWriter: userNameWriter,
     );
   }
+
+  factory ReviewModel.fromEntity(ReviewEntity entity) {
+    return ReviewModel(
+      id: entity.id,
+      raiting: entity.raiting,
+      review: entity.review,
+      writerId: entity.writerId,
+      reviewedId: entity.reviewedId,
+      shopReview: entity.shopReview == 0 ? null : entity.shopReview,
+      avatarWriter: entity.avatarWriter,
+      avatarIdWriter: entity.avatarIdWriter,
+      userNameWriter: entity.userNameWriter,
+    );
+  }
 }

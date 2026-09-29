@@ -1,5 +1,3 @@
-import 'package:roll_and_reserve/data/models/review_model.dart';
-
 class ReviewEntity {
   final int id;
   final int raiting;
@@ -22,18 +20,4 @@ class ReviewEntity {
     required this.avatarIdWriter,
     required this.avatarWriter,
   });
-
-  ReviewModel toReviewModel() {
-    return ReviewModel(
-      id: id,
-      raiting: raiting,
-      review: review,
-      writerId: writerId,
-      reviewedId: reviewedId,
-      shopReview: shopReview == 0 ? null : shopReview,
-      avatarWriter: avatarWriter,
-      avatarIdWriter: '',
-      userNameWriter: userNameWriter,
-    );
-  }
 }

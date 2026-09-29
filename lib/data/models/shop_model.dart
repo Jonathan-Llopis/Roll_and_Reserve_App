@@ -92,6 +92,25 @@ class ShopModel {
     );
   }
 
+  factory ShopModel.fromEntity(ShopEntity entity, [String? logoId]) {
+    return ShopModel(
+      id: entity.id,
+      name: entity.name,
+      address: entity.address,
+      logoId: logoId ??
+          (entity.logoId.isNotEmpty
+              ? entity.logoId
+              : '677e565be78534b20cb542b0'),
+      logo: entity.logo ?? File(''),
+      averageRaiting: entity.averageRaiting,
+      ownerId: entity.ownerId,
+      tablesShop: entity.tablesShop,
+      gamesShop: entity.gamesShop,
+      latitude: entity.latitude,
+      longitude: entity.longitude,
+    );
+  }
+
   ShopModel addInfo(String newLogoId, int idShop) {
     return ShopModel(
       id: idShop,

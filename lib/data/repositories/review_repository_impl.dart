@@ -79,7 +79,7 @@ class ReviewRepositoryImpl implements ReviewRepository {
     try {
       final token = sharedPreferences.getString('token');
       if (token == null) return const Left(AuthFailure('No token found'));
-      ReviewModel shopModel = review.toReviewModel();
+      ReviewModel shopModel = ReviewModel.fromEntity(review);
       await remoteDataSource.createReviews(shopModel, token);
       return const Right(true);
     } catch (e) {

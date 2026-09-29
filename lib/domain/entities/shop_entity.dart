@@ -1,7 +1,3 @@
-import 'dart:typed_data';
-
-import 'package:roll_and_reserve/data/models/shop_model.dart';
-
 class ShopEntity {
   final int id;
   final String address;
@@ -28,20 +24,4 @@ class ShopEntity {
     required this.latitude,
     required this.longitude,
   });
-
-  ShopModel toShopModel(String? logoId) {
-    return ShopModel(
-      id: id,
-      name: name,
-      address: address,
-      logo: logo ?? Uint8List(0),
-      ownerId: ownerId,
-      logoId: logoId ?? '677e565be78534b20cb542b0',
-      averageRaiting: averageRaiting,
-      tablesShop: tablesShop,
-      gamesShop: gamesShop,
-      latitude: latitude,
-      longitude: longitude,
-    );
-  }
 }

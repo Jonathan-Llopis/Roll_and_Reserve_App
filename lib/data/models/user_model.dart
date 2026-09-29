@@ -110,4 +110,19 @@ class UserModel {
       notifications: notifications,
     );
   }
+
+  factory UserModel.fromEntity(UserEntity entity, [String? avatarId]) {
+    return UserModel(
+      id: entity.id,
+      email: entity.email,
+      name: entity.name,
+      username: entity.username,
+      role: entity.role,
+      avatarId: avatarId ?? '',
+      avatar: entity.avatar,
+      averageRaiting: entity.averageRaiting,
+      notifications: entity.notifications,
+      reserveConfirmation: entity.reserveConfirmation,
+    );
+  }
 }

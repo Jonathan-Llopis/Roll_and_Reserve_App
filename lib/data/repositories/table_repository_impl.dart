@@ -66,7 +66,7 @@ class TableRepositoryImpl implements TableRepository {
   Future<Either<Failure, bool>> updateTable(TableEntity table) async {
     try {
       final token = sharedPreferences.getString('token');
-      TableModel shopModel = table.toTableModel();
+      TableModel shopModel = TableModel.fromEntity(table);
       await remoteDataSource.updateTables(shopModel, token!);
       return const Right(true);
     } catch (e) {
@@ -89,7 +89,7 @@ class TableRepositoryImpl implements TableRepository {
   Future<Either<Failure, bool>> createTable(TableEntity table) async {
     try {
       final token = sharedPreferences.getString('token');
-      TableModel shopModel = table.toTableModel();
+      TableModel shopModel = TableModel.fromEntity(table);
       await remoteDataSource.createTables(shopModel, token!);
       return const Right(true);
     } catch (e) {

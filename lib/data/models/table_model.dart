@@ -48,4 +48,14 @@ class TableModel {
       idShop: idShop,
     );
   }
+
+  factory TableModel.fromEntity(TableEntity entity) {
+    return TableModel(
+      id: entity.id,
+      numberTable: entity.numberTable,
+      stats: entity.stats,
+      reserves: entity.reserves,
+      idShop: entity.idShop,
+    );
+  }
 }

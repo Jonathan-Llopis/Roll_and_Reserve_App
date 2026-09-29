@@ -76,7 +76,7 @@ class ReserveRepositoryImpl implements ReserveRepository {
   Future<Either<Failure, bool>> updateReserve(ReserveEntity reserve) async {
     try {
       final token = sharedPreferences.getString('token');
-      ReserveModel shopModel = reserve.toReserveModel();
+      ReserveModel shopModel = ReserveModel.fromEntity(reserve);
       await remoteDataSource.updateReserves(shopModel, token!);
       return const Right(true);
     } catch (e) {
@@ -98,7 +98,7 @@ class ReserveRepositoryImpl implements ReserveRepository {
   Future<Either<Failure, int>> createReserve(ReserveEntity reserve) async {
     try {
       final token = sharedPreferences.getString('token');
-      ReserveModel shopModel = reserve.toReserveModel();
+      ReserveModel shopModel = ReserveModel.fromEntity(reserve);
       int idReserve = await remoteDataSource.createReserves(
         shopModel,
         token!,
@@ -304,7 +304,7 @@ class ReserveRepositoryImpl implements ReserveRepository {
       }
       List<int> reserveIds = [];
       for (var reserve in reserves) {
-        ReserveModel reserveModel = reserve.toReserveModel();
+        ReserveModel reserveModel = ReserveModel.fromEntity(reserve);
         int idReserve = await remoteDataSource.createReservesEvent(
           reserveModel,
           token,
