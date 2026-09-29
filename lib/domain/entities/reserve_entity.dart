@@ -1,4 +1,3 @@
-import 'package:roll_and_reserve/data/models/reserve_model.dart';
 import 'package:roll_and_reserve/domain/entities/user_entity.dart';
 
 class ReserveEntity {
@@ -37,24 +36,4 @@ class ReserveEntity {
     required this.isEvent,
     required this.userReserveId,
   });
-
-  ReserveModel toReserveModel() {
-    return ReserveModel(
-      id: id,
-      freePlaces: freePlaces,
-      dayDate: dayDate,
-      horaInicio: horaInicio,
-      horaFin: horaFin,
-      description: description,
-      requiredMaterial: requiredMaterial,
-      difficultyId: difficultyId,
-      gameId: gameId,
-      gameName: gameName,
-      tableId: tableId,
-      usersInTables: usersInTables,
-      shopId: shopId,
-      isEvent: isEvent,
-      userReserveId: userReserveId,
-    );
-  }
 }

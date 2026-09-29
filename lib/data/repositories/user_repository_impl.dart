@@ -329,10 +329,10 @@ class UserRespositoryImpl implements UserRespository {
       );
       if (user.avatar != null) {
         String avatarId =
-            await userDatasource.updateAvatar(user.toUserModel(null), token!);
-        userModel = user.toUserModel(avatarId);
+            await userDatasource.updateAvatar(UserModel.fromEntity(user), token!);
+        userModel = UserModel.fromEntity(user, avatarId);
       } else {
-        userModel = user.toUserModel(null);
+        userModel = UserModel.fromEntity(user);
       }
       await userDatasource.updateUserInfo(userModel, token!);
       return const Right(true);

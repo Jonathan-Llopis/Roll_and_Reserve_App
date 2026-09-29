@@ -213,4 +213,25 @@ class ReserveModel {
       userReserveId: userReserveId,
     );
   }
+
+  factory ReserveModel.fromEntity(ReserveEntity entity) {
+    return ReserveModel(
+      id: entity.id,
+      freePlaces: entity.freePlaces,
+      dayDate: entity.dayDate,
+      horaInicio: entity.horaInicio,
+      horaFin: entity.horaFin,
+      description: entity.description,
+      requiredMaterial: entity.requiredMaterial,
+      difficultyId: entity.difficultyId,
+      gameId: entity.gameId,
+      gameName: entity.gameName,
+      tableId: entity.tableId,
+      usersInTables: entity.usersInTables,
+      users: entity.users?.map((u) => UserModel.fromEntity(u)).toList(),
+      shopId: entity.shopId,
+      isEvent: entity.isEvent,
+      userReserveId: entity.userReserveId,
+    );
+  }
 }
