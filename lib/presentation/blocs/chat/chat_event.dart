@@ -9,16 +9,29 @@ sealed class ChatEvent extends Equatable {
 
 final class OnChatStart extends ChatEvent {
   const OnChatStart({
-    required this.context,
     required this.message,
+    this.context,
+    this.languageCode,
   });
 
-  final BuildContext context;
+  final BuildContext? context;
   final String message;
+  final String? languageCode;
+
+  String get effectiveLanguageCode {
+    if (languageCode != null) return languageCode!;
+    if (context != null) {
+      try {
+        return Localizations.localeOf(context!).languageCode;
+      } catch (_) {}
+    }
+    return 'es';
+  }
 
   @override
   List<Object?> get props => [
-        context,
+        message,
+        languageCode,
       ];
 }
 
@@ -40,16 +53,28 @@ final class CleanChat extends ChatEvent {
 final class OnRolPlayStart extends ChatEvent {
   final String theme;
   final String character;
+  final BuildContext? context;
+  final String? languageCode;
+
   const OnRolPlayStart({
-    required this.context,
     required this.character,
     required this.theme,
+    this.context,
+    this.languageCode,
   });
 
-  final BuildContext context;
+  String get effectiveLanguageCode {
+    if (languageCode != null) return languageCode!;
+    if (context != null) {
+      try {
+        return Localizations.localeOf(context!).languageCode;
+      } catch (_) {}
+    }
+    return 'es';
+  }
 
   @override
-  List<Object?> get props => [context, character, theme];
+  List<Object?> get props => [character, theme, languageCode];
 }
 
 final class OnRolPlaySendMessage extends ChatEvent {
@@ -71,13 +96,25 @@ final class CleanRolPlay extends ChatEvent {
 
 final class OnChatGeminiStart extends ChatEvent {
   const OnChatGeminiStart({
-    required this.context,
+    this.context,
+    this.languageCode,
   });
 
-  final BuildContext context;
+  final BuildContext? context;
+  final String? languageCode;
+
+  String get effectiveLanguageCode {
+    if (languageCode != null) return languageCode!;
+    if (context != null) {
+      try {
+        return Localizations.localeOf(context!).languageCode;
+      } catch (_) {}
+    }
+    return 'es';
+  }
 
   @override
-  List<Object?> get props => [context];
+  List<Object?> get props => [languageCode];
 }
 
 final class OnChatGeminiSendMessage extends ChatEvent {
@@ -101,13 +138,25 @@ final class CleanChatGemini extends ChatEvent {
 
 final class OnChatAssistantStart extends ChatEvent {
   const OnChatAssistantStart({
-    required this.context,
+    this.context,
+    this.languageCode,
   });
 
-  final BuildContext context;
+  final BuildContext? context;
+  final String? languageCode;
+
+  String get effectiveLanguageCode {
+    if (languageCode != null) return languageCode!;
+    if (context != null) {
+      try {
+        return Localizations.localeOf(context!).languageCode;
+      } catch (_) {}
+    }
+    return 'es';
+  }
 
   @override
-  List<Object?> get props => [context];
+  List<Object?> get props => [languageCode];
 }
 
 final class OnChatAssistantSendMessage extends ChatEvent {
