@@ -37,7 +37,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  configureDependencies();
+  await configureDependencies();
   await NotificationService().initialize();
   runApp(const MyApp());
 }
@@ -96,7 +96,7 @@ class MyAppState extends State<MyApp> {
           create: (_) => sl<LoginBloc>(),
         ),
         BlocProvider(
-          create: (_) => sl<LanguageBloc>(),
+          create: (_) => sl<LanguageBloc>()..add(GetLocaleEvent()),
         ),
         BlocProvider(
           create: (_) => sl<ShopBloc>(),
@@ -116,7 +116,6 @@ class MyAppState extends State<MyApp> {
       ],
       child: BlocBuilder<LanguageBloc, LanguageState>(
         builder: (context, state) {
-          context.read<LanguageBloc>().add(GetLocaleEvent());
           return MaterialApp.router(
             routerConfig: router,
             debugShowCheckedModeBanner: false,

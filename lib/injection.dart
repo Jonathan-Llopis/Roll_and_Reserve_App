@@ -105,7 +105,7 @@ final GetIt sl = GetIt.instance;
 ///
 /// This function is called when the application starts.
 ///
-void configureDependencies() async {
+Future<void> configureDependencies() async {
   // BLocs
   sl.registerFactory<LoginBloc>(
     () => LoginBloc(
