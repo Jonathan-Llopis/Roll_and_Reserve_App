@@ -48,9 +48,17 @@
 		<key>UIStatusBarHidden</key>
 		<true/>
 		<key>NSLocationWhenInUseUsageDescription</key>
-		<string>We need your location to provide better services.</string>
+		<string>We need your location to show board game stores and tables near you.</string>
 		<key>NSLocationAlwaysUsageDescription</key>
-		<string>We need your location to provide better services.</string>
+		<string>We need your location to show board game stores and tables near you.</string>
+		<key>NSCameraUsageDescription</key>
+		<string>We need access to the camera to scan table QR codes and upload images.</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>We need access to your photo library to select shop logos and user avatars.</string>
+		<key>NSMicrophoneUsageDescription</key>
+		<string>We need access to your microphone for voice interaction with the AI assistant.</string>
+		<key>NSSpeechRecognitionUsageDescription</key>
+		<string>We use speech recognition to convert your voice to text in the chat.</string>
 		<key>CFBundleURLTypes</key>
 		<array>
 			<dict>
