@@ -10,18 +10,20 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
   LanguageBloc(this.sharedPreferences)
       : super(LanguageState(const Locale('es'))) {
     on<ChangeLanguageEvent>((event, emit) async {
-      await sharedPreferences.setString(
-        'locale',
-        '${event.locale.languageCode}_${event.locale.countryCode}',
-      );
+      final code = event.locale.countryCode != null
+          ? '${event.locale.languageCode}_${event.locale.countryCode}'
+          : event.locale.languageCode;
+      await sharedPreferences.setString('locale', code);
       emit(LanguageState(event.locale));
     });
 
     on<GetLocaleEvent>((event, emit) async {
       final localeString = sharedPreferences.getString('locale');
-      if (localeString != null) {
+      if (localeString != null && localeString.isNotEmpty) {
         final parts = localeString.split('_');
-        emit(LanguageState(Locale(parts[0], parts[1])));
+        final countryCode =
+            parts.length > 1 && parts[1] != 'null' ? parts[1] : null;
+        emit(LanguageState(Locale(parts[0], countryCode)));
       } else {
         emit(LanguageState(const Locale('es')));
       }
