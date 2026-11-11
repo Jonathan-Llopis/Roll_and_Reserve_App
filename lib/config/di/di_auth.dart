@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
-import 'package:http/http.dart' as http;
 import 'package:roll_and_reserve/data/datasources/firebase_auth_datasource.dart';
 import 'package:roll_and_reserve/data/datasources/firestore_users_datasource.dart';
 import 'package:roll_and_reserve/data/datasources/user_datasource.dart';

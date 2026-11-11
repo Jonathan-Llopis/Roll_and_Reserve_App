@@ -215,7 +215,7 @@ class _DialogCreateUpdateTableState extends State<DialogCreateUpdateTable> {
         id: widget.table?.id ?? 0,
         numberTable: int.parse(_tableNameController.text),
         stats: '',
-        reserves: [],
+        reserves: const [],
         idShop: widget.currentShop.id,
       );
 
