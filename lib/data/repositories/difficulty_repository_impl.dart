@@ -23,12 +23,15 @@ class DifficultyRepositoryImpl implements DifficultyRepository {
   Future<Either<Failure, List<DifficultyEntity>>> getAllDifficultys() async {
     try {
       final token = sharedPreferences.getString('token');
-      final difficultyModels = await remoteDataSource.getAllDifficulty(token!);
+      if (token == null || token.trim().isEmpty) {
+        return const Left(AuthFailure('No hay una sesión activa de usuario'));
+      }
+      final difficultyModels = await remoteDataSource.getAllDifficulty(token);
       return Right(
         difficultyModels.map((model) => model.toDifficultyEntity()).toList(),
       );
     } catch (e) {
-      return const Left(ServerFailure('Error al cargar dificultades'));
+      return Left(ServerFailure('Error al cargar dificultades: ${e.toString()}'));
     }
   }
 }

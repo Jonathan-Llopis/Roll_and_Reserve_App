@@ -22,6 +22,18 @@ class UserRespositoryImpl implements UserRespository {
     this.firebaseUserDataSource,
     this.userDatasource,
   );
+
+  String? _getToken() {
+    final token = sharedPreferences.getString('token');
+    if (token == null || token.trim().isEmpty) return null;
+    return token;
+  }
+
+  String? _getId() {
+    final id = sharedPreferences.getString('id');
+    if (id == null || id.trim().isEmpty) return null;
+    return id;
+  }
   @override
 
   /// Signs in a user with Google authentication.
@@ -102,9 +114,12 @@ class UserRespositoryImpl implements UserRespository {
       await sharedPreferences.setString('token', tokenGenerado);
       await sharedPreferences.setString('email', user.email);
       await sharedPreferences.setString('id', user.id);
-      final token = sharedPreferences.getString('token');
+      final token = _getToken();
+      if (token == null) {
+        return const Left(AuthFailure('No hay una sesión activa de usuario'));
+      }
       UserModel usuerDataBase =
-          await userDatasource.getValidUser(user.id, token!);
+          await userDatasource.getValidUser(user.id, token);
       dynamic avatarFile =
           await userDatasource.getUserAvatar(usuerDataBase.avatarId, token);
 
@@ -182,22 +197,20 @@ class UserRespositoryImpl implements UserRespository {
 
   Future<Either<Failure, UserEntity>> isLoggedIn() async {
     try {
-      final id = sharedPreferences.getString('id');
-      if (id == null) {
-        return const Left(AuthFailure());
-      } else {
-        final token = sharedPreferences.getString('token');
-        final id = sharedPreferences.getString('id');
-        UserModel usuerDataBase =
-            await userDatasource.getValidUser(id!, token!);
-        usuerDataBase.notifications =
-            await firebaseUserDataSource.getUserNotifications(id);
-        dynamic avatarFile =
-            await userDatasource.getUserAvatar(usuerDataBase.avatarId, token);
-        return Right(usuerDataBase.toUserEntity(avatarFile, null));
+      final id = _getId();
+      final token = _getToken();
+      if (id == null || token == null) {
+        return const Left(AuthFailure('No hay una sesión activa de usuario'));
       }
+      UserModel usuerDataBase =
+          await userDatasource.getValidUser(id, token);
+      usuerDataBase.notifications =
+          await firebaseUserDataSource.getUserNotifications(id);
+      dynamic avatarFile =
+          await userDatasource.getUserAvatar(usuerDataBase.avatarId, token);
+      return Right(usuerDataBase.toUserEntity(avatarFile, null));
     } catch (e) {
-      return const Left(AuthFailure());
+      return Left(AuthFailure('Error al verificar sesión: $e'));
     }
   }
 
@@ -210,14 +223,17 @@ class UserRespositoryImpl implements UserRespository {
   /// Returns a [Future] that resolves to an [Either] containing a [UserEntity] with the user's data, or an [AuthFailure] if there is an error during the process.
   Future<Either<Failure, UserEntity>> getUserInfo(String idUser) async {
     try {
-      final token = sharedPreferences.getString('token');
+      final token = _getToken();
+      if (token == null) {
+        return const Left(AuthFailure('No hay una sesión activa de usuario'));
+      }
       UserModel usuerDataBase =
-          await userDatasource.getValidUser(idUser, token!);
+          await userDatasource.getValidUser(idUser, token);
       dynamic avatarFile =
           await userDatasource.getUserAvatar(usuerDataBase.avatarId, token);
       return Right(usuerDataBase.toUserEntity(avatarFile, null));
     } catch (e) {
-      return const Left(AuthFailure());
+      return Left(AuthFailure('Error al obtener usuario: $e'));
     }
   }
 
@@ -231,9 +247,11 @@ class UserRespositoryImpl implements UserRespository {
   /// process.
   Future<Either<Failure, void>> logout() async {
     try {
-      final token = sharedPreferences.getString('token');
-      final id = sharedPreferences.getString('id');
-      await userDatasource.updateTokenNotification(id!, ' ', token!);
+      final token = _getToken();
+      final id = _getId();
+      if (token != null && id != null) {
+        await userDatasource.updateTokenNotification(id, ' ', token);
+      }
       await dataSource.signOut();
       await sharedPreferences.remove('id');
       await sharedPreferences.remove('email');
@@ -241,7 +259,7 @@ class UserRespositoryImpl implements UserRespository {
       await sharedPreferences.remove('isFirstTime');
       return const Right(null);
     } catch (e) {
-      return const Left(AuthFailure());
+      return Left(AuthFailure('Error durante el cierre de sesión: $e'));
     }
   }
 
@@ -320,7 +338,10 @@ class UserRespositoryImpl implements UserRespository {
   Future<Either<Failure, bool>> updateUserInfo(UserEntity user) async {
     try {
       late UserModel userModel;
-      final token = sharedPreferences.getString('token');
+      final token = _getToken();
+      if (token == null) {
+        return const Left(AuthFailure('No hay una sesión activa de usuario'));
+      }
       await firebaseUserDataSource.updateUserInfo(
         user.name,
         user.id,
@@ -329,15 +350,15 @@ class UserRespositoryImpl implements UserRespository {
       );
       if (user.avatar != null) {
         String avatarId =
-            await userDatasource.updateAvatar(UserModel.fromEntity(user), token!);
+            await userDatasource.updateAvatar(UserModel.fromEntity(user), token);
         userModel = UserModel.fromEntity(user, avatarId);
       } else {
         userModel = UserModel.fromEntity(user);
       }
-      await userDatasource.updateUserInfo(userModel, token!);
+      await userDatasource.updateUserInfo(userModel, token);
       return const Right(true);
     } catch (e) {
-      return const Left(AuthFailure());
+      return Left(AuthFailure('Error al actualizar datos: $e'));
     }
   }
 
@@ -359,17 +380,21 @@ class UserRespositoryImpl implements UserRespository {
     String oldPassword,
   ) async {
     try {
-      final token = sharedPreferences.getString('token');
+      final token = _getToken();
+      final id = _getId();
+      if (token == null || id == null) {
+        return const Left(AuthFailure('No hay una sesión activa de usuario'));
+      }
       await dataSource.updatePassword(password);
       await userDatasource.updatePassword(
-        sharedPreferences.getString('id')!,
+        id,
         oldPassword,
         password,
-        token!,
+        token,
       );
       return const Right(true);
     } catch (e) {
-      return const Left(AuthFailure());
+      return Left(AuthFailure('Error al actualizar contraseña: $e'));
     }
   }
 
@@ -388,10 +413,13 @@ class UserRespositoryImpl implements UserRespository {
   Future<Either<Failure, bool>> validatePassword(String password) async {
     try {
       final email = sharedPreferences.getString('email');
-      bool isValid = await dataSource.validatePassword(password, email!);
+      if (email == null) {
+        return const Left(AuthFailure('No hay email almacenado en sesión'));
+      }
+      bool isValid = await dataSource.validatePassword(password, email);
       return Right(isValid);
     } catch (e) {
-      return const Left(AuthFailure());
+      return Left(AuthFailure('Error al validar contraseña: $e'));
     }
   }
 
@@ -407,8 +435,11 @@ class UserRespositoryImpl implements UserRespository {
   /// If the request fails, returns a [Left] containing an [AuthFailure].
   Future<Either<Failure, List<UserEntity>>> getUsersInfo() async {
     try {
-      final token = sharedPreferences.getString('token');
-      List<UserModel> usersDataBase = await userDatasource.getUsers(token!);
+      final token = _getToken();
+      if (token == null) {
+        return const Left(AuthFailure('No hay una sesión activa de usuario'));
+      }
+      List<UserModel> usersDataBase = await userDatasource.getUsers(token);
       List<Future<dynamic>> avatarFiles = usersDataBase.map((user) async {
         return await userDatasource.getUserAvatar(user.avatarId, token);
       }).toList();
@@ -418,7 +449,7 @@ class UserRespositoryImpl implements UserRespository {
       }).toList();
       return Right(usersEntity);
     } catch (e) {
-      return const Left(AuthFailure());
+      return Left(ServerFailure('Error al obtener lista de usuarios: $e'));
     }
   }
 
@@ -441,19 +472,19 @@ class UserRespositoryImpl implements UserRespository {
     String tokenNotification,
   ) async {
     try {
-      final token = sharedPreferences.getString('token');
-      final id = sharedPreferences.getString('id');
-      if (id == null) {
-        return const Left(AuthFailure());
+      final token = _getToken();
+      final currentId = _getId();
+      if (token == null || currentId == null) {
+        return const Left(AuthFailure('No hay una sesión activa'));
       }
       await userDatasource.updateTokenNotification(
-        id,
+        currentId,
         tokenNotification,
-        token!,
+        token,
       );
       return const Right(true);
     } catch (e) {
-      return const Left(AuthFailure());
+      return Left(ServerFailure('Error al actualizar token de notificación: $e'));
     }
   }
 

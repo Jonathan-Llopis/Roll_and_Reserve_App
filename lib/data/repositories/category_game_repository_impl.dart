@@ -24,15 +24,18 @@ class CategoryGameRepositoryImpl implements CategoryGameRepository {
       getAllCategoryGames() async {
     try {
       final token = sharedPreferences.getString('token');
+      if (token == null || token.trim().isEmpty) {
+        return const Left(AuthFailure('No hay una sesión activa de usuario'));
+      }
       final categoryGameModels =
-          await remoteDataSource.getAllCategoryGame(token!);
+          await remoteDataSource.getAllCategoryGame(token);
       return Right(
         categoryGameModels
             .map((model) => model.toGameCategoryEntity())
             .toList(),
       );
     } catch (e) {
-      return const Left(ServerFailure('Error al cargar categorias de juego'));
+      return Left(ServerFailure('Error al cargar categorias de juego: ${e.toString()}'));
     }
   }
 }
