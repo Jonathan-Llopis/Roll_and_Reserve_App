@@ -24,6 +24,16 @@ sealed class LoginState extends Equatable {
   String? get errorMessage =>
       this is LoginFailure ? (this as LoginFailure).message : null;
 
+  LoginState copyWith({
+    String? email,
+    bool? isEmailUsed,
+    bool? isNameUsed,
+    bool? validatePassword,
+    String? id,
+    UserEntity? user,
+    List<UserEntity>? users,
+  });
+
   @override
   List<Object?> get props => [
         email,
@@ -38,6 +48,27 @@ sealed class LoginState extends Equatable {
 
 class LoginInitial extends LoginState {
   const LoginInitial() : super();
+
+  @override
+  LoginState copyWith({
+    String? email,
+    bool? isEmailUsed,
+    bool? isNameUsed,
+    bool? validatePassword,
+    String? id,
+    UserEntity? user,
+    List<UserEntity>? users,
+  }) {
+    return LoginSuccess(
+      email: email ?? this.email,
+      isEmailUsed: isEmailUsed ?? this.isEmailUsed,
+      isNameUsed: isNameUsed ?? this.isNameUsed,
+      validatePassword: validatePassword ?? this.validatePassword,
+      id: id ?? this.id,
+      user: user ?? this.user,
+      users: users ?? this.users,
+    );
+  }
 }
 
 class LoginLoading extends LoginState {
@@ -50,6 +81,27 @@ class LoginLoading extends LoginState {
     super.user,
     super.users,
   });
+
+  @override
+  LoginState copyWith({
+    String? email,
+    bool? isEmailUsed,
+    bool? isNameUsed,
+    bool? validatePassword,
+    String? id,
+    UserEntity? user,
+    List<UserEntity>? users,
+  }) {
+    return LoginLoading(
+      email: email ?? this.email,
+      isEmailUsed: isEmailUsed ?? this.isEmailUsed,
+      isNameUsed: isNameUsed ?? this.isNameUsed,
+      validatePassword: validatePassword ?? this.validatePassword,
+      id: id ?? this.id,
+      user: user ?? this.user,
+      users: users ?? this.users,
+    );
+  }
 }
 
 class LoginSuccess extends LoginState {
@@ -62,6 +114,27 @@ class LoginSuccess extends LoginState {
     super.user,
     super.users,
   });
+
+  @override
+  LoginState copyWith({
+    String? email,
+    bool? isEmailUsed,
+    bool? isNameUsed,
+    bool? validatePassword,
+    String? id,
+    UserEntity? user,
+    List<UserEntity>? users,
+  }) {
+    return LoginSuccess(
+      email: email ?? this.email,
+      isEmailUsed: isEmailUsed ?? this.isEmailUsed,
+      isNameUsed: isNameUsed ?? this.isNameUsed,
+      validatePassword: validatePassword ?? this.validatePassword,
+      id: id ?? this.id,
+      user: user ?? this.user,
+      users: users ?? this.users,
+    );
+  }
 }
 
 class LoginFailure extends LoginState {
@@ -78,5 +151,27 @@ class LoginFailure extends LoginState {
   });
 
   @override
-  List<Object?> get props => [super.props, message];
+  LoginState copyWith({
+    String? email,
+    bool? isEmailUsed,
+    bool? isNameUsed,
+    bool? validatePassword,
+    String? id,
+    UserEntity? user,
+    List<UserEntity>? users,
+  }) {
+    return LoginFailure(
+      message,
+      email: email ?? this.email,
+      isEmailUsed: isEmailUsed ?? this.isEmailUsed,
+      isNameUsed: isNameUsed ?? this.isNameUsed,
+      validatePassword: validatePassword ?? this.validatePassword,
+      id: id ?? this.id,
+      user: user ?? this.user,
+      users: users ?? this.users,
+    );
+  }
+
+  @override
+  List<Object?> get props => [...super.props, message];
 }

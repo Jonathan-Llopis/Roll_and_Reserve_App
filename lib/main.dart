@@ -12,6 +12,8 @@ import 'package:roll_and_reserve/presentation/blocs/language/language_bloc.dart'
 import 'package:roll_and_reserve/presentation/blocs/reviews/reviews_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/admin/admin_user_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/user_profile/user_profile_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/game/game_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/event/event_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/player/player_bloc.dart';
@@ -120,6 +122,12 @@ class MyAppState extends State<MyApp> {
         ),
         BlocProvider(
           create: (_) => sl<PlayerBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => sl<AdminUserBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => sl<UserProfileBloc>(),
         ),
         BlocProvider(
           create: (_) => sl<ReviewBloc>(),

@@ -5,11 +5,12 @@ import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/l10n/app_localizations.dart';
 import 'package:roll_and_reserve/presentation/widgets/cards/card_user.dart';
 
-late List<UserEntity> users;
-
 class BodyUsersAdmin extends StatefulWidget {
+  final List<UserEntity>? users;
+
   const BodyUsersAdmin({
     super.key,
+    this.users,
   });
 
   @override
@@ -17,40 +18,33 @@ class BodyUsersAdmin extends StatefulWidget {
 }
 
 class _BodyUsersAdminState extends State<BodyUsersAdmin> {
-  @override
+  List<UserEntity> _filteredUsers = [];
+  bool _isSearching = false;
 
-  /// Called when the widget is inserted into the tree.
-  ///
-  /// This function uses the BuildContext to get the LoginBloc and set the
-  /// list of users to the users of the LoginBloc. If the users are null,
-  /// it sets the list to an empty list.
+  @override
   void initState() {
-    LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
-    if (loginBloc.state.users != null) {
-      users = loginBloc.state.users!;
-    } else {
-      users == [];
-    }
     super.initState();
+    final sourceUsers =
+        widget.users ?? context.read<LoginBloc>().state.users ?? [];
+    _filteredUsers = List.from(sourceUsers);
   }
 
   @override
+  void didUpdateWidget(covariant BodyUsersAdmin oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.users != oldWidget.users && !_isSearching) {
+      final sourceUsers =
+          widget.users ?? context.read<LoginBloc>().state.users ?? [];
+      _filteredUsers = List.from(sourceUsers);
+    }
+  }
 
-  /// Builds the body of the screen that shows the users.
-  ///
-  /// This is a [Flexible] with a [Column] with the given [children].
-  ///
-  /// The first child is a [Padding] with a [TextField] that filters the users
-  /// by name.
-  ///
-  /// The second child is a [Divider] with a height of 1 and a thickness of
-  /// 1.
-  ///
-  /// The third child is an [Expanded] with a [Padding] and a [ListView].
-  /// The [ListView] has a [itemCount] equal to the length of the [users]
-  /// list, and an [itemBuilder] that returns a [CardUser] with the user.
+  @override
   Widget build(BuildContext context) {
-    LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
+    final allUsers =
+        widget.users ?? context.read<LoginBloc>().state.users ?? [];
+    final displayUsers = _isSearching ? _filteredUsers : allUsers;
+
     return Flexible(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,7 +56,8 @@ class _BodyUsersAdminState extends State<BodyUsersAdmin> {
             child: TextField(
               onChanged: (value) {
                 setState(() {
-                  users = loginBloc.state.users!
+                  _isSearching = value.trim().isNotEmpty;
+                  _filteredUsers = allUsers
                       .where(
                         (user) => user.name
                             .toLowerCase()
@@ -85,13 +80,9 @@ class _BodyUsersAdminState extends State<BodyUsersAdmin> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12.0),
               child: ListView.builder(
-                itemCount: users.isNotEmpty
-                    ? users.length
-                    : loginBloc.state.users!.length,
+                itemCount: displayUsers.length,
                 itemBuilder: (context, index) {
-                  final user = users.isNotEmpty
-                      ? users[index]
-                      : loginBloc.state.users![index];
+                  final user = displayUsers[index];
                   return CardUser(user: user);
                 },
               ),
