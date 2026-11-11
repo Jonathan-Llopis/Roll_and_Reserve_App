@@ -18,7 +18,7 @@ void main() {
 
   group('LanguageBloc', () {
     test('initial state has Spanish (es) locale', () {
-      final bloc = LanguageBloc(mockSharedPreferences);
+      final bloc = LanguageBloc(sharedPreferences: mockSharedPreferences);
       expect(bloc.state.locale, const Locale('es'));
     });
 
@@ -27,7 +27,7 @@ void main() {
       build: () {
         when(() => mockSharedPreferences.setString('locale', 'en'))
             .thenAnswer((_) async => true);
-        return LanguageBloc(mockSharedPreferences);
+        return LanguageBloc(sharedPreferences: mockSharedPreferences);
       },
       act: (bloc) => bloc.add(ChangeLanguageEvent(const Locale('en'))),
       expect: () => [
@@ -42,7 +42,7 @@ void main() {
       'emits saved Locale when GetLocaleEvent is added and preference exists',
       build: () {
         when(() => mockSharedPreferences.getString('locale')).thenReturn('fr');
-        return LanguageBloc(mockSharedPreferences);
+        return LanguageBloc(sharedPreferences: mockSharedPreferences);
       },
       act: (bloc) => bloc.add(GetLocaleEvent()),
       expect: () => [
@@ -54,7 +54,7 @@ void main() {
       'emits default Spanish Locale when GetLocaleEvent is added but no preference exists',
       build: () {
         when(() => mockSharedPreferences.getString('locale')).thenReturn(null);
-        return LanguageBloc(mockSharedPreferences);
+        return LanguageBloc(sharedPreferences: mockSharedPreferences);
       },
       act: (bloc) => bloc.add(GetLocaleEvent()),
       expect: () => [

@@ -25,18 +25,18 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
   final GetPlayerCountUseCase getPlayerCount;
   final GetPeakReservationHoursUseCase getPeakReservationHours;
 
-  ShopBloc(
-    this.createShopsUseCase,
-    this.getShopsUseCase,
-    this.updateShopsUseCase,
-    this.deleteShopsUseCase,
-    this.getShopUseCase,
-    this.getAllShopsByOwnerUseCase,
-    this.getMostPlayedGames,
-    this.getTotalReservations,
-    this.getPlayerCount,
-    this.getPeakReservationHours,
-  ) : super(const ShopInitial()) {
+  ShopBloc({
+    required this.createShopsUseCase,
+    required this.getShopsUseCase,
+    required this.updateShopsUseCase,
+    required this.deleteShopsUseCase,
+    required this.getShopUseCase,
+    required this.getAllShopsByOwnerUseCase,
+    required this.getMostPlayedGames,
+    required this.getTotalReservations,
+    required this.getPlayerCount,
+    required this.getPeakReservationHours,
+  }) : super(const ShopInitial()) {
     on<GetShopsEvent>((event, emit) async {
       emit(
         ShopLoading(

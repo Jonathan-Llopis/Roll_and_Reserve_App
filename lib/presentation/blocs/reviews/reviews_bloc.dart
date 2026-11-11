@@ -11,11 +11,11 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
   final GetAllReviewUseCase getReviewUseCase;
   final DeleteReviewUseCase deleteReviewUseCase;
 
-  ReviewBloc(
-    this.createReviewUseCase,
-    this.getReviewUseCase,
-    this.deleteReviewUseCase,
-  ) : super(const ReviewInitial()) {
+  ReviewBloc({
+    required this.createReviewUseCase,
+    required this.getReviewUseCase,
+    required this.deleteReviewUseCase,
+  }) : super(const ReviewInitial()) {
     on<GetReviewsEvent>((event, emit) async {
       emit(
         ReviewLoading(

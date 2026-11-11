@@ -32,21 +32,21 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final GetUserInfoUseCase getUserInfoUseCase;
   final GetAllUsersUseCase getAllUsersUseCase;
 
-  LoginBloc(
-    this.signInUserUseCase,
-    this.signOutUserUseCase,
-    this.getCurrentUserUseCase,
-    this.signInUserGoogleUseCase,
-    this.signUpUserUseCase,
-    this.restorPasswordUseCase,
-    this.isEmailUsedUseCase,
-    this.isNameUsedUseCase,
-    this.updateUserInfoUseCase,
-    this.updatePasswordUsecase,
-    this.validatePasswordUsecase,
-    this.getUserInfoUseCase,
-    this.getAllUsersUseCase,
-  ) : super(const LoginInitial()) {
+  LoginBloc({
+    required this.signInUserUseCase,
+    required this.signOutUserUseCase,
+    required this.getCurrentUserUseCase,
+    required this.signInUserGoogleUseCase,
+    required this.signUpUserUseCase,
+    required this.restorPasswordUseCase,
+    required this.isEmailUsedUseCase,
+    required this.isNameUsedUseCase,
+    required this.updateUserInfoUseCase,
+    required this.updatePasswordUsecase,
+    required this.validatePasswordUsecase,
+    required this.getUserInfoUseCase,
+    required this.getAllUsersUseCase,
+  }) : super(const LoginInitial()) {
     on<ButtonLoginPressed>((event, emit) async {
       emit(
         LoginLoading(
