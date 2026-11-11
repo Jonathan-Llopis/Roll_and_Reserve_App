@@ -1,8 +1,6 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:deepseek/deepseek.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 
 abstract class ChatRemoteDataSource {
@@ -27,216 +25,41 @@ abstract class ChatRemoteDataSource {
 class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   ChatRemoteDataSourceImpl();
 
-  DeepSeek? _deepSeek;
-  List<Message> chatHistory = [];
-  List<Message> rolePlayHistory = [];
-
-  DeepSeek _getDeepSeek() {
-    if (_deepSeek != null) return _deepSeek!;
-    final apiKey = dotenv.env['DEEP_SEEK_API_KEY'];
-    if (apiKey == null || apiKey.isEmpty) {
-      throw Exception(
-        'DEEP_SEEK_API_KEY is not set in the environment variables.',
-      );
-    }
-    _deepSeek = DeepSeek(apiKey);
-    return _deepSeek!;
-  }
+  List<Map<String, String>> chatHistory = [];
+  List<Map<String, String>> rolePlayHistory = [];
 
   @override
-
-  /// Initiates a chat session by sending a user message to the DeepSeek AI service.
-  ///
-  /// Clears the chat history and adds the user's message to it. Sends the message
-  /// to the DeepSeek service, waiting for an assistant's response.
-  ///
-  /// Returns the assistant's response as a string if successful.
-  ///
-  /// Throws an exception if the response is empty or if there is an error while
-  /// interacting with the DeepSeek service.
-
   Future<String> startChat(String message) async {
-    chatHistory.clear();
-    chatHistory.add(Message(role: 'user', content: message));
-
-    try {
-      final response = await _getDeepSeek().createChat(
-        messages: chatHistory,
-        model: Models.reasoner.name,
-        options: {
-          'temperature': 1.0,
-          'max_tokens': 4096,
-        },
-      );
-
-      if (response.text.isNotEmpty) {
-        chatHistory.add(
-          Message(
-            role: 'assistant',
-            content: utf8.decode(latin1.encode(response.text)),
-          ),
-        );
-        return utf8.decode(latin1.encode(response.text));
-      } else {
-        throw Exception('Failed to start chat.');
-      }
-    } on DeepSeekException catch (e) {
-      throw Exception('DeepSeek API error: ${e.statusCode}:${e.message}');
-    } catch (e) {
-      throw Exception('Unexpected error: $e');
-    }
+    chatHistory = [
+      {'role': 'user', 'content': message},
+      {'role': 'assistant', 'content': 'Chat general deprecado. Por favor, usa el nuevo Árbitro de Reglas con GenUI.'},
+    ];
+    return chatHistory.last['content']!;
   }
 
   @override
-
-  /// Sends a message to the DeepSeek AI service to continue a chat session.
-  ///
-  /// Before calling this method, the chat session must be initialized by calling
-  /// [startChat]. If not, throws an exception.
-  ///
-  /// Adds the user's message to the chat history and sends it to the DeepSeek
-  /// service, waiting for an assistant's response.
-  ///
-  /// Returns the assistant's response as a string if successful.
-  ///
-  /// Throws an exception if the response is empty or if there is an error while
-  /// interacting with the DeepSeek service.
   Future<String> sendMessage(String message) async {
-    if (chatHistory.isEmpty) {
-      throw Exception('Chat session not initialized. Call startChat first.');
-    }
-
-    chatHistory.add(Message(role: 'user', content: message));
-
-    try {
-      final response = await _getDeepSeek().createChat(
-        messages: chatHistory,
-        model: Models.reasoner.name,
-        options: {
-          'temperature': 1.0,
-          'max_tokens': 4096,
-        },
-      );
-
-      if (response.text.isNotEmpty) {
-        chatHistory.add(
-          Message(
-            role: 'assistant',
-            content: utf8.decode(latin1.encode(response.text)),
-          ),
-        );
-        return utf8.decode(latin1.encode(response.text));
-      } else {
-        throw Exception('Failed to send message.');
-      }
-    } on DeepSeekException catch (e) {
-      throw Exception('DeepSeek API error: ${e.statusCode}:${e.message}');
-    } catch (e) {
-      throw Exception('Unexpected error: $e');
-    }
+    chatHistory.add({'role': 'user', 'content': message});
+    const reply = 'Chat general deprecado. Por favor, usa el nuevo Árbitro de Reglas con GenUI.';
+    chatHistory.add({'role': 'assistant', 'content': reply});
+    return reply;
   }
 
   @override
-
-  /// Starts a role play chat session with the DeepSeek AI service.
-  ///
-  /// A role play chat session is a special type of chat session where the AI
-  /// service acts as a character in the context of a story or scenario provided
-  /// by the user. The AI service will generate a response based on the scenario
-  /// and the user's message.
-  ///
-  /// The [prompt] parameter must be a string describing the scenario and the
-  /// character the AI service should act as.
-  ///
-  /// Returns the AI service response as a string if successful.
-  ///
-  /// Throws an exception if the response is empty or if there is an error while
-  /// interacting with the DeepSeek service.
   Future<String> startRolPlay(String prompt) async {
-    rolePlayHistory.clear();
-    rolePlayHistory.add(Message(role: 'user', content: prompt));
-
-    try {
-      final response = await _getDeepSeek().createChat(
-        messages: rolePlayHistory,
-        model: Models.chat.name,
-        options: {
-          'temperature': 1.0,
-          'max_tokens': 4096,
-        },
-      );
-
-      if (response.text.isNotEmpty) {
-        rolePlayHistory.add(
-          Message(
-            role: 'assistant',
-            content: utf8.decode(latin1.encode(response.text)),
-          ),
-        );
-        return utf8.decode(latin1.encode(response.text));
-      } else {
-        throw Exception('Failed to start role play.');
-      }
-    } on DeepSeekException catch (e) {
-      throw Exception('DeepSeek API error: ${e.statusCode}:${e.message}');
-    } catch (e) {
-      throw Exception('Unexpected error: $e');
-    }
+    rolePlayHistory = [
+      {'role': 'system', 'content': prompt},
+      {'role': 'assistant', 'content': 'Modo rol deprecado. Por favor, usa el nuevo Árbitro de Reglas con GenUI.'},
+    ];
+    return rolePlayHistory.last['content']!;
   }
 
   @override
-
-  /// Sends a message to the DeepSeek AI service as part of a role play session.
-  ///
-  /// A role play session is a special type of chat session where the AI service
-  /// acts as a character in the context of a story or scenario provided by the
-  /// user. The AI service will generate a response based on the scenario and the
-  /// user's message.
-  ///
-  /// The [message] parameter is the message to be sent to the AI service.
-  ///
-  /// Returns the AI service response as a string if successful.
-  ///
-  /// Throws an exception if the response is empty or if there is an error while
-  /// interacting with the DeepSeek service.
-  ///
-  /// Before calling this method, you must call [startRolPlay] to start the role
-  /// play session.
   Future<String> sendRolPlay(String message) async {
-    if (rolePlayHistory.isEmpty) {
-      throw Exception(
-        'Role play session not initialized. Call startRolePlay first.',
-      );
-    }
-
-    rolePlayHistory.add(Message(role: 'user', content: message));
-
-    try {
-      final response = await _getDeepSeek().createChat(
-        messages: rolePlayHistory,
-        model: Models.chat.name,
-        options: {
-          'temperature': 1.0,
-          'max_tokens': 4096,
-        },
-      );
-
-      if (response.text.isNotEmpty) {
-        rolePlayHistory.add(
-          Message(
-            role: 'assistant',
-            content: utf8.decode(latin1.encode(response.text)),
-          ),
-        );
-        return utf8.decode(latin1.encode(response.text));
-      } else {
-        throw Exception('Failed to send role play message.');
-      }
-    } on DeepSeekException catch (e) {
-      throw Exception('DeepSeek API error: ${e.statusCode}:${e.message}');
-    } catch (e) {
-      throw Exception('Unexpected error: $e');
-    }
+    rolePlayHistory.add({'role': 'user', 'content': message});
+    const reply = 'Modo rol deprecado. Por favor, usa el nuevo Árbitro de Reglas con GenUI.';
+    rolePlayHistory.add({'role': 'assistant', 'content': reply});
+    return reply;
   }
 
   GenerativeModel? _generativeModel;

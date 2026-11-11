@@ -36,7 +36,6 @@ dependencies:
   collection: ^1.18.0
   cupertino_icons: ^1.0.8
   dartz: ^0.10.1
-  deepseek: ^1.2.0
   dio: ^5.11.1
   dio_smart_retry: ^7.0.1
   dropdown_search: ^6.0.2

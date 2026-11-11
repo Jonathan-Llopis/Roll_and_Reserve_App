@@ -14,7 +14,10 @@ import 'package:roll_and_reserve/domain/usecases/chat_usecases/start_chat_assist
 import 'package:roll_and_reserve/domain/usecases/chat_usecases/start_chat_gemini_usecases.dart';
 import 'package:roll_and_reserve/domain/usecases/chat_usecases/start_chat_rol_usecases.dart';
 import 'package:roll_and_reserve/domain/usecases/chat_usecases/start_chat_usecases.dart';
+import 'package:roll_and_reserve/domain/usecases/game_usecases/ask_game_rule_usecase.dart';
+import 'package:roll_and_reserve/domain/repositories/game_repository.dart';
 import 'package:roll_and_reserve/presentation/blocs/chat/chat_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/game_rules/game_rules_bloc.dart';
 
 void registerChatDependencies(GetIt sl) {
   // Data Sources
@@ -67,8 +70,16 @@ void registerChatDependencies(GetIt sl) {
   sl.registerLazySingleton<ClearChatHistoryUseCase>(
     () => ClearChatHistoryUseCase(sl<ChatRepository>()),
   );
+  sl.registerLazySingleton<AskGameRuleUseCase>(
+    () => AskGameRuleUseCase(sl<GameRepository>()),
+  );
 
   // BLoC
+  sl.registerFactory<GameRulesBloc>(
+    () => GameRulesBloc(
+      askGameRuleUseCase: sl<AskGameRuleUseCase>(),
+    ),
+  );
   sl.registerFactory<ChatBloc>(
     () => ChatBloc(
       startChatUseCase: sl<StartChatUseCase>(),

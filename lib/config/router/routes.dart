@@ -6,9 +6,6 @@ import 'package:roll_and_reserve/main.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_admin.dart';
-import 'package:roll_and_reserve/presentation/screens/screen_chat.dart';
-import 'package:roll_and_reserve/presentation/screens/screen_chat_assistant.dart';
-import 'package:roll_and_reserve/presentation/screens/screen_chat_gemini.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_create_event.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_create_reserve.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_event.dart';
@@ -21,7 +18,8 @@ import 'package:roll_and_reserve/presentation/screens/screen_reserves_table.dart
 import 'package:roll_and_reserve/presentation/screens/screen_reserves_user.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_review_shop.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_edit_shop.dart';
-import 'package:roll_and_reserve/presentation/screens/screen_rol.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_game_rules_chat.dart';
+import 'package:roll_and_reserve/domain/entities/game_entity.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_shop_events.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_statistics.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_tables_shop.dart';
@@ -213,60 +211,39 @@ final GoRouter router = GoRouter(
           },
         ),
         GoRoute(
-          name: 'chat',
-          path: '/chat',
+          name: 'rulesAssistant',
+          path: '/rulesAssistant',
           pageBuilder: (context, state) {
+            final game = state.extra is GameEntity ? state.extra as GameEntity : null;
             return CustomTransitionPage(
               key: state.pageKey,
-              child: const ChatScreen(),
+              child: ScreenGameRulesChat(initialGame: game),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {
                 return child;
               },
             );
           },
+        ),
+        GoRoute(
+          name: 'chat',
+          path: '/chat',
+          redirect: (context, state) => '/user/rulesAssistant',
         ),
         GoRoute(
           name: 'chatGemini',
           path: '/chatGemini',
-          pageBuilder: (context, state) {
-            return CustomTransitionPage(
-              key: state.pageKey,
-              child: const ChatGeminiScreen(),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                return child;
-              },
-            );
-          },
+          redirect: (context, state) => '/user/rulesAssistant',
         ),
         GoRoute(
           name: 'chatAssistant',
           path: '/chatAssistant',
-          pageBuilder: (context, state) {
-            return CustomTransitionPage(
-              key: state.pageKey,
-              child: const ChatAssistantScreen(),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                return child;
-              },
-            );
-          },
+          redirect: (context, state) => '/user/rulesAssistant',
         ),
         GoRoute(
           name: 'rolChat',
           path: '/rolChat',
-          pageBuilder: (context, state) {
-            return CustomTransitionPage(
-              key: state.pageKey,
-              child: const RolScreen(),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                return child;
-              },
-            );
-          },
+          redirect: (context, state) => '/user/rulesAssistant',
         ),
         GoRoute(
           name: 'lastUsers',
