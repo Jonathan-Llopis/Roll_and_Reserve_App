@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 
-import 'package:roll_and_reserve/core/prompt.dart';
-import 'package:roll_and_reserve/core/prompt_asistente.dart';
-import 'package:roll_and_reserve/core/rol_prompt/prompt.dart';
+import 'package:roll_and_reserve/data/datasources/ai/prompts/prompt.dart';
+import 'package:roll_and_reserve/data/datasources/ai/prompts/prompt_asistente.dart';
+import 'package:roll_and_reserve/data/datasources/ai/prompts/rol_prompt.dart';
 import 'package:roll_and_reserve/data/datasources/chat_datasource.dart';
 import 'package:roll_and_reserve/domain/repositories/chat_repository.dart';
 

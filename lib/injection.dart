@@ -27,13 +27,14 @@ import 'package:roll_and_reserve/domain/repositories/shop_repository.dart';
 import 'package:roll_and_reserve/domain/repositories/table_repository.dart';
 import 'package:roll_and_reserve/domain/usecases/chat_usecases/send_message_assistant_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/chat_usecases/send_message_gemini_usecase.dart';
+import 'package:roll_and_reserve/core/services/notification_service.dart';
 import 'package:roll_and_reserve/domain/usecases/chat_usecases/send_message_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/chat_usecases/send_rol_message_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/chat_usecases/start_chat_assistant_usecases.dart';
 import 'package:roll_and_reserve/domain/usecases/chat_usecases/start_chat_gemini_usecases.dart';
 import 'package:roll_and_reserve/domain/usecases/chat_usecases/start_chat_rol_usecases.dart';
 import 'package:roll_and_reserve/domain/usecases/chat_usecases/start_chat_usecases.dart';
-import 'package:roll_and_reserve/domain/usecases/reserve_usecases/search_games_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/game_usecases/search_games_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/shop_usecases/get_most_played_games_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/shop_usecases/get_peak_reservation_houts_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/shop_usecases/get_player_count_usecase.dart';
@@ -49,15 +50,15 @@ import 'package:roll_and_reserve/domain/usecases/user_usecases/sign_up_user_usec
 import 'package:roll_and_reserve/domain/usecases/user_usecases/update_user_info.dart';
 import 'package:roll_and_reserve/domain/usecases/user_usecases/validate_pass_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/reserve_usecases/confirm_reserve_usecase.dart';
-import 'package:roll_and_reserve/domain/usecases/reserve_usecases/create_event_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/event_usecases/create_event_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/reserve_usecases/create_reserve_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/reserve_usecases/delete_reserve_usecase.dart';
-import 'package:roll_and_reserve/domain/usecases/reserve_usecases/get_all_categories_usecase.dart';
-import 'package:roll_and_reserve/domain/usecases/reserve_usecases/get_all_difficulties_usecase.dart';
-import 'package:roll_and_reserve/domain/usecases/reserve_usecases/get_all_games_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/game_usecases/get_all_categories_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/game_usecases/get_all_difficulties_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/game_usecases/get_all_games_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/reserve_usecases/get_all_reserve_bydate_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/reserve_usecases/get_all_reserve_usecase.dart';
-import 'package:roll_and_reserve/domain/usecases/reserve_usecases/get_events_shop_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/event_usecases/get_events_shop_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/reserve_usecases/get_reserve_withuser_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/reserve_usecases/get_reserves_from_user_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/reserve_usecases/update_reserve_usecase.dart';
@@ -440,6 +441,7 @@ Future<void> configureDependencies() async {
     () => StartChatAssistantUsecases(sl()),
   );
 
+  sl.registerLazySingleton<NotificationService>(() => NotificationService());
   sl.registerLazySingleton(() => http.Client());
   final sharedPreferences = await SharedPreferences.getInstance();
   sl.registerLazySingleton(() => sharedPreferences);
