@@ -47,9 +47,12 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
           playerCount: state.playerCount,
           peakReservationHours: state.peakReservationHours,
           mostPlayedGames: state.mostPlayedGames,
+          currentPage: 1,
+          hasReachedMax: false,
+          isLoadingMore: false,
         ),
       );
-      final result = await getShopsUseCase(NoParams());
+      final result = await getShopsUseCase(const GetAllShopsParams(page: 1, limit: 20));
       result.fold(
         (failure) => emit(
           ShopFailure(
@@ -61,6 +64,9 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
             playerCount: state.playerCount,
             peakReservationHours: state.peakReservationHours,
             mostPlayedGames: state.mostPlayedGames,
+            currentPage: 1,
+            hasReachedMax: false,
+            isLoadingMore: false,
           ),
         ),
         (shops) => emit(
@@ -72,8 +78,48 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
             playerCount: state.playerCount,
             peakReservationHours: state.peakReservationHours,
             mostPlayedGames: state.mostPlayedGames,
+            currentPage: 1,
+            hasReachedMax: shops.length < 20,
+            isLoadingMore: false,
           ),
         ),
+      );
+    });
+
+    on<FetchShopsNextPageEvent>((event, emit) async {
+      if (state.hasReachedMax || state.isLoadingMore) return;
+      if (state.shops == null || state.shops!.isEmpty) return;
+
+      emit(state.copyWith(isLoadingMore: true));
+
+      final nextPage = state.currentPage + 1;
+      final result = await getShopsUseCase(GetAllShopsParams(page: nextPage, limit: 20));
+
+      result.fold(
+        (failure) => emit(state.copyWith(isLoadingMore: false)),
+        (newShops) {
+          if (newShops.isEmpty) {
+            emit(
+              state.copyWith(
+                hasReachedMax: true,
+                isLoadingMore: false,
+              ),
+            );
+          } else {
+            final existingIds = (state.shops ?? []).map((s) => s.id).toSet();
+            final uniqueNewShops =
+                newShops.where((s) => !existingIds.contains(s.id)).toList();
+
+            emit(
+              state.copyWith(
+                shops: [...(state.shops ?? []), ...uniqueNewShops],
+                currentPage: nextPage,
+                hasReachedMax: newShops.length < 20,
+                isLoadingMore: false,
+              ),
+            );
+          }
+        },
       );
     });
 

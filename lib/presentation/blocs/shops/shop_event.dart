@@ -8,6 +8,8 @@ abstract class ShopEvent extends Equatable {
 
 class GetShopsEvent extends ShopEvent {}
 
+class FetchShopsNextPageEvent extends ShopEvent {}
+
 class GetShopEvent extends ShopEvent {
   final int idShop;
   GetShopEvent({required this.idShop});

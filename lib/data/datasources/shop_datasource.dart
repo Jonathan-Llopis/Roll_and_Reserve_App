@@ -8,7 +8,7 @@ import 'package:roll_and_reserve/data/models/shop_model.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 abstract class ShopRemoteDataSource {
-  Future<List<ShopModel>> getAllShops(String token);
+  Future<List<ShopModel>> getAllShops(String token, {int page = 1, int limit = 20});
   Future<bool> deleteShops(int idShops, String token);
   Future<bool> updateShops(ShopModel shops, String token);
   Future<ShopModel> createShops(ShopModel shops, String token);
@@ -59,9 +59,16 @@ class ShopsRemoteDataSourceImpl implements ShopRemoteDataSource {
   /// Throws an [Exception] if there is an error during the request or if the
   /// response status code is not 200.
 
-  Future<List<ShopModel>> getAllShops(String token) async {
+  Future<List<ShopModel>> getAllShops(String token, {int page = 1, int limit = 20}) async {
+    final backendUrl = (dotenv.isInitialized ? dotenv.env['BACKEND'] : null) ?? 'http://localhost:3000';
+    final uri = Uri.parse('$backendUrl/shops').replace(
+      queryParameters: {
+        'page': page.toString(),
+        'limit': limit.toString(),
+      },
+    );
     final response = await client.get(
-      Uri.parse('${dotenv.env['BACKEND']}/shops'),
+      uri,
       headers: {
         'authorization': 'Bearer $token',
       },
