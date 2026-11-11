@@ -112,4 +112,35 @@ class AppTheme {
       },
     ),
   );
+
+  static ThemeData get lightTheme {
+    return ThemeData(
+      useMaterial3: true,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: primaryColor,
+        primary: primaryColor,
+        secondary: secondaryColor,
+        surface: backgroundColor,
+      ),
+      scaffoldBackgroundColor: backgroundColor,
+      appBarTheme: const AppBarTheme(
+        backgroundColor: primaryColor,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        centerTitle: true,
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: elevatedButtonAcceptStyle,
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: textButtonAcceptStyle,
+      ),
+      textTheme: const TextTheme(
+        headlineLarge: titleStyle,
+        titleMedium: subtitleStyle,
+        bodyMedium: TextStyle(color: textColor),
+        labelLarge: buttonStyle,
+      ),
+    );
+  }
 }
