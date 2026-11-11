@@ -2,6 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:roll_and_reserve/core/use_case.dart';
+import 'package:roll_and_reserve/domain/entities/chat_message_entity.dart';
+import 'package:roll_and_reserve/domain/usecases/chat_usecases/clear_chat_history_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/chat_usecases/get_chat_history_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/chat_usecases/save_chat_message_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/chat_usecases/send_message_assistant_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/chat_usecases/send_message_gemini_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/chat_usecases/send_message_usecase.dart';
@@ -22,6 +26,27 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final SendMessageGeminiUsecase sendMessageGeminiUseCase;
   final StartChatAssistantUsecases startChatAssistantUsecases;
   final SendMessageAssistantUsecase sendMessageAssistantUsecase;
+  final GetChatHistoryUseCase? getChatHistoryUseCase;
+  final SaveChatMessageUseCase? saveChatMessageUseCase;
+  final ClearChatHistoryUseCase? clearChatHistoryUseCase;
+
+  void _persistMessage(
+    String sessionId,
+    String role,
+    String content,
+    String mode,
+  ) {
+    if (saveChatMessageUseCase == null) return;
+    saveChatMessageUseCase!(
+      ChatMessageEntity(
+        sessionId: sessionId,
+        role: role,
+        content: content,
+        mode: mode,
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+      ),
+    ).ignore();
+  }
 
   ChatBloc({
     required this.startChatUseCase,
@@ -32,6 +57,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     required this.sendMessageGeminiUseCase,
     required this.startChatAssistantUsecases,
     required this.sendMessageAssistantUsecase,
+    this.getChatHistoryUseCase,
+    this.saveChatMessageUseCase,
+    this.clearChatHistoryUseCase,
   }) : super(const ChatInitial()) {
     on<OnChatStart>((event, emit) async {
       emit(
@@ -48,6 +76,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         final List<Map<String, String>> messagesUpdate = [
           {'role': 'user', 'text': event.message},
         ];
+        _persistMessage('deepseek', 'user', event.message, 'deepseek');
         emit(
           ChatSuccess(
             newMessage: state.newMessage,
@@ -71,6 +100,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         final responseIA = await startChatUseCase(
           StartChatParams(message: event.message),
         );
+        _persistMessage('deepseek', 'assistant', responseIA, 'deepseek');
         final List<Map<String, String>> finalMessages =
             List.from(state.messages)..add({'role': 'IA', 'text': responseIA});
         emit(
@@ -111,6 +141,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       );
       final List<Map<String, String>> messagesUpdate = List.from(state.messages)
         ..add({'role': 'user', 'text': event.message});
+      _persistMessage('deepseek', 'user', event.message, 'deepseek');
       emit(
         ChatSuccess(
           newMessage: state.newMessage,
@@ -134,6 +165,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       try {
         final responseIA =
             await sendMessageUseCase(SendMessageParams(event.message));
+        _persistMessage('deepseek', 'assistant', responseIA, 'deepseek');
         final List<Map<String, String>> messagesUpdateIA =
             List.from(state.messages)..add({'role': 'IA', 'text': responseIA});
         emit(
@@ -559,6 +591,117 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           messagesAssistant: const [],
         ),
       );
+    });
+
+    on<LoadChatHistoryEvent>((event, emit) async {
+      if (getChatHistoryUseCase == null) return;
+      emit(
+        ChatLoading(
+          newMessage: state.newMessage,
+          messages: state.messages,
+          messagesRol: state.messagesRol,
+          character: state.character,
+          messagesGemini: state.messagesGemini,
+          messagesAssistant: state.messagesAssistant,
+          history: state.history,
+        ),
+      );
+      try {
+        final history = await getChatHistoryUseCase!(
+          GetChatHistoryParams(sessionId: event.sessionId),
+        );
+        final formattedMessages = history
+            .map(
+              (m) => {
+                'role': m.role == 'user' ? 'user' : 'IA',
+                'text': m.content,
+              },
+            )
+            .toList();
+
+        List<Map<String, String>> messages = state.messages;
+        List<Map<String, String>> messagesRol = state.messagesRol;
+        List<Map<String, String>> messagesGemini = state.messagesGemini;
+        List<Map<String, String>> messagesAssistant = state.messagesAssistant;
+
+        if (event.sessionId == 'deepseek') {
+          messages = formattedMessages;
+        } else if (event.sessionId == 'gemini') {
+          messagesGemini = formattedMessages;
+        } else if (event.sessionId == 'assistant') {
+          messagesAssistant = formattedMessages;
+        } else if (event.sessionId.startsWith('roleplay')) {
+          messagesRol = formattedMessages;
+        }
+
+        emit(
+          ChatSuccess(
+            newMessage: state.newMessage,
+            messages: messages,
+            messagesRol: messagesRol,
+            character: state.character,
+            messagesGemini: messagesGemini,
+            messagesAssistant: messagesAssistant,
+            history: history,
+          ),
+        );
+      } catch (e) {
+        emit(
+          ChatFailure(
+            'Error al cargar historial: $e',
+            newMessage: state.newMessage,
+            messages: state.messages,
+            messagesRol: state.messagesRol,
+            character: state.character,
+            messagesGemini: state.messagesGemini,
+            messagesAssistant: state.messagesAssistant,
+            history: state.history,
+          ),
+        );
+      }
+    });
+
+    on<ClearChatHistoryEvent>((event, emit) async {
+      if (clearChatHistoryUseCase != null) {
+        try {
+          await clearChatHistoryUseCase!(
+            ClearChatHistoryParams(sessionId: event.sessionId),
+          );
+        } catch (_) {}
+      }
+      if (event.sessionId == null) {
+        emit(
+          const ChatSuccess(
+            messages: [],
+            messagesRol: [],
+            messagesGemini: [],
+            messagesAssistant: [],
+            history: [],
+          ),
+        );
+      } else {
+        emit(
+          ChatSuccess(
+            newMessage: state.newMessage,
+            messages:
+                event.sessionId == 'deepseek' ? const [] : state.messages,
+            messagesRol: event.sessionId?.startsWith('roleplay') == true
+                ? const []
+                : state.messagesRol,
+            character: event.sessionId?.startsWith('roleplay') == true
+                ? const {}
+                : state.character,
+            messagesGemini:
+                event.sessionId == 'gemini' ? const [] : state.messagesGemini,
+            messagesAssistant: event.sessionId == 'assistant'
+                ? const []
+                : state.messagesAssistant,
+            history: state.history
+                .where((m) => m.sessionId != event.sessionId)
+                .toList(),
+          ),
+        );
+      }
     });
   }
 }

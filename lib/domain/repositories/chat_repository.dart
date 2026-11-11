@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:roll_and_reserve/domain/entities/chat_message_entity.dart';
 
 abstract class ChatRepository {
   Future<String> startChat(String message);
@@ -24,4 +25,7 @@ abstract class ChatRepository {
     String message, {
     List<ByteData>? imageBytes,
   });
+  Future<List<ChatMessageEntity>> getChatHistory(String sessionId);
+  Future<void> saveChatMessage(ChatMessageEntity message);
+  Future<void> clearChatHistory([String? sessionId]);
 }

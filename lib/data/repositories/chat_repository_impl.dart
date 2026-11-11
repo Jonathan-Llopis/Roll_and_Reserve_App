@@ -4,12 +4,18 @@ import 'package:roll_and_reserve/data/datasources/ai/prompts/prompt.dart';
 import 'package:roll_and_reserve/data/datasources/ai/prompts/prompt_asistente.dart';
 import 'package:roll_and_reserve/data/datasources/ai/prompts/rol_prompt.dart';
 import 'package:roll_and_reserve/data/datasources/chat_datasource.dart';
+import 'package:roll_and_reserve/data/datasources/chat_local_datasource.dart';
+import 'package:roll_and_reserve/domain/entities/chat_message_entity.dart';
 import 'package:roll_and_reserve/domain/repositories/chat_repository.dart';
 
 class ChatRepositoryImpl implements ChatRepository {
   final ChatRemoteDataSource remoteDataSource;
+  final ChatLocalDataSource localDataSource;
 
-  ChatRepositoryImpl(this.remoteDataSource);
+  ChatRepositoryImpl(
+    this.remoteDataSource, {
+    ChatLocalDataSource? localDataSource,
+  }) : localDataSource = localDataSource ?? ChatLocalDataSourceImpl();
 
   @override
   Future<String> startChat(String message) async {
@@ -102,4 +108,19 @@ class ChatRepositoryImpl implements ChatRepository {
     String message, {
     List<ByteData>? imageBytes,
   }) => sendMessageAssistant(message, imageBytes: imageBytes);
+
+  @override
+  Future<List<ChatMessageEntity>> getChatHistory(String sessionId) async {
+    return await localDataSource.getMessages(sessionId);
+  }
+
+  @override
+  Future<void> saveChatMessage(ChatMessageEntity message) async {
+    await localDataSource.saveMessage(message);
+  }
+
+  @override
+  Future<void> clearChatHistory([String? sessionId]) async {
+    await localDataSource.clearHistory(sessionId);
+  }
 }
