@@ -1,10 +1,9 @@
-import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:roll_and_reserve/domain/entities/shop_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/widgets/cards/card_shop_map.dart';
+import 'package:roll_and_reserve/presentation/widgets/common/shop_logo_image.dart';
 
 class MapMarker extends StatelessWidget {
   const MapMarker({
@@ -66,56 +65,14 @@ class MapMarker extends StatelessWidget {
           ),
         ),
         child: store.logoId != '67c4bf45ae01906bd75ace8f'
-            ? kIsWeb
-                ? (store.logo is Uint8List
-                    ? ClipOval(
-                        child: Image(
-                          image: MemoryImage(
-                            store.logo,
-                          ),
-                          width: 20,
-                          height: 20,
-                          fit: BoxFit.cover,
-                          errorBuilder: (
-                            context,
-                            error,
-                            stackTrace,
-                          ) {
-                            return const Image(
-                              image: AssetImage(
-                                'assets/images/error-image.png',
-                              ),
-                            );
-                          },
-                        ),
-                      )
-                    : const Icon(
-                        Icons.shop,
-                        color: Colors.white54,
-                      ))
-                : ClipOval(
-                    child: Image(
-                      image: FileImage(
-                        File(
-                          store.logo.path,
-                        ),
-                      ),
-                      width: 20,
-                      height: 20,
-                      fit: BoxFit.cover,
-                      errorBuilder: (
-                        context,
-                        error,
-                        stackTrace,
-                      ) {
-                        return const Image(
-                          image: AssetImage(
-                            'assets/images/error-image.png',
-                          ),
-                        );
-                      },
-                    ),
-                  )
+            ? ClipOval(
+                child: ShopLogoImage(
+                  shop: store,
+                  width: 20,
+                  height: 20,
+                  fit: BoxFit.cover,
+                ),
+              )
             : SvgPicture.asset(
                 'assets/images/dice.svg',
                 colorFilter: ColorFilter.mode(

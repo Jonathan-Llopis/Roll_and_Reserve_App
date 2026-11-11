@@ -1,10 +1,9 @@
-import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:roll_and_reserve/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:roll_and_reserve/domain/entities/shop_entity.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_utils.dart';
+import 'package:roll_and_reserve/presentation/widgets/common/shop_logo_image.dart';
 
 class CardShopMap extends StatelessWidget {
   const CardShopMap({super.key, required this.store});
@@ -43,33 +42,12 @@ class CardShopMap extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: kIsWeb
-                    ? (store.logo is Uint8List
-                        ? Image(
-                            image: MemoryImage(store.logo),
-                            width: 60,
-                            height: 60,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Image(
-                                image: AssetImage(
-                                  'assets/images/error-image.png',
-                                ),
-                              );
-                            },
-                          )
-                        : const Icon(Icons.shop, color: Colors.white54))
-                    : Image(
-                        image: FileImage(File(store.logo.path)),
-                        width: 60,
-                        height: 60,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Image(
-                            image: AssetImage('assets/images/error-image.png'),
-                          );
-                        },
-                      ),
+                child: ShopLogoImage(
+                  shop: store,
+                  width: 60,
+                  height: 60,
+                  fit: BoxFit.cover,
+                ),
               ),
               const SizedBox(width: 16),
               Expanded(

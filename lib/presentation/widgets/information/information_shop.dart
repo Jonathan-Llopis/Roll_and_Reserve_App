@@ -1,5 +1,3 @@
-import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -7,6 +5,7 @@ import 'package:roll_and_reserve/domain/entities/shop_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_utils.dart';
 import 'package:roll_and_reserve/l10n/app_localizations.dart';
+import 'package:roll_and_reserve/presentation/widgets/common/shop_logo_image.dart';
 
 class InformationShop extends StatefulWidget {
   const InformationShop({
@@ -141,13 +140,10 @@ class _InformationShopState extends State<InformationShop> {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
-        child: kIsWeb
-            ? _buildWebImage()
-            : Image.file(
-                File(widget.shop.logo.path),
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => _buildImageErrorPlaceholder(),
-              ),
+        child: ShopLogoImage(
+          shop: widget.shop,
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }
@@ -324,54 +320,5 @@ class _InformationShopState extends State<InformationShop> {
       ),
       onPressed: () => context.go(route),
     );
-  }
-
-  /// A placeholder widget to display if an image fails to load.
-  ///
-  /// This widget is used as the error builder for the [Image] widget in
-  /// [_buildWebImage] to provide a fallback when the image fails to load.
-  /// It displays a light grey background with a grey icon in the center.
-  Widget _buildImageErrorPlaceholder() {
-    return Container(
-      color: Colors.grey.shade100,
-      child: Center(
-        child: Icon(
-          Icons.storefront_rounded,
-          size: 40,
-          color: Colors.grey.shade400,
-        ),
-      ),
-    );
-  }
-
-  /// Builds the shop's logo image for the web.
-  ///
-  /// If the shop's logo is a [Uint8List], it is displayed as an [Image] widget
-  /// with a [MemoryImage] provider. The image is fit to cover the available
-  /// space and a [CircularProgressIndicator] is used to display the loading
-  /// progress. If the image fails to load, a placeholder widget is displayed
-  /// instead.
-  Widget _buildWebImage() {
-    if (widget.shop.logo is Uint8List) {
-      return Image(
-        image: MemoryImage(widget.shop.logo as Uint8List),
-        fit: BoxFit.cover,
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return Center(
-            child: CircularProgressIndicator(
-              value: loadingProgress.expectedTotalBytes != null
-                  ? loadingProgress.cumulativeBytesLoaded /
-                      loadingProgress.expectedTotalBytes!
-                  : null,
-            ),
-          );
-        },
-        errorBuilder: (context, error, stackTrace) {
-          return _buildImageErrorPlaceholder();
-        },
-      );
-    }
-    return _buildImageErrorPlaceholder();
   }
 }
