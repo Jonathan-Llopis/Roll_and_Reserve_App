@@ -145,26 +145,47 @@ class _ShopListState extends State<_ShopList> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 200) {
-      // TODO: Implement lazy loading trigger here
+    if (_scrollController.hasClients &&
+        _scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent - 200) {
+      context.read<ShopBloc>().add(FetchShopsNextPageEvent());
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      controller: _scrollController,
-      itemCount: widget.shops.length,
-      itemBuilder: (context, index) {
-        final shop = widget.shops[index];
-        return GestureDetector(
-          onTap: () {
-            if (widget.userRole != 1) {
-              context.go('/user/shop/${shop.id}');
+    return BlocBuilder<ShopBloc, ShopState>(
+      builder: (context, state) {
+        final shops = state.shops ?? widget.shops;
+        final isLoadingMore = state.isLoadingMore;
+        final totalCount = shops.length + (isLoadingMore ? 1 : 0);
+
+        return ListView.builder(
+          controller: _scrollController,
+          itemCount: totalCount,
+          itemBuilder: (context, index) {
+            if (index == shops.length) {
+              return const Padding(
+                padding: EdgeInsets.symmetric(vertical: 16.0),
+                child: Center(
+                  child: SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                ),
+              );
             }
+            final shop = shops[index];
+            return GestureDetector(
+              onTap: () {
+                if (widget.userRole != 1) {
+                  context.go('/user/shop/${shop.id}');
+                }
+              },
+              child: InformationShop(shop: shop),
+            );
           },
-          child: InformationShop(shop: shop),
         );
       },
     );

@@ -25,11 +25,12 @@ class ShopRepositoryImpl implements ShopsRepository {
   /// if the operation is successful, or a [Left] containing an [Failure] if an
   /// error occurs.
 
-  Future<Either<Failure, List<ShopEntity>>> getAllShops() async {
+  @override
+  Future<Either<Failure, List<ShopEntity>>> getAllShops({int page = 1, int limit = 20}) async {
     try {
       final token = sharedPreferences.getString('token');
       if (token == null) return const Left(AuthFailure('No token found'));
-      final shopsModels = await remoteDataSource.getAllShops(token);
+      final shopsModels = await remoteDataSource.getAllShops(token, page: page, limit: limit);
       final shopsWithLogo = await Future.wait(
         shopsModels.map((model) async {
           final logo = await remoteDataSource.getShopLogo(model.logoId, token);

@@ -9,6 +9,9 @@ sealed class ShopState extends Equatable {
   final Map<String, dynamic>? playerCount;
   final Map<String, dynamic>? peakReservationHours;
   final Map<String, dynamic>? mostPlayedGames;
+  final int currentPage;
+  final bool hasReachedMax;
+  final bool isLoadingMore;
 
   const ShopState({
     this.shops,
@@ -18,11 +21,69 @@ sealed class ShopState extends Equatable {
     this.playerCount,
     this.peakReservationHours,
     this.mostPlayedGames,
+    this.currentPage = 1,
+    this.hasReachedMax = false,
+    this.isLoadingMore = false,
   });
 
   bool get isLoading => this is ShopLoading;
   String? get errorMessage =>
       this is ShopFailure ? (this as ShopFailure).errorMessage : null;
+
+  ShopState copyWith({
+    List<ShopEntity>? shops,
+    ShopEntity? shop,
+    Map<String, String>? filterShops,
+    Map<String, dynamic>? totalReservations,
+    Map<String, dynamic>? playerCount,
+    Map<String, dynamic>? peakReservationHours,
+    Map<String, dynamic>? mostPlayedGames,
+    int? currentPage,
+    bool? hasReachedMax,
+    bool? isLoadingMore,
+  }) {
+    if (this is ShopLoading) {
+      return ShopLoading(
+        shops: shops ?? this.shops,
+        shop: shop ?? this.shop,
+        filterShops: filterShops ?? this.filterShops,
+        totalReservations: totalReservations ?? this.totalReservations,
+        playerCount: playerCount ?? this.playerCount,
+        peakReservationHours: peakReservationHours ?? this.peakReservationHours,
+        mostPlayedGames: mostPlayedGames ?? this.mostPlayedGames,
+        currentPage: currentPage ?? this.currentPage,
+        hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+        isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+      );
+    } else if (this is ShopFailure) {
+      return ShopFailure(
+        (this as ShopFailure).errorMessage,
+        shops: shops ?? this.shops,
+        shop: shop ?? this.shop,
+        filterShops: filterShops ?? this.filterShops,
+        totalReservations: totalReservations ?? this.totalReservations,
+        playerCount: playerCount ?? this.playerCount,
+        peakReservationHours: peakReservationHours ?? this.peakReservationHours,
+        mostPlayedGames: mostPlayedGames ?? this.mostPlayedGames,
+        currentPage: currentPage ?? this.currentPage,
+        hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+        isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+      );
+    } else {
+      return ShopSuccess(
+        shops: shops ?? this.shops,
+        shop: shop ?? this.shop,
+        filterShops: filterShops ?? this.filterShops,
+        totalReservations: totalReservations ?? this.totalReservations,
+        playerCount: playerCount ?? this.playerCount,
+        peakReservationHours: peakReservationHours ?? this.peakReservationHours,
+        mostPlayedGames: mostPlayedGames ?? this.mostPlayedGames,
+        currentPage: currentPage ?? this.currentPage,
+        hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+        isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+      );
+    }
+  }
 
   @override
   List<Object?> get props => [
@@ -33,6 +94,9 @@ sealed class ShopState extends Equatable {
         playerCount,
         peakReservationHours,
         mostPlayedGames,
+        currentPage,
+        hasReachedMax,
+        isLoadingMore,
       ];
 }
 
@@ -49,6 +113,9 @@ class ShopLoading extends ShopState {
     super.playerCount,
     super.peakReservationHours,
     super.mostPlayedGames,
+    super.currentPage,
+    super.hasReachedMax,
+    super.isLoadingMore,
   });
 }
 
@@ -61,6 +128,9 @@ class ShopSuccess extends ShopState {
     super.playerCount,
     super.peakReservationHours,
     super.mostPlayedGames,
+    super.currentPage,
+    super.hasReachedMax,
+    super.isLoadingMore,
   });
 }
 
@@ -76,8 +146,11 @@ class ShopFailure extends ShopState {
     super.playerCount,
     super.peakReservationHours,
     super.mostPlayedGames,
+    super.currentPage,
+    super.hasReachedMax,
+    super.isLoadingMore,
   });
 
   @override
-  List<Object?> get props => [super.props, errorMessage];
+  List<Object?> get props => [...super.props, errorMessage];
 }

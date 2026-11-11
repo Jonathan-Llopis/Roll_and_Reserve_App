@@ -3,7 +3,7 @@ import 'package:roll_and_reserve/core/failure.dart';
 import 'package:roll_and_reserve/domain/entities/shop_entity.dart';
 
 abstract class ShopsRepository {
-  Future<Either<Failure, List<ShopEntity>>> getAllShops();
+  Future<Either<Failure, List<ShopEntity>>> getAllShops({int page = 1, int limit = 20});
   Future<Either<Failure, bool>> deleteShops(int idShops);
   Future<Either<Failure, bool>> updateShops(ShopEntity shops);
   Future<Either<Failure, bool>> createShops(ShopEntity shops);
