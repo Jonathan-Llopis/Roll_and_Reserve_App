@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:roll_and_reserve/core/failure.dart';
 import 'package:roll_and_reserve/data/datasources/game_datasource.dart';
 import 'package:roll_and_reserve/domain/entities/game_entity.dart';
+import 'package:roll_and_reserve/domain/entities/genui_component_entity.dart';
 import 'package:roll_and_reserve/domain/repositories/game_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,16 +13,8 @@ class GameRepositoryImpl implements GameRepository {
   GameRepositoryImpl(this.remoteDataSource, this.sharedPreferences);
 
   @override
-/*************  ✨ Codeium Command ⭐  *************/
-  /// Retrieves all games from the remote data source.
-  ///
-  /// Returns a [Future] that resolves to an [Either] containing a list of [GameEntity]
-  /// on the right if the operation is successful. If an error occurs, it resolves
-  /// to the left with an [Exception].
-  ///
-  /// This function uses a token stored in shared preferences for authorization.
 
-  /// ****  114f9aa5-e5a4-494d-af34-b658c5cbdfd6  ******
+  /// Retrieves all games from the remote data source.
   Future<Either<Failure, List<GameEntity>>> getAllGames() async {
     try {
       final token = sharedPreferences.getString('token');
@@ -38,14 +31,6 @@ class GameRepositoryImpl implements GameRepository {
   @override
 
   /// Searches for games by name.
-  ///
-  /// The [name] is the name of the game to search.
-  ///
-  /// Returns a [Future] that resolves to an [Either] containing a list of [GameEntity]
-  /// on the right if the operation is successful. If an error occurs, it resolves
-  /// to the left with an [Exception].
-  ///
-  /// This function uses a token stored in shared preferences for authorization.
   Future<Either<Failure, List<GameEntity>>> searchGameByName(
     String name,
   ) async {
@@ -57,7 +42,40 @@ class GameRepositoryImpl implements GameRepository {
       final gameModels = await remoteDataSource.searchGameByName(token, name);
       return Right(gameModels.map((model) => model.toGameEntity()).toList());
     } catch (e) {
-      return Left(ServerFailure('Error al buscar juegos por nombre: ${e.toString()}'));
+      return Left(
+        ServerFailure('Error al buscar juegos por nombre: ${e.toString()}'),
+      );
+    }
+  }
+
+  @override
+
+  /// Resuelve dudas sobre las reglas de un juego con formato GenUI
+  Future<Either<Failure, RulesAssistResponseEntity>> askGameRule({
+    required String question,
+    int? gameId,
+    int? bggId,
+    String? gameName,
+    List<Map<String, String>>? history,
+  }) async {
+    try {
+      final token = sharedPreferences.getString('token');
+      if (token == null || token.trim().isEmpty) {
+        return const Left(AuthFailure('No hay una sesión activa de usuario'));
+      }
+      final responseModel = await remoteDataSource.askGameRule(
+        token: token,
+        question: question,
+        gameId: gameId,
+        bggId: bggId,
+        gameName: gameName,
+        history: history,
+      );
+      return Right(responseModel);
+    } catch (e) {
+      return Left(
+        ServerFailure('Error al consultar reglas de juego: ${e.toString()}'),
+      );
     }
   }
 }

@@ -1,11 +1,20 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:roll_and_reserve/data/models/game_model.dart';
+import 'package:roll_and_reserve/data/models/genui_component_model.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 abstract class GameRemoteDataSource {
   Future<List<GameModel>> getAllGame(String token);
   Future<List<GameModel>> searchGameByName(String name, String token);
+  Future<RulesAssistResponseModel> askGameRule({
+    required String token,
+    required String question,
+    int? gameId,
+    int? bggId,
+    String? gameName,
+    List<Map<String, String>>? history,
+  });
 }
 
 class GameRemoteDataSourceImpl implements GameRemoteDataSource {
@@ -62,6 +71,48 @@ class GameRemoteDataSourceImpl implements GameRemoteDataSource {
       return [];
     } else {
       throw Exception('Error al buscar los juegos.');
+    }
+  }
+
+  @override
+
+  /// Resuelve dudas sobre las reglas de un juego con salida en formato GenUI
+  Future<RulesAssistResponseModel> askGameRule({
+    required String token,
+    required String question,
+    int? gameId,
+    int? bggId,
+    String? gameName,
+    List<Map<String, String>>? history,
+  }) async {
+    final String path = gameId != null
+        ? '/games/$gameId/rules-assist'
+        : bggId != null
+            ? '/games/$bggId/rules-assist'
+            : '/rules-assistant';
+
+    final response = await client.post(
+      Uri.parse('${dotenv.env['BACKEND']}$path'),
+      headers: {
+        'authorization': 'Bearer $token',
+        'content-type': 'application/json',
+      },
+      body: json.encode({
+        'question': question,
+        if (gameName != null) 'gameName': gameName,
+        if (bggId != null) 'bggId': bggId,
+        if (gameId != null) 'gameId': gameId,
+        if (history != null) 'history': history,
+      }),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final Map<String, dynamic> responseJson = json.decode(response.body);
+      return RulesAssistResponseModel.fromJson(responseJson);
+    } else {
+      throw Exception(
+        'Error al consultar las reglas del juego: ${response.statusCode}',
+      );
     }
   }
 }

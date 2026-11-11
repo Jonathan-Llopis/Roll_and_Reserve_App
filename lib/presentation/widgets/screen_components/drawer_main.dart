@@ -32,28 +32,13 @@ class DrawerMain extends StatelessWidget {
   ///
   Widget _buildChatSubmenu(BuildContext context, ThemeData theme) {
     return ExpansionTile(
-      leading: Icon(Icons.chat, color: theme.colorScheme.primary),
+      leading: Icon(Icons.auto_awesome, color: theme.colorScheme.primary),
       title: Text(AppLocalizations.of(context)!.chat_features),
       children: [
         ListTile(
-          leading: Icon(Icons.menu_book, color: theme.colorScheme.primary),
+          leading: Icon(Icons.sports_esports_rounded, color: theme.colorScheme.primary),
           title: Text(AppLocalizations.of(context)!.ask_about_rules),
-          onTap: () => _navigateTo(context, '/user/chat'),
-        ),
-        ListTile(
-          leading: Icon(Icons.theaters, color: theme.colorScheme.primary),
-          title: Text(AppLocalizations.of(context)!.play_role_with_ai),
-          onTap: () => _navigateTo(context, '/user/rolChat'),
-        ),
-        ListTile(
-          leading: Icon(Icons.casino, color: theme.colorScheme.primary),
-          title: Text(AppLocalizations.of(context)!.identify_board_games),
-          onTap: () => _navigateTo(context, '/user/chatGemini'),
-        ),
-        ListTile(
-          leading: Icon(Icons.castle, color: theme.colorScheme.primary),
-          title: Text(AppLocalizations.of(context)!.game_vision_ai),
-          onTap: () => _navigateTo(context, '/user/chatAssistant'),
+          onTap: () => _navigateTo(context, '/user/rulesAssistant'),
         ),
       ],
     );
