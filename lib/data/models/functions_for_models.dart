@@ -1,19 +1,23 @@
 import 'package:roll_and_reserve/data/models/user_model.dart';
 
 double calcularMediaRatings(List<dynamic> reviews) {
-  double sumaRatings = 0;
+  if (reviews.isEmpty) {
+    return 0.0;
+  }
+  double sumaRatings = 0.0;
   int contador = 0;
 
-  if (reviews.isEmpty) {
-    return 0;
-  }
-
   for (var review in reviews) {
-    sumaRatings += review['raiting'] as int;
-    contador++;
+    if (review is Map) {
+      final rawRating = review['raiting'] ?? review['rating'];
+      if (rawRating is num) {
+        sumaRatings += rawRating.toDouble();
+        contador++;
+      }
+    }
   }
 
-  return contador > 0 ? sumaRatings / contador : 0;
+  return contador > 0 ? sumaRatings / contador : 0.0;
 }
 
 List<int> calcularMesasTienda(List<dynamic> tables) {
@@ -23,7 +27,9 @@ List<int> calcularMesasTienda(List<dynamic> tables) {
   }
 
   for (var table in tables) {
-    listTables.add(table['id_table']);
+    if (table is Map && table['id_table'] != null) {
+      listTables.add((table['id_table'] as num).toInt());
+    }
   }
 
   return listTables;
@@ -37,7 +43,9 @@ List<String> crearListaUsuarios(List<dynamic> users) {
   }
 
   for (var user in users) {
-    listaUsuarios.add(user['id_google']);
+    if (user is Map && user['id_google'] != null) {
+      listaUsuarios.add(user['id_google'].toString());
+    }
   }
 
   return listaUsuarios;
@@ -51,7 +59,9 @@ List<int> crearListaReservas(List<dynamic> reserves) {
   }
 
   for (var reserve in reserves) {
-    listaReservas.add(reserve['id_reserve']);
+    if (reserve is Map && reserve['id_reserve'] != null) {
+      listaReservas.add((reserve['id_reserve'] as num).toInt());
+    }
   }
 
   return listaReservas;
@@ -65,17 +75,21 @@ List<int> crearListaJuegos(List<dynamic> reserves) {
   }
 
   for (var reserve in reserves) {
-    listaReservas.add(reserve['id_game']);
+    if (reserve is Map && reserve['id_game'] != null) {
+      listaReservas.add((reserve['id_game'] as num).toInt());
+    }
   }
 
   return listaReservas;
 }
 
 String getDate(String fecha) {
+  if (fecha.length < 10) return fecha;
   return '${fecha.substring(8, 10)} - ${fecha.substring(5, 7)} - ${fecha.substring(0, 4)}';
 }
 
 String getHour(String fecha) {
+  if (fecha.length < 16) return '';
   return '${fecha.substring(11, 13)}:${fecha.substring(14, 16)}';
 }
 
