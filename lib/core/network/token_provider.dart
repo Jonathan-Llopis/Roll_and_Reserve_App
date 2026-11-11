@@ -1,3 +1,4 @@
+import 'package:roll_and_reserve/core/security/secure_storage_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class TokenProvider {
@@ -8,13 +9,17 @@ abstract class TokenProvider {
 }
 
 class TokenProviderImpl implements TokenProvider {
-  final SharedPreferences sharedPreferences;
+  final SecureStorageService secureStorageService;
 
-  TokenProviderImpl({required this.sharedPreferences});
+  TokenProviderImpl({
+    SecureStorageService? secureStorageService,
+    SharedPreferences? sharedPreferences,
+  }) : secureStorageService = secureStorageService ??
+            SecureStorageServiceImpl(sharedPreferences: sharedPreferences);
 
   @override
   Future<String?> getToken() async {
-    final token = sharedPreferences.getString('token');
+    final token = await secureStorageService.read('token');
     if (token == null || token.trim().isEmpty) {
       return null;
     }
@@ -29,11 +34,11 @@ class TokenProviderImpl implements TokenProvider {
 
   @override
   Future<void> clearToken() async {
-    await sharedPreferences.remove('token');
+    await secureStorageService.delete('token');
   }
 
   @override
   Future<void> saveToken(String token) async {
-    await sharedPreferences.setString('token', token);
+    await secureStorageService.write('token', token);
   }
 }

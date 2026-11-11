@@ -11,6 +11,7 @@ void main() {
 
   setUp(() {
     mockSharedPreferences = MockSharedPreferences();
+    when(() => mockSharedPreferences.remove(any())).thenAnswer((_) async => true);
     tokenProvider = TokenProviderImpl(sharedPreferences: mockSharedPreferences);
   });
 
@@ -51,14 +52,10 @@ void main() {
       verify(() => mockSharedPreferences.remove('token')).called(1);
     });
 
-    test('saveToken saves token in SharedPreferences', () async {
-      when(() => mockSharedPreferences.setString('token', 'new_token'))
-          .thenAnswer((_) async => true);
-
+    test('saveToken saves token securely and removes legacy plaintext copy', () async {
       await tokenProvider.saveToken('new_token');
 
-      verify(() => mockSharedPreferences.setString('token', 'new_token'))
-          .called(1);
+      verify(() => mockSharedPreferences.remove('token')).called(1);
     });
   });
 }

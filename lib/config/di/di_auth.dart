@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
+import 'package:roll_and_reserve/core/security/secure_storage_service.dart';
 import 'package:roll_and_reserve/data/datasources/firebase_auth_datasource.dart';
 import 'package:roll_and_reserve/data/datasources/firestore_users_datasource.dart';
 import 'package:roll_and_reserve/data/datasources/user_datasource.dart';
@@ -39,6 +40,7 @@ void registerAuthDependencies(GetIt sl) {
       sl<SharedPreferences>(),
       sl<FirestoreUsersDatasource>(),
       sl<UserDatasource>(),
+      secureStorage: sl<SecureStorageService>(),
     ),
   );
 
