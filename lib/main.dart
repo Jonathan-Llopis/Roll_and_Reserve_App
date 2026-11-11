@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,7 +30,11 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 /// service and runs the app.
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: '.env');
+  try {
+    await dotenv.load(fileName: '.env');
+  } catch (e) {
+    debugPrint('Advertencia: No se pudo cargar el archivo .env ($e).');
+  }
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   Future.delayed(const Duration(seconds: 2), () {
     FlutterNativeSplash.remove();
@@ -51,35 +56,31 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
-  late AppLinks _appLinks;
+  late final AppLinks _appLinks;
+  StreamSubscription<Uri?>? _linkSubscription;
 
   @override
-
-  /// Initializes the state of the widget.
-  ///
-  /// This is called when the widget is inserted into the tree. It initializes
-  /// the deep link listener.
   void initState() {
     super.initState();
     _initDeepLinkListener();
   }
 
-  /// Initializes the deep link listener.
-  ///
-  /// This function is called when the widget is initialized. It creates an
-  /// instance of [AppLinks] and listens to the [uriLinkStream]. When a URI is
-  /// received, it extracts the path and parameters from the URI and navigates
-  /// to the path using [router.go].
-  void _initDeepLinkListener() async {
+  void _initDeepLinkListener() {
     _appLinks = AppLinks();
-    _appLinks.uriLinkStream.listen((Uri? uri) {
-      if (uri != null) {
+    _linkSubscription = _appLinks.uriLinkStream.listen((Uri? uri) {
+      if (uri != null && mounted) {
         var path = uri.path;
         final parameters = uri.queryParameters;
         path = path.replaceAll(RegExp(r'/\d+$'), '');
         router.go(path, extra: parameters);
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _linkSubscription?.cancel();
+    super.dispose();
   }
 
   @override
