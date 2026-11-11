@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/admin/admin_user_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/admin/admin_user_event.dart';
+import 'package:roll_and_reserve/presentation/blocs/admin/admin_user_state.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
-import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_event.dart';
@@ -34,7 +36,7 @@ class _ScreenAdminState extends State<ScreenAdmin> {
   void initState() {
     super.initState();
     NotificationService().getToken();
-    context.read<LoginBloc>().add(GetAllUsersEvent());
+    context.read<AdminUserBloc>().add(const GetAdminAllUsersEvent());
     context.read<ShopBloc>().add(GetShopsEvent());
   }
 
@@ -42,24 +44,11 @@ class _ScreenAdminState extends State<ScreenAdmin> {
 
   /// Builds the main UI of the admin screen with a `BlocBuilder` for `LoginBloc` to handle
   /// user login state and a `BlocBuilder` for `ShopBloc` to handle shop state.
-  ///
-  /// This widget returns a `DefaultScaffold` containing an app bar, a dynamic body that
-  /// switches between user and shop views based on the selected tab index, and a bottom
-  /// navigation bar for navigation. The body displays either a list of users or shops
-  /// depending on the `currentIndex`. The bottom navigation bar allows toggling between
-  /// viewing users or shops.
-  ///
-  /// The floating action button is currently empty (represented by an empty `Container`).
-  ///
-  /// The `BlocBuilder` constructs the UI based on the current state of the respective
-  /// blocs, showing loading indicators, error messages, or the main content when data is
-  /// available.
-
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
-      builder: (context, state) {
+      builder: (context, loginState) {
         return buildContent<LoginState>(
-          state: state,
+          state: loginState,
           isLoading: (state) => state.isLoading,
           errorMessage: (state) => state.errorMessage,
           hasData: (state) => state.user != null,
@@ -68,18 +57,18 @@ class _ScreenAdminState extends State<ScreenAdmin> {
             return DefaultScaffold(
               appBar: widget.appBar,
               body: currentIndex == 0
-                  ? BlocBuilder<LoginBloc, LoginState>(
-                      builder: (context, state) {
-                        return buildContent<LoginState>(
-                          state: state,
+                  ? BlocBuilder<AdminUserBloc, AdminUserState>(
+                      builder: (context, adminState) {
+                        return buildContent<AdminUserState>(
+                          state: adminState,
                           isLoading: (state) => state.isLoading,
                           errorMessage: (state) => state.errorMessage,
                           hasData: (state) => state.users != null,
                           context: context,
-                          contentBuilder: (state) {
-                            return const Column(
+                          contentBuilder: (adminDataState) {
+                            return Column(
                               children: [
-                                BodyUsersAdmin(),
+                                BodyUsersAdmin(users: adminDataState.users),
                               ],
                             );
                           },
