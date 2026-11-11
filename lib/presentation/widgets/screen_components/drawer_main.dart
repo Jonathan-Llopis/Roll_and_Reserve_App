@@ -7,7 +7,6 @@ import 'package:go_router/go_router.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/functions/functions_show_dialogs.dart';
 import 'package:roll_and_reserve/l10n/app_localizations.dart';
-import 'package:roll_and_reserve/presentation/screens/screen_review_user.dart';
 
 class DrawerMain extends StatelessWidget {
   const DrawerMain({super.key, required this.appBar});
@@ -161,13 +160,8 @@ class DrawerMain extends StatelessWidget {
   /// transition duration to zero so that the navigation happens
   /// immediately. It then pushes the route to the navigator.
   void _navigateToReviewScreen(BuildContext context) {
-    Navigator.push(
-      context,
-      PageRouteBuilder(
-        pageBuilder: (context, _, __) => ScreenReviewUser(appBar: appBar),
-        transitionDuration: Duration.zero,
-      ),
-    );
+    Navigator.pop(context);
+    context.pushNamed('userReviews');
   }
 
   /// Closes the current context and shows the user edit dialog.

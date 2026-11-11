@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:roll_and_reserve/domain/entities/table_entity.dart';
@@ -9,8 +10,6 @@ import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_state.dart';
 import 'package:roll_and_reserve/presentation/blocs/tables/table_bloc.dart';
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
-import 'package:roll_and_reserve/presentation/screens/screen_create_reserve.dart';
-import 'package:roll_and_reserve/presentation/screens/screen_qr.dart';
 import 'package:roll_and_reserve/presentation/widgets/information/information_reserve.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/default_scaffold.dart';
 import 'package:roll_and_reserve/l10n/app_localizations.dart';
@@ -144,19 +143,13 @@ class _ScreenReserveState extends State<ScreenReserve> {
                       (userReserve?.reserveConfirmation ?? true) == false
                   ? FloatingActionButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          PageRouteBuilder(
-                            pageBuilder: (context, animation1, animation2) =>
-                                QRScannerScreen(
-                              idReserve: widget.idReserve,
-                              idTable: widget.idTable!,
-                              idShop: table.idShop,
-                              appBar: widget.appBar,
-                            ),
-                            transitionDuration: Duration.zero,
-                            reverseTransitionDuration: Duration.zero,
-                          ),
+                        context.pushNamed(
+                          'qrScanner',
+                          pathParameters: {
+                            'idReserve': widget.idReserve.toString(),
+                            'idShop': table.idShop.toString(),
+                            'idTable': (widget.idTable ?? 0).toString(),
+                          },
                         );
                       },
                       child: Column(
@@ -173,22 +166,15 @@ class _ScreenReserveState extends State<ScreenReserve> {
                   : state.reserve!.userReserveId == loginBloc.state.user!.id
                       ? FloatingActionButton(
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              PageRouteBuilder(
-                                pageBuilder:
-                                    (context, animation1, animation2) =>
-                                        ScreenCreateReserve(
-                                  idShop: table.idShop,
-                                  idTable: widget.idTable!,
-                                  appBar: widget.appBar,
-                                  searchDateTimeString:
-                                      '${state.reserve!.dayDate} ${state.reserve!.horaInicio}',
-                                  reserve: state.reserve,
-                                ),
-                                transitionDuration: Duration.zero,
-                                reverseTransitionDuration: Duration.zero,
-                              ),
+                            context.pushNamed(
+                              'editReserve',
+                              extra: {
+                                'idShop': table.idShop,
+                                'idTable': widget.idTable ?? 0,
+                                'searchDateTimeString':
+                                    '${state.reserve!.dayDate} ${state.reserve!.horaInicio}',
+                                'reserve': state.reserve,
+                              },
                             );
                           },
                           child: const Icon(Icons.edit),

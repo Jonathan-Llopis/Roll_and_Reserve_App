@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:roll_and_reserve/config/router/routes.dart';
+import 'package:go_router/go_router.dart';
 import 'package:roll_and_reserve/domain/entities/table_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_state.dart';
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
-import 'package:roll_and_reserve/presentation/screens/screen_reserve.dart';
 import 'package:roll_and_reserve/presentation/widgets/cards/card_reserve.dart';
 import 'package:roll_and_reserve/l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -181,20 +180,15 @@ class _BodyReservesTableState extends State<BodyReservesTable> {
                         final reserve = state.reserves![index];
                         return GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              PageRouteBuilder(
-                                pageBuilder:
-                                    (context, animation1, animation2) =>
-                                        ScreenReserve(
-                                  idReserve: reserve.id,
-                                  idShop: reserve.shopId,
-                                  idTable: reserve.tableId,
-                                  appBar: appBar,
-                                ),
-                                transitionDuration: Duration.zero,
-                                reverseTransitionDuration: Duration.zero,
-                              ),
+                            context.pushNamed(
+                              'reserveDetail',
+                              pathParameters: {
+                                'idReserve': reserve.id.toString(),
+                              },
+                              extra: {
+                                'idShop': reserve.shopId,
+                                'idTable': reserve.tableId,
+                              },
                             );
                           },
                           child: CardReserve(
