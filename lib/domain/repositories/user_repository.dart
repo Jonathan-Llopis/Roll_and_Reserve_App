@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:roll_and_reserve/core/failure.dart';
 import 'package:roll_and_reserve/domain/entities/user_entity.dart';
 
-abstract class UserRespository {
+abstract class UserRepository {
   Future<Either<Failure, UserEntity>> signIn(String email, String password);
   Future<Either<Failure, UserEntity>> signUp(
     String email,
@@ -34,3 +34,6 @@ abstract class UserRespository {
     dynamic value,
   );
 }
+
+@Deprecated('Use UserRepository instead')
+typedef UserRespository = UserRepository;

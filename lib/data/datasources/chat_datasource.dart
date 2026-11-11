@@ -13,6 +13,11 @@ abstract class ChatRemoteDataSource {
   Future<String> startChatGemini(String prompt);
   Future<String> sendMessageGemini(String message, List<ByteData>? imageBytes);
   Future<String> startChatAssistant(String prompt);
+  Future<String> sendMessageAssistant(
+    String message,
+    List<ByteData>? imageBytes,
+  );
+  @Deprecated('Use sendMessageAssistant instead')
   Future<String> sendMessageAssitant(
     String message,
     List<ByteData>? imageBytes,
@@ -356,7 +361,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   /// Throws an exception if the response is empty or if there is an error while
   /// interacting with the AI service.
 
-  Future<String> sendMessageAssitant(
+  Future<String> sendMessageAssistant(
     String message,
     List<ByteData>? imageBytes,
   ) async {
@@ -380,4 +385,11 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
       throw Exception('Error al enviar el mensaje.');
     }
   }
+
+  @override
+  @Deprecated('Use sendMessageAssistant instead')
+  Future<String> sendMessageAssitant(
+    String message,
+    List<ByteData>? imageBytes,
+  ) => sendMessageAssistant(message, imageBytes);
 }

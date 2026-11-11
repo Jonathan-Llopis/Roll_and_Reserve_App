@@ -15,6 +15,11 @@ abstract class ChatRepository {
     List<ByteData>? imageBytes,
   });
   Future<String> startChatAssistant([String languageCode]);
+  Future<String> sendMessageAssistant(
+    String message, {
+    List<ByteData>? imageBytes,
+  });
+  @Deprecated('Use sendMessageAssistant instead')
   Future<String> sendMessageAssitant(
     String message, {
     List<ByteData>? imageBytes,

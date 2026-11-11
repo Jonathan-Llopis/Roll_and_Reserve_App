@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:roll_and_reserve/core/failure.dart';
-import 'package:roll_and_reserve/data/datasources/shop_datasoruce.dart';
+import 'package:roll_and_reserve/data/datasources/shop_datasource.dart';
 import 'package:roll_and_reserve/data/models/shop_model.dart';
 import 'package:roll_and_reserve/domain/entities/shop_entity.dart';
 import 'package:roll_and_reserve/domain/repositories/shop_repository.dart';

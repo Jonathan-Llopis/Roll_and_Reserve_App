@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:roll_and_reserve/core/failure.dart';
 import 'package:roll_and_reserve/core/use_case.dart';
 import 'package:roll_and_reserve/domain/entities/table_entity.dart';
-import 'package:roll_and_reserve/domain/repositories/table_respository.dart';
+import 'package:roll_and_reserve/domain/repositories/table_repository.dart';
 
 class GetAllTablesUseCase
     implements UseCase<Either<Failure, List<TableEntity>>, NoParams> {

@@ -23,7 +23,7 @@ import 'package:roll_and_reserve/presentation/screens/screen_review_shop.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_edit_shop.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_rol.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_shop_events.dart';
-import 'package:roll_and_reserve/presentation/screens/screen_stadistics.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_statistics.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_tables_shop.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_main.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_reserve.dart';
