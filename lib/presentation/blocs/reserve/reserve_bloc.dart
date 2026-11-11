@@ -46,25 +46,25 @@ class ReserveBloc extends Bloc<ReserveEvent, ReserveState> {
   final GetLastTenPlayersUseCase getLastTenPlayersUseCase;
   final UpdateReserveUseCase updateReserveUseCase;
 
-  ReserveBloc(
-    this.createReserveUseCase,
-    this.getReserveUseCase,
-    this.deleteReserveUseCase,
-    this.getAllDifficultyUseCase,
-    this.getAllGameUseCase,
-    this.getAllCategoryGamesUseCase,
-    this.addUserToReserveUseCase,
-    this.deleteUserToReserveUseCase,
-    this.getAllReservesByDateUseCase,
-    this.getReserveWithuserUsecase,
-    this.getReservesOfUserUseCase,
-    this.confirmateReserveUsecase,
-    this.getEventsShopUsecase,
-    this.createEventsUsecase,
-    this.searchGamesUseCase,
-    this.getLastTenPlayersUseCase,
-    this.updateReserveUseCase,
-  ) : super(const ReserveInitial()) {
+  ReserveBloc({
+    required this.createReserveUseCase,
+    required this.getReserveUseCase,
+    required this.deleteReserveUseCase,
+    required this.getAllDifficultyUseCase,
+    required this.getAllGameUseCase,
+    required this.getAllCategoryGamesUseCase,
+    required this.addUserToReserveUseCase,
+    required this.deleteUserToReserveUseCase,
+    required this.getAllReservesByDateUseCase,
+    required this.getReserveWithuserUsecase,
+    required this.getReservesOfUserUseCase,
+    required this.confirmateReserveUsecase,
+    required this.getEventsShopUsecase,
+    required this.createEventsUsecase,
+    required this.searchGamesUseCase,
+    required this.getLastTenPlayersUseCase,
+    required this.updateReserveUseCase,
+  }) : super(const ReserveInitial()) {
     on<GetReservesEvent>((event, emit) async {
       emit(
         ReserveLoading(

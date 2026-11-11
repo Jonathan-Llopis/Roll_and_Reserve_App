@@ -23,16 +23,16 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final StartChatAssistantUsecases startChatAssistantUsecases;
   final SendMessageAssistantUsecase sendMessageAssistantUsecase;
 
-  ChatBloc(
-    this.startChatUseCase,
-    this.sendMessageUseCase,
-    this.startChatRolUseCase,
-    this.sendRolMessageUseCase,
-    this.startChatGeminiUseCase,
-    this.sendMessageGeminiUseCase,
-    this.startChatAssistantUsecases,
-    this.sendMessageAssistantUsecase,
-  ) : super(const ChatInitial()) {
+  ChatBloc({
+    required this.startChatUseCase,
+    required this.sendMessageUseCase,
+    required this.startChatRolUseCase,
+    required this.sendRolMessageUseCase,
+    required this.startChatGeminiUseCase,
+    required this.sendMessageGeminiUseCase,
+    required this.startChatAssistantUsecases,
+    required this.sendMessageAssistantUsecase,
+  }) : super(const ChatInitial()) {
     on<OnChatStart>((event, emit) async {
       emit(
         ChatLoading(

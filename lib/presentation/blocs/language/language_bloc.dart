@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
   final SharedPreferences sharedPreferences;
 
-  LanguageBloc(this.sharedPreferences)
+  LanguageBloc({required this.sharedPreferences})
       : super(const LanguageState(Locale('es'))) {
     on<ChangeLanguageEvent>((event, emit) async {
       final code = event.locale.countryCode != null

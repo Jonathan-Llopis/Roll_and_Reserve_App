@@ -17,13 +17,13 @@ class TableBloc extends Bloc<TableEvent, TableState> {
   final DeleteTableUseCase deleteTablesUseCase;
   final GetAllTablesByShopUseCase getAllTablesByShopUseCase;
 
-  TableBloc(
-    this.createTablesUseCase,
-    this.getTablesUseCase,
-    this.updateTablesUseCase,
-    this.deleteTablesUseCase,
-    this.getAllTablesByShopUseCase,
-  ) : super(const TableInitial()) {
+  TableBloc({
+    required this.createTablesUseCase,
+    required this.getTablesUseCase,
+    required this.updateTablesUseCase,
+    required this.deleteTablesUseCase,
+    required this.getAllTablesByShopUseCase,
+  }) : super(const TableInitial()) {
     on<GetTablesEvent>((event, emit) async {
       emit(
         TableLoading(
