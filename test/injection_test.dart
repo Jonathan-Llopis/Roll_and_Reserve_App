@@ -7,9 +7,11 @@ import 'package:roll_and_reserve/config/di/di_reservations.dart';
 import 'package:roll_and_reserve/config/di/di_shops.dart';
 import 'package:roll_and_reserve/core/network/api_client.dart';
 import 'package:roll_and_reserve/core/network/token_provider.dart';
+import 'package:roll_and_reserve/data/datasources/chat_local_datasource.dart';
 import 'package:roll_and_reserve/domain/repositories/chat_repository.dart';
 import 'package:roll_and_reserve/domain/repositories/reserve_repository.dart';
 import 'package:roll_and_reserve/domain/repositories/shop_repository.dart';
+import 'package:roll_and_reserve/domain/usecases/chat_usecases/get_chat_history_usecase.dart';
 import 'package:roll_and_reserve/presentation/blocs/chat/chat_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/event/event_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/game/game_bloc.dart';
@@ -72,7 +74,9 @@ void main() {
     test('registerChatDependencies registers chat bloc and repository', () async {
       registerChatDependencies(testSl);
 
+      expect(testSl.isRegistered<ChatLocalDataSource>(), isTrue);
       expect(testSl.isRegistered<ChatRepository>(), isTrue);
+      expect(testSl.isRegistered<GetChatHistoryUseCase>(), isTrue);
       expect(testSl.isRegistered<ChatBloc>(), isTrue);
 
       final chatBloc = testSl<ChatBloc>();

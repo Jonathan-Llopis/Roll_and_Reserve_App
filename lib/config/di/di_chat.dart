@@ -1,7 +1,11 @@
 import 'package:get_it/get_it.dart';
 import 'package:roll_and_reserve/data/datasources/chat_datasource.dart';
+import 'package:roll_and_reserve/data/datasources/chat_local_datasource.dart';
 import 'package:roll_and_reserve/data/repositories/chat_repository_impl.dart';
 import 'package:roll_and_reserve/domain/repositories/chat_repository.dart';
+import 'package:roll_and_reserve/domain/usecases/chat_usecases/clear_chat_history_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/chat_usecases/get_chat_history_usecase.dart';
+import 'package:roll_and_reserve/domain/usecases/chat_usecases/save_chat_message_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/chat_usecases/send_message_assistant_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/chat_usecases/send_message_gemini_usecase.dart';
 import 'package:roll_and_reserve/domain/usecases/chat_usecases/send_message_usecase.dart';
@@ -13,14 +17,20 @@ import 'package:roll_and_reserve/domain/usecases/chat_usecases/start_chat_usecas
 import 'package:roll_and_reserve/presentation/blocs/chat/chat_bloc.dart';
 
 void registerChatDependencies(GetIt sl) {
-  // Data Source
+  // Data Sources
   sl.registerLazySingleton<ChatRemoteDataSource>(
     () => ChatRemoteDataSourceImpl(),
+  );
+  sl.registerLazySingleton<ChatLocalDataSource>(
+    () => ChatLocalDataSourceImpl(),
   );
 
   // Repository
   sl.registerLazySingleton<ChatRepository>(
-    () => ChatRepositoryImpl(sl<ChatRemoteDataSource>()),
+    () => ChatRepositoryImpl(
+      sl<ChatRemoteDataSource>(),
+      localDataSource: sl<ChatLocalDataSource>(),
+    ),
   );
 
   // Use Cases
@@ -48,6 +58,15 @@ void registerChatDependencies(GetIt sl) {
   sl.registerLazySingleton<SendMessageAssistantUsecase>(
     () => SendMessageAssistantUsecase(sl<ChatRepository>()),
   );
+  sl.registerLazySingleton<GetChatHistoryUseCase>(
+    () => GetChatHistoryUseCase(sl<ChatRepository>()),
+  );
+  sl.registerLazySingleton<SaveChatMessageUseCase>(
+    () => SaveChatMessageUseCase(sl<ChatRepository>()),
+  );
+  sl.registerLazySingleton<ClearChatHistoryUseCase>(
+    () => ClearChatHistoryUseCase(sl<ChatRepository>()),
+  );
 
   // BLoC
   sl.registerFactory<ChatBloc>(
@@ -60,6 +79,9 @@ void registerChatDependencies(GetIt sl) {
       sendMessageGeminiUseCase: sl<SendMessageGeminiUsecase>(),
       startChatAssistantUsecases: sl<StartChatAssistantUsecases>(),
       sendMessageAssistantUsecase: sl<SendMessageAssistantUsecase>(),
+      getChatHistoryUseCase: sl<GetChatHistoryUseCase>(),
+      saveChatMessageUseCase: sl<SaveChatMessageUseCase>(),
+      clearChatHistoryUseCase: sl<ClearChatHistoryUseCase>(),
     ),
   );
 }

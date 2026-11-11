@@ -177,3 +177,21 @@ final class CleanChatAssistant extends ChatEvent {
   @override
   List<Object?> get props => [];
 }
+
+final class LoadChatHistoryEvent extends ChatEvent {
+  final String sessionId;
+
+  const LoadChatHistoryEvent({required this.sessionId});
+
+  @override
+  List<Object?> get props => [sessionId];
+}
+
+final class ClearChatHistoryEvent extends ChatEvent {
+  final String? sessionId;
+
+  const ClearChatHistoryEvent({this.sessionId});
+
+  @override
+  List<Object?> get props => [sessionId];
+}
