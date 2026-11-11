@@ -26,10 +26,13 @@ class TableRepositoryImpl implements TableRepository {
   Future<Either<Failure, List<TableEntity>>> getAllTables() async {
     try {
       final token = sharedPreferences.getString('token');
-      final tableModels = await remoteDataSource.getAllTables(token!);
+      if (token == null || token.trim().isEmpty) {
+        return const Left(AuthFailure('No hay una sesión activa de usuario'));
+      }
+      final tableModels = await remoteDataSource.getAllTables(token);
       return Right(tableModels.map((model) => model.toTableEntity()).toList());
     } catch (e) {
-      return const Left(ServerFailure('Error al cargar la mesa'));
+      return Left(ServerFailure('Error al cargar la mesa: ${e.toString()}'));
     }
   }
 
@@ -46,10 +49,13 @@ class TableRepositoryImpl implements TableRepository {
   Future<Either<Failure, bool>> deleteTable(int idTable) async {
     try {
       final token = sharedPreferences.getString('token');
-      await remoteDataSource.deleteTables(idTable, token!);
+      if (token == null || token.trim().isEmpty) {
+        return const Left(AuthFailure('No hay una sesión activa de usuario'));
+      }
+      await remoteDataSource.deleteTables(idTable, token);
       return const Right(true);
     } catch (e) {
-      return const Left(ServerFailure('Error al eliminar la mesa'));
+      return Left(ServerFailure('Error al eliminar la mesa: ${e.toString()}'));
     }
   }
 
@@ -66,8 +72,11 @@ class TableRepositoryImpl implements TableRepository {
   Future<Either<Failure, bool>> updateTable(TableEntity table) async {
     try {
       final token = sharedPreferences.getString('token');
+      if (token == null || token.trim().isEmpty) {
+        return const Left(AuthFailure('No hay una sesión activa de usuario'));
+      }
       TableModel shopModel = TableModel.fromEntity(table);
-      await remoteDataSource.updateTables(shopModel, token!);
+      await remoteDataSource.updateTables(shopModel, token);
       return const Right(true);
     } catch (e) {
       return Left(
@@ -89,8 +98,11 @@ class TableRepositoryImpl implements TableRepository {
   Future<Either<Failure, bool>> createTable(TableEntity table) async {
     try {
       final token = sharedPreferences.getString('token');
+      if (token == null || token.trim().isEmpty) {
+        return const Left(AuthFailure('No hay una sesión activa de usuario'));
+      }
       TableModel shopModel = TableModel.fromEntity(table);
-      await remoteDataSource.createTables(shopModel, token!);
+      await remoteDataSource.createTables(shopModel, token);
       return const Right(true);
     } catch (e) {
       return Left(ServerFailure('Error al crear la mesa: ${e.toString()}'));
@@ -114,11 +126,14 @@ class TableRepositoryImpl implements TableRepository {
   ) async {
     try {
       final token = sharedPreferences.getString('token');
+      if (token == null || token.trim().isEmpty) {
+        return const Left(AuthFailure('No hay una sesión activa de usuario'));
+      }
       final tableModels =
-          await remoteDataSource.getAllTablesByShop(shopId, token!);
+          await remoteDataSource.getAllTablesByShop(shopId, token);
       return Right(tableModels.map((model) => model.toTableEntity()).toList());
     } catch (e) {
-      return const Left(ServerFailure('Error al cargar las mesas por tienda'));
+      return Left(ServerFailure('Error al cargar las mesas por tienda: ${e.toString()}'));
     }
   }
 }

@@ -25,10 +25,13 @@ class GameRepositoryImpl implements GameRepository {
   Future<Either<Failure, List<GameEntity>>> getAllGames() async {
     try {
       final token = sharedPreferences.getString('token');
-      final gameModels = await remoteDataSource.getAllGame(token!);
+      if (token == null || token.trim().isEmpty) {
+        return const Left(AuthFailure('No hay una sesión activa de usuario'));
+      }
+      final gameModels = await remoteDataSource.getAllGame(token);
       return Right(gameModels.map((model) => model.toGameEntity()).toList());
     } catch (e) {
-      return const Left(ServerFailure('Error al cargar juegos'));
+      return Left(ServerFailure('Error al cargar juegos: ${e.toString()}'));
     }
   }
 
@@ -48,10 +51,13 @@ class GameRepositoryImpl implements GameRepository {
   ) async {
     try {
       final token = sharedPreferences.getString('token');
-      final gameModels = await remoteDataSource.searchGameByName(token!, name);
+      if (token == null || token.trim().isEmpty) {
+        return const Left(AuthFailure('No hay una sesión activa de usuario'));
+      }
+      final gameModels = await remoteDataSource.searchGameByName(token, name);
       return Right(gameModels.map((model) => model.toGameEntity()).toList());
     } catch (e) {
-      return const Left(ServerFailure('Error al buscar juegos por nombre'));
+      return Left(ServerFailure('Error al buscar juegos por nombre: ${e.toString()}'));
     }
   }
 }

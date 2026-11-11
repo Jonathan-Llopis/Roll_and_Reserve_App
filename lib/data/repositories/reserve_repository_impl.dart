@@ -19,6 +19,12 @@ class ReserveRepositoryImpl implements ReserveRepository {
     this.userDatasource,
   );
 
+  String? _getToken() {
+    final token = sharedPreferences.getString('token');
+    if (token == null || token.trim().isEmpty) return null;
+    return token;
+  }
+
   @override
 
   /// Gets all reserves from the backend.
@@ -33,15 +39,18 @@ class ReserveRepositoryImpl implements ReserveRepository {
   /// Throws an [Exception] if there is an error during the retrieval process.
   Future<Either<Failure, List<ReserveEntity>>> getAllReserves() async {
     try {
-      final token = sharedPreferences.getString('token');
-      final reserveModels = await remoteDataSource.getAllReserves(token!);
+      final token = _getToken();
+      if (token == null) {
+        return const Left(AuthFailure('No hay una sesión activa de usuario'));
+      }
+      final reserveModels = await remoteDataSource.getAllReserves(token);
       List<ReserveEntity> reserveEntities =
           reserveModels.toList().map((reserveModel) {
         return reserveModel.toReserveEntity();
       }).toList();
       return Right(reserveEntities);
     } catch (e) {
-      return const Left(ServerFailure('Error al cargar reservas'));
+      return Left(ServerFailure('Error al cargar reservas: ${e.toString()}'));
     }
   }
 
@@ -56,11 +65,14 @@ class ReserveRepositoryImpl implements ReserveRepository {
   /// Throws an [Exception] if there is an error during the deletion process.
   Future<Either<Failure, bool>> deleteReserve(int idReserve) async {
     try {
-      final token = sharedPreferences.getString('token');
-      await remoteDataSource.deleteReserves(idReserve, token!);
+      final token = _getToken();
+      if (token == null) {
+        return const Left(AuthFailure('No hay una sesión activa de usuario'));
+      }
+      await remoteDataSource.deleteReserves(idReserve, token);
       return const Right(true);
     } catch (e) {
-      return const Left(ServerFailure('Error al eliminar el reserva'));
+      return Left(ServerFailure('Error al eliminar la reserva: ${e.toString()}'));
     }
   }
 
@@ -75,9 +87,12 @@ class ReserveRepositoryImpl implements ReserveRepository {
   /// Throws an [Exception] if there is an error during the update process.
   Future<Either<Failure, bool>> updateReserve(ReserveEntity reserve) async {
     try {
-      final token = sharedPreferences.getString('token');
+      final token = _getToken();
+      if (token == null) {
+        return const Left(AuthFailure('No hay una sesión activa de usuario'));
+      }
       ReserveModel shopModel = ReserveModel.fromEntity(reserve);
-      await remoteDataSource.updateReserves(shopModel, token!);
+      await remoteDataSource.updateReserves(shopModel, token);
       return const Right(true);
     } catch (e) {
       return Left(
@@ -97,12 +112,15 @@ class ReserveRepositoryImpl implements ReserveRepository {
   /// Throws an [Exception] if there is an error during the creation process.
   Future<Either<Failure, int>> createReserve(ReserveEntity reserve) async {
     try {
-      final token = sharedPreferences.getString('token');
+      final token = _getToken();
+      if (token == null) {
+        return const Left(AuthFailure('No hay una sesión activa de usuario'));
+      }
       ReserveModel shopModel = ReserveModel.fromEntity(reserve);
       int idReserve = await remoteDataSource.createReserves(
         shopModel,
-        token!,
-        reserve.shopId!,
+        token,
+        reserve.shopId ?? 0,
       );
       return Right(idReserve);
     } catch (e) {
@@ -125,8 +143,11 @@ class ReserveRepositoryImpl implements ReserveRepository {
     String idUser,
   ) async {
     try {
-      final token = sharedPreferences.getString('token');
-      await remoteDataSource.addUserToReserve(idReserve, idUser, token!);
+      final token = _getToken();
+      if (token == null) {
+        return const Left(AuthFailure('No hay una sesión activa de usuario'));
+      }
+      await remoteDataSource.addUserToReserve(idReserve, idUser, token);
       return const Right(true);
     } catch (e) {
       return Left(
@@ -153,8 +174,11 @@ class ReserveRepositoryImpl implements ReserveRepository {
     String idUser,
   ) async {
     try {
-      final token = sharedPreferences.getString('token');
-      await remoteDataSource.deleteUserToReserve(idReserve, idUser, token!);
+      final token = _getToken();
+      if (token == null) {
+        return const Left(AuthFailure('No hay una sesión activa de usuario'));
+      }
+      await remoteDataSource.deleteUserToReserve(idReserve, idUser, token);
       return const Right(true);
     } catch (e) {
       return Left(
@@ -180,12 +204,15 @@ class ReserveRepositoryImpl implements ReserveRepository {
     int tableId,
   ) async {
     try {
-      final token = sharedPreferences.getString('token');
+      final token = _getToken();
+      if (token == null) {
+        return const Left(AuthFailure('No hay una sesión activa de usuario'));
+      }
       final formattedDate =
           "${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
       final reserveModels = await remoteDataSource.getAllReservesByDate(
         formattedDate,
-        token!,
+        token,
         tableId,
       );
       List<ReserveEntity> reserveEntities =
@@ -213,11 +240,13 @@ class ReserveRepositoryImpl implements ReserveRepository {
     int idReserve,
   ) async {
     try {
-      final token = sharedPreferences.getString('token');
+      final token = _getToken();
+      if (token == null) {
+        return const Left(AuthFailure('No hay una sesión activa de usuario'));
+      }
       final reserveModels =
-          await remoteDataSource.getReserveById(idReserve, token!);
-      List<Future<dynamic>> userAvatars =
-          reserveModels.users!.map((user) async {
+          await remoteDataSource.getReserveById(idReserve, token);
+      List<Future<dynamic>> userAvatars = (reserveModels.users ?? []).map((user) async {
         return await userDatasource.getUserAvatar(user.avatarId, token);
       }).toList();
       List<dynamic> avatars = await Future.wait(userAvatars);
@@ -225,7 +254,7 @@ class ReserveRepositoryImpl implements ReserveRepository {
           reserveModels.toReserveEntityWithUsers(avatars);
       return Right(reserveEntity);
     } catch (e) {
-      return const Left(ServerFailure('Error al cargar reserve'));
+      return Left(ServerFailure('Error al cargar reserva: ${e.toString()}'));
     }
   }
 
@@ -243,9 +272,12 @@ class ReserveRepositoryImpl implements ReserveRepository {
     String userId,
   ) async {
     try {
-      final token = sharedPreferences.getString('token');
+      final token = _getToken();
+      if (token == null) {
+        return const Left(AuthFailure('No hay una sesión activa de usuario'));
+      }
       final reserveModels =
-          await remoteDataSource.getReservesOfUser(userId, token!);
+          await remoteDataSource.getReservesOfUser(userId, token);
       List<ReserveEntity> reserveEntities =
           reserveModels.asMap().entries.map((entry) {
         return entry.value.toReserveEntity();
@@ -271,10 +303,10 @@ class ReserveRepositoryImpl implements ReserveRepository {
   /// Throws an [Exception] if there is an error during the confirmation process.
   Future<Either<Failure, bool>> confirmReserve(int idReserve) async {
     try {
-      final token = sharedPreferences.getString('token');
+      final token = _getToken();
       final idUser = sharedPreferences.getString('id');
       if (token == null || idUser == null) {
-        throw Exception('Token or user ID is missing');
+        return const Left(AuthFailure('Sesión o ID de usuario no válidos'));
       }
       await remoteDataSource.confirmReserve(idReserve, idUser, token);
       return const Right(true);
@@ -298,9 +330,9 @@ class ReserveRepositoryImpl implements ReserveRepository {
     List<ReserveEntity> reserves,
   ) async {
     try {
-      final token = sharedPreferences.getString('token');
+      final token = _getToken();
       if (token == null) {
-        throw Exception('Token is missing');
+        return const Left(AuthFailure('No hay una sesión activa de usuario'));
       }
       List<int> reserveIds = [];
       for (var reserve in reserves) {
@@ -308,7 +340,7 @@ class ReserveRepositoryImpl implements ReserveRepository {
         int idReserve = await remoteDataSource.createReservesEvent(
           reserveModel,
           token,
-          reserve.shopId!,
+          reserve.shopId ?? 0,
         );
         reserveIds.add(idReserve);
       }
@@ -335,15 +367,18 @@ class ReserveRepositoryImpl implements ReserveRepository {
 
   Future<Either<Failure, List<ReserveEntity>>> getEvents(int idShop) async {
     try {
-      final token = sharedPreferences.getString('token');
-      final reserveModels = await remoteDataSource.getEvents(idShop, token!);
+      final token = _getToken();
+      if (token == null) {
+        return const Left(AuthFailure('No hay una sesión activa de usuario'));
+      }
+      final reserveModels = await remoteDataSource.getEvents(idShop, token);
       List<ReserveEntity> reserveEntities =
           reserveModels.toList().map((reserveModel) {
         return reserveModel.toReserveEntity();
       }).toList();
       return Right(reserveEntities);
     } catch (e) {
-      return const Left(ServerFailure('Error al cargar reservas'));
+      return Left(ServerFailure('Error al cargar eventos: ${e.toString()}'));
     }
   }
 
@@ -361,8 +396,11 @@ class ReserveRepositoryImpl implements ReserveRepository {
     String idUser,
   ) async {
     try {
-      final token = sharedPreferences.getString('token');
-      final players = await remoteDataSource.getLastTenPlayers(idUser, token!);
+      final token = _getToken();
+      if (token == null) {
+        return const Left(AuthFailure('No hay una sesión activa de usuario'));
+      }
+      final players = await remoteDataSource.getLastTenPlayers(idUser, token);
       List<Future<dynamic>> userAvatars = players.map((user) async {
         return await userDatasource.getUserAvatar(user.avatarId, token);
       }).toList();
