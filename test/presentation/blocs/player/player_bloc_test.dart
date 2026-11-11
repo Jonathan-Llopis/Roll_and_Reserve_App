@@ -42,7 +42,7 @@ void main() {
     mockDeleteUserOfReserveUseCase = MockDeleteUserOfReserveUseCase();
   });
 
-  final testUsers = [
+  const testUsers = [
     UserEntity(
       id: 'google_1',
       name: 'Player One',
@@ -69,7 +69,7 @@ void main() {
       'emits [PlayerLoading, PlayerLoaded] when GetLastTenPlayersEvent succeeds',
       build: () {
         when(() => mockGetLastTenPlayersUseCase(any()))
-            .thenAnswer((_) async => Right(testUsers));
+            .thenAnswer((_) async => const Right(testUsers));
         return PlayerBloc(
           getLastTenPlayersUseCase: mockGetLastTenPlayersUseCase,
           addUserToReserveUseCase: mockAddUserToReserveUseCase,
@@ -80,7 +80,7 @@ void main() {
           bloc.add(const GetLastTenPlayersEvent(idGoogle: 'google_1')),
       expect: () => [
         const PlayerLoading(),
-        PlayerLoaded(lastUsers: testUsers),
+        const PlayerLoaded(lastUsers: testUsers),
       ],
     );
 

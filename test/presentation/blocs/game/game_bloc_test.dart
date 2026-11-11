@@ -44,21 +44,21 @@ void main() {
     mockSearchGamesUseCase = MockSearchGamesUseCase();
   });
 
-  final testGames = [
+  const testGames = [
     GameEntity(
       id: 1,
       description: 'Catan',
     ),
   ];
 
-  final testCategories = [
+  const testCategories = [
     GameCategoryEntity(
       id: 1,
       description: 'Strategy',
     ),
   ];
 
-  final testDifficulties = [
+  const testDifficulties = [
     DifficultyEntity(
       id: 1,
       description: 'Medium',
@@ -80,7 +80,7 @@ void main() {
       'emits [GameLoading, GameLoaded] when GetAllGamesEvent succeeds',
       build: () {
         when(() => mockGetAllGameUseCase(any()))
-            .thenAnswer((_) async => Right(testGames));
+            .thenAnswer((_) async => const Right(testGames));
         return GameBloc(
           getAllGameUseCase: mockGetAllGameUseCase,
           getAllCategoryGamesUseCase: mockGetAllCategoryGamesUseCase,
@@ -91,7 +91,7 @@ void main() {
       act: (bloc) => bloc.add(const GetAllGamesEvent()),
       expect: () => [
         const GameLoading(),
-        GameLoaded(games: testGames),
+        const GameLoaded(games: testGames),
       ],
     );
 
@@ -118,7 +118,7 @@ void main() {
       'emits [GameLoading, GameLoaded] when GetAllCategoriesEvent succeeds',
       build: () {
         when(() => mockGetAllCategoryGamesUseCase(any()))
-            .thenAnswer((_) async => Right(testCategories));
+            .thenAnswer((_) async => const Right(testCategories));
         return GameBloc(
           getAllGameUseCase: mockGetAllGameUseCase,
           getAllCategoryGamesUseCase: mockGetAllCategoryGamesUseCase,
@@ -129,7 +129,7 @@ void main() {
       act: (bloc) => bloc.add(const GetAllCategoriesEvent()),
       expect: () => [
         const GameLoading(),
-        GameLoaded(categories: testCategories),
+        const GameLoaded(categories: testCategories),
       ],
     );
 
@@ -137,7 +137,7 @@ void main() {
       'emits [GameLoading, GameLoaded] when GetAllDifficultiesEvent succeeds',
       build: () {
         when(() => mockGetAllDifficultyUseCase(any()))
-            .thenAnswer((_) async => Right(testDifficulties));
+            .thenAnswer((_) async => const Right(testDifficulties));
         return GameBloc(
           getAllGameUseCase: mockGetAllGameUseCase,
           getAllCategoryGamesUseCase: mockGetAllCategoryGamesUseCase,
@@ -148,7 +148,7 @@ void main() {
       act: (bloc) => bloc.add(const GetAllDifficultiesEvent()),
       expect: () => [
         const GameLoading(),
-        GameLoaded(difficulties: testDifficulties),
+        const GameLoaded(difficulties: testDifficulties),
       ],
     );
 
@@ -156,7 +156,7 @@ void main() {
       'emits [GameLoading, GameLoaded] when SearchGameByNameEvent succeeds',
       build: () {
         when(() => mockSearchGamesUseCase('Catan'))
-            .thenAnswer((_) async => Right(testGames));
+            .thenAnswer((_) async => const Right(testGames));
         return GameBloc(
           getAllGameUseCase: mockGetAllGameUseCase,
           getAllCategoryGamesUseCase: mockGetAllCategoryGamesUseCase,
@@ -167,7 +167,7 @@ void main() {
       act: (bloc) => bloc.add(const SearchGameByNameEvent(gameName: 'Catan')),
       expect: () => [
         const GameLoading(),
-        GameLoaded(searchedGames: testGames),
+        const GameLoaded(searchedGames: testGames),
       ],
     );
   });

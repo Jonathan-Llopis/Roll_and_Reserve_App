@@ -30,7 +30,7 @@ void main() {
     mockCreateEventsUsecase = MockCreateEventsUsecase();
   });
 
-  final testEvents = [
+  const testEvents = [
     ReserveEntity(
       id: 1,
       freePlaces: 4,
@@ -62,7 +62,7 @@ void main() {
       'emits [EventLoading, EventLoaded] when GetShopEventsEvent succeeds',
       build: () {
         when(() => mockGetEventsShopUsecase(any()))
-            .thenAnswer((_) async => Right(testEvents));
+            .thenAnswer((_) async => const Right(testEvents));
         return EventBloc(
           getEventsShopUsecase: mockGetEventsShopUsecase,
           createEventsUsecase: mockCreateEventsUsecase,
@@ -71,7 +71,7 @@ void main() {
       act: (bloc) => bloc.add(const GetShopEventsEvent(idShop: 1)),
       expect: () => [
         const EventLoading(),
-        EventLoaded(events: testEvents),
+        const EventLoaded(events: testEvents),
       ],
     );
 
@@ -102,7 +102,7 @@ void main() {
           createEventsUsecase: mockCreateEventsUsecase,
         );
       },
-      act: (bloc) => bloc.add(CreateShopEventEvent(reserves: testEvents)),
+      act: (bloc) => bloc.add(const CreateShopEventEvent(reserves: testEvents)),
       expect: () => [
         const EventLoading(),
         const EventLoaded(createdEventIds: [1, 2]),

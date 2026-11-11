@@ -1,4 +1,6 @@
-class UserEntity {
+import 'package:equatable/equatable.dart';
+
+class UserEntity extends Equatable {
   final String id;
   final String email;
   final int role;
@@ -10,15 +12,52 @@ class UserEntity {
   final bool? reserveConfirmation;
   final List<int> notifications;
 
-  UserEntity({
-    required this.email,
-    required this.avatar,
-    required this.averageRaiting,
+  const UserEntity({
     required this.id,
+    required this.email,
+    required this.role,
     required this.name,
     required this.username,
-    required this.role,
+    required this.avatar,
+    required this.averageRaiting,
     this.reserveConfirmation,
     required this.notifications,
   });
+
+  UserEntity copyWith({
+    String? id,
+    String? email,
+    int? role,
+    String? name,
+    String? username,
+    dynamic avatar,
+    double? averageRaiting,
+    bool? reserveConfirmation,
+    List<int>? notifications,
+  }) {
+    return UserEntity(
+      id: id ?? this.id,
+      email: email ?? this.email,
+      role: role ?? this.role,
+      name: name ?? this.name,
+      username: username ?? this.username,
+      avatar: avatar ?? this.avatar,
+      averageRaiting: averageRaiting ?? this.averageRaiting,
+      reserveConfirmation: reserveConfirmation ?? this.reserveConfirmation,
+      notifications: notifications ?? this.notifications,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+        id,
+        email,
+        role,
+        name,
+        username,
+        avatar,
+        averageRaiting,
+        reserveConfirmation,
+        notifications,
+      ];
 }

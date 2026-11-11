@@ -25,7 +25,7 @@ void main() {
     mockGetAllUsersUseCase = MockGetAllUsersUseCase();
   });
 
-  final testUsers = [
+  const testUsers = [
     UserEntity(
       id: 'admin_1',
       name: 'Admin User',
@@ -58,13 +58,13 @@ void main() {
       'emits [AdminUserLoading, AdminUserLoaded] when GetAdminAllUsersEvent succeeds',
       build: () {
         when(() => mockGetAllUsersUseCase(any()))
-            .thenAnswer((_) async => Right(testUsers));
+            .thenAnswer((_) async => const Right(testUsers));
         return AdminUserBloc(getAllUsersUseCase: mockGetAllUsersUseCase);
       },
       act: (bloc) => bloc.add(const GetAdminAllUsersEvent()),
       expect: () => [
         const AdminUserLoading(),
-        AdminUserLoaded(users: testUsers),
+        const AdminUserLoaded(users: testUsers),
       ],
     );
 

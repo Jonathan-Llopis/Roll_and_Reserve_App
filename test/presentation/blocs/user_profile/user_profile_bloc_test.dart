@@ -50,7 +50,7 @@ void main() {
     mockIsNameUsedUsecase = MockIsNameUsedUsecase();
   });
 
-  final testUser = UserEntity(
+  const testUser = UserEntity(
     id: 'user_123',
     name: 'John Doe',
     username: 'johndoe',
@@ -82,14 +82,14 @@ void main() {
       'emits [UserProfileLoading, UserProfileLoaded] when FetchUserProfileEvent succeeds',
       build: () {
         when(() => mockGetUserInfoUseCase('user_123'))
-            .thenAnswer((_) async => Right(testUser));
+            .thenAnswer((_) async => const Right(testUser));
         return buildBloc();
       },
       act: (bloc) =>
           bloc.add(const FetchUserProfileEvent(idGoogle: 'user_123')),
       expect: () => [
         const UserProfileLoading(),
-        UserProfileLoaded(user: testUser),
+        const UserProfileLoaded(user: testUser),
       ],
     );
 
@@ -116,10 +116,10 @@ void main() {
             .thenAnswer((_) async => const Right(true));
         return buildBloc();
       },
-      act: (bloc) => bloc.add(UpdateProfileInfoEvent(user: testUser)),
+      act: (bloc) => bloc.add(const UpdateProfileInfoEvent(user: testUser)),
       expect: () => [
         const UserProfileLoading(),
-        UserProfileLoaded(user: testUser),
+        const UserProfileLoaded(user: testUser),
       ],
     );
 

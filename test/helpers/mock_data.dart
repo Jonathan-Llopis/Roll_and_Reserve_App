@@ -1,7 +1,7 @@
 import 'package:roll_and_reserve/data/models/user_model.dart';
 import 'package:roll_and_reserve/domain/entities/user_entity.dart';
 
-final tUserEntity = UserEntity(
+const tUserEntity = UserEntity(
   id: 'user_123',
   email: 'test@rollandreserve.com',
   name: 'Test User',
@@ -9,7 +9,7 @@ final tUserEntity = UserEntity(
   role: 2,
   avatar: 'assets/images/default_avatar.png',
   averageRaiting: 4.5,
-  notifications: const [1, 2],
+  notifications: [1, 2],
 );
 
 final tUserModel = UserModel(
