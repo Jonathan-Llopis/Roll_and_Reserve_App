@@ -8,7 +8,7 @@ class SendMessageAssistantUsecase
 
   @override
   Future<String> call(SendMessageGeminiParams params) async {
-    return repository.sendMessageAssitant(
+    return repository.sendMessageAssistant(
       params.message,
       imageBytes: params.imageBytes,
     );

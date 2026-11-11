@@ -85,14 +85,21 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
-  Future<String> sendMessageAssitant(
+  Future<String> sendMessageAssistant(
     String message, {
     List<ByteData>? imageBytes,
   }) async {
     try {
-      return await remoteDataSource.sendMessageAssitant(message, imageBytes);
+      return await remoteDataSource.sendMessageAssistant(message, imageBytes);
     } catch (e) {
       throw Exception('Error sending message assistant: $e');
     }
   }
+
+  @override
+  @Deprecated('Use sendMessageAssistant instead')
+  Future<String> sendMessageAssitant(
+    String message, {
+    List<ByteData>? imageBytes,
+  }) => sendMessageAssistant(message, imageBytes: imageBytes);
 }

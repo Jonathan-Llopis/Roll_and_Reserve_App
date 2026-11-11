@@ -3,7 +3,7 @@ import 'package:roll_and_reserve/core/failure.dart';
 import 'package:roll_and_reserve/data/datasources/table_datasource.dart';
 import 'package:roll_and_reserve/data/models/table_model.dart';
 import 'package:roll_and_reserve/domain/entities/table_entity.dart';
-import 'package:roll_and_reserve/domain/repositories/table_respository.dart';
+import 'package:roll_and_reserve/domain/repositories/table_repository.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 

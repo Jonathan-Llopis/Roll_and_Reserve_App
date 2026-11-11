@@ -6,6 +6,7 @@ class UserEntity {
   final String username;
   final dynamic avatar;
   final double averageRaiting;
+  double get averageRating => averageRaiting;
   final bool? reserveConfirmation;
   final List<int> notifications;
 

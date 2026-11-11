@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:roll_and_reserve/core/failure.dart';
 import 'package:roll_and_reserve/core/use_case.dart';
-import 'package:roll_and_reserve/domain/repositories/table_respository.dart';
+import 'package:roll_and_reserve/domain/repositories/table_repository.dart';
 
 class DeleteTableUseCase implements UseCase<Either<Failure, bool>, int> {
   final TableRepository repository;
