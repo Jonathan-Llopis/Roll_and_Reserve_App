@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
 import 'package:roll_and_reserve/domain/repositories/user_repository.dart';
 import 'package:roll_and_reserve/main.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
-import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_admin.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_chat.dart';
@@ -26,6 +26,9 @@ import 'package:roll_and_reserve/presentation/screens/screen_shop_events.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_stadistics.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_tables_shop.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_main.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_reserve.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_review_user.dart';
+import 'package:roll_and_reserve/presentation/screens/screen_qr.dart';
 import 'package:go_router/go_router.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_user_onboarding.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/default_app_bar.dart';
@@ -91,6 +94,89 @@ final GoRouter router = GoRouter(
       ),
     ),
     GoRoute(
+      name: 'userReviews',
+      path: '/user_reviews',
+      pageBuilder: (context, state) => CustomTransitionPage(
+        key: state.pageKey,
+        child: ScreenReviewUser(appBar: appBar),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return child;
+        },
+      ),
+    ),
+    GoRoute(
+      name: 'reserveDetail',
+      path: '/reserve_detail/:idReserve',
+      pageBuilder: (context, state) {
+        final idReserve =
+            int.tryParse(state.pathParameters['idReserve'] ?? '') ?? 0;
+        final extra = state.extra as Map<String, dynamic>?;
+        final idShop = extra?['idShop'] as int?;
+        final idTable = extra?['idTable'] as int?;
+        return CustomTransitionPage(
+          key: state.pageKey,
+          child: ScreenReserve(
+            idReserve: idReserve,
+            idShop: idShop,
+            idTable: idTable,
+            appBar: appBar,
+          ),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return child;
+          },
+        );
+      },
+    ),
+    GoRoute(
+      name: 'qrScanner',
+      path: '/qr_scanner/:idReserve/:idShop/:idTable',
+      pageBuilder: (context, state) {
+        final idReserve =
+            int.tryParse(state.pathParameters['idReserve'] ?? '') ?? 0;
+        final idShop =
+            int.tryParse(state.pathParameters['idShop'] ?? '') ?? 0;
+        final idTable =
+            int.tryParse(state.pathParameters['idTable'] ?? '') ?? 0;
+        return CustomTransitionPage(
+          key: state.pageKey,
+          child: QRScannerScreen(
+            idReserve: idReserve,
+            idShop: idShop,
+            idTable: idTable,
+            appBar: appBar,
+          ),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return child;
+          },
+        );
+      },
+    ),
+    GoRoute(
+      name: 'editReserve',
+      path: '/edit_reserve',
+      pageBuilder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>? ?? {};
+        final idShop = extra['idShop'] as int? ?? 0;
+        final idTable = extra['idTable'] as int? ?? 0;
+        final searchDateTimeString =
+            extra['searchDateTimeString'] as String? ?? '';
+        final reserve = extra['reserve'] as ReserveEntity?;
+        return CustomTransitionPage(
+          key: state.pageKey,
+          child: ScreenCreateReserve(
+            idShop: idShop,
+            idTable: idTable,
+            appBar: appBar,
+            searchDateTimeString: searchDateTimeString,
+            reserve: reserve,
+          ),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return child;
+          },
+        );
+      },
+    ),
+    GoRoute(
       name: 'user',
       path: '/user',
       pageBuilder: (context, state) => CustomTransitionPage(
@@ -113,7 +199,8 @@ final GoRouter router = GoRouter(
           name: 'editShop',
           path: '/shop_edit/:idEditShop',
           pageBuilder: (context, state) {
-            final shopId = int.parse(state.pathParameters['idEditShop']!);
+            final shopId =
+                int.tryParse(state.pathParameters['idEditShop'] ?? '') ?? 0;
             return CustomTransitionPage(
               key: state.pageKey,
               child: ScreenEditShop(idShop: shopId, appBar: appBar),
@@ -336,16 +423,20 @@ final GoRouter router = GoRouter(
                   name: 'createReserve',
                   path: 'createReserve/:dateSearch',
                   pageBuilder: (context, state) {
-                    final idShop =
-                        int.parse(state.pathParameters['idTablesShop']!);
-                    final idTable = int.parse(state.pathParameters['idTable']!);
-                    final dateSearch = state.pathParameters['dateSearch'];
+                    final idShop = int.tryParse(
+                          state.pathParameters['idTablesShop'] ?? '',
+                        ) ??
+                        0;
+                    final idTable =
+                        int.tryParse(state.pathParameters['idTable'] ?? '') ??
+                            0;
+                    final dateSearch = state.pathParameters['dateSearch'] ?? '';
                     return CustomTransitionPage(
                       key: state.pageKey,
                       child: ScreenCreateReserve(
                         idShop: idShop,
                         idTable: idTable,
-                        searchDateTimeString: dateSearch!,
+                        searchDateTimeString: dateSearch,
                         appBar: appBar,
                       ),
                       transitionsBuilder:
@@ -363,35 +454,35 @@ final GoRouter router = GoRouter(
     ),
   ],
   redirect: (context, state) async {
-    final isLoggedIn = await di.sl<UserRespository>().isLoggedIn();
-    final sharedPreferences = await SharedPreferences.getInstance();
+    final sharedPreferences = di.sl<SharedPreferences>();
     final email = sharedPreferences.getString('email');
-    if (context.mounted) {
-      BlocProvider.of<LoginBloc>(context).add(CheckAuthentication());
+    final isGoingToLogin = state.matchedLocation.startsWith('/login');
+
+    if (email == null) {
+      return isGoingToLogin ? null : '/login';
     }
 
-    if (!state.matchedLocation.contains('/login') && email == null) {
-      return '/login';
-    } else {
-      if (state.matchedLocation.startsWith('/login')) {
-        return null;
-      } else {
-        return isLoggedIn.fold(
-          (_) => '/login',
-          (loggedIn) async {
-            final sharedPreferences = await SharedPreferences.getInstance();
-            final isFirstTime =
-                sharedPreferences.getBool('isFirstTime') ?? true;
-            if (isFirstTime && loggedIn.role == 1) {
-              return '/ownerOnBoard';
-            } else if (isFirstTime && loggedIn.role == 2) {
-              return '/userOnBoard';
-            } else {
-              return state.matchedLocation;
-            }
-          },
-        );
-      }
-    }
+    final authResult = await di.sl<UserRespository>().isLoggedIn();
+    return authResult.fold(
+      (failure) => isGoingToLogin ? null : '/login',
+      (loggedIn) {
+        if (isGoingToLogin) {
+          return '/user';
+        }
+        final isFirstTime =
+            sharedPreferences.getBool('isFirstTime') ?? true;
+        if (isFirstTime && loggedIn.role == 1) {
+          return state.matchedLocation == '/ownerOnBoard'
+              ? null
+              : '/ownerOnBoard';
+        } else if (isFirstTime && loggedIn.role == 2) {
+          return state.matchedLocation == '/userOnBoard'
+              ? null
+              : '/userOnBoard';
+        } else {
+          return null;
+        }
+      },
+    );
   },
 );
