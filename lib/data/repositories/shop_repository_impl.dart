@@ -31,13 +31,8 @@ class ShopRepositoryImpl implements ShopsRepository {
       final token = sharedPreferences.getString('token');
       if (token == null) return const Left(AuthFailure('No token found'));
       final shopsModels = await remoteDataSource.getAllShops(token, page: page, limit: limit);
-      final shopsWithLogo = await Future.wait(
-        shopsModels.map((model) async {
-          final logo = await remoteDataSource.getShopLogo(model.logoId, token);
-          return model.toShopEntity(logo);
-        }),
-      );
-      return Right(shopsWithLogo);
+      final shopEntities = shopsModels.map((model) => model.toShopEntity()).toList();
+      return Right(shopEntities);
     } catch (e) {
       return Left(ServerFailure('Error al cargar tiendas: ${e.toString()}'));
     }
@@ -47,9 +42,9 @@ class ShopRepositoryImpl implements ShopsRepository {
 
   /// Fetches a shop from the backend with the given [idShop].
   ///
-  /// Retrieves the shop with the given [idShop] and its associated logo from the
+  /// Retrieves the shop with the given [idShop] from the
   /// backend. The method uses a stored token for authorization and maps the
-  /// resulting [ShopModel] to a [ShopEntity] including the shop logo.
+  /// resulting [ShopModel] to a [ShopEntity].
   ///
   /// Returns a [Future] that resolves to a [Right] containing a [ShopEntity]
   /// if the operation is successful, or a [Left] containing an [Failure] if an
@@ -59,8 +54,7 @@ class ShopRepositoryImpl implements ShopsRepository {
       final token = sharedPreferences.getString('token');
       if (token == null) return const Left(AuthFailure('No token found'));
       final shopModel = await remoteDataSource.getShop(idShop, token);
-      final logo = await remoteDataSource.getShopLogo(shopModel.logoId, token);
-      final shopEntity = shopModel.toShopEntity(logo);
+      final shopEntity = shopModel.toShopEntity();
       return Right(shopEntity);
     } catch (e) {
       return Left(ServerFailure('Error al obtener la tienda: ${e.toString()}'));
@@ -73,9 +67,8 @@ class ShopRepositoryImpl implements ShopsRepository {
   /// from the backend.
   ///
   /// Retrieves the list of shops owned by the user with the given [ownerId]
-  /// and their associated logos from the backend. The method uses a stored
-  /// token for authorization and maps the resulting [ShopModel] to a
-  /// [ShopEntity] including the shop logo.
+  /// from the backend. The method uses a stored token for authorization and maps
+  /// the resulting [ShopModel] to a [ShopEntity].
   ///
   /// Returns a [Future] that resolves to a [Right] containing a [List] of
   /// [ShopEntity] if the operation is successful, or a [Left] containing an
@@ -88,13 +81,9 @@ class ShopRepositoryImpl implements ShopsRepository {
       if (token == null) return const Left(AuthFailure('No token found'));
       final shopsModels =
           await remoteDataSource.getShopsByOwner(ownerId, token);
-      final shopsWithLogo = await Future.wait(
-        shopsModels.map((model) async {
-          final logo = await remoteDataSource.getShopLogo(model.logoId, token);
-          return model.toShopEntity(logo);
-        }),
-      );
-      return Right(shopsWithLogo);
+      final shopEntities =
+          shopsModels.map((model) => model.toShopEntity()).toList();
+      return Right(shopEntities);
     } catch (e) {
       return Left(
         ServerFailure('Error al obtener las tiendas: ${e.toString()}'),

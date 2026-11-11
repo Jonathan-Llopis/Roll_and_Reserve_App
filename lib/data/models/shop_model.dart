@@ -76,7 +76,7 @@ class ShopModel {
     };
   }
 
-  ShopEntity toShopEntity(dynamic logoFile) {
+  ShopEntity toShopEntity([dynamic logoFile]) {
     return ShopEntity(
       id: id,
       name: name,

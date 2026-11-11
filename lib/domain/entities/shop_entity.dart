@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ShopEntity extends Equatable {
   final int id;
@@ -14,11 +15,19 @@ class ShopEntity extends Equatable {
   final double latitude;
   final double longitude;
 
+  String get logoUrl {
+    if (logoId.isEmpty || logoId == '67c4bf45ae01906bd75ace8f' || logoId == '0') {
+      return '';
+    }
+    final backend = (dotenv.isInitialized ? dotenv.env['BACKEND'] : null) ?? 'http://localhost:3000';
+    return '$backend/files/download/$logoId';
+  }
+
   const ShopEntity({
     required this.id,
     required this.name,
     required this.address,
-    required this.logo,
+    this.logo,
     required this.averageRaiting,
     required this.logoId,
     required this.ownerId,
