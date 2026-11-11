@@ -5,7 +5,7 @@ import 'package:roll_and_reserve/domain/entities/reserve_entity.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_event.dart';
 import 'package:roll_and_reserve/presentation/blocs/login/login_state.dart';
-import 'package:roll_and_reserve/presentation/functions/notification_service.dart';
+import 'package:roll_and_reserve/core/services/notification_service.dart';
 import 'package:roll_and_reserve/presentation/functions/state_check.dart';
 import 'package:roll_and_reserve/presentation/widgets/cards/card_reserve.dart';
 import 'package:roll_and_reserve/l10n/app_localizations.dart';
