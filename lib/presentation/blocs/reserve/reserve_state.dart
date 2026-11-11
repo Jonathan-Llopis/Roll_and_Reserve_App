@@ -36,6 +36,20 @@ sealed class ReserveState extends Equatable {
   String? get errorMessage =>
       this is ReserveFailure ? (this as ReserveFailure).message : null;
 
+  ReserveState copyWith({
+    int? idReserve,
+    List<ReserveEntity>? reserves,
+    List<ReserveEntity>? reservesOfUser,
+    List<ReserveEntity>? eventsShop,
+    ReserveEntity? reserve,
+    List<DifficultyEntity>? difficulties,
+    List<GameEntity>? games,
+    List<GameEntity>? searchedGames,
+    List<GameCategoryEntity>? gameCategories,
+    List<UserEntity>? lastUsers,
+    Map<String, String>? filterTables,
+  });
+
   @override
   List<Object?> get props => [
         idReserve,
@@ -54,6 +68,35 @@ sealed class ReserveState extends Equatable {
 
 class ReserveInitial extends ReserveState {
   const ReserveInitial() : super();
+
+  @override
+  ReserveState copyWith({
+    int? idReserve,
+    List<ReserveEntity>? reserves,
+    List<ReserveEntity>? reservesOfUser,
+    List<ReserveEntity>? eventsShop,
+    ReserveEntity? reserve,
+    List<DifficultyEntity>? difficulties,
+    List<GameEntity>? games,
+    List<GameEntity>? searchedGames,
+    List<GameCategoryEntity>? gameCategories,
+    List<UserEntity>? lastUsers,
+    Map<String, String>? filterTables,
+  }) {
+    return ReserveSuccess(
+      idReserve: idReserve ?? this.idReserve,
+      reserves: reserves ?? this.reserves,
+      reserve: reserve ?? this.reserve,
+      difficulties: difficulties ?? this.difficulties,
+      games: games ?? this.games,
+      searchedGames: searchedGames ?? this.searchedGames,
+      gameCategories: gameCategories ?? this.gameCategories,
+      reservesOfUser: reservesOfUser ?? this.reservesOfUser,
+      eventsShop: eventsShop ?? this.eventsShop,
+      lastUsers: lastUsers ?? this.lastUsers,
+      filterTables: filterTables ?? this.filterTables,
+    );
+  }
 }
 
 class ReserveLoading extends ReserveState {
@@ -70,6 +113,35 @@ class ReserveLoading extends ReserveState {
     super.lastUsers,
     super.filterTables,
   });
+
+  @override
+  ReserveState copyWith({
+    int? idReserve,
+    List<ReserveEntity>? reserves,
+    List<ReserveEntity>? reservesOfUser,
+    List<ReserveEntity>? eventsShop,
+    ReserveEntity? reserve,
+    List<DifficultyEntity>? difficulties,
+    List<GameEntity>? games,
+    List<GameEntity>? searchedGames,
+    List<GameCategoryEntity>? gameCategories,
+    List<UserEntity>? lastUsers,
+    Map<String, String>? filterTables,
+  }) {
+    return ReserveLoading(
+      idReserve: idReserve ?? this.idReserve,
+      reserves: reserves ?? this.reserves,
+      reserve: reserve ?? this.reserve,
+      difficulties: difficulties ?? this.difficulties,
+      games: games ?? this.games,
+      searchedGames: searchedGames ?? this.searchedGames,
+      gameCategories: gameCategories ?? this.gameCategories,
+      reservesOfUser: reservesOfUser ?? this.reservesOfUser,
+      eventsShop: eventsShop ?? this.eventsShop,
+      lastUsers: lastUsers ?? this.lastUsers,
+      filterTables: filterTables ?? this.filterTables,
+    );
+  }
 }
 
 class ReserveSuccess extends ReserveState {
@@ -86,6 +158,35 @@ class ReserveSuccess extends ReserveState {
     super.lastUsers,
     super.filterTables,
   });
+
+  @override
+  ReserveState copyWith({
+    int? idReserve,
+    List<ReserveEntity>? reserves,
+    List<ReserveEntity>? reservesOfUser,
+    List<ReserveEntity>? eventsShop,
+    ReserveEntity? reserve,
+    List<DifficultyEntity>? difficulties,
+    List<GameEntity>? games,
+    List<GameEntity>? searchedGames,
+    List<GameCategoryEntity>? gameCategories,
+    List<UserEntity>? lastUsers,
+    Map<String, String>? filterTables,
+  }) {
+    return ReserveSuccess(
+      idReserve: idReserve ?? this.idReserve,
+      reserves: reserves ?? this.reserves,
+      reserve: reserve ?? this.reserve,
+      difficulties: difficulties ?? this.difficulties,
+      games: games ?? this.games,
+      searchedGames: searchedGames ?? this.searchedGames,
+      gameCategories: gameCategories ?? this.gameCategories,
+      reservesOfUser: reservesOfUser ?? this.reservesOfUser,
+      eventsShop: eventsShop ?? this.eventsShop,
+      lastUsers: lastUsers ?? this.lastUsers,
+      filterTables: filterTables ?? this.filterTables,
+    );
+  }
 }
 
 class ReserveFailure extends ReserveState {
@@ -106,5 +207,35 @@ class ReserveFailure extends ReserveState {
   });
 
   @override
-  List<Object?> get props => [super.props, message];
+  ReserveState copyWith({
+    int? idReserve,
+    List<ReserveEntity>? reserves,
+    List<ReserveEntity>? reservesOfUser,
+    List<ReserveEntity>? eventsShop,
+    ReserveEntity? reserve,
+    List<DifficultyEntity>? difficulties,
+    List<GameEntity>? games,
+    List<GameEntity>? searchedGames,
+    List<GameCategoryEntity>? gameCategories,
+    List<UserEntity>? lastUsers,
+    Map<String, String>? filterTables,
+  }) {
+    return ReserveFailure(
+      message,
+      idReserve: idReserve ?? this.idReserve,
+      reserves: reserves ?? this.reserves,
+      reserve: reserve ?? this.reserve,
+      difficulties: difficulties ?? this.difficulties,
+      games: games ?? this.games,
+      searchedGames: searchedGames ?? this.searchedGames,
+      gameCategories: gameCategories ?? this.gameCategories,
+      reservesOfUser: reservesOfUser ?? this.reservesOfUser,
+      eventsShop: eventsShop ?? this.eventsShop,
+      lastUsers: lastUsers ?? this.lastUsers,
+      filterTables: filterTables ?? this.filterTables,
+    );
+  }
+
+  @override
+  List<Object?> get props => [...super.props, message];
 }

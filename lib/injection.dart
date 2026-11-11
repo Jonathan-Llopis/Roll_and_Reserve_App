@@ -89,6 +89,9 @@ import 'package:roll_and_reserve/domain/usecases/user_usecases/sign_in_user_usec
 import 'package:roll_and_reserve/domain/usecases/user_usecases/sign_out_user_usecase.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
+import 'package:roll_and_reserve/presentation/blocs/game/game_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/event/event_bloc.dart';
+import 'package:roll_and_reserve/presentation/blocs/player/player_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/reviews/reviews_bloc.dart';
 import 'package:roll_and_reserve/presentation/blocs/shops/shop_bloc.dart';
@@ -169,6 +172,27 @@ Future<void> configureDependencies() async {
     ),
   );
   sl.registerFactory<LanguageBloc>(() => LanguageBloc(sl()));
+  sl.registerFactory<GameBloc>(
+    () => GameBloc(
+      getAllGameUseCase: sl(),
+      getAllCategoryGamesUseCase: sl(),
+      getAllDifficultyUseCase: sl(),
+      searchGamesUseCase: sl(),
+    ),
+  );
+  sl.registerFactory<EventBloc>(
+    () => EventBloc(
+      getEventsShopUsecase: sl(),
+      createEventsUsecase: sl(),
+    ),
+  );
+  sl.registerFactory<PlayerBloc>(
+    () => PlayerBloc(
+      getLastTenPlayersUseCase: sl(),
+      addUserToReserveUseCase: sl(),
+      deleteUserToReserveUseCase: sl(),
+    ),
+  );
   sl.registerFactory<ChatBloc>(
     () => ChatBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()),
   );
