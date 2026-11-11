@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:roll_and_reserve/config/di/di_chat.dart';
@@ -7,6 +8,7 @@ import 'package:roll_and_reserve/config/di/di_reservations.dart';
 import 'package:roll_and_reserve/config/di/di_shops.dart';
 import 'package:roll_and_reserve/core/network/api_client.dart';
 import 'package:roll_and_reserve/core/network/token_provider.dart';
+import 'package:roll_and_reserve/core/security/secure_storage_service.dart';
 import 'package:roll_and_reserve/data/datasources/chat_local_datasource.dart';
 import 'package:roll_and_reserve/domain/repositories/chat_repository.dart';
 import 'package:roll_and_reserve/domain/repositories/reserve_repository.dart';
@@ -87,6 +89,8 @@ void main() {
       await registerCoreDependencies(testSl);
 
       expect(testSl.isRegistered<SharedPreferences>(), isTrue);
+      expect(testSl.isRegistered<FlutterSecureStorage>(), isTrue);
+      expect(testSl.isRegistered<SecureStorageService>(), isTrue);
       expect(testSl.isRegistered<TokenProvider>(), isTrue);
       expect(testSl.isRegistered<Dio>(), isTrue);
       expect(testSl.isRegistered<ApiClient>(), isTrue);

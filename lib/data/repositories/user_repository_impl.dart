@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:roll_and_reserve/core/failure.dart';
+import 'package:roll_and_reserve/core/security/secure_storage_service.dart';
 import 'package:roll_and_reserve/data/datasources/firebase_auth_datasource.dart';
 import 'package:roll_and_reserve/data/datasources/firestore_users_datasource.dart';
 import 'package:roll_and_reserve/data/datasources/user_datasource.dart';
@@ -15,22 +16,25 @@ class UserRespositoryImpl implements UserRespository {
   final SharedPreferences sharedPreferences;
   final FirestoreUsersDatasource firebaseUserDataSource;
   final UserDatasource userDatasource;
+  final SecureStorageService secureStorage;
 
   UserRespositoryImpl(
     this.dataSource,
     this.sharedPreferences,
     this.firebaseUserDataSource,
-    this.userDatasource,
-  );
+    this.userDatasource, {
+    SecureStorageService? secureStorage,
+  }) : secureStorage = secureStorage ??
+            SecureStorageServiceImpl(sharedPreferences: sharedPreferences);
 
-  String? _getToken() {
-    final token = sharedPreferences.getString('token');
+  Future<String?> _getToken() async {
+    final token = await secureStorage.read('token');
     if (token == null || token.trim().isEmpty) return null;
     return token;
   }
 
-  String? _getId() {
-    final id = sharedPreferences.getString('id');
+  Future<String?> _getId() async {
+    final id = await secureStorage.read('id');
     if (id == null || id.trim().isEmpty) return null;
     return id;
   }
@@ -73,12 +77,12 @@ class UserRespositoryImpl implements UserRespository {
         await userDatasource.createUser(usuarioRegistro, '1');
       }
 
-      await sharedPreferences.setString('email', user.email);
-      await sharedPreferences.setString('id', user.id);
+      await secureStorage.write('email', user.email);
+      await secureStorage.write('id', user.id);
 
       String tokenGenerado =
           await userDatasource.getValidToken(user.email, '1');
-      await sharedPreferences.setString('token', tokenGenerado);
+      await secureStorage.write('token', tokenGenerado);
 
       UserModel usuerDataBase =
           await userDatasource.getValidUser(user.id, tokenGenerado);
@@ -111,10 +115,10 @@ class UserRespositoryImpl implements UserRespository {
       String tokenGenerado =
           await userDatasource.getValidToken(email, password);
       UserModel user = await dataSource.signIn(email, password);
-      await sharedPreferences.setString('token', tokenGenerado);
-      await sharedPreferences.setString('email', user.email);
-      await sharedPreferences.setString('id', user.id);
-      final token = _getToken();
+      await secureStorage.write('token', tokenGenerado);
+      await secureStorage.write('email', user.email);
+      await secureStorage.write('id', user.id);
+      final token = await _getToken();
       if (token == null) {
         return const Left(AuthFailure('No hay una sesión activa de usuario'));
       }
@@ -155,8 +159,8 @@ class UserRespositoryImpl implements UserRespository {
         name,
         user.id,
       );
-      await sharedPreferences.setString('email', user.email);
-      await sharedPreferences.setString('id', user.id);
+      await secureStorage.write('email', user.email);
+      await secureStorage.write('id', user.id);
 
       UserModel usuarioRegistro = UserModel(
         email: email,
@@ -172,7 +176,7 @@ class UserRespositoryImpl implements UserRespository {
       await userDatasource.createUser(usuarioRegistro, password);
       String tokenGenerado =
           await userDatasource.getValidToken(email, password);
-      await sharedPreferences.setString('token', tokenGenerado);
+      await secureStorage.write('token', tokenGenerado);
 
       bool isFirstTime = await firebaseUserDataSource.isFirstTime(user.id);
       await sharedPreferences.setBool('isFirstTime', isFirstTime);
@@ -197,8 +201,8 @@ class UserRespositoryImpl implements UserRespository {
 
   Future<Either<Failure, UserEntity>> isLoggedIn() async {
     try {
-      final id = _getId();
-      final token = _getToken();
+      final id = await _getId();
+      final token = await _getToken();
       if (id == null || token == null) {
         return const Left(AuthFailure('No hay una sesión activa de usuario'));
       }
@@ -223,7 +227,7 @@ class UserRespositoryImpl implements UserRespository {
   /// Returns a [Future] that resolves to an [Either] containing a [UserEntity] with the user's data, or an [AuthFailure] if there is an error during the process.
   Future<Either<Failure, UserEntity>> getUserInfo(String idUser) async {
     try {
-      final token = _getToken();
+      final token = await _getToken();
       if (token == null) {
         return const Left(AuthFailure('No hay una sesión activa de usuario'));
       }
@@ -247,12 +251,15 @@ class UserRespositoryImpl implements UserRespository {
   /// process.
   Future<Either<Failure, void>> logout() async {
     try {
-      final token = _getToken();
-      final id = _getId();
+      final token = await _getToken();
+      final id = await _getId();
       if (token != null && id != null) {
         await userDatasource.updateTokenNotification(id, ' ', token);
       }
       await dataSource.signOut();
+      await secureStorage.delete('id');
+      await secureStorage.delete('email');
+      await secureStorage.delete('token');
       await sharedPreferences.remove('id');
       await sharedPreferences.remove('email');
       await sharedPreferences.remove('token');
@@ -338,7 +345,7 @@ class UserRespositoryImpl implements UserRespository {
   Future<Either<Failure, bool>> updateUserInfo(UserEntity user) async {
     try {
       late UserModel userModel;
-      final token = _getToken();
+      final token = await _getToken();
       if (token == null) {
         return const Left(AuthFailure('No hay una sesión activa de usuario'));
       }
@@ -380,8 +387,8 @@ class UserRespositoryImpl implements UserRespository {
     String oldPassword,
   ) async {
     try {
-      final token = _getToken();
-      final id = _getId();
+      final token = await _getToken();
+      final id = await _getId();
       if (token == null || id == null) {
         return const Left(AuthFailure('No hay una sesión activa de usuario'));
       }
@@ -435,7 +442,7 @@ class UserRespositoryImpl implements UserRespository {
   /// If the request fails, returns a [Left] containing an [AuthFailure].
   Future<Either<Failure, List<UserEntity>>> getUsersInfo() async {
     try {
-      final token = _getToken();
+      final token = await _getToken();
       if (token == null) {
         return const Left(AuthFailure('No hay una sesión activa de usuario'));
       }
@@ -472,8 +479,8 @@ class UserRespositoryImpl implements UserRespository {
     String tokenNotification,
   ) async {
     try {
-      final token = _getToken();
-      final currentId = _getId();
+      final token = await _getToken();
+      final currentId = await _getId();
       if (token == null || currentId == null) {
         return const Left(AuthFailure('No hay una sesión activa'));
       }
@@ -508,7 +515,7 @@ class UserRespositoryImpl implements UserRespository {
     dynamic value,
   ) async {
     try {
-      final token = sharedPreferences.getString('token');
+      final token = await _getToken();
       if (token == null) {
         return const Left(AuthFailure());
       }

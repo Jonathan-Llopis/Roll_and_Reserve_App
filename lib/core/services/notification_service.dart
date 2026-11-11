@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:roll_and_reserve/config/router/routes.dart';
+import 'package:roll_and_reserve/core/security/secure_storage_service.dart';
 import 'package:roll_and_reserve/domain/repositories/user_repository.dart';
 import 'package:roll_and_reserve/main.dart';
 import 'package:roll_and_reserve/injection.dart' as di;
@@ -64,8 +65,14 @@ class NotificationService {
     try {
       String? token = await _firebaseMessaging.getToken();
       if (token != null) {
-        final sharedPreferences = await SharedPreferences.getInstance();
-        final id = sharedPreferences.getString('id');
+        String? id;
+        try {
+          if (di.sl.isRegistered<SecureStorageService>()) {
+            id = await di.sl<SecureStorageService>().read('id');
+          }
+        } catch (_) {}
+        id ??= (await SharedPreferences.getInstance()).getString('id');
+
         if (id != null && id.isNotEmpty) {
           final updateToken =
               await di.sl<UserRespository>().updateTokenNotification(id, token);

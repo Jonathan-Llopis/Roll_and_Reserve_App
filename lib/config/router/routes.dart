@@ -32,6 +32,7 @@ import 'package:roll_and_reserve/presentation/screens/screen_qr.dart';
 import 'package:go_router/go_router.dart';
 import 'package:roll_and_reserve/presentation/screens/screen_user_onboarding.dart';
 import 'package:roll_and_reserve/presentation/widgets/screen_components/default_app_bar.dart';
+import 'package:roll_and_reserve/core/security/secure_storage_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:roll_and_reserve/injection.dart' as di;
 
@@ -455,7 +456,9 @@ final GoRouter router = GoRouter(
   ],
   redirect: (context, state) async {
     final sharedPreferences = di.sl<SharedPreferences>();
-    final email = sharedPreferences.getString('email');
+    final email = di.sl.isRegistered<SecureStorageService>()
+        ? await di.sl<SecureStorageService>().read('email')
+        : sharedPreferences.getString('email');
     final isGoingToLogin = state.matchedLocation.startsWith('/login');
 
     if (email == null) {
