@@ -1,7 +1,11 @@
 import 'dart:ui';
+import 'package:equatable/equatable.dart';
 
-class LanguageState {
+class LanguageState extends Equatable {
   final Locale locale;
 
-  LanguageState(this.locale);
+  const LanguageState(this.locale);
+
+  @override
+  List<Object?> get props => [locale];
 }
