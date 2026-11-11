@@ -8,7 +8,7 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
   final SharedPreferences sharedPreferences;
 
   LanguageBloc(this.sharedPreferences)
-      : super(LanguageState(const Locale('es'))) {
+      : super(const LanguageState(Locale('es'))) {
     on<ChangeLanguageEvent>((event, emit) async {
       final code = event.locale.countryCode != null
           ? '${event.locale.languageCode}_${event.locale.countryCode}'
@@ -25,7 +25,7 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
             parts.length > 1 && parts[1] != 'null' ? parts[1] : null;
         emit(LanguageState(Locale(parts[0], countryCode)));
       } else {
-        emit(LanguageState(const Locale('es')));
+        emit(const LanguageState(Locale('es')));
       }
     });
   }
